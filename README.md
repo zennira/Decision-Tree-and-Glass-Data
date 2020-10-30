@@ -1,0 +1,69 @@
+Altcoin - a lite version of Altcoin optimized for CPU mining using scrypt as a proof of work scheme.
+
+Algorithm: Scrypt-Adaptive-Nfactor (Not scrypt-jane)
+
+Symbol :  ALT
+
+Max Coins: 4294967296 altcoins.
+
+Block time: 1 minutes
+
+Subsidy halves every 840,000 blocks (~4 years)
+
+Difficulty Re-Target Time:  18 minutes
+
+Block Rewards: Random as shown in the following table:
+
+block number
+
+| Block No.                                | Reward       |   |
+
+|----------                                |--------------|---|
+
+| 1 to 131072                              | rand[1,256]  |   |
+
+| 131073 to 262144                         | rand[1,128]  |   |
+
+| 262145 to 524288                         | rand[1,64]   |   |
+
+| 524289 to 1048576                        | rand[1,16]   |   |
+
+| .................                        | .......      |   |
+
+random up range halves every 131072 blocks (about 3 months)
+
+minimum block reward is 1 ALT
+
+
+Port: P2P 32767, RPC 32768
+
+
+Development process
+===================
+
+Developers work in their own trees, then submit pull requests when
+they think their feature or bug fix is ready.
+
+The patch will be accepted if there is broad consensus that it is a
+good thing.  Developers should expect to rework and resubmit patches
+if they don't match the project's coding conventions (see coding.txt)
+or are controversial.
+
+The master branch is regularly built and tested, but is not guaranteed
+to be completely stable. Tags are regularly created to indicate new
+official, stable release versions of Altcoin.
+
+Feature branches are created when there are major new features being
+worked on by several people.
+
+From time to time a pull request will become outdated. If this occurs, and
+the pull is no longer automatically mergeable; a comment on the pull will
+be used to issue a warning of closure. The pull will be closed 15 days
+after the warning if action is not taken by the author. Pull requests closed
+in this manner will have their corresponding issue labeled 'stagnant'.
+
+Issues with no commits will be given a similar warning, and closed after
+15 days from their last activity. Issues closed in this manner will be 
+labeled 'stale'. 
+
+Check out https://bitcointalk.org/index.php?topic=459028 for more info about the development.
