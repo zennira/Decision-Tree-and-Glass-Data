@@ -1,0 +1,9 @@
+ALTMiner-sha2.o: sha2.c lib/string.h \
+ d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/string.h \
+ d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/_mingw.h \
+ d:\mingw\bin\../lib/gcc/mingw32/4.6.2/include/stddef.h sha2.h config.h \
+ miner.h d:\mingw\bin\../lib/gcc/mingw32/4.6.2/include/stdbool.h \
+ d:\mingw\bin\../lib/gcc/mingw32/4.6.2/include/stdint.h \
+ d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/stdint.h \
+ d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/sys/time.h \
+ d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../.

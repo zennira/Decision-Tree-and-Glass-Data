@@ -1,23 +1,24 @@
-ALTMiner-adl.o: adl.c config.h \
+
+ALTMiner-findnonce.o: findnonce.c config.h \
  d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/stdio.h \
  d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/_mingw.h \
  d:\mingw\bin\../lib/gcc/mingw32/4.6.2/include/stddef.h \
  d:\mingw\bin\../lib/gcc/mingw32/4.6.2/include/stdarg.h \
  d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/sys/types.h \
- lib/string.h \
- d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/string.h \
- d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/math.h \
- d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/curses.h \
- miner.h d:\mingw\bin\../lib/gcc/mingw32/4.6.2/include/stdbool.h \
+ d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/inttypes.h \
  d:\mingw\bin\../lib/gcc/mingw32/4.6.2/include/stdint.h \
  d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/stdint.h \
- d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/sys/time.h \
- d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/time.h \
  d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/pthread.h \
+ d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/time.h \
  d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/setjmp.h \
  d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/limits.h \
  d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/errno.h \
  d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/sched.h \
+ lib/string.h \
+ d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/string.h \
+ findnonce.h miner.h \
+ d:\mingw\bin\../lib/gcc/mingw32/4.6.2/include/stdbool.h \
+ d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/sys/time.h \
  compat/jansson-2.5/src/jansson.h \
  d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/stdlib.h \
  compat/jansson-2.5/src/jansson_config.h \
@@ -79,9 +80,7 @@ ALTMiner-adl.o: adl.c config.h \
  d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/curl/multi.h \
  d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/curl/curl.h \
  d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/curl/typecheck-gcc.h \
- elist.h uthash.h \
- d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/inttypes.h \
- logging.h util.h \
+ elist.h uthash.h logging.h util.h \
  d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/semaphore.h \
  d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/CL/cl.h \
  d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/CL/cl_platform.h \
@@ -93,9 +92,7 @@ ALTMiner-adl.o: adl.c config.h \
  d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/malloc.h \
  d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/io.h \
  ADL_SDK/adl_sdk.h ADL_SDK/adl_structures.h ADL_SDK/adl_defines.h \
- compat.h \
- d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/tchar.h \
- adl_functions.h
+ scrypt.h
 
 config.h:
 
@@ -109,27 +106,15 @@ d:\mingw\bin\../lib/gcc/mingw32/4.6.2/include/stdarg.h:
 
 d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/sys/types.h:
 
-lib/string.h:
-
-d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/string.h:
-
-d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/math.h:
-
-d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/curses.h:
-
-miner.h:
-
-d:\mingw\bin\../lib/gcc/mingw32/4.6.2/include/stdbool.h:
+d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/inttypes.h:
 
 d:\mingw\bin\../lib/gcc/mingw32/4.6.2/include/stdint.h:
 
 d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/stdint.h:
 
-d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/sys/time.h:
+d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/pthread.h:
 
 d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/time.h:
-
-d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/pthread.h:
 
 d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/setjmp.h:
 
@@ -138,6 +123,18 @@ d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/limits.h:
 d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/errno.h:
 
 d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/sched.h:
+
+lib/string.h:
+
+d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/string.h:
+
+findnonce.h:
+
+miner.h:
+
+d:\mingw\bin\../lib/gcc/mingw32/4.6.2/include/stdbool.h:
+
+d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/sys/time.h:
 
 compat/jansson-2.5/src/jansson.h:
 
@@ -265,8 +262,6 @@ elist.h:
 
 uthash.h:
 
-d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/inttypes.h:
-
 logging.h:
 
 util.h:
@@ -297,8 +292,4 @@ ADL_SDK/adl_structures.h:
 
 ADL_SDK/adl_defines.h:
 
-compat.h:
-
-d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/tchar.h:
-
-adl_functions.h:
+scrypt.h:
