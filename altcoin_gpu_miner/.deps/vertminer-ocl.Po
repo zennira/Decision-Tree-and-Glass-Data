@@ -1,37 +1,20 @@
-ALTMiner-logging.o: logging.c config.h \
- d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/unistd.h \
- d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/io.h \
+
+ALTMiner-ocl.o: ocl.c config.h lib/signal.h config.h \
+ d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/signal.h \
  d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/_mingw.h \
  d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/sys/types.h \
  d:\mingw\bin\../lib/gcc/mingw32/4.6.2/include/stddef.h \
- d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/process.h \
- d:\mingw\bin\../lib/gcc/mingw32/4.6.2/include/stdint.h \
- d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/stdint.h \
- d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/getopt.h \
- logging.h d:\mingw\bin\../lib/gcc/mingw32/4.6.2/include/stdbool.h \
- d:\mingw\bin\../lib/gcc/mingw32/4.6.2/include/stdarg.h miner.h \
- d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/sys/time.h \
- d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/time.h \
- d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/pthread.h \
- d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/setjmp.h \
- d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/limits.h \
- d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/errno.h \
- d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/sched.h \
- compat/jansson-2.5/src/jansson.h \
- d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/stdio.h \
  d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/stdlib.h \
- compat/jansson-2.5/src/jansson_config.h \
- d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/curl/curl.h \
- d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/curl/curlver.h \
- d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/curl/curlbuild.h \
- d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/curl/curlrules.h \
+ lib/string.h \
+ d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/string.h \
+ d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/stdio.h \
+ d:\mingw\bin\../lib/gcc/mingw32/4.6.2/include/stdarg.h \
+ d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/limits.h \
  d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/winsock2.h \
  d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/windows.h \
  d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/windef.h \
  d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/winnt.h \
  d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/winerror.h \
- lib/string.h \
- d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/string.h \
  d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/basetsd.h \
  d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/pshpack4.h \
  d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/poppack.h \
@@ -76,15 +59,35 @@ ALTMiner-logging.o: logging.c config.h \
  d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/oleauto.h \
  d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/oaidl.h \
  d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/oleidl.h \
- d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/ws2tcpip.h \
+ d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/time.h \
+ d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/sys/time.h \
+ d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/pthread.h \
+ d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/setjmp.h \
+ d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/errno.h \
+ d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/sched.h \
+ d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/sys/stat.h \
+ d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/unistd.h \
+ d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/io.h \
+ d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/process.h \
+ d:\mingw\bin\../lib/gcc/mingw32/4.6.2/include/stdint.h \
+ d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/stdint.h \
+ d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/getopt.h \
+ findnonce.h miner.h \
+ d:\mingw\bin\../lib/gcc/mingw32/4.6.2/include/stdbool.h \
+ compat/jansson-2.5/src/jansson.h compat/jansson-2.5/src/jansson_config.h \
+ d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/curl/curl.h \
+ d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/curl/curlver.h \
+ d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/curl/curlbuild.h \
+ d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/curl/curlrules.h \
  d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/curl/easy.h \
  d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/curl/multi.h \
  d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/curl/curl.h \
  d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/curl/typecheck-gcc.h \
  elist.h uthash.h \
  d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/inttypes.h \
- util.h \
+ logging.h util.h \
  d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/semaphore.h \
+ d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/ws2tcpip.h \
  d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/CL/cl.h \
  d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/CL/cl_platform.h \
  d:\mingw\bin\../lib/gcc/mingw32/4.6.2/include/float.h \
@@ -93,13 +96,15 @@ ALTMiner-logging.o: logging.c config.h \
  d:\mingw\bin\../lib/gcc/mingw32/4.6.2/include/mm_malloc.h \
  d:\mingw\bin\../lib/gcc/mingw32/4.6.2/include/emmintrin.h \
  d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/malloc.h \
- ADL_SDK/adl_sdk.h ADL_SDK/adl_structures.h ADL_SDK/adl_defines.h
+ ADL_SDK/adl_sdk.h ADL_SDK/adl_structures.h ADL_SDK/adl_defines.h ocl.h
 
 config.h:
 
-d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/unistd.h:
+lib/signal.h:
 
-d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/io.h:
+config.h:
+
+d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/signal.h:
 
 d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/_mingw.h:
 
@@ -107,51 +112,17 @@ d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/sys/types.h:
 
 d:\mingw\bin\../lib/gcc/mingw32/4.6.2/include/stddef.h:
 
-d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/process.h:
+d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/stdlib.h:
 
-d:\mingw\bin\../lib/gcc/mingw32/4.6.2/include/stdint.h:
+lib/string.h:
 
-d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/stdint.h:
-
-d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/getopt.h:
-
-logging.h:
-
-d:\mingw\bin\../lib/gcc/mingw32/4.6.2/include/stdbool.h:
-
-d:\mingw\bin\../lib/gcc/mingw32/4.6.2/include/stdarg.h:
-
-miner.h:
-
-d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/sys/time.h:
-
-d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/time.h:
-
-d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/pthread.h:
-
-d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/setjmp.h:
-
-d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/limits.h:
-
-d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/errno.h:
-
-d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/sched.h:
-
-compat/jansson-2.5/src/jansson.h:
+d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/string.h:
 
 d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/stdio.h:
 
-d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/stdlib.h:
+d:\mingw\bin\../lib/gcc/mingw32/4.6.2/include/stdarg.h:
 
-compat/jansson-2.5/src/jansson_config.h:
-
-d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/curl/curl.h:
-
-d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/curl/curlver.h:
-
-d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/curl/curlbuild.h:
-
-d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/curl/curlrules.h:
+d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/limits.h:
 
 d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/winsock2.h:
 
@@ -162,10 +133,6 @@ d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/windef.h:
 d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/winnt.h:
 
 d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/winerror.h:
-
-lib/string.h:
-
-d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/string.h:
 
 d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/basetsd.h:
 
@@ -255,7 +222,49 @@ d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/oaidl.h:
 
 d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/oleidl.h:
 
-d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/ws2tcpip.h:
+d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/time.h:
+
+d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/sys/time.h:
+
+d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/pthread.h:
+
+d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/setjmp.h:
+
+d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/errno.h:
+
+d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/sched.h:
+
+d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/sys/stat.h:
+
+d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/unistd.h:
+
+d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/io.h:
+
+d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/process.h:
+
+d:\mingw\bin\../lib/gcc/mingw32/4.6.2/include/stdint.h:
+
+d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/stdint.h:
+
+d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/getopt.h:
+
+findnonce.h:
+
+miner.h:
+
+d:\mingw\bin\../lib/gcc/mingw32/4.6.2/include/stdbool.h:
+
+compat/jansson-2.5/src/jansson.h:
+
+compat/jansson-2.5/src/jansson_config.h:
+
+d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/curl/curl.h:
+
+d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/curl/curlver.h:
+
+d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/curl/curlbuild.h:
+
+d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/curl/curlrules.h:
 
 d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/curl/easy.h:
 
@@ -271,9 +280,13 @@ uthash.h:
 
 d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/inttypes.h:
 
+logging.h:
+
 util.h:
 
 d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/semaphore.h:
+
+d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/ws2tcpip.h:
 
 d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/CL/cl.h:
 
@@ -296,3 +309,5 @@ ADL_SDK/adl_sdk.h:
 ADL_SDK/adl_structures.h:
 
 ADL_SDK/adl_defines.h:
+
+ocl.h:
