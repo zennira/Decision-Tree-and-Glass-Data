@@ -7436,3 +7436,1166 @@ void _quit(int status)
 #if defined(unix) || defined(__APPLE__)
 	if (forkpid > 0) {
 		kill(forkpid, SIGTERM);
+		forkpid = 0;
+	}
+#endif
+
+	exit(status);
+}
+
+#ifdef HAVE_CURSES
+char *curses_input(const char *query)
+{
+	char *input;
+
+	echo();
+	input = malloc(255);
+	if (!input)
+		quit(1, "Failed to malloc input");
+	leaveok(logwin, false);
+	wlogprint("%s:\n", query);
+	wgetnstr(logwin, input, 255);
+	if (!strlen(input))
+		strcpy(input, "-1");
+	leaveok(logwin, true);
+	noecho();
+	return input;
+}
+#endif
+
+static bool pools_active = false;
+
+static void *test_pool_thread(void *arg)
+{
+	struct pool *pool = (struct pool *)arg;
+
+	if (pool_active(pool, false)) {
+		pool_tset(pool, &pool->lagging);
+		pool_tclear(pool, &pool->idle);
+		bool first_pool = false;
+
+		cg_wlock(&control_lock);
+		if (!pools_active) {
+			currentpool = pool;
+			if (pool->pool_no != 0)
+				first_pool = true;
+			pools_active = true;
+		}
+		cg_wunlock(&control_lock);
+
+		if (unlikely(first_pool))
+			applog(LOG_NOTICE, "Switching to pool %d %s - first alive pool", pool->pool_no, pool->rpc_url);
+
+		pool_resus(pool);
+		switch_pools(NULL);
+	} else
+		pool_died(pool);
+
+	return NULL;
+}
+
+/* Always returns true that the pool details were added unless we are not
+ * live, implying this is the only pool being added, so if no pools are
+ * active it returns false. */
+bool add_pool_details(struct pool *pool, bool live, char *url, char *user, char *pass)
+{
+	size_t siz;
+
+	url = get_proxy(url, pool);
+
+	pool->rpc_url = url;
+	pool->rpc_user = user;
+	pool->rpc_pass = pass;
+	siz = strlen(pool->rpc_user) + strlen(pool->rpc_pass) + 2;
+	pool->rpc_userpass = malloc(siz);
+	if (!pool->rpc_userpass)
+		quit(1, "Failed to malloc userpass");
+	snprintf(pool->rpc_userpass, siz, "%s:%s", pool->rpc_user, pool->rpc_pass);
+
+	pool->testing = true;
+	pool->idle = true;
+	enable_pool(pool);
+
+	pthread_create(&pool->test_thread, NULL, test_pool_thread, (void *)pool);
+	if (!live) {
+		pthread_join(pool->test_thread, NULL);
+		pool->testing = false;
+		return pools_active;
+	}
+	return true;
+}
+
+#ifdef HAVE_CURSES
+static bool input_pool(bool live)
+{
+	char *url = NULL, *user = NULL, *pass = NULL;
+	struct pool *pool;
+	bool ret = false;
+
+	immedok(logwin, true);
+	wlogprint("Input server details.\n");
+
+	url = curses_input("URL");
+	if (!url)
+		goto out;
+
+	user = curses_input("Username");
+	if (!user)
+		goto out;
+
+	pass = curses_input("Password");
+	if (!pass)
+		goto out;
+
+	pool = add_pool();
+
+	if (!detect_stratum(pool, url) && strncmp(url, "http://", 7) &&
+	    strncmp(url, "https://", 8)) {
+		char *httpinput;
+
+		httpinput = malloc(256);
+		if (!httpinput)
+			quit(1, "Failed to malloc httpinput");
+		strcpy(httpinput, "http://");
+		strncat(httpinput, url, 248);
+		free(url);
+		url = httpinput;
+	}
+
+	ret = add_pool_details(pool, live, url, user, pass);
+out:
+	immedok(logwin, false);
+
+	if (!ret) {
+		if (url)
+			free(url);
+		if (user)
+			free(user);
+		if (pass)
+			free(pass);
+	}
+	return ret;
+}
+#endif
+
+#if defined(unix) || defined(__APPLE__)
+static void fork_monitor()
+{
+	// Make a pipe: [readFD, writeFD]
+	int pfd[2];
+	int r = pipe(pfd);
+
+	if (r < 0) {
+		perror("pipe - failed to create pipe for --monitor");
+		exit(1);
+	}
+
+	// Make stderr write end of pipe
+	fflush(stderr);
+	r = dup2(pfd[1], 2);
+	if (r < 0) {
+		perror("dup2 - failed to alias stderr to write end of pipe for --monitor");
+		exit(1);
+	}
+	r = close(pfd[1]);
+	if (r < 0) {
+		perror("close - failed to close write end of pipe for --monitor");
+		exit(1);
+	}
+
+	// Don't allow a dying monitor to kill the main process
+	sighandler_t sr0 = signal(SIGPIPE, SIG_IGN);
+	sighandler_t sr1 = signal(SIGPIPE, SIG_IGN);
+	if (SIG_ERR == sr0 || SIG_ERR == sr1) {
+		perror("signal - failed to edit signal mask for --monitor");
+		exit(1);
+	}
+
+	// Fork a child process
+	forkpid = fork();
+	if (forkpid < 0) {
+		perror("fork - failed to fork child process for --monitor");
+		exit(1);
+	}
+
+	// Child: launch monitor command
+	if (0 == forkpid) {
+		// Make stdin read end of pipe
+		r = dup2(pfd[0], 0);
+		if (r < 0) {
+			perror("dup2 - in child, failed to alias read end of pipe to stdin for --monitor");
+			exit(1);
+		}
+		close(pfd[0]);
+		if (r < 0) {
+			perror("close - in child, failed to close read end of  pipe for --monitor");
+			exit(1);
+		}
+
+		// Launch user specified command
+		execl("/bin/bash", "/bin/bash", "-c", opt_stderr_cmd, (char*)NULL);
+		perror("execl - in child failed to exec user specified command for --monitor");
+		exit(1);
+	}
+
+	// Parent: clean up unused fds and bail
+	r = close(pfd[0]);
+	if (r < 0) {
+		perror("close - failed to close read end of pipe for --monitor");
+		exit(1);
+	}
+}
+#endif // defined(unix)
+
+#ifdef HAVE_CURSES
+static void enable_curses_windows(void)
+{
+	int x,y;
+
+	getmaxyx(mainwin, y, x);
+	statuswin = newwin(logstart, x, 0, 0);
+	leaveok(statuswin, true);
+	logwin = newwin(y - logcursor, 0, logcursor, 0);
+	idlok(logwin, true);
+	scrollok(logwin, true);
+	leaveok(logwin, true);
+	cbreak();
+	noecho();
+}
+void enable_curses(void) {
+	lock_curses();
+	if (curses_active) {
+		unlock_curses();
+		return;
+	}
+
+	mainwin = initscr();
+	enable_curses_windows();
+	curses_active = true;
+	statusy = logstart;
+	unlock_curses();
+}
+#endif
+
+static int cgminer_id_count = 0;
+
+/* Various noop functions for drivers that don't support or need their
+ * variants. */
+static void noop_reinit_device(struct cgpu_info __maybe_unused *cgpu)
+{
+}
+
+void blank_get_statline_before(char *buf, size_t bufsiz, struct cgpu_info __maybe_unused *cgpu)
+{
+	tailsprintf(buf, bufsiz, "               | ");
+}
+
+static void noop_get_statline(char __maybe_unused *buf, size_t __maybe_unused bufsiz, struct cgpu_info __maybe_unused *cgpu)
+{
+}
+
+static bool noop_get_stats(struct cgpu_info __maybe_unused *cgpu)
+{
+	return true;
+}
+
+static bool noop_thread_prepare(struct thr_info __maybe_unused *thr)
+{
+	return true;
+}
+
+static uint64_t noop_can_limit_work(struct thr_info __maybe_unused *thr)
+{
+	return 0xffffffff;
+}
+
+static bool noop_thread_init(struct thr_info __maybe_unused *thr)
+{
+	return true;
+}
+
+static bool noop_prepare_work(struct thr_info __maybe_unused *thr, struct work __maybe_unused *work)
+{
+	return true;
+}
+
+static void noop_hw_error(struct thr_info __maybe_unused *thr)
+{
+}
+
+static void noop_thread_shutdown(struct thr_info __maybe_unused *thr)
+{
+}
+
+static void noop_thread_enable(struct thr_info __maybe_unused *thr)
+{
+}
+
+static void noop_detect(bool __maybe_unused hotplug)
+{
+}
+#define noop_flush_work noop_reinit_device
+#define noop_update_work noop_reinit_device
+#define noop_queue_full noop_get_stats
+
+/* Fill missing driver drv functions with noops */
+void fill_device_drv(struct device_drv *drv)
+{
+	if (!drv->drv_detect)
+		drv->drv_detect = &noop_detect;
+	if (!drv->reinit_device)
+		drv->reinit_device = &noop_reinit_device;
+	if (!drv->get_statline_before)
+		drv->get_statline_before = &blank_get_statline_before;
+	if (!drv->get_statline)
+		drv->get_statline = &noop_get_statline;
+	if (!drv->get_stats)
+		drv->get_stats = &noop_get_stats;
+	if (!drv->thread_prepare)
+		drv->thread_prepare = &noop_thread_prepare;
+	if (!drv->can_limit_work)
+		drv->can_limit_work = &noop_can_limit_work;
+	if (!drv->thread_init)
+		drv->thread_init = &noop_thread_init;
+	if (!drv->prepare_work)
+		drv->prepare_work = &noop_prepare_work;
+	if (!drv->hw_error)
+		drv->hw_error = &noop_hw_error;
+	if (!drv->thread_shutdown)
+		drv->thread_shutdown = &noop_thread_shutdown;
+	if (!drv->thread_enable)
+		drv->thread_enable = &noop_thread_enable;
+	if (!drv->hash_work)
+		drv->hash_work = &hash_sole_work;
+	if (!drv->flush_work)
+		drv->flush_work = &noop_flush_work;
+	if (!drv->update_work)
+		drv->update_work = &noop_update_work;
+	if (!drv->queue_full)
+		drv->queue_full = &noop_queue_full;
+	if (!drv->max_diff)
+		drv->max_diff = 1;
+	if (!drv->working_diff)
+		drv->working_diff = 1;
+}
+
+void enable_device(struct cgpu_info *cgpu)
+{
+	cgpu->deven = DEV_ENABLED;
+
+	wr_lock(&devices_lock);
+	devices[cgpu->cgminer_id = cgminer_id_count++] = cgpu;
+	wr_unlock(&devices_lock);
+
+	if (hotplug_mode) {
+		new_threads += cgpu->threads;
+#ifdef HAVE_CURSES
+		adj_width(mining_threads + new_threads, &dev_width);
+#endif
+	} else {
+		mining_threads += cgpu->threads;
+#ifdef HAVE_CURSES
+		adj_width(mining_threads, &dev_width);
+#endif
+	}
+#ifdef HAVE_OPENCL
+	if (cgpu->drv->drv_id == DRIVER_opencl) {
+		gpu_threads += cgpu->threads;
+	}
+#endif
+	rwlock_init(&cgpu->qlock);
+	cgpu->queued_work = NULL;
+}
+
+struct _cgpu_devid_counter {
+	char name[4];
+	int lastid;
+	UT_hash_handle hh;
+};
+
+static void adjust_mostdevs(void)
+{
+	if (total_devices - zombie_devs > most_devices)
+		most_devices = total_devices - zombie_devs;
+}
+
+bool add_cgpu(struct cgpu_info *cgpu)
+{
+	static struct _cgpu_devid_counter *devids = NULL;
+	struct _cgpu_devid_counter *d;
+	
+	HASH_FIND_STR(devids, cgpu->drv->name, d);
+	if (d)
+		cgpu->device_id = ++d->lastid;
+	else {
+		d = malloc(sizeof(*d));
+		memcpy(d->name, cgpu->drv->name, sizeof(d->name));
+		cgpu->device_id = d->lastid = 0;
+		HASH_ADD_STR(devids, name, d);
+	}
+
+	wr_lock(&devices_lock);
+	devices = realloc(devices, sizeof(struct cgpu_info *) * (total_devices + new_devices + 2));
+	wr_unlock(&devices_lock);
+
+	mutex_lock(&stats_lock);
+	cgpu->last_device_valid_work = time(NULL);
+	mutex_unlock(&stats_lock);
+
+	if (hotplug_mode)
+		devices[total_devices + new_devices++] = cgpu;
+	else
+		devices[total_devices++] = cgpu;
+
+	adjust_mostdevs();
+	return true;
+}
+
+struct device_drv *copy_drv(struct device_drv *drv)
+{
+	struct device_drv *copy;
+
+	if (unlikely(!(copy = malloc(sizeof(*copy))))) {
+		quit(1, "Failed to allocate device_drv copy of %s (%s)",
+				drv->name, drv->copy ? "copy" : "original");
+	}
+	memcpy(copy, drv, sizeof(*copy));
+	copy->copy = true;
+	return copy;
+}
+
+#ifdef USE_USBUTILS
+static void hotplug_process(void)
+{
+	struct thr_info *thr;
+	int i, j;
+
+	for (i = 0; i < new_devices; i++) {
+		struct cgpu_info *cgpu;
+		int dev_no = total_devices + i;
+
+		cgpu = devices[dev_no];
+		if (!opt_devs_enabled || (opt_devs_enabled && devices_enabled[dev_no]))
+			enable_device(cgpu);
+		cgpu->cgminer_stats.getwork_wait_min.tv_sec = MIN_SEC_UNSET;
+		cgpu->rolling = cgpu->total_mhashes = 0;
+	}
+
+	wr_lock(&mining_thr_lock);
+	mining_thr = realloc(mining_thr, sizeof(thr) * (mining_threads + new_threads + 1));
+
+	if (!mining_thr)
+		quit(1, "Failed to hotplug realloc mining_thr");
+	for (i = 0; i < new_threads; i++) {
+		mining_thr[mining_threads + i] = calloc(1, sizeof(*thr));
+		if (!mining_thr[mining_threads + i])
+			quit(1, "Failed to hotplug calloc mining_thr[%d]", i);
+	}
+
+	// Start threads
+	for (i = 0; i < new_devices; ++i) {
+		struct cgpu_info *cgpu = devices[total_devices];
+		cgpu->thr = malloc(sizeof(*cgpu->thr) * (cgpu->threads+1));
+		cgpu->thr[cgpu->threads] = NULL;
+		cgpu->status = LIFE_INIT;
+		cgtime(&(cgpu->dev_start_tv));
+
+		for (j = 0; j < cgpu->threads; ++j) {
+			thr = __get_thread(mining_threads);
+			thr->id = mining_threads;
+			thr->cgpu = cgpu;
+			thr->device_thread = j;
+
+			if (cgpu->drv->thread_prepare && !cgpu->drv->thread_prepare(thr))
+				continue;
+
+			if (unlikely(thr_info_create(thr, NULL, miner_thread, thr)))
+				quit(1, "hotplug thread %d create failed", thr->id);
+
+			cgpu->thr[j] = thr;
+
+			/* Enable threads for devices set not to mine but disable
+			 * their queue in case we wish to enable them later */
+			if (cgpu->deven != DEV_DISABLED) {
+				applog(LOG_DEBUG, "Pushing sem post to thread %d", thr->id);
+				cgsem_post(&thr->sem);
+			}
+
+			mining_threads++;
+		}
+		total_devices++;
+		applog(LOG_WARNING, "Hotplug: %s added %s %i", cgpu->drv->dname, cgpu->drv->name, cgpu->device_id);
+	}
+	wr_unlock(&mining_thr_lock);
+
+	adjust_mostdevs();
+	switch_logsize(true);
+}
+
+#define DRIVER_DRV_DETECT_HOTPLUG(X) X##_drv.drv_detect(true);
+
+static void *hotplug_thread(void __maybe_unused *userdata)
+{
+	pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
+
+	RenameThread("hotplug");
+
+	hotplug_mode = true;
+
+	cgsleep_ms(5000);
+
+	while (0x2a) {
+// Version 0.1 just add the devices on - worry about using nodev later
+
+		if (hotplug_time == 0)
+			cgsleep_ms(5000);
+		else {
+			new_devices = 0;
+			new_threads = 0;
+
+			/* Use the DRIVER_PARSE_COMMANDS macro to detect all
+			 * devices */
+			DRIVER_PARSE_COMMANDS(DRIVER_DRV_DETECT_HOTPLUG)
+
+			if (new_devices)
+				hotplug_process();
+
+			// hotplug_time >0 && <=9999
+			cgsleep_ms(hotplug_time * 1000);
+		}
+	}
+
+	return NULL;
+}
+#endif
+
+static void probe_pools(void)
+{
+	int i;
+
+	for (i = 0; i < total_pools; i++) {
+		struct pool *pool = pools[i];
+
+		pool->testing = true;
+		pthread_create(&pool->test_thread, NULL, test_pool_thread, (void *)pool);
+	}
+}
+
+#define DRIVER_FILL_DEVICE_DRV(X) fill_device_drv(&X##_drv);
+#define DRIVER_DRV_DETECT_ALL(X) X##_drv.drv_detect(false);
+
+#ifdef USE_USBUTILS
+static void *libusb_poll_thread(void __maybe_unused *arg)
+{
+	struct timeval tv_end = {1, 0};
+
+	RenameThread("usbpoll");
+
+	while (usb_polling)
+		libusb_handle_events_timeout_completed(NULL, &tv_end, NULL);
+
+	/* Cancel any cancellable usb transfers */
+	cancel_usb_transfers();
+
+	/* Keep event handling going until there are no async transfers in
+	 * flight. */
+	do {
+		libusb_handle_events_timeout_completed(NULL, &tv_end, NULL);
+	} while (async_usb_transfers());
+
+	return NULL;
+}
+
+static void initialise_usb(void) {
+	int err = libusb_init(NULL);
+	if (err) {
+		fprintf(stderr, "libusb_init() failed err %d", err);
+		fflush(stderr);
+		quit(1, "libusb_init() failed");
+	}
+	mutex_init(&cgusb_lock);
+	mutex_init(&cgusbres_lock);
+	cglock_init(&cgusb_fd_lock);
+	usb_polling = true;
+	pthread_create(&usb_poll_thread, NULL, libusb_poll_thread, NULL);
+}
+#else
+#define initialise_usb() {}
+#endif
+
+int main(int argc, char *argv[])
+{
+	struct sigaction handler;
+	struct thr_info *thr;
+	struct block *block;
+	unsigned int k;
+	int i, j;
+	char *s;
+
+	/* This dangerous functions tramples random dynamically allocated
+	 * variables so do it before anything at all */
+	if (unlikely(curl_global_init(CURL_GLOBAL_ALL)))
+		quit(1, "Failed to curl_global_init");
+
+#if LOCK_TRACKING
+	// Must be first
+	if (unlikely(pthread_mutex_init(&lockstat_lock, NULL)))
+		quithere(1, "Failed to pthread_mutex_init lockstat_lock errno=%d", errno);
+#endif
+
+	initial_args = malloc(sizeof(char *) * (argc + 1));
+	for  (i = 0; i < argc; i++)
+		initial_args[i] = strdup(argv[i]);
+	initial_args[argc] = NULL;
+
+	mutex_init(&hash_lock);
+	mutex_init(&console_lock);
+	cglock_init(&control_lock);
+	mutex_init(&stats_lock);
+	mutex_init(&sharelog_lock);
+	cglock_init(&ch_lock);
+	mutex_init(&sshare_lock);
+	rwlock_init(&blk_lock);
+	rwlock_init(&netacc_lock);
+	rwlock_init(&mining_thr_lock);
+	rwlock_init(&devices_lock);
+
+	mutex_init(&lp_lock);
+	if (unlikely(pthread_cond_init(&lp_cond, NULL)))
+		quit(1, "Failed to pthread_cond_init lp_cond");
+
+	mutex_init(&restart_lock);
+	if (unlikely(pthread_cond_init(&restart_cond, NULL)))
+		quit(1, "Failed to pthread_cond_init restart_cond");
+
+	if (unlikely(pthread_cond_init(&gws_cond, NULL)))
+		quit(1, "Failed to pthread_cond_init gws_cond");
+
+	initialise_usb();
+
+	snprintf(packagename, sizeof(packagename), "%s %s", PACKAGE, VERSION);
+
+	handler.sa_handler = &sighandler;
+	handler.sa_flags = 0;
+	sigemptyset(&handler.sa_mask);
+	sigaction(SIGTERM, &handler, &termhandler);
+	sigaction(SIGINT, &handler, &inthandler);
+#ifndef WIN32
+	signal(SIGPIPE, SIG_IGN);
+#else
+	timeBeginPeriod(1);
+#endif
+	opt_kernel_path = alloca(PATH_MAX);
+	strcpy(opt_kernel_path, CGMINER_PREFIX);
+	cgminer_path = alloca(PATH_MAX);
+	s = strdup(argv[0]);
+	strcpy(cgminer_path, dirname(s));
+	free(s);
+	strcat(cgminer_path, "/");
+
+	devcursor = 8;
+	logstart = devcursor + 1;
+	logcursor = logstart + 1;
+
+	block = calloc(sizeof(struct block), 1);
+	if (unlikely(!block))
+		quit (1, "main OOM");
+	for (i = 0; i < 36; i++)
+		strcat(block->hash, "0");
+	HASH_ADD_STR(blocks, hash, block);
+	strcpy(current_hash, block->hash);
+
+	INIT_LIST_HEAD(&scan_devices);
+
+#ifdef HAVE_OPENCL
+	memset(gpus, 0, sizeof(gpus));
+	for (i = 0; i < MAX_GPUDEVICES; i++)
+		gpus[i].dynamic = true;
+#endif
+
+	/* parse command line */
+	opt_register_table(opt_config_table,
+			   "Options for both config file and command line");
+	opt_register_table(opt_cmdline_table,
+			   "Options for command line only");
+
+	opt_parse(&argc, argv, applog_and_exit);
+	if (argc != 1)
+		quit(1, "Unexpected extra commandline arguments");
+
+	if (!config_loaded)
+		load_default_config();
+
+	if (opt_benchmark) {
+		struct pool *pool;
+
+		if (opt_scrypt)
+			quit(1, "Cannot use benchmark mode with scrypt");
+		pool = add_pool();
+		pool->rpc_url = malloc(255);
+		strcpy(pool->rpc_url, "Benchmark");
+		pool->rpc_user = pool->rpc_url;
+		pool->rpc_pass = pool->rpc_url;
+		enable_pool(pool);
+		pool->idle = false;
+		successful_connect = true;
+	}
+
+#ifdef HAVE_CURSES
+	if (opt_realquiet || opt_display_devs)
+		use_curses = false;
+
+	if (use_curses)
+		enable_curses();
+#endif
+
+	applog(LOG_WARNING, "Started %s", packagename);
+	if (cnfbuf) {
+		applog(LOG_NOTICE, "Loaded configuration file %s", cnfbuf);
+		switch (fileconf_load) {
+			case 0:
+				applog(LOG_WARNING, "Fatal JSON error in configuration file.");
+				applog(LOG_WARNING, "Configuration file could not be used.");
+				break;
+			case -1:
+				applog(LOG_WARNING, "Error in configuration file, partially loaded.");
+				if (use_curses)
+					applog(LOG_WARNING, "Start cgminer with -T to see what failed to load.");
+				break;
+			default:
+				break;
+		}
+		free(cnfbuf);
+		cnfbuf = NULL;
+	}
+
+	strcat(opt_kernel_path, "/");
+
+	if (want_per_device_stats)
+		opt_log_output = true;
+
+	/* Use a shorter scantime for scrypt */
+	if (opt_scantime < 0)
+		opt_scantime = opt_scrypt ? 30 : 60;
+
+	total_control_threads = 9;
+	control_thr = calloc(total_control_threads, sizeof(*thr));
+	if (!control_thr)
+		quit(1, "Failed to calloc control_thr");
+
+	gwsched_thr_id = 0;
+
+#ifdef USE_USBUTILS
+	usb_initialise();
+
+	// before device detection
+	if (!opt_scrypt) {
+		cgsem_init(&usb_resource_sem);
+		usbres_thr_id = 1;
+		thr = &control_thr[usbres_thr_id];
+		if (thr_info_create(thr, NULL, usb_resource_thread, thr))
+			quit(1, "usb resource thread create failed");
+		pthread_detach(thr->pth);
+	}
+#endif
+
+	/* Use the DRIVER_PARSE_COMMANDS macro to fill all the device_drvs */
+	DRIVER_PARSE_COMMANDS(DRIVER_FILL_DEVICE_DRV)
+
+	if (opt_scrypt)
+		opencl_drv.drv_detect(false);
+	else {
+	/* Use the DRIVER_PARSE_COMMANDS macro to detect all devices */
+		DRIVER_PARSE_COMMANDS(DRIVER_DRV_DETECT_ALL)
+	}
+
+	if (opt_display_devs) {
+		applog(LOG_ERR, "Devices detected:");
+		for (i = 0; i < total_devices; ++i) {
+			struct cgpu_info *cgpu = devices[i];
+			if (cgpu->name)
+				applog(LOG_ERR, " %2d. %s %d: %s (driver: %s)", i, cgpu->drv->name, cgpu->device_id, cgpu->name, cgpu->drv->dname);
+			else
+				applog(LOG_ERR, " %2d. %s %d (driver: %s)", i, cgpu->drv->name, cgpu->device_id, cgpu->drv->dname);
+		}
+		quit(0, "%d devices listed", total_devices);
+	}
+
+	mining_threads = 0;
+	if (opt_devs_enabled) {
+		for (i = 0; i < MAX_DEVICES; i++) {
+			if (devices_enabled[i]) {
+				if (i >= total_devices)
+					quit (1, "Command line options set a device that doesn't exist");
+				enable_device(devices[i]);
+			} else if (i < total_devices) {
+				if (!opt_removedisabled)
+					enable_device(devices[i]);
+				devices[i]->deven = DEV_DISABLED;
+			}
+		}
+		total_devices = cgminer_id_count;
+	} else {
+		for (i = 0; i < total_devices; ++i)
+			enable_device(devices[i]);
+	}
+
+#ifdef USE_USBUTILS
+	if (!total_devices) {
+		applog(LOG_WARNING, "No devices detected!");
+		applog(LOG_WARNING, "Waiting for USB hotplug devices or press q to quit");
+	}
+#else
+	if (!total_devices)
+		quit(1, "All devices disabled, cannot mine!");
+#endif
+
+	most_devices = total_devices;
+
+	load_temp_cutoffs();
+
+	for (i = 0; i < total_devices; ++i)
+		devices[i]->cgminer_stats.getwork_wait_min.tv_sec = MIN_SEC_UNSET;
+
+	if (!opt_compact) {
+		logstart += most_devices;
+		logcursor = logstart + 1;
+#ifdef HAVE_CURSES
+		check_winsizes();
+#endif
+	}
+
+	if (!total_pools) {
+		applog(LOG_WARNING, "Need to specify at least one pool server.");
+#ifdef HAVE_CURSES
+		if (!use_curses || !input_pool(false))
+#endif
+			quit(1, "Pool setup failed");
+	}
+
+	for (i = 0; i < total_pools; i++) {
+		struct pool *pool = pools[i];
+		size_t siz;
+
+		pool->cgminer_stats.getwork_wait_min.tv_sec = MIN_SEC_UNSET;
+		pool->cgminer_pool_stats.getwork_wait_min.tv_sec = MIN_SEC_UNSET;
+
+		if (!pool->rpc_userpass) {
+			if (!pool->rpc_user || !pool->rpc_pass)
+				quit(1, "No login credentials supplied for pool %u %s", i, pool->rpc_url);
+			siz = strlen(pool->rpc_user) + strlen(pool->rpc_pass) + 2;
+			pool->rpc_userpass = malloc(siz);
+			if (!pool->rpc_userpass)
+				quit(1, "Failed to malloc userpass");
+			snprintf(pool->rpc_userpass, siz, "%s:%s", pool->rpc_user, pool->rpc_pass);
+		}
+	}
+	/* Set the currentpool to pool 0 */
+	currentpool = pools[0];
+
+#ifdef HAVE_SYSLOG_H
+	if (use_syslog)
+		openlog(PACKAGE, LOG_PID, LOG_USER);
+#endif
+
+	#if defined(unix) || defined(__APPLE__)
+		if (opt_stderr_cmd)
+			fork_monitor();
+	#endif // defined(unix)
+
+	mining_thr = calloc(mining_threads, sizeof(thr));
+	if (!mining_thr)
+		quit(1, "Failed to calloc mining_thr");
+	for (i = 0; i < mining_threads; i++) {
+		mining_thr[i] = calloc(1, sizeof(*thr));
+		if (!mining_thr[i])
+			quit(1, "Failed to calloc mining_thr[%d]", i);
+	}
+
+	stage_thr_id = 2;
+	thr = &control_thr[stage_thr_id];
+	thr->q = tq_new();
+	if (!thr->q)
+		quit(1, "Failed to tq_new");
+	/* start stage thread */
+	if (thr_info_create(thr, NULL, stage_thread, thr))
+		quit(1, "stage thread create failed");
+	pthread_detach(thr->pth);
+
+	/* Create a unique get work queue */
+	getq = tq_new();
+	if (!getq)
+		quit(1, "Failed to create getq");
+	/* We use the getq mutex as the staged lock */
+	stgd_lock = &getq->mutex;
+
+	if (opt_benchmark)
+		goto begin_bench;
+
+	for (i = 0; i < total_pools; i++) {
+		struct pool *pool  = pools[i];
+
+		enable_pool(pool);
+		pool->idle = true;
+	}
+
+	applog(LOG_NOTICE, "Probing for an alive pool");
+	do {
+		int slept = 0;
+
+		/* Look for at least one active pool before starting */
+		probe_pools();
+		do {
+			sleep(1);
+			slept++;
+		} while (!pools_active && slept < 60);
+
+		if (!pools_active) {
+			applog(LOG_ERR, "No servers were found that could be used to get work from.");
+			applog(LOG_ERR, "Please check the details from the list below of the servers you have input");
+			applog(LOG_ERR, "Most likely you have input the wrong URL, forgotten to add a port, or have not set up workers");
+			for (i = 0; i < total_pools; i++) {
+				struct pool *pool;
+
+				pool = pools[i];
+				applog(LOG_WARNING, "Pool: %d  URL: %s  User: %s  Password: %s",
+				       i, pool->rpc_url, pool->rpc_user, pool->rpc_pass);
+			}
+#ifdef HAVE_CURSES
+			if (use_curses) {
+				halfdelay(150);
+				applog(LOG_ERR, "Press any key to exit, or cgminer will try again in 15s.");
+				if (getch() != ERR)
+					quit(0, "No servers could be used! Exiting.");
+				cbreak();
+			} else
+#endif
+				quit(0, "No servers could be used! Exiting.");
+		}
+	} while (!pools_active);
+
+begin_bench:
+	total_mhashes_done = 0;
+	for (i = 0; i < total_devices; i++) {
+		struct cgpu_info *cgpu = devices[i];
+
+		cgpu->rolling = cgpu->total_mhashes = 0;
+	}
+	
+	cgtime(&total_tv_start);
+	cgtime(&total_tv_end);
+	get_datestamp(datestamp, sizeof(datestamp), &total_tv_start);
+
+	// Start threads
+	k = 0;
+	for (i = 0; i < total_devices; ++i) {
+		struct cgpu_info *cgpu = devices[i];
+		cgpu->thr = malloc(sizeof(*cgpu->thr) * (cgpu->threads+1));
+		cgpu->thr[cgpu->threads] = NULL;
+		cgpu->status = LIFE_INIT;
+
+		for (j = 0; j < cgpu->threads; ++j, ++k) {
+			thr = get_thread(k);
+			thr->id = k;
+			thr->cgpu = cgpu;
+			thr->device_thread = j;
+
+			if (!cgpu->drv->thread_prepare(thr))
+				continue;
+
+			if (unlikely(thr_info_create(thr, NULL, miner_thread, thr)))
+				quit(1, "thread %d create failed", thr->id);
+
+			cgpu->thr[j] = thr;
+
+			/* Enable threads for devices set not to mine but disable
+			 * their queue in case we wish to enable them later */
+			if (cgpu->deven != DEV_DISABLED) {
+				applog(LOG_DEBUG, "Pushing sem post to thread %d", thr->id);
+				cgsem_post(&thr->sem);
+			}
+		}
+	}
+
+#ifdef HAVE_OPENCL
+	applog(LOG_INFO, "%d gpu miner threads started", gpu_threads);
+	for (i = 0; i < nDevs; i++)
+		pause_dynamic_threads(i);
+#endif
+
+	cgtime(&total_tv_start);
+	cgtime(&total_tv_end);
+
+	watchpool_thr_id = 3;
+	thr = &control_thr[watchpool_thr_id];
+	/* start watchpool thread */
+	if (thr_info_create(thr, NULL, watchpool_thread, NULL))
+		quit(1, "watchpool thread create failed");
+	pthread_detach(thr->pth);
+
+	watchdog_thr_id = 4;
+	thr = &control_thr[watchdog_thr_id];
+	/* start watchdog thread */
+	if (thr_info_create(thr, NULL, watchdog_thread, NULL))
+		quit(1, "watchdog thread create failed");
+	pthread_detach(thr->pth);
+
+#ifdef HAVE_OPENCL
+	/* Create reinit gpu thread */
+	gpur_thr_id = 5;
+	thr = &control_thr[gpur_thr_id];
+	thr->q = tq_new();
+	if (!thr->q)
+		quit(1, "tq_new failed for gpur_thr_id");
+	if (thr_info_create(thr, NULL, reinit_gpu, thr))
+		quit(1, "reinit_gpu thread create failed");
+#endif	
+
+	/* Create API socket thread */
+	api_thr_id = 6;
+	thr = &control_thr[api_thr_id];
+	if (thr_info_create(thr, NULL, api_thread, thr))
+		quit(1, "API thread create failed");
+
+#ifdef USE_USBUTILS
+	if (!opt_scrypt) {
+		hotplug_thr_id = 7;
+		thr = &control_thr[hotplug_thr_id];
+		if (thr_info_create(thr, NULL, hotplug_thread, thr))
+			quit(1, "hotplug thread create failed");
+		pthread_detach(thr->pth);
+	}
+#endif
+
+#ifdef HAVE_CURSES
+	/* Create curses input thread for keyboard input. Create this last so
+	 * that we know all threads are created since this can call kill_work
+	 * to try and shut down all previous threads. */
+	input_thr_id = 8;
+	thr = &control_thr[input_thr_id];
+	if (thr_info_create(thr, NULL, input_thread, thr))
+		quit(1, "input thread create failed");
+	pthread_detach(thr->pth);
+#endif
+
+	/* Just to be sure */
+	if (total_control_threads != 9)
+		quit(1, "incorrect total_control_threads (%d) should be 9", total_control_threads);
+
+	/* Once everything is set up, main() becomes the getwork scheduler */
+	while (42) {
+		int ts, max_staged = opt_queue;
+		struct pool *pool, *cp;
+		bool lagging = false;
+		struct work *work;
+
+		if (opt_work_update)
+			signal_work_update();
+		opt_work_update = false;
+		cp = current_pool();
+
+		/* If the primary pool is a getwork pool and cannot roll work,
+		 * try to stage one extra work per mining thread */
+		if (!pool_localgen(cp) && !staged_rollable)
+			max_staged += mining_threads;
+
+		mutex_lock(stgd_lock);
+		ts = __total_staged();
+
+		if (!pool_localgen(cp) && !ts && !opt_fail_only)
+			lagging = true;
+
+		/* Wait until hash_pop tells us we need to create more work */
+		if (ts > max_staged) {
+			pthread_cond_wait(&gws_cond, stgd_lock);
+			ts = __total_staged();
+		}
+		mutex_unlock(stgd_lock);
+
+		if (ts > max_staged)
+			continue;
+
+		work = make_work();
+
+		if (lagging && !pool_tset(cp, &cp->lagging)) {
+			applog(LOG_WARNING, "Pool %d not providing work fast enough", cp->pool_no);
+			cp->getfail_occasions++;
+			total_go++;
+		}
+		pool = select_pool(lagging);
+retry:
+		if (pool->has_stratum) {
+			while (!pool->stratum_active || !pool->stratum_notify) {
+				struct pool *altpool = select_pool(true);
+
+				cgsleep_ms(5000);
+				if (altpool != pool) {
+					pool = altpool;
+					goto retry;
+				}
+			}
+			gen_stratum_work(pool, work);
+			applog(LOG_DEBUG, "Generated stratum work");
+			stage_work(work);
+			continue;
+		}
+
+		if (opt_benchmark) {
+			get_benchmark_work(work);
+			applog(LOG_DEBUG, "Generated benchmark work");
+			stage_work(work);
+			continue;
+		}
+
+#ifdef HAVE_LIBCURL
+		struct curl_ent *ce;
+
+		if (pool->has_gbt) {
+			while (pool->idle) {
+				struct pool *altpool = select_pool(true);
+
+				cgsleep_ms(5000);
+				if (altpool != pool) {
+					pool = altpool;
+					goto retry;
+				}
+			}
+			gen_gbt_work(pool, work);
+			applog(LOG_DEBUG, "Generated GBT work");
+			stage_work(work);
+			continue;
+		}
+
+		if (clone_available()) {
+			applog(LOG_DEBUG, "Cloned getwork work");
+			free_work(work);
+			continue;
+		}
+
+		work->pool = pool;
+		ce = pop_curl_entry(pool);
+		/* obtain new work from bitcoin via JSON-RPC */
+		if (!get_upstream_work(work, ce->curl)) {
+			applog(LOG_DEBUG, "Pool %d json_rpc_call failed on get work, retrying in 5s", pool->pool_no);
+			/* Make sure the pool just hasn't stopped serving
+			 * requests but is up as we'll keep hammering it */
+			if (++pool->seq_getfails > mining_threads + opt_queue)
+				pool_died(pool);
+			cgsleep_ms(5000);
+			push_curl_entry(ce, pool);
+			pool = select_pool(!opt_fail_only);
+			goto retry;
+		}
+		if (ts >= max_staged)
+			pool_tclear(pool, &pool->lagging);
+		if (pool_tclear(pool, &pool->idle))
+			pool_resus(pool);
+
+		applog(LOG_DEBUG, "Generated getwork work");
+		stage_work(work);
+		push_curl_entry(ce, pool);
+#endif
+	}
+
+	return 0;
+}
