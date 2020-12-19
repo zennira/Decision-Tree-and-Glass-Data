@@ -140,4 +140,128 @@ AUTO MODES:
 There are two "auto" modes in cgminer, --auto-fan and --auto-gpu. These can
 be used independently of each other and are complementary. Both auto modes
 are designed to safely change settings while trying to maintain a target
-temperature. By default this is set to 75 degree
+temperature. By default this is set to 75 degrees C but can be changed with:
+
+--temp-target
+e.g.
+--temp-target 80
+Sets all cards' target temperature to 80 degrees.
+
+--temp-target 75,85
+Sets card 0 target temperature to 75, and card 1 to 85 degrees.
+
+AUTO FAN:
+e.g.
+--auto-fan (implies 85% upper limit)
+--gpu-fan 25-85,65 --auto-fan
+
+Fan control in auto fan works off the theory that the minimum possible fan
+required to maintain an optimal temperature will use less power, make less
+noise, and prolong the life of the fan. In auto-fan mode, the fan speed is
+limited to 85% if the temperature is below "overheat" intentionally, as
+higher fanspeeds on GPUs do not produce signficantly more cooling, yet
+significanly shorten the lifespan of the fans. If temperature reaches the
+overheat value, fanspeed will still be increased to 100%. The overheat value
+is set to 85 degrees by default and can be changed with:
+
+--temp-overheat
+e.g.
+--temp-overheat 75,85
+Sets card 0 overheat threshold to 75 degrees and card 1 to 85.
+
+AUTO GPU:
+e.g.
+--auto-gpu --gpu-engine 750-950
+--auto-gpu --gpu-engine 750-950,945,700-930,960
+
+GPU control in auto gpu tries to maintain as high a clock speed as possible
+while not reaching overheat temperatures. As a lower clock speed limit,
+the auto-gpu mode checks the GPU card's "normal" clock speed and will not go
+below this unless you have manually set a lower speed in the range. Also,
+unless a higher clock speed was specified at startup, it will not raise the
+clockspeed. If the temperature climbs, fanspeed is adjusted and optimised
+before GPU engine clockspeed is adjusted. If fan speed control is not available
+or already optimal, then GPU clock speed is only decreased if it goes over
+the target temperature by the hysteresis amount, which is set to 3 by default
+and can be changed with:
+--temp-hysteresis
+If the temperature drops below the target temperature, and engine clock speed
+is not at the highest level set at startup, cgminer will raise the clock speed.
+If at any time you manually set an even higher clock speed successfully in
+cgminer, it will record this value and use it as its new upper limit (and the
+same for low clock speeds and lower limits). If the temperature goes over the
+cutoff limit (95 degrees by default), cgminer will completely disable the GPU
+from mining and it will not be re-enabled unless manually done so. The cutoff
+temperature can be changed with:
+
+--temp-cutoff
+e.g.
+--temp-cutoff 95,105
+Sets card 0 cutoff temperature to 95 and card 1 to 105.
+
+--gpu-memdiff -125
+This setting will modify the memory speed whenever the GPU clock speed is
+modified by --auto-gpu. In this example, it will set the memory speed to
+be 125 Mhz lower than the GPU speed. This is useful for some cards like the
+6970 which normally don't allow a bigger clock speed difference. The 6970 is
+known to only allow -125, while the 7970 only allows -150.
+
+
+CHANGING SETTINGS:
+When setting values, it is important to realise that even though the driver
+may report the value was changed successfully, and the new card power profile
+information contains the values you set it to, that the card itself may
+refuse to use those settings. As the performance profile changes dynamically,
+querying the "current" value on the card can be wrong as well. So when changing
+values in cgminer, after a pause of 1 second, it will report to you the current
+values where you should check that your change has taken. An example is that
+6970 reference cards will accept low memory values but refuse to actually run
+those lower memory values unless they're within 125 of the engine clock speed.
+In that scenario, they usually set their real speed back to their default.
+
+Cgminer reports the so-called "safe" range of whatever it is you are modifying
+when you ask to modify it on the fly. However, you can change settings to values
+outside this range. Despite this, the card can easily refuse to accept your
+changes, or worse, to accept your changes and then silently ignore them. So
+there is absolutely to know how far to/from where/to it can set things safely or
+otherwise, and there is nothing stopping you from at least trying to set them
+outside this range. Being very conscious of these possible failures is why
+cgminer will report back the current values for you to examine how exactly the
+card has responded. Even within the reported range of accepted values by the
+card, it is very easy to crash just about any card, so it cannot use those
+values to determine what range to set. You have to provide something meaningful
+manually for cgminer to work with through experimentation.
+
+STARTUP / SHUTDOWN:
+When cgminer starts up, it tries to read off the current profile information
+for clock and fan speeds and stores these values. When quitting cgminer, it
+will then try to restore the original values. Changing settings outside of
+cgminer while it's running may be reset to the startup cgminer values when
+cgminer shuts down because of this.
+
+---
+
+GPU DEVICE ISSUES and use of --gpu-map
+
+GPUs mine with OpenCL software via the GPU device driver. This means you need
+to have both an OpenCL SDK installed, and the GPU device driver RUNNING (i.e.
+Xorg up and running configured for all devices that will mine on linux etc.)
+Meanwhile, the hardware monitoring that cgminer offers for AMD devices relies
+on the ATI Display Library (ADL) software to work. OpenCL DOES NOT TALK TO THE
+ADL. There is no 100% reliable way to know that OpenCL devices are identical
+to the ADL devices, as neither give off the same information. cgminer does its
+best to correlate these devices based on the order that OpenCL and ADL numbers
+them. It is possible that this will fail for the following reasons:
+
+1. The device order is listed differently by OpenCL and ADL (rare), even if the
+number of devices is the same.
+2. There are more OpenCL devices than ADL. OpenCL stupidly sees one GPU as two
+devices if you have two monitors connected to the one GPU.
+3. There are more ADL devices than OpenCL. ADL devices include any ATI GPUs,
+including ones that can't mine, like some older R4xxx cards.
+
+To cope with this, the ADVANCED option for --gpu-map is provided with cgminer.
+DO NOT USE THIS UNLESS YOU KNOW WHAT YOU ARE DOING. The default will work the
+vast majority of the time unless you know you have a problem already.
+
+To get useful information, start cgmin
