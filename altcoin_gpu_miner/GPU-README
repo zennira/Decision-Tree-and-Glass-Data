@@ -1,0 +1,143 @@
+EXECUTIVE SUMMARY ON GPU USAGE (SEE ALSO SCRYPT-README FOR SCRYPT MINING):
+
+Single pool, regular desktop:
+
+cgminer -o http://pool:port -u username -p password
+
+By default if you have configured your system properly, cgminer will mine on
+ALL GPUs, but in "dynamic" mode which is designed to keep your system usable
+and sacrifice some mining performance.
+
+Single pool, dedicated miner:
+
+cgminer -o http://pool:port -u username -p password -I 9
+
+Single pool, first card regular desktop, 3 other dedicated cards:
+
+cgminer -o http://pool:port -u username -p password -I d,9,9,9
+
+Multiple pool, dedicated miner:
+
+cgminer -o http://pool1:port -u pool1username -p pool1password -o http://pool2:port -u pool2usernmae -p pool2password -I 9
+
+Add overclocking settings, GPU and fan control for all cards:
+
+cgminer -o http://pool:port -u username -p password -I 9 --auto-fan --auto-gpu --gpu-engine 750-950 --gpu-memclock 300
+
+Add overclocking settings, GPU and fan control with different engine settings for 4 cards:
+
+cgminer -o http://pool:port -u username -p password -I 9 --auto-fan --auto-gpu --gpu-engine 750-950,945,700-930,960 --gpu-memclock 300
+
+READ WARNINGS AND DOCUMENTATION BELOW ABOUT OVERCLOCKING
+
+To configure multiple displays on linux you need to configure your Xorg cleanly
+to use them all:
+
+sudo aticonfig --adapter=all -f --initial
+
+On Linux you virtually always need to export your display settings before
+starting to get all the cards recognised and/or temperature+clocking working:
+
+export DISPLAY=:0
+
+---
+BUILDING FOR GPU SUPPORT:
+
+	To build with GPU mining support:
+	Install AMD APP sdk, ideal version (see FAQ!) - no official place to
+	install it so just keep track of where it is if you're not installing
+	the include files and library files into the system directory.
+	(Do NOT install the ati amd sdk if you are on nvidia.)
+	To build with GPU monitoring & clocking support:
+	Extract the AMD ADL SDK, latest version - there is also no official
+	place for these files. Copy all the *.h files in the "include"
+	directory into cgminer's ADL_SDK directory.
+
+The easiest way to install the ATI AMD SPP sdk on linux is to actually put it
+into a system location. Then building will be simpler. Download the correct
+version for either 32 bit or 64 bit from here:
+	http://developer.amd.com/tools/heterogeneous-computing/amd-accelerated-parallel-processing-app-sdk/downloads/
+
+The best version for Radeon 5xxx and 6xxx is v2.5, while 7xxx cards need
+v2.6 or later, 2.7 seems the best.
+
+For versions 2.4 or earlier you will need to manually install them:
+This will give you a file with a name like:
+ AMD-APP-SDK-v2.4-lnx64.tgz (64-bit)
+or
+ AMD-APP-SDK-v2.4-lnx32.tgz (32-bit)
+
+Then:
+
+sudo su
+cd /opt
+tar xf /path/to/AMD-APP-SDK-v2.4-lnx##.tgz
+cd /
+tar xf /opt/AMD-APP-SDK-v2.4-lnx##/icd-registration.tgz
+ln -s /opt/AMD-APP-SDK-v2.4-lnx##/include/CL /usr/include
+ln -s /opt/AMD-APP-SDK-v2.4-lnx##/lib/x86_64/* /usr/lib/
+ldconfig
+
+Where ## is 32 or 64, depending on the bitness of the SDK you downloaded.
+If you are on 32 bit, x86_64 in the 2nd last line should be x86
+
+Basic *nix build instructions:
+	CFLAGS="-O2 -Wall -march=native" ./configure <options>
+	or if you haven't installed the AMD files in system locations:
+	CFLAGS="-O2 -Wall -march=native -I<path to AMD APP include>" LDFLAGS="-L<path to AMD APP lib/x86_64> ./configure <options>
+	make
+
+	If it finds the opencl files it will inform you with
+	"OpenCL: FOUND. GPU mining support enabled."
+
+
+---
+INTENSITY INFORMATION:
+
+Intensity correlates with the size of work being submitted at any one time to
+a GPU. The higher the number the larger the size of work. Generally speaking
+finding an optimal value rather than the highest value is the correct approach
+as hash rate rises up to a point with higher intensities but above that, the
+device may be very slow to return responses, or produce errors.
+
+NOTE: Running BTC intensities above 9 with current hardware is likely to only
+diminish return performance even if the hash rate might appear better. A good
+starting baseline intensity to try on dedicated miners is 9. 11 is the upper
+limit for intensity while BTC mining, if the GPU_USE_SYNC_OBJECTS variable
+is set (see FAQ). The upper limit for sha256 mining is 14 and 20 for scrypt.
+
+
+---
+OVERCLOCKING WARNING AND INFORMATION
+
+AS WITH ALL OVERCLOCKING TOOLS YOU ARE ENTIRELY RESPONSIBLE FOR ANY HARM YOU
+MAY CAUSE TO YOUR HARDWARE. OVERCLOCKING CAN INVALIDATE WARRANTIES, DAMAGE
+HARDWARE AND EVEN CAUSE FIRES. THE AUTHOR ASSUMES NO RESPONSIBILITY FOR ANY
+DAMAGE YOU MAY CAUSE OR UNPLANNED CHILDREN THAT MAY OCCUR AS A RESULT.
+
+The GPU monitoring, clocking and fanspeed control incorporated into cgminer
+comes through use of the ATI Display Library. As such, it only supports ATI
+GPUs. Even if ADL support is successfully built into cgminer, unless the card
+and driver supports it, no GPU monitoring/settings will be available.
+
+Cgminer supports initial setting of GPU engine clock speed, memory clock
+speed, voltage, fanspeed, and the undocumented powertune feature of 69x0+ GPUs.
+The setting passed to cgminer is used by all GPUs unless separate values are
+specified. All settings can all be changed within the menu on the fly on a
+per-GPU basis.
+
+For example:
+--gpu-engine 950 --gpu-memclock 825
+
+will try to set all GPU engine clocks to 950 and all memory clocks to 825,
+while:
+--gpu-engine 950,945,930,960 --gpu-memclock 300
+
+will try to set the engine clock of card 0 to 950, 1 to 945, 2 to 930, 3 to
+960 and all memory clocks to 300.
+
+AUTO MODES:
+There are two "auto" modes in cgminer, --auto-fan and --auto-gpu. These can
+be used independently of each other and are complementary. Both auto modes
+are designed to safely change settings while trying to maintain a target
+temperature. By default this is set to 75 degree
