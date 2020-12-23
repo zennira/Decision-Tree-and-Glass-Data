@@ -264,4 +264,126 @@ To cope with this, the ADVANCED option for --gpu-map is provided with cgminer.
 DO NOT USE THIS UNLESS YOU KNOW WHAT YOU ARE DOING. The default will work the
 vast majority of the time unless you know you have a problem already.
 
-To get useful information, start cgmin
+To get useful information, start cgminer with just the -n option. You will get
+output that looks like this:
+
+[2012-04-25 13:17:34] CL Platform 0 vendor: Advanced Micro Devices, Inc.
+[2012-04-25 13:17:34] CL Platform 0 name: AMD Accelerated Parallel Processing
+[2012-04-25 13:17:34] CL Platform 0 version: OpenCL 1.1 AMD-APP (844.4)
+[2012-04-25 13:17:34] Platform 0 devices: 3
+[2012-04-25 13:17:34]   0       Tahiti
+[2012-04-25 13:17:34]   1       Tahiti
+[2012-04-25 13:17:34]   2       Cayman
+[2012-04-25 13:17:34] GPU 0 AMD Radeon HD 7900 Series  hardware monitoring enabled
+[2012-04-25 13:17:34] GPU 1 AMD Radeon HD 7900 Series  hardware monitoring enabled
+[2012-04-25 13:17:34] GPU 2 AMD Radeon HD 6900 Series hardware monitoring enabled
+[2012-04-25 13:17:34] 3 GPU devices max detected
+
+Note the number of devices here match, and the order is the same. If devices 1
+and 2 were different between Tahiti and Cayman, you could run cgminer with:
+--gpu-map 2:1,1:2
+And it would swap the monitoring it received from ADL device 1 and put it to
+opencl device 2 and vice versa.
+
+If you have 2 monitors connected to the first device it would look like this:
+
+[2012-04-25 13:17:34] Platform 0 devices: 4
+[2012-04-25 13:17:34]   0       Tahiti
+[2012-04-25 13:17:34]   1       Tahiti
+[2012-04-25 13:17:34]   2       Tahiti
+[2012-04-25 13:17:34]   3       Cayman
+[2012-04-25 13:17:34] GPU 0 AMD Radeon HD 7900 Series  hardware monitoring enabled
+[2012-04-25 13:17:34] GPU 1 AMD Radeon HD 7900 Series  hardware monitoring enabled
+[2012-04-25 13:17:34] GPU 2 AMD Radeon HD 6900 Series hardware monitoring enabled
+
+To work around this, you would use:
+-d 0 -d 2 -d 3 --gpu-map 2:1,3:2
+
+If you have an older card as well as the rest it would look like this:
+
+[2012-04-25 13:17:34] Platform 0 devices: 3
+[2012-04-25 13:17:34]   0       Tahiti
+[2012-04-25 13:17:34]   1       Tahiti
+[2012-04-25 13:17:34]   2       Cayman
+[2012-04-25 13:17:34] GPU 0 AMD Radeon HD 4500 Series  hardware monitoring enabled
+[2012-04-25 13:17:34] GPU 1 AMD Radeon HD 7900 Series  hardware monitoring enabled
+[2012-04-25 13:17:34] GPU 2 AMD Radeon HD 7900 Series  hardware monitoring enabled
+[2012-04-25 13:17:34] GPU 3 AMD Radeon HD 6900 Series hardware monitoring enabled
+
+To work around this you would use:
+--gpu-map 0:1,1:2,2:3
+
+
+---
+GPU FAQ:
+
+Q: Can I change the intensity settings individually for each GPU?
+A: Yes, pass a list separated by commas such as -I d,4,9,9
+
+Q: The CPU usage is high.
+A: The ATI drivers after 11.6 have a bug that makes them consume 100% of one
+CPU core unnecessarily so downgrade to 11.6. Binding cgminer to one CPU core on
+windows can minimise it to 100% (instead of more than one core). Driver version
+11.11 on linux and 11.12 on windows appear to have fixed this issue. Note that
+later drivers may have an apparent return of high CPU usage. Try
+'export GPU_USE_SYNC_OBJECTS=1' on Linux before starting cgminer. You can also
+set this variable in windows via a batch file or on the command line before
+starting cgminer with 'setx GPU_USE_SYNC_OBJECTS 1'
+
+Q: My GPU hangs and I have to reboot it to get it going again?
+A: The more aggressively the mining software uses your GPU, the less overclock
+you will be able to run. You are more likely to hit your limits with cgminer
+and you will find you may need to overclock your GPU less aggressively. The
+software cannot be responsible and make your GPU hang directly. If you simply
+cannot get it to ever stop hanging, try decreasing the intensity, and if even
+that fails, try changing to the poclbm kernel with -k poclbm, though you will
+sacrifice performance. cgminer is designed to try and safely restart GPUs as
+much as possible, but NOT if that restart might actually crash the rest of the
+GPUs mining, or even the machine. It tries to restart them with a separate
+thread and if that separate thread dies, it gives up trying to restart any more
+GPUs.
+
+Q: Can you change the autofan/autogpu to change speeds in a different manner?
+A: The defaults are sane and safe. I'm not interested in changing them
+further. The starting fan speed is set to 50% in auto-fan mode as a safety
+precaution.
+
+Q: I upgraded cgminer version and my hashrate suddenly dropped!
+A: No, you upgraded your SDK version unwittingly between upgrades of cgminer
+and that caused  your hashrate to drop. See the next question.
+
+Q: I upgraded my ATI driver/SDK/cgminer and my hashrate suddenly dropped!
+A: The hashrate performance in cgminer is tied to the version of the ATI SDK
+that is installed only for the very first time cgminer is run. This generates
+binaries that are used by the GPU every time after that. Any upgrades to the
+SDK after that time will have no effect on the binaries. However, if you
+install a fresh version of cgminer, and have since upgraded your SDK, new
+binaries will be built. It is known that the 2.6 ATI SDK has a huge hashrate
+penalty on generating new binaries. It is recommended to not use this SDK at
+this time unless you are using an ATI 7xxx card that needs it.
+
+Q: Which AMD SDK is the best for cgminer?
+A: At the moment, versions 2.4 and 2.5 work the best for R5xxx and R6xxx GPUS.
+SDK 2.6 or 2.7 works best for R7xxx. SDK 2.8 is known to have many problems.
+If you are need to use the 2.6+ SDK or R7xxx or later, the phatk kernel will
+perform poorly, while the diablo or my custom modified poclbm kernel are
+optimised for it.
+
+Q: Which AMD driver is the best?
+A: Unfortunately AMD has a history of having quite a few releases with issues
+when it comes to mining, either in terms of breaking mining, increasing CPU
+usage or very low hashrates. Only experimentation can tell you for sure, but
+some good releases were 11.6, 11.12, 12.4 and 12.8. Note that older cards may
+not work with the newer drivers.
+
+Q: I have multiple SDKs installed, can I choose which one it uses?
+A: Run cgminer with the -n option and it will list all the platforms currently
+installed. Then you can tell cgminer which platform to use with --gpu-platform.
+
+Q: cgminer reports no devices or only one device on startup on Linux although
+I have multiple devices and drivers+SDK installed properly?
+A: Try "export DISPLAY=:0" before running cgminer.
+
+Q: cgminer crashes immediately on startup.
+A: One of the common reasons for this is that you have mixed files on your
+machine for the driver or SDK. Windows has a nasty history of not 
