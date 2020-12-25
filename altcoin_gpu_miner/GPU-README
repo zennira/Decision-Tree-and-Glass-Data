@@ -386,4 +386,129 @@ A: Try "export DISPLAY=:0" before running cgminer.
 
 Q: cgminer crashes immediately on startup.
 A: One of the common reasons for this is that you have mixed files on your
-machine for the driver or SDK. Windows has a nasty history of not 
+machine for the driver or SDK. Windows has a nasty history of not cleanly
+uninstalling files so you may have to use third party tools like driversweeper
+to remove old versions. The other common reason for this is windows
+antivirus software is disabling one of the DLLs from working. If cgminer
+starts with the -T option but never starts without it, this is a sure fire
+sign you have this problem and will have to disable your antivirus or make
+exceptions.
+
+Q: Cgminer cannot see any of my GPUs even though I have configured them all
+to be enabled and installed OpenCL (+/- Xorg is running and the DISPLAY
+variable is exported on linux)?
+A: Check the output of 'cgminer -n', it will list what OpenCL devices your
+installed SDK recognises. If it lists none, you have a problem with your
+version or installation of the SDK.
+
+Q: Cgminer is mining on the wrong GPU, I want it on the AMD but it's mining
+on my on board GPU?
+A: Make sure the AMD OpenCL SDK is installed, check the output of 'cgminer -n'
+and use the appropriate parameter with --gpu-platform.
+
+Q: I'm getting much lower hashrates than I should be for my GPU?
+A: Look at your driver/SDK combination and disable power saving options for
+your GPU. Specifically look to disable ULPS. Make sure not to set intensity
+above 11 for BTC mining.
+
+Q: Can I mine with AMD while running Nvidia or Intel GPUs at the same time?
+A: If you can install both drivers successfully (easier on windows) then
+yes, using the --gpu-platform option.
+
+Q: Can I mine with Nvidia or Intel GPUs?
+A: Yes but their hashrate is very poor and likely you'll be using much more
+energy than you'll be earning in coins.
+
+Q: Can I mine on both Nvidia and AMD GPUs at the same time?
+A: No, you must run one instance of cgminer with the --gpu-platform option for
+each.
+
+Q: Can I mine on Linux without running Xorg?
+A: With Nvidia you can, but with AMD you cannot.
+
+Q: I can't get anywhere near enough hashrate for scrypt compared to other
+people?
+A: You may not have enough system RAM as this is also required.
+
+Q: My scrypt hashrate is high but the pool reports only a tiny proportion of
+my hashrate?
+A: You are generating garbage hashes due to your choice of settings. Your
+Work Utility (WU) value will confirm you are not generating garbage. You
+should be getting about .9WU per kHash. If not, then try decreasing your
+intensity, do not increase the number of gpu-threads, and consider adding
+system RAM to match your GPU ram. You may also be using a bad combination
+of driver and/or SDK. If you are getting a lot more HW errors with the
+current version of cgminer but were not on an older version, chances are that
+the older version simply wasn't reporting them so going back to and older
+version is not a real solution.
+
+Q: Scrypt fails to initialise the kernel every time?
+A: Your parameters are too high. Don't add GPU threads, don't set intensity
+too high, decrease thread concurrency. See the SCRYPT-README for a lot more
+help.
+
+Q: Cgminer stops mining (or my GPUs go DEAD) and I can't close it?
+A: Once the driver has crashed, there is no way for cgminer to close cleanly.
+You will have to kill it, and depending on how corrupted your driver state
+has gotten, you may even need to reboot. Windows is known to reset drivers
+when they fail and cgminer will be stuck trying to use the old driver instance.
+GPUs going SICK or DEAD is a sign of overclocking too much, overheating,
+driver or hardware instability.
+
+Q: I can't get any monitoring of temperatures or fanspeed with cgminer when
+I start it remotely?
+A: With linux, make sure to export the DISPLAY variable. On windows, you
+cannot access these monitoring values via RDP. This should work with tightVNC
+or teamviewer though.
+
+Q: I change my GPU engine/memory/voltage and cgminer reports back no change?
+A: Cgminer asks the GPU using the ATI Display Library to change settings, but
+the driver and hardware are free to do what it wants with that query, including
+ignoring it. Some GPUs are locked with one or more of those properties as well.
+The most common of these is that many GPUs only allow a fixed difference
+between the engine clock speed and the memory clock speed (such as the memory
+being no lower than the engine - 150). Other 3rd party tools have unofficial
+data on these devices on windows and can get the memory clock speed down
+further but cgminer does not have access to these means.
+
+Q: I have multiple GPUs and although many devices show up, it appears to be
+working only on one GPU splitting it up.
+A: Your driver setup is failing to properly use the accessory GPUs. Your
+driver may be configured wrong or you have a driver version that needs a dummy
+plug on all the GPUs that aren't connected to a monitor.
+
+Q: Should I use crossfire/SLI?
+A: It does not benefit mining at all and depending on the GPU may actually
+worsen performance.
+
+Q: I have some random GPU performance related problem not addressed above.
+A: Seriously, it's the driver and/or SDK. Uninstall them and start again,
+noting there is no clean way to uninstall them so you have to use extra tools
+or do it manually.
+
+Q: Do I need to recompile after updating my driver/SDK?
+A: No. The software is unchanged regardless of which driver/SDK/ADL_SDK version
+you are running. However if you change SDKs you should delete any generated
+.bin files for them to be recreated with the new SDK.
+
+Q: I do not want cgminer to modify my engine/clock/fanspeed?
+A: Cgminer only modifies values if you tell it to via some parameters.
+Otherwise it will just monitor the values.
+
+Q: Cgminer does not disable my GPU even though it hit the overheat temperature?
+A: It only disables GPUs if you enable the --auto-gpu option. If you don't give
+it parameters for engine clock it will not adjust engine clocks with this
+option.
+
+Q: Can I use the open source radeon driver for AMD GPUs or the nouveau driver
+for NVIDIA GPUs?
+A: None of them currently support OpenCL, so no you cannot.
+
+---
+
+This code is provided entirely free of charge by the programmer in his spare
+time so donations would be greatly appreciated. Please consider donating to the
+address below.
+
+Con Kolivas <kernel@kolivas.org>
+15qSxP1SQcUX3o4nhkfdbgyoWEFMomJ4rZ
