@@ -2,4 +2,171 @@ This is a multi-threaded multi-pool GPU vertcoin miner with ATI GPU
 monitoring, (over)clocking and fanspeed support for bitcoin and derivative
 coins. Do not use on multiple block chains at the same time!
 
-This code is provided entirely free of c
+This code is provided entirely free of charge by the programmer in his spare
+time so donations would be greatly appreciated. Please consider donating to the
+address below.
+
+Bufius
+VvvmmkYHKGtdr97JLyyZuJ3Th5ayungnjk
+
+
+Main author of cgminer (ALTMiner is based on cgminer)
+Con Kolivas <kernel@kolivas.org>
+15qSxP1SQcUX3o4nhkfdbgyoWEFMomJ4rZ
+
+
+DOWNLOADS:
+
+
+GIT TREE:
+
+https://github.com/Bufius/ALTMiner-gpu
+
+Support thread:
+
+
+IRC Channel:
+
+
+License: GPLv3.  See COPYING for details.
+
+SEE ALSO API-README, ASIC-README, FGPA-README, GPU-README AND SCRYPT-README FOR
+MORE INFORMATION ON EACH.
+
+---
+
+EXECUTIVE SUMMARY ON USAGE:
+
+After saving configuration from the menu, you do not need to give ALTMiner any
+arguments and it will load your configuration.
+
+Any configuration file may also contain a single
+	"include" : "filename"
+to recursively include another configuration file.
+Writing the configuration will save all settings from all files in the output.
+
+
+Single pool:
+
+ALTMiner -o http://pool:port -u username -p password
+
+Multiple pools:
+
+ALTMiner -o http://pool1:port -u pool1username -p pool1password -o http://pool2:port -u pool2usernmae -p pool2password
+
+Single pool with a standard http proxy, regular desktop:
+
+ALTMiner -o "http:proxy:port|http://pool:port" -u username -p password
+
+Single pool with a socks5 proxy, regular desktop:
+
+ALTMiner -o "socks5:proxy:port|http://pool:port" -u username -p password
+
+Single pool with stratum protocol support:
+
+ALTMiner -o stratum+tcp://pool:port -u username -p password
+
+The list of proxy types are:
+ http:    standard http 1.1 proxy
+ http0:   http 1.0 proxy
+ socks4:  socks4 proxy
+ socks5:  socks5 proxy
+ socks4a: socks4a proxy
+ socks5h: socks5 proxy using a hostname
+
+If you compile ALTMiner with a version of CURL before 7.19.4 then some of the above will
+not be available. All are available since CURL version 7.19.4
+
+If you specify the --socks-proxy option to ALTMiner, it will only be applied to all pools
+that don't specify their own proxy setting like above
+
+---
+BUILDING CGMINER FOR YOURSELF
+
+DEPENDENCIES:
+Mandatory:
+	curl dev library 	http://curl.haxx.se/libcurl/
+	(libcurl4-openssl-dev)
+
+	pkg-config		http://www.freedesktop.org/wiki/Software/pkg-config
+	libtool			http://www.gnu.org/software/libtool/
+Optional:
+	curses dev library
+	(libncurses5-dev or libpdcurses on WIN32 for text user interface)
+
+	AMD APP SDK		http://developer.amd.com/sdks/AMDAPPSDK
+	(This sdk is mandatory for GPU mining)
+
+	AMD ADL SDK		http://developer.amd.com/sdks/ADLSDK
+	(This sdk is mandatory for ATI GPU monitoring & clocking)
+
+	libudev dev library (libudev-dev)
+	(This is only required for ASIC+FPGA support and is linux only)
+
+If building from git:
+	autoconf
+	automake
+
+
+CGMiner specific configuration options:
+  --enable-opencl         Enable support for GPU mining with opencl
+  --disable-adl           Override detection and disable building with adl
+  --enable-scrypt         Compile support for scrypt litecoin mining (default
+                          disabled)
+  --enable-avalon         Compile support for Avalon (default disabled)
+  --enable-bflsc          Compile support for BFL ASICs (default disabled)
+  --enable-bitforce       Compile support for BitForce FPGAs (default
+                          disabled)
+  --enable-bitfury        Compile support for BitFury ASICs (default disabled)
+  --enable-hashfast       Compile support for Hashfast (default disabled)
+  --enable-icarus         Compile support for Icarus (default disabled)
+  --enable-knc            Compile support for KnC miners (default disabled)
+  --enable-klondike       Compile support for Klondike (default disabled)
+  --enable-modminer       Compile support for ModMiner FPGAs(default disabled)
+  --without-curses        Compile support for curses TUI (default enabled)
+  --with-system-libusb    Compile against dynamic system libusb (default use
+                          included static libusb)
+
+Basic *nix build instructions:
+	To actually build:
+
+	./autogen.sh	# only needed if building from git repo
+	CFLAGS="-O2 -Wall -march=native" ./configure <options>
+
+	No installation is necessary. You may run ALTMiner from the build
+	directory directly, but you may do make install if you wish to install
+	ALTMiner to a system location or location you specified.
+
+Native WIN32 build instructions: see windows-build.txt
+
+---
+
+Usage instructions:  Run "ALTMiner --help" to see options:
+
+Usage: . [-atDdGCgIKklmpPQqrRsTouvwOchnV] 
+Options for both config file and command line:
+--api-allow         Allow API access (if enabled) only to the given list of [W:]IP[/Prefix] address[/subnets]
+                    This overrides --api-network and you must specify 127.0.0.1 if it is required
+                    W: in front of the IP address gives that address privileged access to all api commands
+--api-description   Description placed in the API status header (default: ALTMiner version)
+--api-groups        API one letter groups G:cmd:cmd[,P:cmd:*...]
+                    See API-README for usage
+--api-listen        Listen for API requests (default: disabled)
+                    By default any command that does not just display data returns access denied
+                    See --api-allow to overcome this
+--api-network       Allow API (if enabled) to listen on/for any address (default: only 127.0.0.1)
+--api-mcast         Enable API Multicast listener, (default: disabled)
+                    The listener will only run if the API is also enabled
+--api-mcast-addr <arg> API Multicast listen address, (default: 224.0.0.75)
+--api-mcast-code <arg> Code expected in the API Multicast message, don't use '-' (default: "FTW")
+--api-mcast-port <arg> API Multicast listen port, (default: 4028)
+--api-port          Port number of miner API (default: 4028)
+--auto-fan          Automatically adjust all GPU fan speeds to maintain a target temperature
+--auto-gpu          Automatically adjust all GPU engine clock speeds to maintain a target temperature
+--balance           Change multipool strategy from failover to even share balance
+--benchmark         Run ALTMiner in benchmark mode - produces no shares
+--compact           Use compact display without per device statistics
+--debug|-D          Enable debug output
+--device|-d <arg>   Select device to use, one value, range and/or comma separated (e.g. 0-2,4) default: all
+--disable-rejecting Automatically disable pools that continually reject shares
+--expiry|-E <arg>   Upper bound on how many seconds after getting work we consider a share from i
