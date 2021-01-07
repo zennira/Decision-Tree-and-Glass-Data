@@ -266,4 +266,198 @@ GPU only options:
 --temp-hysteresis <arg> Set how much the temperature can fluctuate outside limits when automanaging speeds (default: 3)
 --temp-overheat <arg> Overheat temperature when automatically managing fan and GPU speeds (default: 85)
 --temp-target <arg> Target temperature when automatically managing fan and GPU speeds (default: 75)
---vectors|-v <arg>  Override detected optimal vector (1, 2 or 4) - one value
+--vectors|-v <arg>  Override detected optimal vector (1, 2 or 4) - one value or comma separated list
+--worksize|-w <arg> Override detected optimal worksize - one value or comma separated list
+
+See GPU-README for more information regarding GPU mining.
+
+
+SCRYPT only options:
+
+--lookup-gap <arg>  Set GPU lookup gap for scrypt mining, comma separated
+--shaders <arg>     GPU shaders per card for tuning scrypt, comma separated
+--thread-concurrency <arg> Set GPU thread concurrency for scrypt-vert mining, comma separated
+
+See SCRYPT-README for more information regarding litecoin mining.
+
+
+Cgminer should automatically find all of your Avalon ASIC, BFL ASIC, BitForce
+FPGAs, Icarus bitstream FPGAs, Klondike ASIC, ASICMINER usb block erupters,
+KnC ASICs, Hashfast ASICs and ModMiner FPGAs.
+
+---
+
+SETTING UP USB DEVICES
+
+WINDOWS:
+
+On windows, the direct USB support requires the installation of a WinUSB
+driver (NOT the ftdi_sio driver), and attach it to your devices.
+The easiest way to do this is to use the zadig utility which will install the
+drivers for you and then once you plug in your device you can choose the
+"list all devices" from the "option" menu and you should be able to see the
+device as something like: "BitFORCE SHA256 SC". Choose the install or replace
+driver option and select WinUSB. You can either google for zadig or download
+it from the ALTMiner directoy in the DOWNLOADS link above.
+
+LINUX:
+
+On linux, the direct USB support requires no drivers at all. However due to
+permissions issues, you may not be able to mine directly on the devices as a
+regular user without giving the user access to the device or by mining as
+root (administrator). In order to give your regular user access, you can make
+him a member of the plugdev group with the following commands:
+
+ sudo usermod -G plugdev -a `whoami`
+
+If your distribution does not have the plugdev group you can create it with:
+
+ sudo groupadd plugdev
+
+In order for the BFL devices to instantly be owned by the plugdev group and
+accessible by anyone from the plugdev group you can copy the file
+"01-ALTMiner.rules" from the ALTMiner archive into the /etc/udev/rules.d
+directory with the following command:
+
+ sudo cp 01-ALTMiner.rules /etc/udev/rules.d/
+
+After this you can either manually restart udev and re-login, or more easily
+just reboot.
+
+Advanced USB options:
+
+The --usb option can restrict how many Avalon, BFL ASIC, BitForce FPGAs,
+Klondike ASIC, ModMiner FPGAs or Icarus bitstream FPGAs it finds:
+
+  --usb 1:2,1:3,1:4,1:*
+or
+  --usb BAS:1,BFL:1,MMQ:0,ICA:0,KLN:0
+or
+  --usb :10
+
+You can only use one of the above 3
+
+The first version
+  --usb 1:2,1:3,1:4,1:*
+allows you to select which devices to mine on with a list of USB
+ bus_number:device_address
+All other USB devices will be ignored
+Hotplug will also only look at the devices matching the list specified and
+find nothing new if they are all in use
+You can specify just the USB bus_number to find all devices like 1:*
+which means any devices on USB bus_number 1
+This is useful if you unplug a device then plug it back in the same port,
+it usually reappears with the same bus_number but a different device_address
+
+You can see the list of all USB devices on linux with 'sudo lsusb'
+Cgminer will list the recognised USB devices with the '-n' option or the
+'--usb-dump 0' option
+The '--usb-dump N' option with a value of N greater than 0 will dump a lot
+of details about each recognised USB device
+If you wish to see all USB devices, include the --usb-list-all option
+
+The second version
+  --usb BAS:1,BFL:1,MMQ:0,ICA:0,KLN:0
+allows you to specify how many devices to choose based on each device
+driver ALTMiner has - there are currently 5 USB drivers: BAS, BFL, MMQ.
+ICA & KLN
+N.B. you can only specify which device driver to limit, not the type of
+each device, e.g. with BAS:n you can limit how many BFL ASIC devices will
+be checked, but you cannot limit the number of each type of BFL ASIC
+Also note that the MMQ count is the number of MMQ backplanes you have
+not the number of MMQ FPGAs
+
+The third version
+  --usb :10
+means only use a maximum of 10 devices of any supported USB devices
+Once ALTMiner has 10 devices it will not configure any more and hotplug will
+not scan for any more
+If one of the 10 devices stops working, hotplug - if enabled, as is default
+- will scan normally again until it has 10 devices
+
+  --usb :0 will disable all USB I/O other than to initialise libusb
+
+NOTE: The --device option will limit which devices are in use based on their
+numbering order of the total devices, so if you hotplug USB devices regularly,
+it will not reliably be the same devices.
+
+---
+
+WHILE RUNNING:
+
+The following options are available while running with a single keypress:
+
+[P]ool management [G]PU management [S]ettings [D]isplay options [Q]uit
+
+P gives you:
+
+Current pool management strategy: Failover
+[F]ailover only disabled
+[A]dd pool [R]emove pool [D]isable pool [E]nable pool
+[C]hange management strategy [S]witch pool [I]nformation
+
+
+S gives you:
+
+[Q]ueue: 1
+[S]cantime: 60
+[E]xpiry: 120
+[W]rite config file
+[C]gminer restart
+
+
+D gives you:
+
+[N]ormal [C]lear [S]ilent mode (disable all output)
+[D]ebug:off
+[P]er-device:off
+[Q]uiet:off
+[V]erbose:off
+[R]PC debug:off
+[W]orkTime details:off
+co[M]pact: off
+[L]og interval:5
+
+
+Q quits the application.
+
+
+G gives you something like:
+
+GPU 0: [124.2 / 191.3 Mh/s] [A:77  R:33  HW:0  U:1.73/m  WU 1.73/m]
+Temp: 67.0 C
+Fan Speed: 35% (2500 RPM)
+Engine Clock: 960 MHz
+Memory Clock: 480 Mhz
+Vddc: 1.200 V
+Activity: 93%
+Powertune: 0%
+Last initialised: [2011-09-06 12:03:56]
+Thread 0: 62.4 Mh/s Enabled ALIVE
+Thread 1: 60.2 Mh/s Enabled ALIVE
+
+[E]nable [D]isable [R]estart GPU [C]hange settings
+Or press any other key to continue
+
+
+The running log shows output like this:
+
+ [2012-10-12 18:02:20] Accepted f0c05469 Diff 1/1 GPU 0 pool 1
+ [2012-10-12 18:02:22] Accepted 218ac982 Diff 7/1 GPU 1 pool 1
+ [2012-10-12 18:02:23] Accepted d8300795 Diff 1/1 GPU 3 pool 1
+ [2012-10-12 18:02:24] Accepted 122c1ff1 Diff 14/1 GPU 1 pool 1
+
+The 8 byte hex value are the 2nd 8 bytes of the share being submitted to the
+pool. The 2 diff values are the actual difficulty target that share reached
+followed by the difficulty target the pool is currently asking for.
+
+---
+Also many issues and FAQs are covered in the forum thread
+dedicated to this program,
+	http://forum.bitcoin.org/index.php?topic=28402.0
+
+The output line shows the following:
+(5s):1713.6 (avg):1707.8 Mh/s | A:729  R:8  HW:0  WU:22.53/m
+
+Each column is as follows:
+5s:  
