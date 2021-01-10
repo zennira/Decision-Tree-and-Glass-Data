@@ -210,4 +210,33 @@ Then once you find the maximum memory clock speed, you need to find the sweet
 spot engine clock speed that matches it. It's a fine line where one more MHz
 will make the hashrate drop by 20%. It's somewhere in the .57 - 0.6 ratio range.
 Start your engine clock speed at half your memory clock speed and then increase
-it by 5 at a ti
+it by 5 at a time. The hashrate should climb a little each rise in engine speed
+and then suddenly drop above a certain value. Decrease it by 1 then until you
+find it climbs dramatically. If your engine clock speed cannot get that high
+without crashing the GPU, you will have to use a lower memclock.
+
+Then, and only then, bother trying to increase intensity further.
+
+My final settings were:
+--gpu-engine 1141  --gpu-memclock 1875 -I 20
+for a hashrate of 745kH.
+
+Note I did not bother setting a thread concurrency. Once you have the magic
+endpoint, look at what tc was chosen by the bin file generated and then hard
+code that in next time (eg --thread-concurrency 22392) as slight changes in
+thread concurrency will happen every time if you don't specify one, and the tc
+to clock ratios are critical!
+
+Good luck, and if this doesn't work for you, well same old magic discussion
+applies, I cannot debug every hardware combo out there.
+
+Your numbers will be your numbers depending on your hardware combination and OS,
+so don't expect to get exactly the same results!
+
+---
+While BTC donations are preferred, if you wish to donate to the author, Con
+Kolivas, in LTC, please submit your donations to:
+
+Lc8TWMiKM7gRUrG8VB8pPNP1Yvt1SGZnoH
+
+Otherwise, please donate in BTC as per the main README.
