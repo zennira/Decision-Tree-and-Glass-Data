@@ -1,0 +1,51 @@
+While BTC donations are preferred, if you wish to donate to the author, Con
+Kolivas, in LTC, please submit your donations to:
+
+Lc8TWMiKM7gRUrG8VB8pPNP1Yvt1SGZnoH
+
+Otherwise, please donate in BTC as per the main README.
+
+---
+
+Scrypt mining, AKA litecoin mining, for GPU is completely different to sha256
+used for bitcoin mining. The algorithm was originally developed in a manner
+that it was anticipated would make it suitable for mining on CPU but NOT GPU.
+Thanks to some innovative work by Artforz and mtrlt, this was proven to be
+wrong. However, it has very different requirements to bitcoin mining and is a
+lot more complicated to get working well. Note that it is a ram dependent
+workload, and requires you to have enough system ram as well as fast enough
+GPU ram. If you have less system ram than your GPU has, it may not be possible
+to mine at any reasonable rate.
+
+There are 5 main parameters to tuning scrypt, all of which are optional for
+further fine tuning. When you start scrypt mining with the --scrypt option,
+cgminer will fail IN RANDOM WAYS. They are all due to parameters being outside
+what the GPU can cope with.
+
+NOTE that if it does not fail at startup, the presence of hardware errors (HW)
+are a sure sign that you have set the parameters too high.
+
+
+DRIVERS AND OPENCL SDK
+
+The choice of driver version for your GPU is critical, as some are known to
+break scrypt mining entirely while others give poor hashrates. As for the
+OpenCL SDK installed, for AMD it must be version 2.6 or later.
+
+
+Step 1 on linux:
+export GPU_MAX_ALLOC_PERCENT=100
+If you do not do this, you may find it impossible to scrypt mine. You may find
+a value of 40 is enough and increasing this further has little effect.
+
+export GPU_USE_SYNC_OBJECTS=1
+may help CPU usage a little as well.
+
+On windows the same commands can be passed via a batch file if the following
+lines are in the .bat before starting cgminer:
+setx GPU_MAX_ALLOC_PERCENT 100
+setx GPU_USE_SYNC_OBJECTS 1
+
+--intensity XX (-I XX)
+
+Just like in bitco
