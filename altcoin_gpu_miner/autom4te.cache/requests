@@ -377,4 +377,16 @@
                         'sinclude' => 1,
                         'AM_PROG_CC_C_O' => 1,
                         'm4_pattern_allow' => 1,
-    
+                        'AM_XGETTEXT_OPTION' => 1,
+                        'AC_CANONICAL_SYSTEM' => 1,
+                        'AM_CONDITIONAL' => 1,
+                        'AC_CONFIG_HEADERS' => 1,
+                        'AC_DEFINE_TRACE_LITERAL' => 1,
+                        'AM_POT_TOOLS' => 1,
+                        'm4_include' => 1,
+                        '_AM_COND_ELSE' => 1,
+                        'AC_SUBST_TRACE' => 1
+                      }
+                    ], 'Autom4te::Request' )
+           );
+
