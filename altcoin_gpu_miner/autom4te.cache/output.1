@@ -19386,3 +19386,605 @@ link_static_flag=$lt_lt_prog_compiler_static
 
 # Does compiler simultaneously support -c and -o options?
 compiler_c_o=$lt_lt_cv_prog_compiler_c_o
+
+# Whether or not to add -lc for building shared libraries.
+build_libtool_need_lc=$archive_cmds_need_lc
+
+# Whether or not to disallow shared libs when runtime libs are static.
+allow_libtool_libs_with_static_runtimes=$enable_shared_with_static_runtimes
+
+# Compiler flag to allow reflexive dlopens.
+export_dynamic_flag_spec=$lt_export_dynamic_flag_spec
+
+# Compiler flag to generate shared objects directly from archives.
+whole_archive_flag_spec=$lt_whole_archive_flag_spec
+
+# Whether the compiler copes with passing no objects directly.
+compiler_needs_object=$lt_compiler_needs_object
+
+# Create an old-style archive from a shared archive.
+old_archive_from_new_cmds=$lt_old_archive_from_new_cmds
+
+# Create a temporary old-style archive to link instead of a shared archive.
+old_archive_from_expsyms_cmds=$lt_old_archive_from_expsyms_cmds
+
+# Commands used to build a shared archive.
+archive_cmds=$lt_archive_cmds
+archive_expsym_cmds=$lt_archive_expsym_cmds
+
+# Commands used to build a loadable module if different from building
+# a shared archive.
+module_cmds=$lt_module_cmds
+module_expsym_cmds=$lt_module_expsym_cmds
+
+# Whether we are building with GNU ld or not.
+with_gnu_ld=$lt_with_gnu_ld
+
+# Flag that allows shared libraries with undefined symbols to be built.
+allow_undefined_flag=$lt_allow_undefined_flag
+
+# Flag that enforces no undefined symbols.
+no_undefined_flag=$lt_no_undefined_flag
+
+# Flag to hardcode \$libdir into a binary during linking.
+# This must work even if \$libdir does not exist
+hardcode_libdir_flag_spec=$lt_hardcode_libdir_flag_spec
+
+# If ld is used when linking, flag to hardcode \$libdir into a binary
+# during linking.  This must work even if \$libdir does not exist.
+hardcode_libdir_flag_spec_ld=$lt_hardcode_libdir_flag_spec_ld
+
+# Whether we need a single "-rpath" flag with a separated argument.
+hardcode_libdir_separator=$lt_hardcode_libdir_separator
+
+# Set to "yes" if using DIR/libNAME\${shared_ext} during linking hardcodes
+# DIR into the resulting binary.
+hardcode_direct=$hardcode_direct
+
+# Set to "yes" if using DIR/libNAME\${shared_ext} during linking hardcodes
+# DIR into the resulting binary and the resulting library dependency is
+# "absolute",i.e impossible to change by setting \${shlibpath_var} if the
+# library is relocated.
+hardcode_direct_absolute=$hardcode_direct_absolute
+
+# Set to "yes" if using the -LDIR flag during linking hardcodes DIR
+# into the resulting binary.
+hardcode_minus_L=$hardcode_minus_L
+
+# Set to "yes" if using SHLIBPATH_VAR=DIR during linking hardcodes DIR
+# into the resulting binary.
+hardcode_shlibpath_var=$hardcode_shlibpath_var
+
+# Set to "yes" if building a shared library automatically hardcodes DIR
+# into the library and all subsequent libraries and executables linked
+# against it.
+hardcode_automatic=$hardcode_automatic
+
+# Set to yes if linker adds runtime paths of dependent libraries
+# to runtime path list.
+inherit_rpath=$inherit_rpath
+
+# Whether libtool must link a program against all its dependency libraries.
+link_all_deplibs=$link_all_deplibs
+
+# Set to "yes" if exported symbols are required.
+always_export_symbols=$always_export_symbols
+
+# The commands to list exported symbols.
+export_symbols_cmds=$lt_export_symbols_cmds
+
+# Symbols that should not be listed in the preloaded symbols.
+exclude_expsyms=$lt_exclude_expsyms
+
+# Symbols that must always be exported.
+include_expsyms=$lt_include_expsyms
+
+# Commands necessary for linking programs (against libraries) with templates.
+prelink_cmds=$lt_prelink_cmds
+
+# Commands necessary for finishing linking programs.
+postlink_cmds=$lt_postlink_cmds
+
+# Specify filename containing input files.
+file_list_spec=$lt_file_list_spec
+
+# How to hardcode a shared library path into an executable.
+hardcode_action=$hardcode_action
+
+# ### END LIBTOOL CONFIG
+
+_LT_EOF
+
+  case $host_os in
+  aix3*)
+    cat <<\_LT_EOF >> "$cfgfile"
+# AIX sometimes has problems with the GCC collect2 program.  For some
+# reason, if we set the COLLECT_NAMES environment variable, the problems
+# vanish in a puff of smoke.
+if test "X${COLLECT_NAMES+set}" != Xset; then
+  COLLECT_NAMES=
+  export COLLECT_NAMES
+fi
+_LT_EOF
+    ;;
+  esac
+
+  
+ltmain="$ac_aux_dir/ltmain.sh"
+
+
+  # We use sed instead of cat because bash on DJGPP gets confused if
+  # if finds mixed CR/LF and LF-only lines.  Since sed operates in
+  # text mode, it properly converts lines to CR/LF.  This bash problem
+  # is reportedly fixed, but why not run on old versions too?
+  sed '$q' "$ltmain" >> "$cfgfile" \
+     || (rm -f "$cfgfile"; exit 1)
+
+  if test x"$xsi_shell" = xyes; then
+  sed -e '/^func_dirname ()$/,/^} # func_dirname /c\
+func_dirname ()\
+{\
+\    case ${1} in\
+\      */*) func_dirname_result="${1%/*}${2}" ;;\
+\      *  ) func_dirname_result="${3}" ;;\
+\    esac\
+} # Extended-shell func_dirname implementation' "$cfgfile" > $cfgfile.tmp \
+  && mv -f "$cfgfile.tmp" "$cfgfile" \
+    || (rm -f "$cfgfile" && cp "$cfgfile.tmp" "$cfgfile" && rm -f "$cfgfile.tmp")
+test 0 -eq $? || _lt_function_replace_fail=:
+
+
+  sed -e '/^func_basename ()$/,/^} # func_basename /c\
+func_basename ()\
+{\
+\    func_basename_result="${1##*/}"\
+} # Extended-shell func_basename implementation' "$cfgfile" > $cfgfile.tmp \
+  && mv -f "$cfgfile.tmp" "$cfgfile" \
+    || (rm -f "$cfgfile" && cp "$cfgfile.tmp" "$cfgfile" && rm -f "$cfgfile.tmp")
+test 0 -eq $? || _lt_function_replace_fail=:
+
+
+  sed -e '/^func_dirname_and_basename ()$/,/^} # func_dirname_and_basename /c\
+func_dirname_and_basename ()\
+{\
+\    case ${1} in\
+\      */*) func_dirname_result="${1%/*}${2}" ;;\
+\      *  ) func_dirname_result="${3}" ;;\
+\    esac\
+\    func_basename_result="${1##*/}"\
+} # Extended-shell func_dirname_and_basename implementation' "$cfgfile" > $cfgfile.tmp \
+  && mv -f "$cfgfile.tmp" "$cfgfile" \
+    || (rm -f "$cfgfile" && cp "$cfgfile.tmp" "$cfgfile" && rm -f "$cfgfile.tmp")
+test 0 -eq $? || _lt_function_replace_fail=:
+
+
+  sed -e '/^func_stripname ()$/,/^} # func_stripname /c\
+func_stripname ()\
+{\
+\    # pdksh 5.2.14 does not do ${X%$Y} correctly if both X and Y are\
+\    # positional parameters, so assign one to ordinary parameter first.\
+\    func_stripname_result=${3}\
+\    func_stripname_result=${func_stripname_result#"${1}"}\
+\    func_stripname_result=${func_stripname_result%"${2}"}\
+} # Extended-shell func_stripname implementation' "$cfgfile" > $cfgfile.tmp \
+  && mv -f "$cfgfile.tmp" "$cfgfile" \
+    || (rm -f "$cfgfile" && cp "$cfgfile.tmp" "$cfgfile" && rm -f "$cfgfile.tmp")
+test 0 -eq $? || _lt_function_replace_fail=:
+
+
+  sed -e '/^func_split_long_opt ()$/,/^} # func_split_long_opt /c\
+func_split_long_opt ()\
+{\
+\    func_split_long_opt_name=${1%%=*}\
+\    func_split_long_opt_arg=${1#*=}\
+} # Extended-shell func_split_long_opt implementation' "$cfgfile" > $cfgfile.tmp \
+  && mv -f "$cfgfile.tmp" "$cfgfile" \
+    || (rm -f "$cfgfile" && cp "$cfgfile.tmp" "$cfgfile" && rm -f "$cfgfile.tmp")
+test 0 -eq $? || _lt_function_replace_fail=:
+
+
+  sed -e '/^func_split_short_opt ()$/,/^} # func_split_short_opt /c\
+func_split_short_opt ()\
+{\
+\    func_split_short_opt_arg=${1#??}\
+\    func_split_short_opt_name=${1%"$func_split_short_opt_arg"}\
+} # Extended-shell func_split_short_opt implementation' "$cfgfile" > $cfgfile.tmp \
+  && mv -f "$cfgfile.tmp" "$cfgfile" \
+    || (rm -f "$cfgfile" && cp "$cfgfile.tmp" "$cfgfile" && rm -f "$cfgfile.tmp")
+test 0 -eq $? || _lt_function_replace_fail=:
+
+
+  sed -e '/^func_lo2o ()$/,/^} # func_lo2o /c\
+func_lo2o ()\
+{\
+\    case ${1} in\
+\      *.lo) func_lo2o_result=${1%.lo}.${objext} ;;\
+\      *)    func_lo2o_result=${1} ;;\
+\    esac\
+} # Extended-shell func_lo2o implementation' "$cfgfile" > $cfgfile.tmp \
+  && mv -f "$cfgfile.tmp" "$cfgfile" \
+    || (rm -f "$cfgfile" && cp "$cfgfile.tmp" "$cfgfile" && rm -f "$cfgfile.tmp")
+test 0 -eq $? || _lt_function_replace_fail=:
+
+
+  sed -e '/^func_xform ()$/,/^} # func_xform /c\
+func_xform ()\
+{\
+    func_xform_result=${1%.*}.lo\
+} # Extended-shell func_xform implementation' "$cfgfile" > $cfgfile.tmp \
+  && mv -f "$cfgfile.tmp" "$cfgfile" \
+    || (rm -f "$cfgfile" && cp "$cfgfile.tmp" "$cfgfile" && rm -f "$cfgfile.tmp")
+test 0 -eq $? || _lt_function_replace_fail=:
+
+
+  sed -e '/^func_arith ()$/,/^} # func_arith /c\
+func_arith ()\
+{\
+    func_arith_result=$(( $* ))\
+} # Extended-shell func_arith implementation' "$cfgfile" > $cfgfile.tmp \
+  && mv -f "$cfgfile.tmp" "$cfgfile" \
+    || (rm -f "$cfgfile" && cp "$cfgfile.tmp" "$cfgfile" && rm -f "$cfgfile.tmp")
+test 0 -eq $? || _lt_function_replace_fail=:
+
+
+  sed -e '/^func_len ()$/,/^} # func_len /c\
+func_len ()\
+{\
+    func_len_result=${#1}\
+} # Extended-shell func_len implementation' "$cfgfile" > $cfgfile.tmp \
+  && mv -f "$cfgfile.tmp" "$cfgfile" \
+    || (rm -f "$cfgfile" && cp "$cfgfile.tmp" "$cfgfile" && rm -f "$cfgfile.tmp")
+test 0 -eq $? || _lt_function_replace_fail=:
+
+fi
+
+if test x"$lt_shell_append" = xyes; then
+  sed -e '/^func_append ()$/,/^} # func_append /c\
+func_append ()\
+{\
+    eval "${1}+=\\${2}"\
+} # Extended-shell func_append implementation' "$cfgfile" > $cfgfile.tmp \
+  && mv -f "$cfgfile.tmp" "$cfgfile" \
+    || (rm -f "$cfgfile" && cp "$cfgfile.tmp" "$cfgfile" && rm -f "$cfgfile.tmp")
+test 0 -eq $? || _lt_function_replace_fail=:
+
+
+  sed -e '/^func_append_quoted ()$/,/^} # func_append_quoted /c\
+func_append_quoted ()\
+{\
+\    func_quote_for_eval "${2}"\
+\    eval "${1}+=\\\\ \\$func_quote_for_eval_result"\
+} # Extended-shell func_append_quoted implementation' "$cfgfile" > $cfgfile.tmp \
+  && mv -f "$cfgfile.tmp" "$cfgfile" \
+    || (rm -f "$cfgfile" && cp "$cfgfile.tmp" "$cfgfile" && rm -f "$cfgfile.tmp")
+test 0 -eq $? || _lt_function_replace_fail=:
+
+
+  # Save a `func_append' function call where possible by direct use of '+='
+  sed -e 's%func_append \([a-zA-Z_]\{1,\}\) "%\1+="%g' $cfgfile > $cfgfile.tmp \
+    && mv -f "$cfgfile.tmp" "$cfgfile" \
+      || (rm -f "$cfgfile" && cp "$cfgfile.tmp" "$cfgfile" && rm -f "$cfgfile.tmp")
+  test 0 -eq $? || _lt_function_replace_fail=:
+else
+  # Save a `func_append' function call even when '+=' is not available
+  sed -e 's%func_append \([a-zA-Z_]\{1,\}\) "%\1="$\1%g' $cfgfile > $cfgfile.tmp \
+    && mv -f "$cfgfile.tmp" "$cfgfile" \
+      || (rm -f "$cfgfile" && cp "$cfgfile.tmp" "$cfgfile" && rm -f "$cfgfile.tmp")
+  test 0 -eq $? || _lt_function_replace_fail=:
+fi
+
+if test x"$_lt_function_replace_fail" = x":"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Unable to substitute extended shell functions in $ofile" >&5
+$as_echo "$as_me: WARNING: Unable to substitute extended shell functions in $ofile" >&2;}
+fi
+
+
+   mv -f "$cfgfile" "$ofile" ||
+    (rm -f "$ofile" && cp "$cfgfile" "$ofile" && rm -f "$cfgfile")
+  chmod +x "$ofile"
+
+ ;;
+
+  esac
+done # for ac_tag
+
+
+as_fn_exit 0
+_ACEOF
+ac_clean_files=$ac_clean_files_save
+
+test $ac_write_fail = 0 ||
+  as_fn_error $? "write failure creating $CONFIG_STATUS" "$LINENO" 5 
+
+
+# configure is writing to config.log, and then calls config.status.
+# config.status does its own redirection, appending to config.log.
+# Unfortunately, on DOS this fails, as config.log is still kept open
+# by configure, so config.status won't be able to write to it; its
+# output is simply discarded.  So we exec the FD to /dev/null,
+# effectively closing config.log, so it can be properly (re)opened and
+# appended to by config.status.  When coming back to configure, we
+# need to make the FD available again.
+if test "$no_create" != yes; then
+  ac_cs_success=:
+  ac_config_status_args=
+  test "$silent" = yes &&
+    ac_config_status_args="$ac_config_status_args --quiet"
+  exec 5>/dev/null
+  $SHELL $CONFIG_STATUS $ac_config_status_args || ac_cs_success=false
+  exec 5>>config.log
+  # Use ||, not &&, to avoid exiting from the if with $? = 1, which
+  # would make configure fail if this is the last instruction.
+  $ac_cs_success || as_fn_exit 1
+fi
+
+#
+# CONFIG_SUBDIRS section.
+#
+if test "$no_recursion" != yes; then
+
+  # Remove --cache-file, --srcdir, and --disable-option-checking arguments
+  # so they do not pile up.
+  ac_sub_configure_args=
+  ac_prev=
+  eval "set x $ac_configure_args"
+  shift
+  for ac_arg
+  do
+    if test -n "$ac_prev"; then
+      ac_prev=
+      continue
+    fi
+    case $ac_arg in
+    -cache-file | --cache-file | --cache-fil | --cache-fi \
+    | --cache-f | --cache- | --cache | --cach | --cac | --ca | --c)
+      ac_prev=cache_file ;;
+    -cache-file=* | --cache-file=* | --cache-fil=* | --cache-fi=* \
+    | --cache-f=* | --cache-=* | --cache=* | --cach=* | --cac=* | --ca=* \
+    | --c=*)
+      ;;
+    --config-cache | -C)
+      ;;
+    -srcdir | --srcdir | --srcdi | --srcd | --src | --sr)
+      ac_prev=srcdir ;;
+    -srcdir=* | --srcdir=* | --srcdi=* | --srcd=* | --src=* | --sr=*)
+      ;;
+    -prefix | --prefix | --prefi | --pref | --pre | --pr | --p)
+      ac_prev=prefix ;;
+    -prefix=* | --prefix=* | --prefi=* | --pref=* | --pre=* | --pr=* | --p=*)
+      ;;
+    --disable-option-checking)
+      ;;
+    *)
+      case $ac_arg in
+      *\'*) ac_arg=`$as_echo "$ac_arg" | sed "s/'/'\\\\\\\\''/g"` ;;
+      esac
+      as_fn_append ac_sub_configure_args " '$ac_arg'" ;;
+    esac
+  done
+
+  # Always prepend --prefix to ensure using the same prefix
+  # in subdir configurations.
+  ac_arg="--prefix=$prefix"
+  case $ac_arg in
+  *\'*) ac_arg=`$as_echo "$ac_arg" | sed "s/'/'\\\\\\\\''/g"` ;;
+  esac
+  ac_sub_configure_args="'$ac_arg' $ac_sub_configure_args"
+
+  # Pass --silent
+  if test "$silent" = yes; then
+    ac_sub_configure_args="--silent $ac_sub_configure_args"
+  fi
+
+  # Always prepend --disable-option-checking to silence warnings, since
+  # different subdirs can have different --enable and --with options.
+  ac_sub_configure_args="--disable-option-checking $ac_sub_configure_args"
+
+  ac_popdir=`pwd`
+  for ac_dir in : $subdirs; do test "x$ac_dir" = x: && continue
+
+    # Do not complain, so a configure script can configure whichever
+    # parts of a large source tree are present.
+    test -d "$srcdir/$ac_dir" || continue
+
+    ac_msg="=== configuring in $ac_dir (`pwd`/$ac_dir)"
+    $as_echo "$as_me:${as_lineno-$LINENO}: $ac_msg" >&5
+    $as_echo "$ac_msg" >&6
+    as_dir="$ac_dir"; as_fn_mkdir_p
+    ac_builddir=.
+
+case "$ac_dir" in
+.) ac_dir_suffix= ac_top_builddir_sub=. ac_top_build_prefix= ;;
+*)
+  ac_dir_suffix=/`$as_echo "$ac_dir" | sed 's|^\.[\\/]||'`
+  # A ".." for each directory in $ac_dir_suffix.
+  ac_top_builddir_sub=`$as_echo "$ac_dir_suffix" | sed 's|/[^\\/]*|/..|g;s|/||'`
+  case $ac_top_builddir_sub in
+  "") ac_top_builddir_sub=. ac_top_build_prefix= ;;
+  *)  ac_top_build_prefix=$ac_top_builddir_sub/ ;;
+  esac ;;
+esac
+ac_abs_top_builddir=$ac_pwd
+ac_abs_builddir=$ac_pwd$ac_dir_suffix
+# for backward compatibility:
+ac_top_builddir=$ac_top_build_prefix
+
+case $srcdir in
+  .)  # We are building in place.
+    ac_srcdir=.
+    ac_top_srcdir=$ac_top_builddir_sub
+    ac_abs_top_srcdir=$ac_pwd ;;
+  [\\/]* | ?:[\\/]* )  # Absolute name.
+    ac_srcdir=$srcdir$ac_dir_suffix;
+    ac_top_srcdir=$srcdir
+    ac_abs_top_srcdir=$srcdir ;;
+  *) # Relative name.
+    ac_srcdir=$ac_top_build_prefix$srcdir$ac_dir_suffix
+    ac_top_srcdir=$ac_top_build_prefix$srcdir
+    ac_abs_top_srcdir=$ac_pwd/$srcdir ;;
+esac
+ac_abs_srcdir=$ac_abs_top_srcdir$ac_dir_suffix
+
+
+    cd "$ac_dir"
+
+    # Check for guested configure; otherwise get Cygnus style configure.
+    if test -f "$ac_srcdir/configure.gnu"; then
+      ac_sub_configure=$ac_srcdir/configure.gnu
+    elif test -f "$ac_srcdir/configure"; then
+      ac_sub_configure=$ac_srcdir/configure
+    elif test -f "$ac_srcdir/configure.in"; then
+      # This should be Cygnus configure.
+      ac_sub_configure=$ac_aux_dir/configure
+    else
+      { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: no configuration information is in $ac_dir" >&5
+$as_echo "$as_me: WARNING: no configuration information is in $ac_dir" >&2;}
+      ac_sub_configure=
+    fi
+
+    # The recursion is here.
+    if test -n "$ac_sub_configure"; then
+      # Make the cache file name correct relative to the subdirectory.
+      case $cache_file in
+      [\\/]* | ?:[\\/]* ) ac_sub_cache_file=$cache_file ;;
+      *) # Relative name.
+	ac_sub_cache_file=$ac_top_build_prefix$cache_file ;;
+      esac
+
+      { $as_echo "$as_me:${as_lineno-$LINENO}: running $SHELL $ac_sub_configure $ac_sub_configure_args --cache-file=$ac_sub_cache_file --srcdir=$ac_srcdir" >&5
+$as_echo "$as_me: running $SHELL $ac_sub_configure $ac_sub_configure_args --cache-file=$ac_sub_cache_file --srcdir=$ac_srcdir" >&6;}
+      # The eval makes quoting arguments work.
+      eval "\$SHELL \"\$ac_sub_configure\" $ac_sub_configure_args \
+	   --cache-file=\"\$ac_sub_cache_file\" --srcdir=\"\$ac_srcdir\"" ||
+	as_fn_error $? "$ac_sub_configure failed for $ac_dir" "$LINENO" 5 
+    fi
+
+    cd "$ac_popdir"
+  done
+fi
+if test -n "$ac_unrecognized_opts" && test "$enable_option_checking" != no; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: unrecognized options: $ac_unrecognized_opts" >&5
+$as_echo "$as_me: WARNING: unrecognized options: $ac_unrecognized_opts" >&2;}
+fi
+
+
+
+echo
+echo
+echo
+echo "------------------------------------------------------------------------"
+echo "$PACKAGE $VERSION"
+echo "------------------------------------------------------------------------"
+echo
+echo
+echo "Configuration Options Summary:"
+echo
+
+if test "x$libcurl" != xno; then
+	echo "  libcurl(GBT+getwork).: Enabled: $LIBCURL_LIBS"
+else
+	echo "  libcurl(GBT+getwork).: Disabled"
+fi
+
+echo "  curses.TUI...........: $cursesmsg"
+
+
+if test "x$opencl" != xno; then
+	if test $found_opencl = 1; then
+		echo "  OpenCL...............: FOUND. GPU mining support enabled"
+	if test "x$scrypt" != xno; then
+		echo "  scrypt...............: Enabled"
+	else
+		echo "  scrypt...............: Disabled"
+	fi
+
+	else
+		echo "  OpenCL...............: NOT FOUND. GPU mining support DISABLED"
+		if test "x$avalon$bitforce$bitfury$icarus$modminer$bflsc$hashfast$klondike$knc" = xnonononononononono; then
+			as_fn_error $? "No mining configured in" "$LINENO" 5 
+		fi
+		echo "  scrypt...............: Disabled (needs OpenCL)"
+	fi
+else
+	echo "  OpenCL...............: Detection overrided. GPU mining support DISABLED"
+	if test "x$avalon$bitforce$bitfury$icarus$modminer$bflsc$hashfast$klondike$knc" = xnonononononononono; then
+		as_fn_error $? "No mining configured in" "$LINENO" 5 
+	fi
+	echo "  scrypt...............: Disabled (needs OpenCL)"
+fi
+
+if test "x$adl" != xno; then
+	if test x$have_adl = xtrue; then
+		echo "  ADL..................: SDK found, GPU monitoring support enabled"
+	else
+		echo "  ADL..................: SDK NOT found, GPU monitoring support DISABLED"
+	fi
+else
+	echo "  ADL..................: Detection overrided. GPU monitoring support DISABLED"
+fi
+
+echo
+if test "x$avalon" = xyes; then
+	echo "  Avalon.ASICs.........: Enabled"
+else
+	echo "  Avalon.ASICs.........: Disabled"
+fi
+
+if test "x$bflsc" = xyes; then
+	echo "  BFL.ASICs............: Enabled"
+else
+	echo "  BFL.ASICs............: Disabled"
+fi
+
+if test "x$knc" = xyes; then
+	echo "  KnC.ASICs............: Enabled"
+else
+	echo "  KnC.ASICs............: Disabled"
+fi
+
+if test "x$bitforce" = xyes; then
+	echo "  BitForce.FPGAs.......: Enabled"
+else
+	echo "  BitForce.FPGAs.......: Disabled"
+fi
+
+if test "x$bitfury" = xyes; then
+	echo "  BitFury.ASICs........: Enabled"
+else
+	echo "  BitFury.ASICs........: Disabled"
+fi
+
+if test "x$hashfast" = xyes; then
+	echo "  Hashfast.ASICs.......: Enabled"
+else
+	echo "  Hashfast.ASICs.......: Disabled"
+fi
+
+if test "x$icarus" = xyes; then
+	echo "  Icarus.ASICs/FPGAs...: Enabled"
+else
+	echo "  Icarus.ASICs/FPGAs...: Disabled"
+fi
+
+if test "x$klondike" = xyes; then
+	echo "  Klondike.ASICs.......: Enabled"
+else
+	echo "  Klondike.ASICs.......: Disabled"
+fi
+
+if test "x$modminer" = xyes; then
+	echo "  ModMiner.FPGAs.......: Enabled"
+else
+	echo "  ModMiner.FPGAs.......: Disabled"
+fi
+
+echo
+echo "Compilation............: make (or gmake)"
+echo "  CPPFLAGS.............: $CPPFLAGS"
+echo "  CFLAGS...............: $CFLAGS"
+echo "  LDFLAGS..............: $LDFLAGS $PTHREAD_FLAGS"
+echo "  LDADD................: $DLOPEN_FLAGS $LIBCURL_LIBS $JANSSON_LIBS $PTHREAD_LIBS $OPENCL_LIBS $NCURSES_LIBS $PDCURSES_LIBS $WS2_LIBS $MATH_LIBS $LIBUSB_LIBS $RT_LIBS"
+echo
+echo "Installation...........: make install (as root if needed, with 'su' or 'sudo')"
+echo "  prefix...............: $prefix"
+echo
