@@ -2296,4 +2296,202 @@ AC_CACHE_VAL([lt_cv_sys_max_cmd_len], [dnl
       lt_cv_sys_max_cmd_len=`expr "X$teststring" : ".*" 2>&1`
       teststring=
       # Add a significant safety factor because C++ compilers can tack on
-      # massive amounts of additional arguments before p
+      # massive amounts of additional arguments before passing them to the
+      # linker.  It appears as though 1/2 is a usable value.
+      lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \/ 2`
+    fi
+    ;;
+  esac
+])
+if test -n $lt_cv_sys_max_cmd_len ; then
+  AC_MSG_RESULT($lt_cv_sys_max_cmd_len)
+else
+  AC_MSG_RESULT(none)
+fi
+max_cmd_len=$lt_cv_sys_max_cmd_len
+_LT_DECL([], [max_cmd_len], [0],
+    [What is the maximum length of a command?])
+])
+m4trace:m4/libtool.m4:1671: -1- AU_DEFUN([AC_LIBTOOL_SYS_MAX_CMD_LEN], [m4_if($#, 0, [LT_CMD_MAX_LEN], [LT_CMD_MAX_LEN($@)])])
+m4trace:m4/libtool.m4:1671: -1- AC_DEFUN([AC_LIBTOOL_SYS_MAX_CMD_LEN], [AC_DIAGNOSE([obsolete], [The macro `AC_LIBTOOL_SYS_MAX_CMD_LEN' is obsolete.
+You should run autoupdate.])dnl
+m4_if($#, 0, [LT_CMD_MAX_LEN], [LT_CMD_MAX_LEN($@)])])
+m4trace:m4/libtool.m4:1782: -1- AC_DEFUN([LT_SYS_DLOPEN_SELF], [m4_require([_LT_HEADER_DLFCN])dnl
+if test "x$enable_dlopen" != xyes; then
+  enable_dlopen=unknown
+  enable_dlopen_self=unknown
+  enable_dlopen_self_static=unknown
+else
+  lt_cv_dlopen=no
+  lt_cv_dlopen_libs=
+
+  case $host_os in
+  beos*)
+    lt_cv_dlopen="load_add_on"
+    lt_cv_dlopen_libs=
+    lt_cv_dlopen_self=yes
+    ;;
+
+  mingw* | pw32* | cegcc*)
+    lt_cv_dlopen="LoadLibrary"
+    lt_cv_dlopen_libs=
+    ;;
+
+  cygwin*)
+    lt_cv_dlopen="dlopen"
+    lt_cv_dlopen_libs=
+    ;;
+
+  darwin*)
+  # if libdl is installed we need to link against it
+    AC_CHECK_LIB([dl], [dlopen],
+		[lt_cv_dlopen="dlopen" lt_cv_dlopen_libs="-ldl"],[
+    lt_cv_dlopen="dyld"
+    lt_cv_dlopen_libs=
+    lt_cv_dlopen_self=yes
+    ])
+    ;;
+
+  *)
+    AC_CHECK_FUNC([shl_load],
+	  [lt_cv_dlopen="shl_load"],
+      [AC_CHECK_LIB([dld], [shl_load],
+	    [lt_cv_dlopen="shl_load" lt_cv_dlopen_libs="-ldld"],
+	[AC_CHECK_FUNC([dlopen],
+	      [lt_cv_dlopen="dlopen"],
+	  [AC_CHECK_LIB([dl], [dlopen],
+		[lt_cv_dlopen="dlopen" lt_cv_dlopen_libs="-ldl"],
+	    [AC_CHECK_LIB([svld], [dlopen],
+		  [lt_cv_dlopen="dlopen" lt_cv_dlopen_libs="-lsvld"],
+	      [AC_CHECK_LIB([dld], [dld_link],
+		    [lt_cv_dlopen="dld_link" lt_cv_dlopen_libs="-ldld"])
+	      ])
+	    ])
+	  ])
+	])
+      ])
+    ;;
+  esac
+
+  if test "x$lt_cv_dlopen" != xno; then
+    enable_dlopen=yes
+  else
+    enable_dlopen=no
+  fi
+
+  case $lt_cv_dlopen in
+  dlopen)
+    save_CPPFLAGS="$CPPFLAGS"
+    test "x$ac_cv_header_dlfcn_h" = xyes && CPPFLAGS="$CPPFLAGS -DHAVE_DLFCN_H"
+
+    save_LDFLAGS="$LDFLAGS"
+    wl=$lt_prog_compiler_wl eval LDFLAGS=\"\$LDFLAGS $export_dynamic_flag_spec\"
+
+    save_LIBS="$LIBS"
+    LIBS="$lt_cv_dlopen_libs $LIBS"
+
+    AC_CACHE_CHECK([whether a program can dlopen itself],
+	  lt_cv_dlopen_self, [dnl
+	  _LT_TRY_DLOPEN_SELF(
+	    lt_cv_dlopen_self=yes, lt_cv_dlopen_self=yes,
+	    lt_cv_dlopen_self=no, lt_cv_dlopen_self=cross)
+    ])
+
+    if test "x$lt_cv_dlopen_self" = xyes; then
+      wl=$lt_prog_compiler_wl eval LDFLAGS=\"\$LDFLAGS $lt_prog_compiler_static\"
+      AC_CACHE_CHECK([whether a statically linked program can dlopen itself],
+	  lt_cv_dlopen_self_static, [dnl
+	  _LT_TRY_DLOPEN_SELF(
+	    lt_cv_dlopen_self_static=yes, lt_cv_dlopen_self_static=yes,
+	    lt_cv_dlopen_self_static=no,  lt_cv_dlopen_self_static=cross)
+      ])
+    fi
+
+    CPPFLAGS="$save_CPPFLAGS"
+    LDFLAGS="$save_LDFLAGS"
+    LIBS="$save_LIBS"
+    ;;
+  esac
+
+  case $lt_cv_dlopen_self in
+  yes|no) enable_dlopen_self=$lt_cv_dlopen_self ;;
+  *) enable_dlopen_self=unknown ;;
+  esac
+
+  case $lt_cv_dlopen_self_static in
+  yes|no) enable_dlopen_self_static=$lt_cv_dlopen_self_static ;;
+  *) enable_dlopen_self_static=unknown ;;
+  esac
+fi
+_LT_DECL([dlopen_support], [enable_dlopen], [0],
+	 [Whether dlopen is supported])
+_LT_DECL([dlopen_self], [enable_dlopen_self], [0],
+	 [Whether dlopen of programs is supported])
+_LT_DECL([dlopen_self_static], [enable_dlopen_self_static], [0],
+	 [Whether dlopen of statically linked programs is supported])
+])
+m4trace:m4/libtool.m4:1899: -1- AU_DEFUN([AC_LIBTOOL_DLOPEN_SELF], [m4_if($#, 0, [LT_SYS_DLOPEN_SELF], [LT_SYS_DLOPEN_SELF($@)])])
+m4trace:m4/libtool.m4:1899: -1- AC_DEFUN([AC_LIBTOOL_DLOPEN_SELF], [AC_DIAGNOSE([obsolete], [The macro `AC_LIBTOOL_DLOPEN_SELF' is obsolete.
+You should run autoupdate.])dnl
+m4_if($#, 0, [LT_SYS_DLOPEN_SELF], [LT_SYS_DLOPEN_SELF($@)])])
+m4trace:m4/libtool.m4:2871: -1- AC_DEFUN([_LT_PATH_TOOL_PREFIX], [m4_require([_LT_DECL_EGREP])dnl
+AC_MSG_CHECKING([for $1])
+AC_CACHE_VAL(lt_cv_path_MAGIC_CMD,
+[case $MAGIC_CMD in
+[[\\/*] |  ?:[\\/]*])
+  lt_cv_path_MAGIC_CMD="$MAGIC_CMD" # Let the user override the test with a path.
+  ;;
+*)
+  lt_save_MAGIC_CMD="$MAGIC_CMD"
+  lt_save_ifs="$IFS"; IFS=$PATH_SEPARATOR
+dnl $ac_dummy forces splitting on constant user-supplied paths.
+dnl POSIX.2 word splitting is done only on the output of word expansions,
+dnl not every word.  This closes a longstanding sh security hole.
+  ac_dummy="m4_if([$2], , $PATH, [$2])"
+  for ac_dir in $ac_dummy; do
+    IFS="$lt_save_ifs"
+    test -z "$ac_dir" && ac_dir=.
+    if test -f $ac_dir/$1; then
+      lt_cv_path_MAGIC_CMD="$ac_dir/$1"
+      if test -n "$file_magic_test_file"; then
+	case $deplibs_check_method in
+	"file_magic "*)
+	  file_magic_regex=`expr "$deplibs_check_method" : "file_magic \(.*\)"`
+	  MAGIC_CMD="$lt_cv_path_MAGIC_CMD"
+	  if eval $file_magic_cmd \$file_magic_test_file 2> /dev/null |
+	    $EGREP "$file_magic_regex" > /dev/null; then
+	    :
+	  else
+	    cat <<_LT_EOF 1>&2
+
+*** Warning: the command libtool uses to detect shared libraries,
+*** $file_magic_cmd, produces output that libtool cannot recognize.
+*** The result is that libtool may fail to recognize shared libraries
+*** as such.  This will affect the creation of libtool libraries that
+*** depend on shared libraries, but programs linked with such libtool
+*** libraries will work regardless of this problem.  Nevertheless, you
+*** may want to report the problem to your system manager and/or to
+*** bug-libtool@gnu.org
+
+_LT_EOF
+	  fi ;;
+	esac
+      fi
+      break
+    fi
+  done
+  IFS="$lt_save_ifs"
+  MAGIC_CMD="$lt_save_MAGIC_CMD"
+  ;;
+esac])
+MAGIC_CMD="$lt_cv_path_MAGIC_CMD"
+if test -n "$MAGIC_CMD"; then
+  AC_MSG_RESULT($MAGIC_CMD)
+else
+  AC_MSG_RESULT(no)
+fi
+_LT_DECL([], [MAGIC_CMD], [0],
+	 [Used to examine libraries when file_magic_cmd begins with "file"])dnl
+])
+m4trace:m4/libtool.m4:2933: -1- AU_DEFUN([AC_PATH_TOOL_PREFIX], [m4_if($#, 0, [_LT_PATH_TOOL_PREFIX], [_LT_PATH_TOOL_PREFIX($@)])])
+m4trace:m4/libtool.m4:2933: -1- AC_DEFUN([AC_PATH_TOOL_PREFIX], [AC_DIAGNOSE([obsolete], [The macro `AC_PATH_T
