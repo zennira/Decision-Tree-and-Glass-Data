@@ -1788,4 +1788,172 @@ EOF
      gl_save_CPPFLAGS="$CPPFLAGS"
      CPPFLAGS="$gl_save_CPPFLAGS -Iconftestd1b -Iconftestd2"
 dnl We intentionally avoid using AC_LANG_SOURCE here.
-     AC_COMPILE_IFELSE([AC_LANG_DEFINES_PROVIDED[#include <conft
+     AC_COMPILE_IFELSE([AC_LANG_DEFINES_PROVIDED[#include <conftest.h>]],
+       [gl_cv_have_include_next=yes],
+       [CPPFLAGS="$gl_save_CPPFLAGS -Iconftestd1a -Iconftestd2"
+        AC_COMPILE_IFELSE([AC_LANG_DEFINES_PROVIDED[#include <conftest.h>]],
+          [gl_cv_have_include_next=buggy],
+          [gl_cv_have_include_next=no])
+       ])
+     CPPFLAGS="$gl_save_CPPFLAGS"
+     rm -rf conftestd1a conftestd1b conftestd2
+    ])
+  PRAGMA_SYSTEM_HEADER=
+  if test $gl_cv_have_include_next = yes; then
+    INCLUDE_NEXT=include_next
+    INCLUDE_NEXT_AS_FIRST_DIRECTIVE=include_next
+    if test -n "$GCC"; then
+      PRAGMA_SYSTEM_HEADER='#pragma GCC system_header'
+    fi
+  else
+    if test $gl_cv_have_include_next = buggy; then
+      INCLUDE_NEXT=include
+      INCLUDE_NEXT_AS_FIRST_DIRECTIVE=include_next
+    else
+      INCLUDE_NEXT=include
+      INCLUDE_NEXT_AS_FIRST_DIRECTIVE=include
+    fi
+  fi
+  AC_SUBST([INCLUDE_NEXT])
+  AC_SUBST([INCLUDE_NEXT_AS_FIRST_DIRECTIVE])
+  AC_SUBST([PRAGMA_SYSTEM_HEADER])
+  AC_CACHE_CHECK([whether system header files limit the line length],
+    [gl_cv_pragma_columns],
+    [dnl HP NonStop systems, which define __TANDEM, have this misfeature.
+     AC_EGREP_CPP([choke me],
+       [
+#ifdef __TANDEM
+choke me
+#endif
+       ],
+       [gl_cv_pragma_columns=yes],
+       [gl_cv_pragma_columns=no])
+    ])
+  if test $gl_cv_pragma_columns = yes; then
+    PRAGMA_COLUMNS="#pragma COLUMNS 10000"
+  else
+    PRAGMA_COLUMNS=
+  fi
+  AC_SUBST([PRAGMA_COLUMNS])
+])
+m4trace:m4/include_next.m4:153: -1- AC_DEFUN([gl_CHECK_NEXT_HEADERS], [
+  gl_NEXT_HEADERS_INTERNAL([$1], [check])
+])
+m4trace:m4/include_next.m4:163: -1- AC_DEFUN([gl_NEXT_HEADERS], [
+  gl_NEXT_HEADERS_INTERNAL([$1], [assume])
+])
+m4trace:m4/include_next.m4:169: -1- AC_DEFUN([gl_NEXT_HEADERS_INTERNAL], [
+  AC_REQUIRE([gl_INCLUDE_NEXT])
+  AC_REQUIRE([AC_CANONICAL_HOST])
+
+  m4_if([$2], [check],
+    [AC_CHECK_HEADERS_ONCE([$1])
+    ])
+
+  m4_foreach_w([gl_HEADER_NAME], [$1],
+    [AS_VAR_PUSHDEF([gl_next_header],
+                    [gl_cv_next_]m4_defn([gl_HEADER_NAME]))
+     if test $gl_cv_have_include_next = yes; then
+       AS_VAR_SET([gl_next_header], ['<'gl_HEADER_NAME'>'])
+     else
+       AC_CACHE_CHECK(
+         [absolute name of <]m4_defn([gl_HEADER_NAME])[>],
+         m4_defn([gl_next_header]),
+         [m4_if([$2], [check],
+            [AS_VAR_PUSHDEF([gl_header_exists],
+                            [ac_cv_header_]m4_defn([gl_HEADER_NAME]))
+             if test AS_VAR_GET(gl_header_exists) = yes; then
+             AS_VAR_POPDEF([gl_header_exists])
+            ])
+               AC_LANG_CONFTEST(
+                 [AC_LANG_SOURCE(
+                    [[#include <]]m4_dquote(m4_defn([gl_HEADER_NAME]))[[>]]
+                  )])
+               dnl AIX "xlc -E" and "cc -E" omit #line directives for header
+               dnl files that contain only a #include of other header files and
+               dnl no non-comment tokens of their own. This leads to a failure
+               dnl to detect the absolute name of <dirent.h>, <signal.h>,
+               dnl <poll.h> and others. The workaround is to force preservation
+               dnl of comments through option -C. This ensures all necessary
+               dnl #line directives are present. GCC supports option -C as well.
+               case "$host_os" in
+                 aix*) gl_absname_cpp="$ac_cpp -C" ;;
+                 *)    gl_absname_cpp="$ac_cpp" ;;
+               esac
+               dnl eval is necessary to expand gl_absname_cpp.
+               dnl Ultrix and Pyramid sh refuse to redirect output of eval,
+               dnl so use subshell.
+               AS_VAR_SET([gl_next_header],
+                 ['"'`(eval "$gl_absname_cpp conftest.$ac_ext") 2>&AS_MESSAGE_LOG_FD |
+                  sed -n '\#/]m4_defn([gl_HEADER_NAME])[#{
+                    s#.*"\(.*/]m4_defn([gl_HEADER_NAME])[\)".*#\1#
+                    s#^/[^/]#//&#
+                    p
+                    q
+                  }'`'"'])
+          m4_if([$2], [check],
+            [else
+               AS_VAR_SET([gl_next_header], ['<'gl_HEADER_NAME'>'])
+             fi
+            ])
+         ])
+     fi
+     AC_SUBST(
+       AS_TR_CPP([NEXT_]m4_defn([gl_HEADER_NAME])),
+       [AS_VAR_GET([gl_next_header])])
+     if test $gl_cv_have_include_next = yes || test $gl_cv_have_include_next = buggy; then
+       # INCLUDE_NEXT_AS_FIRST_DIRECTIVE='include_next'
+       gl_next_as_first_directive='<'gl_HEADER_NAME'>'
+     else
+       # INCLUDE_NEXT_AS_FIRST_DIRECTIVE='include'
+       gl_next_as_first_directive=AS_VAR_GET([gl_next_header])
+     fi
+     AC_SUBST(
+       AS_TR_CPP([NEXT_AS_FIRST_DIRECTIVE_]m4_defn([gl_HEADER_NAME])),
+       [$gl_next_as_first_directive])
+     AS_VAR_POPDEF([gl_next_header])])
+])
+m4trace:m4/libtool.m4:69: -1- AC_DEFUN([LT_INIT], [AC_PREREQ([2.58])dnl We use AC_INCLUDES_DEFAULT
+AC_REQUIRE([AC_CONFIG_AUX_DIR_DEFAULT])dnl
+AC_BEFORE([$0], [LT_LANG])dnl
+AC_BEFORE([$0], [LT_OUTPUT])dnl
+AC_BEFORE([$0], [LTDL_INIT])dnl
+m4_require([_LT_CHECK_BUILDDIR])dnl
+
+dnl Autoconf doesn't catch unexpanded LT_ macros by default:
+m4_pattern_forbid([^_?LT_[A-Z_]+$])dnl
+m4_pattern_allow([^(_LT_EOF|LT_DLGLOBAL|LT_DLLAZY_OR_NOW|LT_MULTI_MODULE)$])dnl
+dnl aclocal doesn't pull ltoptions.m4, ltsugar.m4, or ltversion.m4
+dnl unless we require an AC_DEFUNed macro:
+AC_REQUIRE([LTOPTIONS_VERSION])dnl
+AC_REQUIRE([LTSUGAR_VERSION])dnl
+AC_REQUIRE([LTVERSION_VERSION])dnl
+AC_REQUIRE([LTOBSOLETE_VERSION])dnl
+m4_require([_LT_PROG_LTMAIN])dnl
+
+_LT_SHELL_INIT([SHELL=${CONFIG_SHELL-/bin/sh}])
+
+dnl Parse OPTIONS
+_LT_SET_OPTIONS([$0], [$1])
+
+# This can be used to rebuild libtool when needed
+LIBTOOL_DEPS="$ltmain"
+
+# Always use our own libtool.
+LIBTOOL='$(SHELL) $(top_builddir)/libtool'
+AC_SUBST(LIBTOOL)dnl
+
+_LT_SETUP
+
+# Only expand once:
+m4_define([LT_INIT])
+])
+m4trace:m4/libtool.m4:107: -1- AU_DEFUN([AC_PROG_LIBTOOL], [m4_if($#, 0, [LT_INIT], [LT_INIT($@)])])
+m4trace:m4/libtool.m4:107: -1- AC_DEFUN([AC_PROG_LIBTOOL], [AC_DIAGNOSE([obsolete], [The macro `AC_PROG_LIBTOOL' is obsolete.
+You should run autoupdate.])dnl
+m4_if($#, 0, [LT_INIT], [LT_INIT($@)])])
+m4trace:m4/libtool.m4:108: -1- AU_DEFUN([AM_PROG_LIBTOOL], [m4_if($#, 0, [LT_INIT], [LT_INIT($@)])])
+m4trace:m4/libtool.m4:108: -1- AC_DEFUN([AM_PROG_LIBTOOL], [AC_DIAGNOSE([obsolete], [The macro `AM_PROG_LIBTOOL' is obsolete.
+You should run autoupdate.])dnl
+m4_if($#, 0, [LT_INIT], [LT_INIT($@)])])
+m4t
