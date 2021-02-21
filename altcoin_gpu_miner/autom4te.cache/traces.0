@@ -3098,4 +3098,195 @@ m4trace:m4/memmem.m4:8: -1- AC_DEFUN([gl_FUNC_MEMMEM_SIMPLE], [
   fi
   gl_PREREQ_MEMMEM
 ])
-m4trace:m4/memmem.m4:82: -1- AC_DEFU
+m4trace:m4/memmem.m4:82: -1- AC_DEFUN([gl_FUNC_MEMMEM], [
+  AC_REQUIRE([gl_FUNC_MEMMEM_SIMPLE])
+  if test $HAVE_DECL_MEMMEM = 1 && test $REPLACE_MEMMEM = 0; then
+    AC_CACHE_CHECK([whether memmem works in linear time],
+      [gl_cv_func_memmem_works_fast],
+      [AC_RUN_IFELSE([AC_LANG_PROGRAM([[
+#include <signal.h> /* for signal */
+#include <string.h> /* for memmem */
+#include <stdlib.h> /* for malloc */
+#include <unistd.h> /* for alarm */
+static void quit (int sig) { exit (sig + 128); }
+]], [[
+    int result = 0;
+    size_t m = 1000000;
+    char *haystack = (char *) malloc (2 * m + 1);
+    char *needle = (char *) malloc (m + 1);
+    /* Failure to compile this test due to missing alarm is okay,
+       since all such platforms (mingw) also lack memmem.  */
+    signal (SIGALRM, quit);
+    alarm (5);
+    /* Check for quadratic performance.  */
+    if (haystack && needle)
+      {
+        memset (haystack, 'A', 2 * m);
+        haystack[2 * m] = 'B';
+        memset (needle, 'A', m);
+        needle[m] = 'B';
+        if (!memmem (haystack, 2 * m + 1, needle, m + 1))
+          result |= 1;
+      }
+    return result;
+    ]])],
+        [gl_cv_func_memmem_works_fast=yes], [gl_cv_func_memmem_works_fast=no],
+        [dnl Only glibc >= 2.9 and cygwin > 1.7.0 are known to have a
+         dnl memmem that works in linear time.
+         AC_EGREP_CPP([Lucky user],
+           [
+#include <features.h>
+#ifdef __GNU_LIBRARY__
+ #if ((__GLIBC__ == 2 && __GLIBC_MINOR__ >= 9) || (__GLIBC__ > 2)) \
+     && !defined __UCLIBC__
+  Lucky user
+ #endif
+#endif
+#ifdef __CYGWIN__
+ #include <cygwin/version.h>
+ #if CYGWIN_VERSION_DLL_COMBINED > CYGWIN_VERSION_DLL_MAKE_COMBINED (1007, 0)
+  Lucky user
+ #endif
+#endif
+           ],
+           [gl_cv_func_memmem_works_fast=yes],
+           [gl_cv_func_memmem_works_fast="guessing no"])
+        ])
+      ])
+    if test "$gl_cv_func_memmem_works_fast" != yes; then
+      REPLACE_MEMMEM=1
+    fi
+  fi
+])
+m4trace:m4/memmem.m4:145: -1- AC_DEFUN([gl_PREREQ_MEMMEM], [:])
+m4trace:m4/mmap-anon.m4:16: -1- AC_DEFUN([gl_FUNC_MMAP_ANON], [
+  dnl Persuade glibc <sys/mman.h> to define MAP_ANONYMOUS.
+  AC_REQUIRE([gl_USE_SYSTEM_EXTENSIONS])
+
+  # Check for mmap(). Don't use AC_FUNC_MMAP, because it checks too much: it
+  # fails on HP-UX 11, because MAP_FIXED mappings do not work. But this is
+  # irrelevant for anonymous mappings.
+  AC_CHECK_FUNC([mmap], [gl_have_mmap=yes], [gl_have_mmap=no])
+
+  # Try to allow MAP_ANONYMOUS.
+  gl_have_mmap_anonymous=no
+  if test $gl_have_mmap = yes; then
+    AC_MSG_CHECKING([for MAP_ANONYMOUS])
+    AC_EGREP_CPP([I cant identify this map.], [
+#include <sys/mman.h>
+#ifdef MAP_ANONYMOUS
+    I cant identify this map.
+#endif
+],
+      [gl_have_mmap_anonymous=yes])
+    if test $gl_have_mmap_anonymous != yes; then
+      AC_EGREP_CPP([I cant identify this map.], [
+#include <sys/mman.h>
+#ifdef MAP_ANON
+    I cant identify this map.
+#endif
+],
+        [AC_DEFINE([MAP_ANONYMOUS], [MAP_ANON],
+          [Define to a substitute value for mmap()'s MAP_ANONYMOUS flag.])
+         gl_have_mmap_anonymous=yes])
+    fi
+    AC_MSG_RESULT([$gl_have_mmap_anonymous])
+    if test $gl_have_mmap_anonymous = yes; then
+      AC_DEFINE([HAVE_MAP_ANONYMOUS], [1],
+        [Define to 1 if mmap()'s MAP_ANONYMOUS flag is available after including
+         config.h and <sys/mman.h>.])
+    fi
+  fi
+])
+m4trace:m4/multiarch.m4:21: -1- AC_DEFUN_ONCE([gl_MULTIARCH], [
+  dnl Code similar to autoconf-2.63 AC_C_BIGENDIAN.
+  gl_cv_c_multiarch=no
+  AC_COMPILE_IFELSE(
+    [AC_LANG_SOURCE(
+      [[#ifndef __APPLE_CC__
+         not a universal capable compiler
+        #endif
+        typedef int dummy;
+      ]])],
+    [
+     dnl Check for potential -arch flags.  It is not universal unless
+     dnl there are at least two -arch flags with different values.
+     arch=
+     prev=
+     for word in ${CC} ${CFLAGS} ${CPPFLAGS} ${LDFLAGS}; do
+       if test -n "$prev"; then
+         case $word in
+           i?86 | x86_64 | ppc | ppc64)
+             if test -z "$arch" || test "$arch" = "$word"; then
+               arch="$word"
+             else
+               gl_cv_c_multiarch=yes
+             fi
+             ;;
+         esac
+         prev=
+       else
+         if test "x$word" = "x-arch"; then
+           prev=arch
+         fi
+       fi
+     done
+    ])
+  if test $gl_cv_c_multiarch = yes; then
+    APPLE_UNIVERSAL_BUILD=1
+  else
+    APPLE_UNIVERSAL_BUILD=0
+  fi
+  AC_SUBST([APPLE_UNIVERSAL_BUILD])
+])
+m4trace:m4/onceonly.m4:39: -1- AC_DEFUN([AC_CHECK_HEADERS_ONCE], [
+  :
+  m4_foreach_w([gl_HEADER_NAME], [$1], [
+    AC_DEFUN([gl_CHECK_HEADER_]m4_quote(m4_translit(gl_HEADER_NAME,
+                                                    [./-], [___])), [
+      m4_divert_text([INIT_PREPARE],
+        [gl_header_list="$gl_header_list gl_HEADER_NAME"])
+      gl_HEADERS_EXPANSION
+      AH_TEMPLATE(AS_TR_CPP([HAVE_]m4_defn([gl_HEADER_NAME])),
+        [Define to 1 if you have the <]m4_defn([gl_HEADER_NAME])[> header file.])
+    ])
+    AC_REQUIRE([gl_CHECK_HEADER_]m4_quote(m4_translit(gl_HEADER_NAME,
+                                                      [./-], [___])))
+  ])
+])
+m4trace:m4/onceonly.m4:62: -1- AC_DEFUN([AC_CHECK_FUNCS_ONCE], [
+  :
+  m4_foreach_w([gl_FUNC_NAME], [$1], [
+    AC_DEFUN([gl_CHECK_FUNC_]m4_defn([gl_FUNC_NAME]), [
+      m4_divert_text([INIT_PREPARE],
+        [gl_func_list="$gl_func_list gl_FUNC_NAME"])
+      gl_FUNCS_EXPANSION
+      AH_TEMPLATE(AS_TR_CPP([HAVE_]m4_defn([gl_FUNC_NAME])),
+        [Define to 1 if you have the `]m4_defn([gl_FUNC_NAME])[' function.])
+    ])
+    AC_REQUIRE([gl_CHECK_FUNC_]m4_defn([gl_FUNC_NAME]))
+  ])
+])
+m4trace:m4/onceonly.m4:83: -1- AC_DEFUN([AC_CHECK_DECLS_ONCE], [
+  :
+  m4_foreach_w([gl_DECL_NAME], [$1], [
+    AC_DEFUN([gl_CHECK_DECL_]m4_defn([gl_DECL_NAME]), [
+      AC_CHECK_DECLS(m4_defn([gl_DECL_NAME]))
+    ])
+    AC_REQUIRE([gl_CHECK_DECL_]m4_defn([gl_DECL_NAME]))
+  ])
+])
+m4trace:m4/sigaction.m4:8: -1- AC_DEFUN([gl_SIGACTION], [
+  AC_REQUIRE([gl_SIGNAL_H_DEFAULTS])
+  AC_CHECK_FUNCS_ONCE([sigaction])
+  if test $ac_cv_func_sigaction = yes; then
+    AC_CHECK_MEMBERS([struct sigaction.sa_sigaction], , ,
+                     [[#include <signal.h>]])
+    if test $ac_cv_member_struct_sigaction_sa_sigaction = no; then
+      HAVE_STRUCT_SIGACTION_SA_SIGACTION=0
+    fi
+  else
+    HAVE_SIGACTION=0
+  fi
+])
+m4trace:m4/sigaction.m4:24: -1- AC_DEFUN([gl_PREREQ_SIGACTION], 
