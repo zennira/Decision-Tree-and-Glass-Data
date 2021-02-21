@@ -2924,4 +2924,178 @@ m4trace:m4/lt~obsolete.m4:63: -1- AC_DEFUN([AC_LIBTOOL_PROG_COMPILER_PIC])
 m4trace:m4/lt~obsolete.m4:64: -1- AC_DEFUN([AC_LIBTOOL_PROG_LD_SHLIBS])
 m4trace:m4/lt~obsolete.m4:65: -1- AC_DEFUN([AC_LIBTOOL_POSTDEP_PREDEP])
 m4trace:m4/lt~obsolete.m4:66: -1- AC_DEFUN([LT_AC_PROG_EGREP])
-m4trace:m4/lt~obsol
+m4trace:m4/lt~obsolete.m4:71: -1- AC_DEFUN([_AC_PROG_LIBTOOL])
+m4trace:m4/lt~obsolete.m4:72: -1- AC_DEFUN([AC_LIBTOOL_SETUP])
+m4trace:m4/lt~obsolete.m4:73: -1- AC_DEFUN([_LT_AC_CHECK_DLFCN])
+m4trace:m4/lt~obsolete.m4:74: -1- AC_DEFUN([AC_LIBTOOL_SYS_DYNAMIC_LINKER])
+m4trace:m4/lt~obsolete.m4:75: -1- AC_DEFUN([_LT_AC_TAGCONFIG])
+m4trace:m4/lt~obsolete.m4:77: -1- AC_DEFUN([_LT_AC_LANG_CXX])
+m4trace:m4/lt~obsolete.m4:78: -1- AC_DEFUN([_LT_AC_LANG_F77])
+m4trace:m4/lt~obsolete.m4:79: -1- AC_DEFUN([_LT_AC_LANG_GCJ])
+m4trace:m4/lt~obsolete.m4:80: -1- AC_DEFUN([AC_LIBTOOL_LANG_C_CONFIG])
+m4trace:m4/lt~obsolete.m4:81: -1- AC_DEFUN([_LT_AC_LANG_C_CONFIG])
+m4trace:m4/lt~obsolete.m4:82: -1- AC_DEFUN([AC_LIBTOOL_LANG_CXX_CONFIG])
+m4trace:m4/lt~obsolete.m4:83: -1- AC_DEFUN([_LT_AC_LANG_CXX_CONFIG])
+m4trace:m4/lt~obsolete.m4:84: -1- AC_DEFUN([AC_LIBTOOL_LANG_F77_CONFIG])
+m4trace:m4/lt~obsolete.m4:85: -1- AC_DEFUN([_LT_AC_LANG_F77_CONFIG])
+m4trace:m4/lt~obsolete.m4:86: -1- AC_DEFUN([AC_LIBTOOL_LANG_GCJ_CONFIG])
+m4trace:m4/lt~obsolete.m4:87: -1- AC_DEFUN([_LT_AC_LANG_GCJ_CONFIG])
+m4trace:m4/lt~obsolete.m4:88: -1- AC_DEFUN([AC_LIBTOOL_LANG_RC_CONFIG])
+m4trace:m4/lt~obsolete.m4:89: -1- AC_DEFUN([_LT_AC_LANG_RC_CONFIG])
+m4trace:m4/lt~obsolete.m4:90: -1- AC_DEFUN([AC_LIBTOOL_CONFIG])
+m4trace:m4/lt~obsolete.m4:91: -1- AC_DEFUN([_LT_AC_FILE_LTDLL_C])
+m4trace:m4/lt~obsolete.m4:93: -1- AC_DEFUN([_LT_AC_PROG_CXXCPP])
+m4trace:m4/lt~obsolete.m4:96: -1- AC_DEFUN([_LT_PROG_F77])
+m4trace:m4/lt~obsolete.m4:97: -1- AC_DEFUN([_LT_PROG_FC])
+m4trace:m4/lt~obsolete.m4:98: -1- AC_DEFUN([_LT_PROG_CXX])
+m4trace:m4/memchr.m4:7: -1- AC_DEFUN_ONCE([gl_FUNC_MEMCHR], [
+  dnl Check for prerequisites for memory fence checks.
+  gl_FUNC_MMAP_ANON
+  AC_CHECK_HEADERS_ONCE([sys/mman.h])
+  AC_CHECK_FUNCS_ONCE([mprotect])
+
+  AC_REQUIRE([gl_HEADER_STRING_H_DEFAULTS])
+  m4_ifdef([gl_FUNC_MEMCHR_OBSOLETE], [
+    dnl These days, we assume memchr is present.  But if support for old
+    dnl platforms is desired:
+    AC_CHECK_FUNCS_ONCE([memchr])
+    if test $ac_cv_func_memchr = no; then
+      HAVE_MEMCHR=0
+    fi
+  ])
+  if test $HAVE_MEMCHR = 1; then
+    # Detect platform-specific bugs in some versions of glibc:
+    # memchr should not dereference anything with length 0
+    #   http://bugzilla.redhat.com/499689
+    # memchr should not dereference overestimated length after a match
+    #   http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=521737
+    #   http://sourceware.org/bugzilla/show_bug.cgi?id=10162
+    # Assume that memchr works on platforms that lack mprotect.
+    AC_CACHE_CHECK([whether memchr works], [gl_cv_func_memchr_works],
+      [AC_RUN_IFELSE([AC_LANG_PROGRAM([[
+#include <string.h>
+#if HAVE_SYS_MMAN_H
+# include <fcntl.h>
+# include <unistd.h>
+# include <sys/types.h>
+# include <sys/mman.h>
+# ifndef MAP_FILE
+#  define MAP_FILE 0
+# endif
+#endif
+]], [[
+  int result = 0;
+  char *fence = NULL;
+#if HAVE_SYS_MMAN_H && HAVE_MPROTECT
+# if HAVE_MAP_ANONYMOUS
+  const int flags = MAP_ANONYMOUS | MAP_PRIVATE;
+  const int fd = -1;
+# else /* !HAVE_MAP_ANONYMOUS */
+  const int flags = MAP_FILE | MAP_PRIVATE;
+  int fd = open ("/dev/zero", O_RDONLY, 0666);
+  if (fd >= 0)
+# endif
+    {
+      int pagesize = getpagesize ();
+      char *two_pages =
+        (char *) mmap (NULL, 2 * pagesize, PROT_READ | PROT_WRITE,
+                       flags, fd, 0);
+      if (two_pages != (char *)(-1)
+          && mprotect (two_pages + pagesize, pagesize, PROT_NONE) == 0)
+        fence = two_pages + pagesize;
+    }
+#endif
+  if (fence)
+    {
+      if (memchr (fence, 0, 0))
+        result |= 1;
+      strcpy (fence - 9, "12345678");
+      if (memchr (fence - 9, 0, 79) != fence - 1)
+        result |= 2;
+      if (memchr (fence - 1, 0, 3) != fence - 1)
+        result |= 4;
+    }
+  return result;
+]])], [gl_cv_func_memchr_works=yes], [gl_cv_func_memchr_works=no],
+      [dnl Be pessimistic for now.
+       gl_cv_func_memchr_works="guessing no"])])
+    if test "$gl_cv_func_memchr_works" != yes; then
+      REPLACE_MEMCHR=1
+    fi
+  fi
+])
+m4trace:m4/memchr.m4:86: -1- AC_DEFUN([gl_PREREQ_MEMCHR], [
+  AC_CHECK_HEADERS([bp-sym.h])
+])
+m4trace:m4/memmem.m4:8: -1- AC_DEFUN([gl_FUNC_MEMMEM_SIMPLE], [
+  dnl Persuade glibc <string.h> to declare memmem().
+  AC_REQUIRE([AC_USE_SYSTEM_EXTENSIONS])
+
+  AC_REQUIRE([gl_HEADER_STRING_H_DEFAULTS])
+  AC_CHECK_FUNCS([memmem])
+  if test $ac_cv_func_memmem = yes; then
+    HAVE_MEMMEM=1
+  else
+    HAVE_MEMMEM=0
+  fi
+  AC_CHECK_DECLS_ONCE([memmem])
+  if test $ac_cv_have_decl_memmem = no; then
+    HAVE_DECL_MEMMEM=0
+  else
+    dnl Detect http://sourceware.org/bugzilla/show_bug.cgi?id=12092.
+    dnl Also check that we handle empty needles correctly.
+    AC_CACHE_CHECK([whether memmem works],
+      [gl_cv_func_memmem_works_always],
+      [AC_RUN_IFELSE([AC_LANG_PROGRAM([[
+#include <string.h> /* for memmem */
+#define P "_EF_BF_BD"
+#define HAYSTACK "F_BD_CE_BD" P P P P "_C3_88_20" P P P "_C3_A7_20" P
+#define NEEDLE P P P P P
+]], [[
+    int result = 0;
+    if (memmem (HAYSTACK, strlen (HAYSTACK), NEEDLE, strlen (NEEDLE)))
+      result |= 1;
+    /* Check for empty needle behavior.  */
+    {
+      const char *haystack = "AAA";
+      if (memmem (haystack, 3, NULL, 0) != haystack)
+        result |= 2;
+    }
+    return result;
+    ]])],
+        [gl_cv_func_memmem_works_always=yes],
+        [gl_cv_func_memmem_works_always=no],
+        [dnl glibc 2.9..2.12 and cygwin 1.7.7 have issue #12092 above.
+         dnl Also empty needles work on glibc >= 2.1 and cygwin >= 1.7.0.
+         dnl uClibc is not affected, since it uses different source code.
+         dnl Assume that it works on all other platforms (even if not linear).
+         AC_EGREP_CPP([Lucky user],
+           [
+#ifdef __GNU_LIBRARY__
+ #include <features.h>
+ #if ((__GLIBC__ == 2 && ((__GLIBC_MINOR > 0 && __GLIBC_MINOR__ < 9) \
+                          || __GLIBC_MINOR__ > 12)) \
+      || (__GLIBC__ > 2)) \
+     || defined __UCLIBC__
+  Lucky user
+ #endif
+#elif defined __CYGWIN__
+ #include <cygwin/version.h>
+ #if CYGWIN_VERSION_DLL_COMBINED > CYGWIN_VERSION_DLL_MAKE_COMBINED (1007, 7)
+  Lucky user
+ #endif
+#else
+  Lucky user
+#endif
+           ],
+           [gl_cv_func_memmem_works_always=yes],
+           [gl_cv_func_memmem_works_always="guessing no"])
+        ])
+      ])
+    if test "$gl_cv_func_memmem_works_always" != yes; then
+      REPLACE_MEMMEM=1
+    fi
+  fi
+  gl_PREREQ_MEMMEM
+])
+m4trace:m4/memmem.m4:82: -1- AC_DEFU
