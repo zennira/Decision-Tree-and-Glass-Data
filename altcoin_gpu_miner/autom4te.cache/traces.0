@@ -3289,4 +3289,190 @@ m4trace:m4/sigaction.m4:8: -1- AC_DEFUN([gl_SIGACTION], [
     HAVE_SIGACTION=0
   fi
 ])
-m4trace:m4/sigaction.m4:24: -1- AC_DEFUN([gl_PREREQ_SIGACTION], 
+m4trace:m4/sigaction.m4:24: -1- AC_DEFUN([gl_PREREQ_SIGACTION], [
+  AC_REQUIRE([gl_SIGNAL_H_DEFAULTS])
+  AC_REQUIRE([AC_C_RESTRICT])
+  AC_REQUIRE([AC_TYPE_UID_T])
+  AC_REQUIRE([gl_PREREQ_SIG_HANDLER_H])
+  AC_CHECK_FUNCS_ONCE([sigaltstack siginterrupt])
+  AC_CHECK_TYPES([siginfo_t], [], [], [[
+#include <signal.h>
+  ]])
+  if test $ac_cv_type_siginfo_t = no; then
+    HAVE_SIGINFO_T=0
+  fi
+])
+m4trace:m4/sigaction.m4:40: -1- AC_DEFUN([gl_PREREQ_SIG_HANDLER_H], [
+  AC_REQUIRE([AC_C_INLINE])
+])
+m4trace:m4/signal_h.m4:7: -1- AC_DEFUN([gl_SIGNAL_H], [
+  AC_REQUIRE([gl_SIGNAL_H_DEFAULTS])
+  gl_NEXT_HEADERS([signal.h])
+
+# AIX declares sig_atomic_t to already include volatile, and C89 compilers
+# then choke on 'volatile sig_atomic_t'.  C99 requires that it compile.
+  AC_CHECK_TYPE([volatile sig_atomic_t], [],
+    [HAVE_TYPE_VOLATILE_SIG_ATOMIC_T=0], [[
+#include <signal.h>
+    ]])
+
+  AC_REQUIRE([AC_TYPE_UID_T])
+
+  dnl Persuade glibc <signal.h> to define sighandler_t.
+  AC_REQUIRE([AC_USE_SYSTEM_EXTENSIONS])
+  AC_CHECK_TYPE([sighandler_t], [], [HAVE_SIGHANDLER_T=0], [[
+#include <signal.h>
+    ]])
+
+  dnl Check for declarations of anything we want to poison if the
+  dnl corresponding gnulib module is not in use.
+  gl_WARN_ON_USE_PREPARE([[#include <signal.h>
+    ]], [sigaction sigaddset sigdelset sigemptyset sigfillset sigismember
+    sigpending sigprocmask])
+])
+m4trace:m4/signal_h.m4:34: -1- AC_DEFUN([gl_SIGNAL_MODULE_INDICATOR], [
+  dnl Use AC_REQUIRE here, so that the default settings are expanded once only.
+  AC_REQUIRE([gl_SIGNAL_H_DEFAULTS])
+  gl_MODULE_INDICATOR_SET_VARIABLE([$1])
+  dnl Define it also as a C macro, for the benefit of the unit tests.
+  gl_MODULE_INDICATOR_FOR_TESTS([$1])
+])
+m4trace:m4/signal_h.m4:43: -1- AC_DEFUN([gl_SIGNAL_H_DEFAULTS], [
+  GNULIB_SIGNAL_H_SIGPIPE=0;   AC_SUBST([GNULIB_SIGNAL_H_SIGPIPE])
+  GNULIB_SIGPROCMASK=0;        AC_SUBST([GNULIB_SIGPROCMASK])
+  GNULIB_SIGACTION=0;          AC_SUBST([GNULIB_SIGACTION])
+  dnl Assume proper GNU behavior unless another module says otherwise.
+  HAVE_POSIX_SIGNALBLOCKING=1; AC_SUBST([HAVE_POSIX_SIGNALBLOCKING])
+  HAVE_SIGSET_T=1;             AC_SUBST([HAVE_SIGSET_T])
+  HAVE_SIGINFO_T=1;            AC_SUBST([HAVE_SIGINFO_T])
+  HAVE_SIGACTION=1;            AC_SUBST([HAVE_SIGACTION])
+  HAVE_STRUCT_SIGACTION_SA_SIGACTION=1;
+                               AC_SUBST([HAVE_STRUCT_SIGACTION_SA_SIGACTION])
+  HAVE_TYPE_VOLATILE_SIG_ATOMIC_T=1;
+                               AC_SUBST([HAVE_TYPE_VOLATILE_SIG_ATOMIC_T])
+  HAVE_SIGHANDLER_T=1;         AC_SUBST([HAVE_SIGHANDLER_T])
+])
+m4trace:m4/signalblocking.m4:12: -1- AC_DEFUN([gl_SIGNALBLOCKING], [
+  AC_REQUIRE([gl_SIGNAL_H_DEFAULTS])
+  signals_not_posix=
+  AC_EGREP_HEADER([sigset_t], [signal.h], , [signals_not_posix=1])
+  if test -z "$signals_not_posix"; then
+    AC_CHECK_FUNC([sigprocmask], [gl_cv_func_sigprocmask=1])
+  fi
+  if test -z "$gl_cv_func_sigprocmask"; then
+    HAVE_POSIX_SIGNALBLOCKING=0
+  fi
+])
+m4trace:m4/signalblocking.m4:26: -1- AC_DEFUN([gl_PREREQ_SIGPROCMASK], [
+  AC_REQUIRE([gl_SIGNAL_H_DEFAULTS])
+  AC_CHECK_TYPES([sigset_t],
+    [gl_cv_type_sigset_t=yes], [gl_cv_type_sigset_t=no],
+    [#include <signal.h>
+/* Mingw defines sigset_t not in <signal.h>, but in <sys/types.h>.  */
+#include <sys/types.h>])
+  if test $gl_cv_type_sigset_t != yes; then
+    HAVE_SIGSET_T=0
+  fi
+  dnl HAVE_SIGSET_T is 1 if the system lacks the sigprocmask function but has
+  dnl the sigset_t type.
+  AC_SUBST([HAVE_SIGSET_T])
+])
+m4trace:m4/stddef_h.m4:8: -1- AC_DEFUN([gl_STDDEF_H], [
+  AC_REQUIRE([gl_STDDEF_H_DEFAULTS])
+  AC_REQUIRE([gt_TYPE_WCHAR_T])
+  STDDEF_H=
+  if test $gt_cv_c_wchar_t = no; then
+    HAVE_WCHAR_T=0
+    STDDEF_H=stddef.h
+  fi
+  AC_CACHE_CHECK([whether NULL can be used in arbitrary expressions],
+    [gl_cv_decl_null_works],
+    [AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <stddef.h>
+      int test[2 * (sizeof NULL == sizeof (void *)) -1];
+]])],
+      [gl_cv_decl_null_works=yes],
+      [gl_cv_decl_null_works=no])])
+  if test $gl_cv_decl_null_works = no; then
+    REPLACE_NULL=1
+    STDDEF_H=stddef.h
+  fi
+  AC_SUBST([STDDEF_H])
+  AM_CONDITIONAL([GL_GENERATE_STDDEF_H], [test -n "$STDDEF_H"])
+  if test -n "$STDDEF_H"; then
+    gl_NEXT_HEADERS([stddef.h])
+  fi
+])
+m4trace:m4/stddef_h.m4:35: -1- AC_DEFUN([gl_STDDEF_MODULE_INDICATOR], [
+  dnl Use AC_REQUIRE here, so that the default settings are expanded once only.
+  AC_REQUIRE([gl_STDDEF_H_DEFAULTS])
+  gl_MODULE_INDICATOR_SET_VARIABLE([$1])
+])
+m4trace:m4/stddef_h.m4:42: -1- AC_DEFUN([gl_STDDEF_H_DEFAULTS], [
+  dnl Assume proper GNU behavior unless another module says otherwise.
+  REPLACE_NULL=0;                AC_SUBST([REPLACE_NULL])
+  HAVE_WCHAR_T=1;                AC_SUBST([HAVE_WCHAR_T])
+])
+m4trace:m4/stdint.m4:10: -1- AC_DEFUN_ONCE([gl_STDINT_H], [
+  AC_PREREQ([2.59])dnl
+
+  dnl Check for long long int and unsigned long long int.
+  AC_REQUIRE([AC_TYPE_LONG_LONG_INT])
+  if test $ac_cv_type_long_long_int = yes; then
+    HAVE_LONG_LONG_INT=1
+  else
+    HAVE_LONG_LONG_INT=0
+  fi
+  AC_SUBST([HAVE_LONG_LONG_INT])
+  AC_REQUIRE([AC_TYPE_UNSIGNED_LONG_LONG_INT])
+  if test $ac_cv_type_unsigned_long_long_int = yes; then
+    HAVE_UNSIGNED_LONG_LONG_INT=1
+  else
+    HAVE_UNSIGNED_LONG_LONG_INT=0
+  fi
+  AC_SUBST([HAVE_UNSIGNED_LONG_LONG_INT])
+
+  dnl Check for <wchar.h>, in the same way as gl_WCHAR_H does.
+  AC_CHECK_HEADERS_ONCE([wchar.h])
+  if test $ac_cv_header_wchar_h = yes; then
+    HAVE_WCHAR_H=1
+  else
+    HAVE_WCHAR_H=0
+  fi
+  AC_SUBST([HAVE_WCHAR_H])
+
+  dnl Check for <inttypes.h>.
+  dnl AC_INCLUDES_DEFAULT defines $ac_cv_header_inttypes_h.
+  if test $ac_cv_header_inttypes_h = yes; then
+    HAVE_INTTYPES_H=1
+  else
+    HAVE_INTTYPES_H=0
+  fi
+  AC_SUBST([HAVE_INTTYPES_H])
+
+  dnl Check for <sys/types.h>.
+  dnl AC_INCLUDES_DEFAULT defines $ac_cv_header_sys_types_h.
+  if test $ac_cv_header_sys_types_h = yes; then
+    HAVE_SYS_TYPES_H=1
+  else
+    HAVE_SYS_TYPES_H=0
+  fi
+  AC_SUBST([HAVE_SYS_TYPES_H])
+
+  gl_CHECK_NEXT_HEADERS([stdint.h])
+  if test $ac_cv_header_stdint_h = yes; then
+    HAVE_STDINT_H=1
+  else
+    HAVE_STDINT_H=0
+  fi
+  AC_SUBST([HAVE_STDINT_H])
+
+  dnl Now see whether we need a substitute <stdint.h>.
+  if test $ac_cv_header_stdint_h = yes; then
+    AC_CACHE_CHECK([whether stdint.h conforms to C99],
+      [gl_cv_header_working_stdint_h],
+      [gl_cv_header_working_stdint_h=no
+       AC_COMPILE_IFELSE([
+         AC_LANG_PROGRAM([[
+#define __STDC_LIMIT_MACROS 1 /* to make it work also in C++ mode */
+#define __STDC_CONSTANT_MACROS 1 /* to make it work also in C++ mode */
+#
