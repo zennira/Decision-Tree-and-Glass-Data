@@ -4375,4 +4375,109 @@ m4trace:configure.ac:55: -1- m4_pattern_allow([^REPLACE_STRCASESTR$])
 m4trace:configure.ac:55: -1- m4_pattern_allow([^REPLACE_STRCHRNUL$])
 m4trace:configure.ac:55: -1- m4_pattern_allow([^REPLACE_STRERROR$])
 m4trace:configure.ac:55: -1- m4_pattern_allow([^REPLACE_STRERROR_R$])
-m4trace:configure.ac:55: -1- m4_pattern_allow([^REPLACE_STR
+m4trace:configure.ac:55: -1- m4_pattern_allow([^REPLACE_STRNCAT$])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^REPLACE_STRNDUP$])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^REPLACE_STRNLEN$])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^REPLACE_STRSIGNAL$])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^REPLACE_STRTOK_R$])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^UNDEFINE_STRTOK_R$])
+m4trace:configure.ac:55: -1- gl_LIBSOURCES([memchr.c])
+m4trace:configure.ac:55: -1- gl_PREREQ_MEMCHR
+m4trace:configure.ac:55: -1- m4_pattern_allow([^HAVE_BP_SYM_H$])
+m4trace:configure.ac:55: -1- gl_STRING_MODULE_INDICATOR([memchr])
+m4trace:configure.ac:55: -1- gl_MODULE_INDICATOR_SET_VARIABLE([memchr])
+m4trace:configure.ac:55: -1- gl_MODULE_INDICATOR_SET_VARIABLE_AUX([GNULIB_[]m4_translit([[memchr]],
+                          [abcdefghijklmnopqrstuvwxyz./-],
+                          [ABCDEFGHIJKLMNOPQRSTUVWXYZ___])], [gl_MODULE_INDICATOR_CONDITION])
+m4trace:configure.ac:55: -1- gl_MODULE_INDICATOR_FOR_TESTS([memchr])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^GNULIB_TEST_MEMCHR$])
+m4trace:configure.ac:55: -1- gl_FUNC_MEMMEM
+m4trace:configure.ac:55: -1- gl_FUNC_MEMMEM_SIMPLE
+m4trace:configure.ac:55: -1- m4_pattern_allow([^HAVE_MEMMEM$])
+m4trace:configure.ac:55: -1- AC_CHECK_DECLS_ONCE([memmem])
+m4trace:configure.ac:55: -1- AC_DEFUN([gl_CHECK_DECL_memmem], [
+      AC_CHECK_DECLS(m4_defn([gl_DECL_NAME]))
+    ])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^HAVE_DECL_MEMMEM$])
+m4trace:configure.ac:55: -1- gl_PREREQ_MEMMEM
+m4trace:configure.ac:55: -1- gl_LIBSOURCES([memmem.c])
+m4trace:configure.ac:55: -1- gl_FUNC_MEMMEM_SIMPLE
+m4trace:configure.ac:55: -1- m4_pattern_allow([^HAVE_MEMMEM$])
+m4trace:configure.ac:55: -1- AC_CHECK_DECLS_ONCE([memmem])
+m4trace:configure.ac:55: -1- AC_DEFUN([gl_CHECK_DECL_memmem], [
+      AC_CHECK_DECLS(m4_defn([gl_DECL_NAME]))
+    ])
+m4trace:configure.ac:55: -1- gl_PREREQ_MEMMEM
+m4trace:configure.ac:55: -1- gl_LIBSOURCES([memmem.c])
+m4trace:configure.ac:55: -1- gl_STRING_MODULE_INDICATOR([memmem])
+m4trace:configure.ac:55: -1- gl_MODULE_INDICATOR_SET_VARIABLE([memmem])
+m4trace:configure.ac:55: -1- gl_MODULE_INDICATOR_SET_VARIABLE_AUX([GNULIB_[]m4_translit([[memmem]],
+                          [abcdefghijklmnopqrstuvwxyz./-],
+                          [ABCDEFGHIJKLMNOPQRSTUVWXYZ___])], [gl_MODULE_INDICATOR_CONDITION])
+m4trace:configure.ac:55: -1- gl_MODULE_INDICATOR_FOR_TESTS([memmem])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^GNULIB_TEST_MEMMEM$])
+m4trace:configure.ac:55: -1- gl_MULTIARCH
+m4trace:configure.ac:55: -1- m4_pattern_allow([^APPLE_UNIVERSAL_BUILD$])
+m4trace:configure.ac:55: -1- gl_SIGACTION
+m4trace:configure.ac:55: -1- gl_SIGNAL_H_DEFAULTS
+m4trace:configure.ac:55: -1- m4_pattern_allow([^GNULIB_SIGNAL_H_SIGPIPE$])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^GNULIB_SIGPROCMASK$])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^GNULIB_SIGACTION$])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^HAVE_POSIX_SIGNALBLOCKING$])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^HAVE_SIGSET_T$])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^HAVE_SIGINFO_T$])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^HAVE_SIGACTION$])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^HAVE_STRUCT_SIGACTION_SA_SIGACTION$])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^HAVE_TYPE_VOLATILE_SIG_ATOMIC_T$])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^HAVE_SIGHANDLER_T$])
+m4trace:configure.ac:55: -1- AC_CHECK_FUNCS_ONCE([sigaction])
+m4trace:configure.ac:55: -1- AC_DEFUN([gl_CHECK_FUNC_sigaction], [
+      m4_divert_text([INIT_PREPARE],
+        [gl_func_list="$gl_func_list gl_FUNC_NAME"])
+      gl_FUNCS_EXPANSION
+      AH_TEMPLATE(AS_TR_CPP([HAVE_]m4_defn([gl_FUNC_NAME])),
+        [Define to 1 if you have the `]m4_defn([gl_FUNC_NAME])[' function.])
+    ])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^HAVE_STRUCT_SIGACTION_SA_SIGACTION$])
+m4trace:configure.ac:55: -1- gl_LIBSOURCES([sigaction.c])
+m4trace:configure.ac:55: -1- gl_PREREQ_SIGACTION
+m4trace:configure.ac:55: -1- AC_C_RESTRICT
+m4trace:configure.ac:55: -1- m4_pattern_allow([^restrict$])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^restrict$])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^uid_t$])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^gid_t$])
+m4trace:configure.ac:55: -1- gl_PREREQ_SIG_HANDLER_H
+m4trace:configure.ac:55: -1- AC_CHECK_FUNCS_ONCE([sigaltstack siginterrupt])
+m4trace:configure.ac:55: -1- AC_DEFUN([gl_CHECK_FUNC_sigaltstack], [
+      m4_divert_text([INIT_PREPARE],
+        [gl_func_list="$gl_func_list gl_FUNC_NAME"])
+      gl_FUNCS_EXPANSION
+      AH_TEMPLATE(AS_TR_CPP([HAVE_]m4_defn([gl_FUNC_NAME])),
+        [Define to 1 if you have the `]m4_defn([gl_FUNC_NAME])[' function.])
+    ])
+m4trace:configure.ac:55: -1- AC_DEFUN([gl_CHECK_FUNC_siginterrupt], [
+      m4_divert_text([INIT_PREPARE],
+        [gl_func_list="$gl_func_list gl_FUNC_NAME"])
+      gl_FUNCS_EXPANSION
+      AH_TEMPLATE(AS_TR_CPP([HAVE_]m4_defn([gl_FUNC_NAME])),
+        [Define to 1 if you have the `]m4_defn([gl_FUNC_NAME])[' function.])
+    ])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^HAVE_SIGINFO_T$])
+m4trace:configure.ac:55: -1- gl_SIGNAL_MODULE_INDICATOR([sigaction])
+m4trace:configure.ac:55: -1- gl_MODULE_INDICATOR_SET_VARIABLE([sigaction])
+m4trace:configure.ac:55: -1- gl_MODULE_INDICATOR_SET_VARIABLE_AUX([GNULIB_[]m4_translit([[sigaction]],
+                          [abcdefghijklmnopqrstuvwxyz./-],
+                          [ABCDEFGHIJKLMNOPQRSTUVWXYZ___])], [gl_MODULE_INDICATOR_CONDITION])
+m4trace:configure.ac:55: -1- gl_MODULE_INDICATOR_FOR_TESTS([sigaction])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^GNULIB_TEST_SIGACTION$])
+m4trace:configure.ac:55: -1- gl_SIGNAL_H
+m4trace:configure.ac:55: -1- gl_NEXT_HEADERS([signal.h])
+m4trace:configure.ac:55: -1- gl_NEXT_HEADERS_INTERNAL([signal.h], [assume])
+m4trace:configure.ac:55: -1- gl_INCLUDE_NEXT
+m4trace:configure.ac:55: -1- m4_pattern_allow([^INCLUDE_NEXT$])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^INCLUDE_NEXT_AS_FIRST_DIRECTIVE$])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^PRAGMA_SYSTEM_HEADER$])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^PRAGMA_COLUMNS$])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^NEXT_SIGNAL_H$])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^NEXT_AS_FIRST_DIRECTIVE_SIGNAL_H$])
+m4trace:configure.ac:55: -1-
