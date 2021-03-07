@@ -4480,4 +4480,103 @@ m4trace:configure.ac:55: -1- m4_pattern_allow([^PRAGMA_SYSTEM_HEADER$])
 m4trace:configure.ac:55: -1- m4_pattern_allow([^PRAGMA_COLUMNS$])
 m4trace:configure.ac:55: -1- m4_pattern_allow([^NEXT_SIGNAL_H$])
 m4trace:configure.ac:55: -1- m4_pattern_allow([^NEXT_AS_FIRST_DIRECTIVE_SIGNAL_H$])
-m4trace:configure.ac:55: -1-
+m4trace:configure.ac:55: -1- gl_WARN_ON_USE_PREPARE([[#include <signal.h>
+    ]], [sigaction sigaddset sigdelset sigemptyset sigfillset sigismember
+    sigpending sigprocmask])
+m4trace:configure.ac:55: -1- gl_SIGNALBLOCKING
+m4trace:configure.ac:55: -1- gl_LIBSOURCES([sigprocmask.c])
+m4trace:configure.ac:55: -1- gl_PREREQ_SIGPROCMASK
+m4trace:configure.ac:55: -1- m4_pattern_allow([^HAVE_SIGSET_T$])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^HAVE_SIGSET_T$])
+m4trace:configure.ac:55: -1- gl_SIGNAL_MODULE_INDICATOR([sigprocmask])
+m4trace:configure.ac:55: -1- gl_MODULE_INDICATOR_SET_VARIABLE([sigprocmask])
+m4trace:configure.ac:55: -1- gl_MODULE_INDICATOR_SET_VARIABLE_AUX([GNULIB_[]m4_translit([[sigprocmask]],
+                          [abcdefghijklmnopqrstuvwxyz./-],
+                          [ABCDEFGHIJKLMNOPQRSTUVWXYZ___])], [gl_MODULE_INDICATOR_CONDITION])
+m4trace:configure.ac:55: -1- gl_MODULE_INDICATOR_FOR_TESTS([sigprocmask])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^GNULIB_TEST_SIGPROCMASK$])
+m4trace:configure.ac:55: -1- gl_STDDEF_H
+m4trace:configure.ac:55: -1- gl_STDDEF_H_DEFAULTS
+m4trace:configure.ac:55: -1- m4_pattern_allow([^REPLACE_NULL$])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^HAVE_WCHAR_T$])
+m4trace:configure.ac:55: -1- gt_TYPE_WCHAR_T
+m4trace:configure.ac:55: -1- m4_pattern_allow([^HAVE_WCHAR_T$])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^STDDEF_H$])
+m4trace:configure.ac:55: -1- AM_CONDITIONAL([GL_GENERATE_STDDEF_H], [test -n "$STDDEF_H"])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^GL_GENERATE_STDDEF_H_TRUE$])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^GL_GENERATE_STDDEF_H_FALSE$])
+m4trace:configure.ac:55: -1- _AM_SUBST_NOTMAKE([GL_GENERATE_STDDEF_H_TRUE])
+m4trace:configure.ac:55: -1- _AM_SUBST_NOTMAKE([GL_GENERATE_STDDEF_H_FALSE])
+m4trace:configure.ac:55: -1- gl_NEXT_HEADERS([stddef.h])
+m4trace:configure.ac:55: -1- gl_NEXT_HEADERS_INTERNAL([stddef.h], [assume])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^NEXT_STDDEF_H$])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^NEXT_AS_FIRST_DIRECTIVE_STDDEF_H$])
+m4trace:configure.ac:55: -1- gl_STDINT_H
+m4trace:configure.ac:55: -1- AC_TYPE_LONG_LONG_INT
+m4trace:configure.ac:55: -1- AC_TYPE_UNSIGNED_LONG_LONG_INT
+m4trace:configure.ac:55: -1- _AC_TYPE_LONG_LONG_SNIPPET
+m4trace:configure.ac:55: -1- m4_pattern_allow([^HAVE_UNSIGNED_LONG_LONG_INT$])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^HAVE_LONG_LONG_INT$])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^HAVE_LONG_LONG_INT$])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^HAVE_UNSIGNED_LONG_LONG_INT$])
+m4trace:configure.ac:55: -1- AC_CHECK_HEADERS_ONCE([wchar.h])
+m4trace:configure.ac:55: -1- AC_DEFUN([gl_CHECK_HEADER_wchar_h], [
+      m4_divert_text([INIT_PREPARE],
+        [gl_header_list="$gl_header_list gl_HEADER_NAME"])
+      gl_HEADERS_EXPANSION
+      AH_TEMPLATE(AS_TR_CPP([HAVE_]m4_defn([gl_HEADER_NAME])),
+        [Define to 1 if you have the <]m4_defn([gl_HEADER_NAME])[> header file.])
+    ])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^HAVE_WCHAR_H$])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^HAVE_INTTYPES_H$])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^HAVE_SYS_TYPES_H$])
+m4trace:configure.ac:55: -1- gl_CHECK_NEXT_HEADERS([stdint.h])
+m4trace:configure.ac:55: -1- gl_NEXT_HEADERS_INTERNAL([stdint.h], [check])
+m4trace:configure.ac:55: -1- AC_CHECK_HEADERS_ONCE([stdint.h])
+m4trace:configure.ac:55: -1- AC_DEFUN([gl_CHECK_HEADER_stdint_h], [
+      m4_divert_text([INIT_PREPARE],
+        [gl_header_list="$gl_header_list gl_HEADER_NAME"])
+      gl_HEADERS_EXPANSION
+      AH_TEMPLATE(AS_TR_CPP([HAVE_]m4_defn([gl_HEADER_NAME])),
+        [Define to 1 if you have the <]m4_defn([gl_HEADER_NAME])[> header file.])
+    ])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^NEXT_STDINT_H$])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^NEXT_AS_FIRST_DIRECTIVE_STDINT_H$])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^HAVE_STDINT_H$])
+m4trace:configure.ac:55: -1- gl_STDINT_INCLUDES
+m4trace:configure.ac:55: -1- gl_STDINT_INCLUDES
+m4trace:configure.ac:55: -1- m4_pattern_allow([^HAVE_SYS_INTTYPES_H$])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^HAVE_SYS_BITYPES_H$])
+m4trace:configure.ac:55: -1- gl_STDINT_TYPE_PROPERTIES
+m4trace:configure.ac:55: -1- gl_STDINT_BITSIZEOF([ptrdiff_t size_t], [gl_STDINT_INCLUDES])
+m4trace:configure.ac:55: -1- AC_COMPUTE_INT([result], [sizeof ($gltype) * CHAR_BIT], [gl_STDINT_INCLUDES
+#include <limits.h>], [result=unknown])
+m4trace:configure.ac:55: -1- gl_STDINT_INCLUDES
+m4trace:configure.ac:55: -1- m4_pattern_allow([^BITSIZEOF_PTRDIFF_T$])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^BITSIZEOF_SIZE_T$])
+m4trace:configure.ac:55: -1- gl_STDINT_BITSIZEOF([sig_atomic_t wchar_t wint_t], [gl_STDINT_INCLUDES])
+m4trace:configure.ac:55: -1- AC_COMPUTE_INT([result], [sizeof ($gltype) * CHAR_BIT], [gl_STDINT_INCLUDES
+#include <limits.h>], [result=unknown])
+m4trace:configure.ac:55: -1- gl_STDINT_INCLUDES
+m4trace:configure.ac:55: -1- m4_pattern_allow([^BITSIZEOF_SIG_ATOMIC_T$])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^BITSIZEOF_WCHAR_T$])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^BITSIZEOF_WINT_T$])
+m4trace:configure.ac:55: -1- gl_CHECK_TYPES_SIGNED([sig_atomic_t wchar_t wint_t], [gl_STDINT_INCLUDES])
+m4trace:configure.ac:55: -1- gl_STDINT_INCLUDES
+m4trace:configure.ac:55: -1- m4_pattern_allow([^HAVE_SIGNED_SIG_ATOMIC_T$])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^HAVE_SIGNED_WCHAR_T$])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^HAVE_SIGNED_WINT_T$])
+m4trace:configure.ac:55: -1- gl_INTEGER_TYPE_SUFFIX([ptrdiff_t size_t], [gl_STDINT_INCLUDES])
+m4trace:configure.ac:55: -1- gl_STDINT_INCLUDES
+m4trace:configure.ac:55: -1- m4_pattern_allow([^PTRDIFF_T_SUFFIX$])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^SIZE_T_SUFFIX$])
+m4trace:configure.ac:55: -1- gl_INTEGER_TYPE_SUFFIX([sig_atomic_t wchar_t wint_t], [gl_STDINT_INCLUDES])
+m4trace:configure.ac:55: -1- gl_STDINT_INCLUDES
+m4trace:configure.ac:55: -1- m4_pattern_allow([^SIG_ATOMIC_T_SUFFIX$])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^WCHAR_T_SUFFIX$])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^WINT_T_SUFFIX$])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^STDINT_H$])
+m4trace:configure.ac:55: -1- AM_CONDITIONAL([GL_GENERATE_STDINT_H], [test -n "$STDINT_H"])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^GL_GENERATE_STDINT_H_TRUE$])
+m4trace:configure.ac:55: -1- m4_pattern_allow([^GL_GENERATE_STDINT_H_FALSE$])
+m4trace:configure.ac:55: -1
