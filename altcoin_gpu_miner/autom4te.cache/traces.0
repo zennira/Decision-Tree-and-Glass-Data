@@ -4735,4 +4735,80 @@ m4trace:configure.ac:353: -1- AM_CONDITIONAL([NEED_FPGAUTILS], [test x$modminer 
 m4trace:configure.ac:353: -1- m4_pattern_allow([^NEED_FPGAUTILS_TRUE$])
 m4trace:configure.ac:353: -1- m4_pattern_allow([^NEED_FPGAUTILS_FALSE$])
 m4trace:configure.ac:353: -1- _AM_SUBST_NOTMAKE([NEED_FPGAUTILS_TRUE])
-m4trace:c
+m4trace:configure.ac:353: -1- _AM_SUBST_NOTMAKE([NEED_FPGAUTILS_FALSE])
+m4trace:configure.ac:354: -1- AM_CONDITIONAL([WANT_USBUTILS], [test x$want_usbutils != xfalse])
+m4trace:configure.ac:354: -1- m4_pattern_allow([^WANT_USBUTILS_TRUE$])
+m4trace:configure.ac:354: -1- m4_pattern_allow([^WANT_USBUTILS_FALSE$])
+m4trace:configure.ac:354: -1- _AM_SUBST_NOTMAKE([WANT_USBUTILS_TRUE])
+m4trace:configure.ac:354: -1- _AM_SUBST_NOTMAKE([WANT_USBUTILS_FALSE])
+m4trace:configure.ac:355: -1- AM_CONDITIONAL([HAVE_CURSES], [test x$curses = xyes])
+m4trace:configure.ac:355: -1- m4_pattern_allow([^HAVE_CURSES_TRUE$])
+m4trace:configure.ac:355: -1- m4_pattern_allow([^HAVE_CURSES_FALSE$])
+m4trace:configure.ac:355: -1- _AM_SUBST_NOTMAKE([HAVE_CURSES_TRUE])
+m4trace:configure.ac:355: -1- _AM_SUBST_NOTMAKE([HAVE_CURSES_FALSE])
+m4trace:configure.ac:356: -1- AM_CONDITIONAL([HAVE_WINDOWS], [test x$have_win32 = xtrue])
+m4trace:configure.ac:356: -1- m4_pattern_allow([^HAVE_WINDOWS_TRUE$])
+m4trace:configure.ac:356: -1- m4_pattern_allow([^HAVE_WINDOWS_FALSE$])
+m4trace:configure.ac:356: -1- _AM_SUBST_NOTMAKE([HAVE_WINDOWS_TRUE])
+m4trace:configure.ac:356: -1- _AM_SUBST_NOTMAKE([HAVE_WINDOWS_FALSE])
+m4trace:configure.ac:357: -1- AM_CONDITIONAL([HAVE_x86_64], [test x$have_x86_64 = xtrue])
+m4trace:configure.ac:357: -1- m4_pattern_allow([^HAVE_x86_64_TRUE$])
+m4trace:configure.ac:357: -1- m4_pattern_allow([^HAVE_x86_64_FALSE$])
+m4trace:configure.ac:357: -1- _AM_SUBST_NOTMAKE([HAVE_x86_64_TRUE])
+m4trace:configure.ac:357: -1- _AM_SUBST_NOTMAKE([HAVE_x86_64_FALSE])
+m4trace:configure.ac:361: -1- m4_pattern_allow([^USE_USBUTILS$])
+m4trace:configure.ac:362: -1- _m4_warn([obsolete], [The macro `AC_HELP_STRING' is obsolete.
+You should run autoupdate.], [/mingw/src/autoconf/26/autoconf2.5-2.68-1/src/autoconf-2.68/lib/autoconf/general.m4:209: AC_HELP_STRING is expanded from...
+/mingw/src/autoconf/26/autoconf2.5-2.68-1/src/autoconf-2.68/lib/autoconf/general.m4:1482: AC_ARG_WITH is expanded from...
+configure.ac:362: the top level])
+m4trace:configure.ac:372: -1- m4_pattern_allow([^HAVE_LIBUSB$])
+m4trace:configure.ac:375: -1- PKG_CHECK_MODULES([LIBUSB], [libusb-1.0], [AC_DEFINE(HAVE_LIBUSB, 1, [Define if you have libusb-1.0])], [AC_MSG_ERROR([Could not find usb library - please install libusb-1.0])])
+m4trace:configure.ac:375: -1- PKG_PROG_PKG_CONFIG
+m4trace:configure.ac:375: -1- m4_pattern_forbid([^_?PKG_[A-Z_]+$])
+m4trace:configure.ac:375: -1- m4_pattern_allow([^PKG_CONFIG(_(PATH|LIBDIR|SYSROOT_DIR|ALLOW_SYSTEM_(CFLAGS|LIBS)))?$])
+m4trace:configure.ac:375: -1- m4_pattern_allow([^PKG_CONFIG_(DISABLE_UNINSTALLED|TOP_BUILD_DIR|DEBUG_SPEW)$])
+m4trace:configure.ac:375: -1- m4_pattern_allow([^PKG_CONFIG$])
+m4trace:configure.ac:375: -1- m4_pattern_allow([^PKG_CONFIG_PATH$])
+m4trace:configure.ac:375: -1- m4_pattern_allow([^PKG_CONFIG_LIBDIR$])
+m4trace:configure.ac:375: -1- m4_pattern_allow([^PKG_CONFIG$])
+m4trace:configure.ac:375: -1- m4_pattern_allow([^LIBUSB_CFLAGS$])
+m4trace:configure.ac:375: -1- m4_pattern_allow([^LIBUSB_LIBS$])
+m4trace:configure.ac:375: -1- PKG_CHECK_EXISTS([libusb-1.0], [pkg_cv_[]LIBUSB_CFLAGS=`$PKG_CONFIG --[]cflags "libusb-1.0" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes ], [pkg_failed=yes])
+m4trace:configure.ac:375: -1- PKG_CHECK_EXISTS([libusb-1.0], [pkg_cv_[]LIBUSB_LIBS=`$PKG_CONFIG --[]libs "libusb-1.0" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes ], [pkg_failed=yes])
+m4trace:configure.ac:375: -1- _PKG_SHORT_ERRORS_SUPPORTED
+m4trace:configure.ac:375: -1- m4_pattern_allow([^HAVE_LIBUSB$])
+m4trace:configure.ac:379: -1- m4_pattern_allow([^subdirs$])
+m4trace:configure.ac:393: -1- AM_CONDITIONAL([WANT_STATIC_LIBUSB], [test x$dlibusb = xno])
+m4trace:configure.ac:393: -1- m4_pattern_allow([^WANT_STATIC_LIBUSB_TRUE$])
+m4trace:configure.ac:393: -1- m4_pattern_allow([^WANT_STATIC_LIBUSB_FALSE$])
+m4trace:configure.ac:393: -1- _AM_SUBST_NOTMAKE([WANT_STATIC_LIBUSB_TRUE])
+m4trace:configure.ac:393: -1- _AM_SUBST_NOTMAKE([WANT_STATIC_LIBUSB_FALSE])
+m4trace:configure.ac:395: -1- m4_pattern_allow([^subdirs$])
+m4trace:configure.ac:398: -1- PKG_PROG_PKG_CONFIG([])
+m4trace:configure.ac:398: -1- m4_pattern_forbid([^_?PKG_[A-Z_]+$])
+m4trace:configure.ac:398: -1- m4_pattern_allow([^PKG_CONFIG(_(PATH|LIBDIR|SYSROOT_DIR|ALLOW_SYSTEM_(CFLAGS|LIBS)))?$])
+m4trace:configure.ac:398: -1- m4_pattern_allow([^PKG_CONFIG_(DISABLE_UNINSTALLED|TOP_BUILD_DIR|DEBUG_SPEW)$])
+m4trace:configure.ac:398: -1- m4_pattern_allow([^PKG_CONFIG$])
+m4trace:configure.ac:398: -1- m4_pattern_allow([^PKG_CONFIG_PATH$])
+m4trace:configure.ac:398: -1- m4_pattern_allow([^PKG_CONFIG_LIBDIR$])
+m4trace:configure.ac:398: -1- m4_pattern_allow([^PKG_CONFIG$])
+m4trace:configure.ac:410: -1- m4_pattern_allow([^LIBUSB_LIBS$])
+m4trace:configure.ac:411: -1- m4_pattern_allow([^LIBUSB_CFLAGS$])
+m4trace:configure.ac:413: -1- _m4_warn([obsolete], [The macro `AC_HELP_STRING' is obsolete.
+You should run autoupdate.], [/mingw/src/autoconf/26/autoconf2.5-2.68-1/src/autoconf-2.68/lib/autoconf/general.m4:209: AC_HELP_STRING is expanded from...
+/mingw/src/autoconf/26/autoconf2.5-2.68-1/src/autoconf-2.68/lib/autoconf/general.m4:1463: AC_ARG_ENABLE is expanded from...
+configure.ac:413: the top level])
+m4trace:configure.ac:420: -1- PKG_CHECK_MODULES([LIBCURL], [libcurl >= 7.25.0], [AC_DEFINE([CURL_HAS_KEEPALIVE], [1], [Defined if version of curl supports keepalive.])], [PKG_CHECK_MODULES([LIBCURL], [libcurl >= 7.18.2], ,[AC_MSG_ERROR([Missing required libcurl dev >= 7.18.2])])])
+m4trace:configure.ac:420: -1- m4_pattern_allow([^LIBCURL_CFLAGS$])
+m4trace:configure.ac:420: -1- m4_pattern_allow([^LIBCURL_LIBS$])
+m4trace:configure.ac:420: -1- PKG_CHECK_EXISTS([libcurl >= 7.25.0], [pkg_cv_[]LIBCURL_CFLAGS=`$PKG_CONFIG --[]cflags "libcurl >= 7.25.0" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes ], [pkg_failed=yes])
+m4trace:configure.ac:420: -1- PKG_CHECK_EXISTS([libcurl >= 7.25.0], [pkg_cv_[]LIBCURL_LIBS=`$PKG_CONFIG --[]libs "libcurl >= 7.25.0" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes ], [pkg_failed=yes])
+m4trace:configure.ac:420: -1- _PKG_SHORT_ERRORS_SUPPORTED
+m4trace:configure.ac:420: -1- PKG_CHECK_MODULES([LIBCURL], [libcurl >= 7.18.2], [], [AC_MSG_ERROR([Missing required libcurl dev >= 7.18.2])])
+m4trace:configure.ac:420: -1- m4_pattern_allow([^LIBCURL_CFLAGS$])
+m4trace:configure.ac:420: -1- m4_pattern_allow([^LIBCURL_LIBS$])
+m4trace:configure.ac:420: -1- PKG_CHECK_EXISTS([l
