@@ -1,4 +1,5 @@
-opt/libccan_a-helpers.o: opt/helpers.c ../ccan/opt/opt.h \
+
+opt/libccan_a-parse.o: opt/parse.c ../ccan/opt/opt.h \
  ../ccan/compiler/compiler.h ../config.h \
  ../ccan/typesafe_cb/typesafe_cb.h \
  d:\mingw\bin\../lib/gcc/mingw32/4.6.2/include/stdbool.h \
@@ -6,10 +7,7 @@ opt/libccan_a-helpers.o: opt/helpers.c ../ccan/opt/opt.h \
  d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/_mingw.h \
  d:\mingw\bin\../lib/gcc/mingw32/4.6.2/include/stddef.h \
  d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/string.h \
- d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/errno.h \
- d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/stdio.h \
- d:\mingw\bin\../lib/gcc/mingw32/4.6.2/include/stdarg.h \
- d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/sys/types.h \
+ d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/assert.h \
  opt/private.h
 
 ../ccan/opt/opt.h:
@@ -30,12 +28,6 @@ d:\mingw\bin\../lib/gcc/mingw32/4.6.2/include/stddef.h:
 
 d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/string.h:
 
-d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/errno.h:
-
-d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/stdio.h:
-
-d:\mingw\bin\../lib/gcc/mingw32/4.6.2/include/stdarg.h:
-
-d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/sys/types.h:
+d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include/assert.h:
 
 opt/private.h:
