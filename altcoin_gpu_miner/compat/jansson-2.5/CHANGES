@@ -1,0 +1,230 @@
+Version 2.5
+===========
+
+Released 2013-09-19
+
+* New features:
+
+  - `json_pack()` and friends: Add format specifiers ``s#``, ``+`` and
+    ``+#``.
+
+  - Add ``JSON_DECODE_INT_AS_REAL`` decoding flag to treat all numbers
+    as real in the decoder (#123).
+
+  - Add `json_array_foreach()`, paralleling `json_object_foreach()`
+    (#118).
+
+* Bug fixes:
+
+  - `json_dumps()` and friends: Don't crash if json is *NULL* and
+    ``JSON_ENCODE_ANY`` is set.
+
+  - Fix a theoretical integer overflow in `jsonp_strdup()`.
+
+  - Fix `l_isxdigit()` macro (#97).
+
+  - Fix an off-by-one error in `json_array_remove()`.
+
+* Build:
+
+  - Support CMake in addition to GNU Autotools (#106, #107, #112,
+    #115, #120, #127).
+
+  - Support building for Android (#109).
+
+  - Don't use ``-Werror`` by default.
+
+  - Support building and testing with VPATH (#93).
+
+  - Fix compilation when ``NDEBUG`` is defined (#128)
+
+* Tests:
+
+  - Fix a refleak in ``test/bin/json_process.c``.
+
+* Documentation:
+
+  - Clarify the return value of `json_load_callback_t`.
+
+  - Document how to circumvent problems with separate heaps on Windows.
+
+  - Fix memory leaks and warnings in ``github_commits.c``.
+
+  - Use `json_decref()` properly in tutorial.
+
+* Other:
+
+  - Make it possible to forward declare ``struct json_t``.
+
+
+Version 2.4
+===========
+
+Released 2012-09-23
+
+* New features:
+
+  - Add `json_boolean()` macro that returns the JSON true or false
+    value based on its argument (#86).
+
+  - Add `json_load_callback()` that calls a callback function
+    repeatedly to read the JSON input (#57).
+
+  - Add JSON_ESCAPE_SLASH encoding flag to escape all occurences of
+    ``/`` with ``\/``.
+
+* Bug fixes:
+
+  - Check for and reject NaN and Inf values for reals. Encoding these
+    values resulted in invalid JSON.
+
+  - Fix `json_real_set()` to return -1 on error.
+
+* Build:
+
+  - Jansson now builds on Windows with Visual Studio 2010, and
+    includes solution and project files in ``win32/vs2010/``
+    directory.
+
+  - Fix build warnings (#77, #78).
+
+  - Add ``-no-undefined`` to LDFLAGS (#90).
+
+* Tests:
+
+  - Fix the symbol exports test on Linux/PPC64 (#88).
+
+* Documentation:
+
+  - Fix typos (#73, #84).
+
+
+Version 2.3.1
+=============
+
+Released 2012-04-20
+
+* Build issues:
+
+  - Only use ``long long`` if ``strtoll()`` is also available.
+
+* Documentation:
+
+  - Fix the names of library version constants in documentation. (#52)
+
+  - Change the tutorial to use GitHub API v3. (#65)
+
+* Tests:
+
+  - Make some tests locale independent. (#51)
+
+  - Distribute the library exports test in the tarball.
+
+  - Make test run on shells that don't support the ``export FOO=bar``
+    syntax.
+
+
+Version 2.3
+===========
+
+Released 2012-01-27
+
+* New features:
+
+  - `json_unpack()` and friends: Add support for optional object keys
+    with the ``{s?o}`` syntax.
+
+  - Add `json_object_update_existing()` and
+    `json_object_update_missing()`, for updating only existing keys or
+    only adding missing keys to an object. (#37)
+
+  - Add `json_object_foreach()` for more convenient iteration over
+    objects. (#45, #46)
+
+  - When decoding JSON, write the number of bytes that were read from
+    input to ``error.position`` also on success. This is handy with
+    ``JSON_DISABLE_EOF_CHECK``.
+
+  - Add support for decoding any JSON value, not just arrays or
+    objects. The support is enabled with the new ``JSON_DECODE_ANY``
+    flag. Patch by Andrea Marchesini. (#4)
+
+* Bug fixes
+
+  - Avoid problems with object's serial number growing too big. (#40,
+    #41)
+
+  - Decoding functions now return NULL if the first argument is NULL.
+    Patch by Andrea Marchesini.
+
+  - Include ``jansson_config.h.win32`` in the distribution tarball.
+
+  - Remove ``+`` and leading zeros from exponents in the encoder.
+    (#39)
+
+  - Make Jansson build and work on MinGW. (#39, #38)
+
+* Documentation
+
+  - Note that the same JSON values must not be encoded in parallel by
+    separate threads. (#42)
+
+  - Document MinGW support.
+
+
+Version 2.2.1
+=============
+
+Released 2011-10-06
+
+* Bug fixes:
+
+  - Fix real number encoding and decoding under non-C locales. (#32)
+
+  - Fix identifier decoding under non-UTF-8 locales. (#35)
+
+  - `json_load_file()`: Open the input file in binary mode for maximum
+    compatiblity.
+
+* Documentation:
+
+  - Clarify the lifecycle of the result of the ``s`` fromat of
+    `json_unpack()`. (#31)
+
+  - Add some portability info. (#36)
+
+  - Little clarifications here and there.
+
+* Other:
+
+  - Some style fixes, issues detected by static analyzers.
+
+
+Version 2.2
+===========
+
+Released 2011-09-03
+
+* New features:
+
+  - `json_dump_callback()`: Pass the encoder output to a callback
+    function in chunks.
+
+* Bug fixes:
+
+  - `json_string_set()`: Check that target is a string and value is
+    not NULL.
+
+* Other:
+
+  - Documentation typo fixes and clarifications.
+
+
+Version 2.1
+===========
+
+Released 2011-06-10
+
+* New features:
+
+  - `json_loadb()`: Decode a string w

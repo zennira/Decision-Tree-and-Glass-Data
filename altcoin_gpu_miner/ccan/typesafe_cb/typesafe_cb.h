@@ -83,3 +83,52 @@
  *	#define register_callback(fn, arg) \
  *		_register_callback(typesafe_cb(void, (fn), void*, (arg)), (arg))
  */
+#define typesafe_cb(rtype, atype, fn, arg)			\
+	typesafe_cb_cast(rtype (*)(atype),			\
+			 rtype (*)(__typeof__(arg)),		\
+			 (fn))
+
+/**
+ * typesafe_cb_preargs - cast a callback function if it matches the arg
+ * @rtype: the return type of the callback function
+ * @atype: the (pointer) type which the callback function expects.
+ * @fn: the callback function to cast
+ * @arg: the (pointer) argument to hand to the callback function.
+ *
+ * This is a version of typesafe_cb() for callbacks that take other arguments
+ * before the @arg.
+ *
+ * Example:
+ *	void _register_callback(void (*fn)(int, void *arg), void *arg);
+ *	#define register_callback(fn, arg)				   \
+ *		_register_callback(typesafe_cb_preargs(void, (fn), void *, \
+ *				   (arg), int),				   \
+ *				   (arg))
+ */
+#define typesafe_cb_preargs(rtype, atype, fn, arg, ...)			\
+	typesafe_cb_cast(rtype (*)(__VA_ARGS__, atype),			\
+			 rtype (*)(__VA_ARGS__, __typeof__(arg)),	\
+			 (fn))
+
+/**
+ * typesafe_cb_postargs - cast a callback function if it matches the arg
+ * @rtype: the return type of the callback function
+ * @atype: the (pointer) type which the callback function expects.
+ * @fn: the callback function to cast
+ * @arg: the (pointer) argument to hand to the callback function.
+ *
+ * This is a version of typesafe_cb() for callbacks that take other arguments
+ * after the @arg.
+ *
+ * Example:
+ *	void _register_callback(void (*fn)(void *arg, int), void *arg);
+ *	#define register_callback(fn, arg) \
+ *		_register_callback(typesafe_cb_postargs(void, (fn), void *, \
+ *				   (arg), int),				    \
+ *				   (arg))
+ */
+#define typesafe_cb_postargs(rtype, atype, fn, arg, ...)		\
+	typesafe_cb_cast(rtype (*)(atype, __VA_ARGS__),			\
+			 rtype (*)(__typeof__(arg), __VA_ARGS__),	\
+			 (fn))
+#endif /* CCAN_CAST_IF_TYPE_H */
