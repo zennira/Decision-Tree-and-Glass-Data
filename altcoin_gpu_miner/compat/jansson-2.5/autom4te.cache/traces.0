@@ -572,4 +572,154 @@ darwin[[1567]].*)
 beos*)
   LT_DLLOADERS="$LT_DLLOADERS ${lt_dlopen_dir+$lt_dlopen_dir/}load_add_on.la"
   ;;
-cygwin* | mingw* | os
+cygwin* | mingw* | os2* | pw32*)
+  AC_CHECK_DECLS([cygwin_conv_path], [], [], [[#include <sys/cygwin.h>]])
+  LT_DLLOADERS="$LT_DLLOADERS ${lt_dlopen_dir+$lt_dlopen_dir/}loadlibrary.la"
+  ;;
+esac
+
+AC_CHECK_LIB([dld], [dld_link],
+	[AC_DEFINE([HAVE_DLD], [1],
+		   [Define if you have the GNU dld library.])
+		LT_DLLOADERS="$LT_DLLOADERS ${lt_dlopen_dir+$lt_dlopen_dir/}dld_link.la"])
+AC_SUBST([LIBADD_DLD_LINK])
+
+m4_pattern_allow([^LT_DLPREOPEN$])
+LT_DLPREOPEN=
+if test -n "$LT_DLLOADERS"
+then
+  for lt_loader in $LT_DLLOADERS; do
+    LT_DLPREOPEN="$LT_DLPREOPEN-dlpreopen $lt_loader "
+  done
+  AC_DEFINE([HAVE_LIBDLLOADER], [1],
+            [Define if libdlloader will be built on this platform])
+fi
+AC_SUBST([LT_DLPREOPEN])
+
+dnl This isn't used anymore, but set it for backwards compatibility
+LIBADD_DL="$LIBADD_DLOPEN $LIBADD_SHL_LOAD"
+AC_SUBST([LIBADD_DL])
+
+AC_LANG_POP
+])
+m4trace:/mingw/share/aclocal/ltdl.m4:731: -1- AU_DEFUN([AC_LTDL_DLLIB], [m4_if($#, 0, [LT_LIB_DLLOAD], [LT_LIB_DLLOAD($@)])])
+m4trace:/mingw/share/aclocal/ltdl.m4:731: -1- AC_DEFUN([AC_LTDL_DLLIB], [AC_DIAGNOSE([obsolete], [The macro `AC_LTDL_DLLIB' is obsolete.
+You should run autoupdate.])dnl
+m4_if($#, 0, [LT_LIB_DLLOAD], [LT_LIB_DLLOAD($@)])])
+m4trace:/mingw/share/aclocal/ltdl.m4:739: -1- AC_DEFUN([LT_SYS_SYMBOL_USCORE], [m4_require([_LT_CMD_GLOBAL_SYMBOLS])dnl
+AC_CACHE_CHECK([for _ prefix in compiled symbols],
+  [lt_cv_sys_symbol_underscore],
+  [lt_cv_sys_symbol_underscore=no
+  cat > conftest.$ac_ext <<_LT_EOF
+void nm_test_func(){}
+int main(){nm_test_func;return 0;}
+_LT_EOF
+  if AC_TRY_EVAL(ac_compile); then
+    # Now try to grab the symbols.
+    ac_nlist=conftest.nm
+    if AC_TRY_EVAL(NM conftest.$ac_objext \| $lt_cv_sys_global_symbol_pipe \> $ac_nlist) && test -s "$ac_nlist"; then
+      # See whether the symbols have a leading underscore.
+      if grep '^. _nm_test_func' "$ac_nlist" >/dev/null; then
+        lt_cv_sys_symbol_underscore=yes
+      else
+        if grep '^. nm_test_func ' "$ac_nlist" >/dev/null; then
+	  :
+        else
+	  echo "configure: cannot find nm_test_func in $ac_nlist" >&AS_MESSAGE_LOG_FD
+        fi
+      fi
+    else
+      echo "configure: cannot run $lt_cv_sys_global_symbol_pipe" >&AS_MESSAGE_LOG_FD
+    fi
+  else
+    echo "configure: failed program was:" >&AS_MESSAGE_LOG_FD
+    cat conftest.c >&AS_MESSAGE_LOG_FD
+  fi
+  rm -rf conftest*
+  ])
+  sys_symbol_underscore=$lt_cv_sys_symbol_underscore
+  AC_SUBST([sys_symbol_underscore])
+])
+m4trace:/mingw/share/aclocal/ltdl.m4:776: -1- AU_DEFUN([AC_LTDL_SYMBOL_USCORE], [m4_if($#, 0, [LT_SYS_SYMBOL_USCORE], [LT_SYS_SYMBOL_USCORE($@)])])
+m4trace:/mingw/share/aclocal/ltdl.m4:776: -1- AC_DEFUN([AC_LTDL_SYMBOL_USCORE], [AC_DIAGNOSE([obsolete], [The macro `AC_LTDL_SYMBOL_USCORE' is obsolete.
+You should run autoupdate.])dnl
+m4_if($#, 0, [LT_SYS_SYMBOL_USCORE], [LT_SYS_SYMBOL_USCORE($@)])])
+m4trace:/mingw/share/aclocal/ltdl.m4:783: -1- AC_DEFUN([LT_FUNC_DLSYM_USCORE], [AC_REQUIRE([LT_SYS_SYMBOL_USCORE])dnl
+if test x"$lt_cv_sys_symbol_underscore" = xyes; then
+  if test x"$libltdl_cv_func_dlopen" = xyes ||
+     test x"$libltdl_cv_lib_dl_dlopen" = xyes ; then
+	AC_CACHE_CHECK([whether we have to add an underscore for dlsym],
+	  [libltdl_cv_need_uscore],
+	  [libltdl_cv_need_uscore=unknown
+          save_LIBS="$LIBS"
+          LIBS="$LIBS $LIBADD_DLOPEN"
+	  _LT_TRY_DLOPEN_SELF(
+	    [libltdl_cv_need_uscore=no], [libltdl_cv_need_uscore=yes],
+	    [],				 [libltdl_cv_need_uscore=cross])
+	  LIBS="$save_LIBS"
+	])
+  fi
+fi
+
+if test x"$libltdl_cv_need_uscore" = xyes; then
+  AC_DEFINE([NEED_USCORE], [1],
+    [Define if dlsym() requires a leading underscore in symbol names.])
+fi
+])
+m4trace:/mingw/share/aclocal/ltdl.m4:808: -1- AU_DEFUN([AC_LTDL_DLSYM_USCORE], [m4_if($#, 0, [LT_FUNC_DLSYM_USCORE], [LT_FUNC_DLSYM_USCORE($@)])])
+m4trace:/mingw/share/aclocal/ltdl.m4:808: -1- AC_DEFUN([AC_LTDL_DLSYM_USCORE], [AC_DIAGNOSE([obsolete], [The macro `AC_LTDL_DLSYM_USCORE' is obsolete.
+You should run autoupdate.])dnl
+m4_if($#, 0, [LT_FUNC_DLSYM_USCORE], [LT_FUNC_DLSYM_USCORE($@)])])
+m4trace:/mingw/share/aclocal-1.11/amversion.m4:14: -1- AC_DEFUN([AM_AUTOMAKE_VERSION], [am__api_version='1.11'
+dnl Some users find AM_AUTOMAKE_VERSION and mistake it for a way to
+dnl require some minimum version.  Point them to the right macro.
+m4_if([$1], [1.11.1], [],
+      [AC_FATAL([Do not call $0, use AM_INIT_AUTOMAKE([$1]).])])dnl
+])
+m4trace:/mingw/share/aclocal-1.11/amversion.m4:33: -1- AC_DEFUN([AM_SET_CURRENT_AUTOMAKE_VERSION], [AM_AUTOMAKE_VERSION([1.11.1])dnl
+m4_ifndef([AC_AUTOCONF_VERSION],
+  [m4_copy([m4_PACKAGE_VERSION], [AC_AUTOCONF_VERSION])])dnl
+_AM_AUTOCONF_VERSION(m4_defn([AC_AUTOCONF_VERSION]))])
+m4trace:/mingw/share/aclocal-1.11/auxdir.m4:47: -1- AC_DEFUN([AM_AUX_DIR_EXPAND], [dnl Rely on autoconf to set up CDPATH properly.
+AC_PREREQ([2.50])dnl
+# expand $ac_aux_dir to an absolute path
+am_aux_dir=`cd $ac_aux_dir && pwd`
+])
+m4trace:/mingw/share/aclocal-1.11/cond.m4:15: -1- AC_DEFUN([AM_CONDITIONAL], [AC_PREREQ(2.52)dnl
+ ifelse([$1], [TRUE],  [AC_FATAL([$0: invalid condition: $1])],
+	[$1], [FALSE], [AC_FATAL([$0: invalid condition: $1])])dnl
+AC_SUBST([$1_TRUE])dnl
+AC_SUBST([$1_FALSE])dnl
+_AM_SUBST_NOTMAKE([$1_TRUE])dnl
+_AM_SUBST_NOTMAKE([$1_FALSE])dnl
+m4_define([_AM_COND_VALUE_$1], [$2])dnl
+if $2; then
+  $1_TRUE=
+  $1_FALSE='#'
+else
+  $1_TRUE='#'
+  $1_FALSE=
+fi
+AC_CONFIG_COMMANDS_PRE(
+[if test -z "${$1_TRUE}" && test -z "${$1_FALSE}"; then
+  AC_MSG_ERROR([[conditional "$1" was never defined.
+Usually this means the macro was only invoked conditionally.]])
+fi])])
+m4trace:/mingw/share/aclocal-1.11/depend.m4:28: -1- AC_DEFUN([_AM_DEPENDENCIES], [AC_REQUIRE([AM_SET_DEPDIR])dnl
+AC_REQUIRE([AM_OUTPUT_DEPENDENCY_COMMANDS])dnl
+AC_REQUIRE([AM_MAKE_INCLUDE])dnl
+AC_REQUIRE([AM_DEP_TRACK])dnl
+
+ifelse([$1], CC,   [depcc="$CC"   am_compiler_list=],
+       [$1], CXX,  [depcc="$CXX"  am_compiler_list=],
+       [$1], OBJC, [depcc="$OBJC" am_compiler_list='gcc3 gcc'],
+       [$1], UPC,  [depcc="$UPC"  am_compiler_list=],
+       [$1], GCJ,  [depcc="$GCJ"  am_compiler_list='gcc3 gcc'],
+                   [depcc="$$1"   am_compiler_list=])
+
+AC_CACHE_CHECK([dependency style of $depcc],
+               [am_cv_$1_dependencies_compiler_type],
+[if test -z "$AMDEP_TRUE" && test -f "$am_depcomp"; then
+  # We make a subdir and do the tests there.  Otherwise we can end up
+  # making bogus files that we don't know about and never remove.  For
+  # i
