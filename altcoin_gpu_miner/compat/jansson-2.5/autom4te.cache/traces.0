@@ -1392,4 +1392,156 @@ m4trace:m4/libtool.m4:861: -1- AC_DEFUN([AC_LIBTOOL_CXX], [AC_DIAGNOSE([obsolete
 You should run autoupdate.])dnl
 LT_LANG(C++)])
 m4trace:m4/libtool.m4:862: -1- AU_DEFUN([AC_LIBTOOL_F77], [LT_LANG(Fortran 77)])
-m4trace:m4/libtool.m4:862: -1- AC_DEFUN([AC_LIBTOOL_F77], [AC_DIAGNOSE([obsolete], [The macro `AC_
+m4trace:m4/libtool.m4:862: -1- AC_DEFUN([AC_LIBTOOL_F77], [AC_DIAGNOSE([obsolete], [The macro `AC_LIBTOOL_F77' is obsolete.
+You should run autoupdate.])dnl
+LT_LANG(Fortran 77)])
+m4trace:m4/libtool.m4:863: -1- AU_DEFUN([AC_LIBTOOL_FC], [LT_LANG(Fortran)])
+m4trace:m4/libtool.m4:863: -1- AC_DEFUN([AC_LIBTOOL_FC], [AC_DIAGNOSE([obsolete], [The macro `AC_LIBTOOL_FC' is obsolete.
+You should run autoupdate.])dnl
+LT_LANG(Fortran)])
+m4trace:m4/libtool.m4:864: -1- AU_DEFUN([AC_LIBTOOL_GCJ], [LT_LANG(Java)])
+m4trace:m4/libtool.m4:864: -1- AC_DEFUN([AC_LIBTOOL_GCJ], [AC_DIAGNOSE([obsolete], [The macro `AC_LIBTOOL_GCJ' is obsolete.
+You should run autoupdate.])dnl
+LT_LANG(Java)])
+m4trace:m4/libtool.m4:865: -1- AU_DEFUN([AC_LIBTOOL_RC], [LT_LANG(Windows Resource)])
+m4trace:m4/libtool.m4:865: -1- AC_DEFUN([AC_LIBTOOL_RC], [AC_DIAGNOSE([obsolete], [The macro `AC_LIBTOOL_RC' is obsolete.
+You should run autoupdate.])dnl
+LT_LANG(Windows Resource)])
+m4trace:m4/libtool.m4:1181: -1- AC_DEFUN([_LT_WITH_SYSROOT], [AC_MSG_CHECKING([for sysroot])
+AC_ARG_WITH([sysroot],
+[  --with-sysroot[=DIR] Search for dependent libraries within DIR
+                        (or the compiler's sysroot if not specified).],
+[], [with_sysroot=no])
+
+dnl lt_sysroot will always be passed unquoted.  We quote it here
+dnl in case the user passed a directory name.
+lt_sysroot=
+case ${with_sysroot} in #(
+ yes)
+   if test "$GCC" = yes; then
+     lt_sysroot=`$CC --print-sysroot 2>/dev/null`
+   fi
+   ;; #(
+ /*)
+   lt_sysroot=`echo "$with_sysroot" | sed -e "$sed_quote_subst"`
+   ;; #(
+ no|'')
+   ;; #(
+ *)
+   AC_MSG_RESULT([${with_sysroot}])
+   AC_MSG_ERROR([The sysroot must be an absolute path.])
+   ;;
+esac
+
+ AC_MSG_RESULT([${lt_sysroot:-no}])
+_LT_DECL([], [lt_sysroot], [0], [The root where to search for ]dnl
+[dependent libraries, and in which our libraries should be installed.])])
+m4trace:m4/libtool.m4:1445: -1- AC_DEFUN([_LT_COMPILER_OPTION], [m4_require([_LT_FILEUTILS_DEFAULTS])dnl
+m4_require([_LT_DECL_SED])dnl
+AC_CACHE_CHECK([$1], [$2],
+  [$2=no
+   m4_if([$4], , [ac_outfile=conftest.$ac_objext], [ac_outfile=$4])
+   echo "$lt_simple_compile_test_code" > conftest.$ac_ext
+   lt_compiler_flag="$3"
+   # Insert the option either (1) after the last *FLAGS variable, or
+   # (2) before a word containing "conftest.", or (3) at the end.
+   # Note that $ac_compile itself does not contain backslashes and begins
+   # with a dollar sign (not a hyphen), so the echo should work correctly.
+   # The option is referenced via a variable to avoid confusing sed.
+   lt_compile=`echo "$ac_compile" | $SED \
+   -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
+   -e 's: [[^ ]]*conftest\.: $lt_compiler_flag&:; t' \
+   -e 's:$: $lt_compiler_flag:'`
+   (eval echo "\"\$as_me:$LINENO: $lt_compile\"" >&AS_MESSAGE_LOG_FD)
+   (eval "$lt_compile" 2>conftest.err)
+   ac_status=$?
+   cat conftest.err >&AS_MESSAGE_LOG_FD
+   echo "$as_me:$LINENO: \$? = $ac_status" >&AS_MESSAGE_LOG_FD
+   if (exit $ac_status) && test -s "$ac_outfile"; then
+     # The compiler can only warn and ignore the option if not recognized
+     # So say no if there are warnings other than the usual output.
+     $ECHO "$_lt_compiler_boilerplate" | $SED '/^$/d' >conftest.exp
+     $SED '/^$/d; /^ *+/d' conftest.err >conftest.er2
+     if test ! -s conftest.er2 || diff conftest.exp conftest.er2 >/dev/null; then
+       $2=yes
+     fi
+   fi
+   $RM conftest*
+])
+
+if test x"[$]$2" = xyes; then
+    m4_if([$5], , :, [$5])
+else
+    m4_if([$6], , :, [$6])
+fi
+])
+m4trace:m4/libtool.m4:1487: -1- AU_DEFUN([AC_LIBTOOL_COMPILER_OPTION], [m4_if($#, 0, [_LT_COMPILER_OPTION], [_LT_COMPILER_OPTION($@)])])
+m4trace:m4/libtool.m4:1487: -1- AC_DEFUN([AC_LIBTOOL_COMPILER_OPTION], [AC_DIAGNOSE([obsolete], [The macro `AC_LIBTOOL_COMPILER_OPTION' is obsolete.
+You should run autoupdate.])dnl
+m4_if($#, 0, [_LT_COMPILER_OPTION], [_LT_COMPILER_OPTION($@)])])
+m4trace:m4/libtool.m4:1496: -1- AC_DEFUN([_LT_LINKER_OPTION], [m4_require([_LT_FILEUTILS_DEFAULTS])dnl
+m4_require([_LT_DECL_SED])dnl
+AC_CACHE_CHECK([$1], [$2],
+  [$2=no
+   save_LDFLAGS="$LDFLAGS"
+   LDFLAGS="$LDFLAGS $3"
+   echo "$lt_simple_link_test_code" > conftest.$ac_ext
+   if (eval $ac_link 2>conftest.err) && test -s conftest$ac_exeext; then
+     # The linker can only warn and ignore the option if not recognized
+     # So say no if there are warnings
+     if test -s conftest.err; then
+       # Append any errors to the config.log.
+       cat conftest.err 1>&AS_MESSAGE_LOG_FD
+       $ECHO "$_lt_linker_boilerplate" | $SED '/^$/d' > conftest.exp
+       $SED '/^$/d; /^ *+/d' conftest.err >conftest.er2
+       if diff conftest.exp conftest.er2 >/dev/null; then
+         $2=yes
+       fi
+     else
+       $2=yes
+     fi
+   fi
+   $RM -r conftest*
+   LDFLAGS="$save_LDFLAGS"
+])
+
+if test x"[$]$2" = xyes; then
+    m4_if([$4], , :, [$4])
+else
+    m4_if([$5], , :, [$5])
+fi
+])
+m4trace:m4/libtool.m4:1531: -1- AU_DEFUN([AC_LIBTOOL_LINKER_OPTION], [m4_if($#, 0, [_LT_LINKER_OPTION], [_LT_LINKER_OPTION($@)])])
+m4trace:m4/libtool.m4:1531: -1- AC_DEFUN([AC_LIBTOOL_LINKER_OPTION], [AC_DIAGNOSE([obsolete], [The macro `AC_LIBTOOL_LINKER_OPTION' is obsolete.
+You should run autoupdate.])dnl
+m4_if($#, 0, [_LT_LINKER_OPTION], [_LT_LINKER_OPTION($@)])])
+m4trace:m4/libtool.m4:1538: -1- AC_DEFUN([LT_CMD_MAX_LEN], [AC_REQUIRE([AC_CANONICAL_HOST])dnl
+# find the maximum length of command line arguments
+AC_MSG_CHECKING([the maximum length of command line arguments])
+AC_CACHE_VAL([lt_cv_sys_max_cmd_len], [dnl
+  i=0
+  teststring="ABCD"
+
+  case $build_os in
+  msdosdjgpp*)
+    # On DJGPP, this test can blow up pretty badly due to problems in libc
+    # (any single argument exceeding 2000 bytes causes a buffer overrun
+    # during glob expansion).  Even if it were fixed, the result of this
+    # check would be larger than it should be.
+    lt_cv_sys_max_cmd_len=12288;    # 12K is about right
+    ;;
+
+  gnu*)
+    # Under GNU Hurd, this test is not required because there is
+    # no limit to the length of command line arguments.
+    # Libtool will interpret -1 as no limit whatsoever
+    lt_cv_sys_max_cmd_len=-1;
+    ;;
+
+  cygwin* | mingw* | cegcc*)
+    # On Win9x/ME, this test blows up -- it succeeds, but takes
+    # about 5 minutes as the teststring grows exponentially.
+    # Worse, since 9x/ME are not pre-emptively multitasking,
+    # you end up with a "frozen" computer, even though with patience
+    # the test eventually succeeds (with a max line length of 256k).
+    # Instead, let's
