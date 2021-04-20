@@ -1923,4 +1923,156 @@ m4_if($#, 0, [LT_PATH_LD], [LT_PATH_LD($@)])])
 m4trace:m4/libtool.m4:3046: -1- AU_DEFUN([AC_PROG_LD], [m4_if($#, 0, [LT_PATH_LD], [LT_PATH_LD($@)])])
 m4trace:m4/libtool.m4:3046: -1- AC_DEFUN([AC_PROG_LD], [AC_DIAGNOSE([obsolete], [The macro `AC_PROG_LD' is obsolete.
 You should run autoupdate.])dnl
-m4_
+m4_if($#, 0, [LT_PATH_LD], [LT_PATH_LD($@)])])
+m4trace:m4/libtool.m4:3340: -1- AC_DEFUN([LT_PATH_NM], [AC_REQUIRE([AC_PROG_CC])dnl
+AC_CACHE_CHECK([for BSD- or MS-compatible name lister (nm)], lt_cv_path_NM,
+[if test -n "$NM"; then
+  # Let the user override the test.
+  lt_cv_path_NM="$NM"
+else
+  lt_nm_to_check="${ac_tool_prefix}nm"
+  if test -n "$ac_tool_prefix" && test "$build" = "$host"; then
+    lt_nm_to_check="$lt_nm_to_check nm"
+  fi
+  for lt_tmp_nm in $lt_nm_to_check; do
+    lt_save_ifs="$IFS"; IFS=$PATH_SEPARATOR
+    for ac_dir in $PATH /usr/ccs/bin/elf /usr/ccs/bin /usr/ucb /bin; do
+      IFS="$lt_save_ifs"
+      test -z "$ac_dir" && ac_dir=.
+      tmp_nm="$ac_dir/$lt_tmp_nm"
+      if test -f "$tmp_nm" || test -f "$tmp_nm$ac_exeext" ; then
+	# Check to see if the nm accepts a BSD-compat flag.
+	# Adding the `sed 1q' prevents false positives on HP-UX, which says:
+	#   nm: unknown option "B" ignored
+	# Tru64's nm complains that /dev/null is an invalid object file
+	case `"$tmp_nm" -B /dev/null 2>&1 | sed '1q'` in
+	*/dev/null* | *'Invalid file or object type'*)
+	  lt_cv_path_NM="$tmp_nm -B"
+	  break
+	  ;;
+	*)
+	  case `"$tmp_nm" -p /dev/null 2>&1 | sed '1q'` in
+	  */dev/null*)
+	    lt_cv_path_NM="$tmp_nm -p"
+	    break
+	    ;;
+	  *)
+	    lt_cv_path_NM=${lt_cv_path_NM="$tmp_nm"} # keep the first match, but
+	    continue # so that we can try to find one that supports BSD flags
+	    ;;
+	  esac
+	  ;;
+	esac
+      fi
+    done
+    IFS="$lt_save_ifs"
+  done
+  : ${lt_cv_path_NM=no}
+fi])
+if test "$lt_cv_path_NM" != "no"; then
+  NM="$lt_cv_path_NM"
+else
+  # Didn't find any BSD compatible name lister, look for dumpbin.
+  if test -n "$DUMPBIN"; then :
+    # Let the user override the test.
+  else
+    AC_CHECK_TOOLS(DUMPBIN, [dumpbin "link -dump"], :)
+    case `$DUMPBIN -symbols /dev/null 2>&1 | sed '1q'` in
+    *COFF*)
+      DUMPBIN="$DUMPBIN -symbols"
+      ;;
+    *)
+      DUMPBIN=:
+      ;;
+    esac
+  fi
+  AC_SUBST([DUMPBIN])
+  if test "$DUMPBIN" != ":"; then
+    NM="$DUMPBIN"
+  fi
+fi
+test -z "$NM" && NM=nm
+AC_SUBST([NM])
+_LT_DECL([], [NM], [1], [A BSD- or MS-compatible name lister])dnl
+
+AC_CACHE_CHECK([the name lister ($NM) interface], [lt_cv_nm_interface],
+  [lt_cv_nm_interface="BSD nm"
+  echo "int some_variable = 0;" > conftest.$ac_ext
+  (eval echo "\"\$as_me:$LINENO: $ac_compile\"" >&AS_MESSAGE_LOG_FD)
+  (eval "$ac_compile" 2>conftest.err)
+  cat conftest.err >&AS_MESSAGE_LOG_FD
+  (eval echo "\"\$as_me:$LINENO: $NM \\\"conftest.$ac_objext\\\"\"" >&AS_MESSAGE_LOG_FD)
+  (eval "$NM \"conftest.$ac_objext\"" 2>conftest.err > conftest.out)
+  cat conftest.err >&AS_MESSAGE_LOG_FD
+  (eval echo "\"\$as_me:$LINENO: output\"" >&AS_MESSAGE_LOG_FD)
+  cat conftest.out >&AS_MESSAGE_LOG_FD
+  if $GREP 'External.*some_variable' conftest.out > /dev/null; then
+    lt_cv_nm_interface="MS dumpbin"
+  fi
+  rm -f conftest*])
+])
+m4trace:m4/libtool.m4:3430: -1- AU_DEFUN([AM_PROG_NM], [m4_if($#, 0, [LT_PATH_NM], [LT_PATH_NM($@)])])
+m4trace:m4/libtool.m4:3430: -1- AC_DEFUN([AM_PROG_NM], [AC_DIAGNOSE([obsolete], [The macro `AM_PROG_NM' is obsolete.
+You should run autoupdate.])dnl
+m4_if($#, 0, [LT_PATH_NM], [LT_PATH_NM($@)])])
+m4trace:m4/libtool.m4:3431: -1- AU_DEFUN([AC_PROG_NM], [m4_if($#, 0, [LT_PATH_NM], [LT_PATH_NM($@)])])
+m4trace:m4/libtool.m4:3431: -1- AC_DEFUN([AC_PROG_NM], [AC_DIAGNOSE([obsolete], [The macro `AC_PROG_NM' is obsolete.
+You should run autoupdate.])dnl
+m4_if($#, 0, [LT_PATH_NM], [LT_PATH_NM($@)])])
+m4trace:m4/libtool.m4:3501: -1- AC_DEFUN([LT_LIB_M], [AC_REQUIRE([AC_CANONICAL_HOST])dnl
+LIBM=
+case $host in
+*-*-beos* | *-*-cegcc* | *-*-cygwin* | *-*-haiku* | *-*-pw32* | *-*-darwin*)
+  # These system don't have libm, or don't need it
+  ;;
+*-ncr-sysv4.3*)
+  AC_CHECK_LIB(mw, _mwvalidcheckl, LIBM="-lmw")
+  AC_CHECK_LIB(m, cos, LIBM="$LIBM -lm")
+  ;;
+*)
+  AC_CHECK_LIB(m, cos, LIBM="-lm")
+  ;;
+esac
+AC_SUBST([LIBM])
+])
+m4trace:m4/libtool.m4:3520: -1- AU_DEFUN([AC_CHECK_LIBM], [m4_if($#, 0, [LT_LIB_M], [LT_LIB_M($@)])])
+m4trace:m4/libtool.m4:3520: -1- AC_DEFUN([AC_CHECK_LIBM], [AC_DIAGNOSE([obsolete], [The macro `AC_CHECK_LIBM' is obsolete.
+You should run autoupdate.])dnl
+m4_if($#, 0, [LT_LIB_M], [LT_LIB_M($@)])])
+m4trace:m4/libtool.m4:7478: -1- AC_DEFUN([LT_PROG_GCJ], [m4_ifdef([AC_PROG_GCJ], [AC_PROG_GCJ],
+  [m4_ifdef([A][M_PROG_GCJ], [A][M_PROG_GCJ],
+    [AC_CHECK_TOOL(GCJ, gcj,)
+      test "x${GCJFLAGS+set}" = xset || GCJFLAGS="-g -O2"
+      AC_SUBST(GCJFLAGS)])])[]dnl
+])
+m4trace:m4/libtool.m4:7487: -1- AU_DEFUN([LT_AC_PROG_GCJ], [m4_if($#, 0, [LT_PROG_GCJ], [LT_PROG_GCJ($@)])])
+m4trace:m4/libtool.m4:7487: -1- AC_DEFUN([LT_AC_PROG_GCJ], [AC_DIAGNOSE([obsolete], [The macro `LT_AC_PROG_GCJ' is obsolete.
+You should run autoupdate.])dnl
+m4_if($#, 0, [LT_PROG_GCJ], [LT_PROG_GCJ($@)])])
+m4trace:m4/libtool.m4:7494: -1- AC_DEFUN([LT_PROG_RC], [AC_CHECK_TOOL(RC, windres,)
+])
+m4trace:m4/libtool.m4:7499: -1- AU_DEFUN([LT_AC_PROG_RC], [m4_if($#, 0, [LT_PROG_RC], [LT_PROG_RC($@)])])
+m4trace:m4/libtool.m4:7499: -1- AC_DEFUN([LT_AC_PROG_RC], [AC_DIAGNOSE([obsolete], [The macro `LT_AC_PROG_RC' is obsolete.
+You should run autoupdate.])dnl
+m4_if($#, 0, [LT_PROG_RC], [LT_PROG_RC($@)])])
+m4trace:m4/libtool.m4:7619: -1- AU_DEFUN([LT_AC_PROG_SED], [m4_if($#, 0, [AC_PROG_SED], [AC_PROG_SED($@)])])
+m4trace:m4/libtool.m4:7619: -1- AC_DEFUN([LT_AC_PROG_SED], [AC_DIAGNOSE([obsolete], [The macro `LT_AC_PROG_SED' is obsolete.
+You should run autoupdate.])dnl
+m4_if($#, 0, [AC_PROG_SED], [AC_PROG_SED($@)])])
+m4trace:m4/ltoptions.m4:14: -1- AC_DEFUN([LTOPTIONS_VERSION], [m4_if([1])])
+m4trace:m4/ltoptions.m4:111: -1- AU_DEFUN([AC_LIBTOOL_DLOPEN], [_LT_SET_OPTION([LT_INIT], [dlopen])
+AC_DIAGNOSE([obsolete],
+[$0: Remove this warning and the call to _LT_SET_OPTION when you
+put the `dlopen' option into LT_INIT's first parameter.])
+])
+m4trace:m4/ltoptions.m4:111: -1- AC_DEFUN([AC_LIBTOOL_DLOPEN], [AC_DIAGNOSE([obsolete], [The macro `AC_LIBTOOL_DLOPEN' is obsolete.
+You should run autoupdate.])dnl
+_LT_SET_OPTION([LT_INIT], [dlopen])
+AC_DIAGNOSE([obsolete],
+[$0: Remove this warning and the call to _LT_SET_OPTION when you
+put the `dlopen' option into LT_INIT's first parameter.])
+])
+m4trace:m4/ltoptions.m4:146: -1- AU_DEFUN([AC_LIBTOOL_WIN32_DLL], [AC_REQUIRE([AC_CANONICAL_HOST])dnl
+_LT_SET_OPTION([LT_INIT], [win32-dll])
+AC_DIAGNOSE([obsolete],
+[$0: Remove t
