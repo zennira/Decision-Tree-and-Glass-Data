@@ -2075,4 +2075,107 @@ put the `dlopen' option into LT_INIT's first parameter.])
 m4trace:m4/ltoptions.m4:146: -1- AU_DEFUN([AC_LIBTOOL_WIN32_DLL], [AC_REQUIRE([AC_CANONICAL_HOST])dnl
 _LT_SET_OPTION([LT_INIT], [win32-dll])
 AC_DIAGNOSE([obsolete],
-[$0: Remove t
+[$0: Remove this warning and the call to _LT_SET_OPTION when you
+put the `win32-dll' option into LT_INIT's first parameter.])
+])
+m4trace:m4/ltoptions.m4:146: -1- AC_DEFUN([AC_LIBTOOL_WIN32_DLL], [AC_DIAGNOSE([obsolete], [The macro `AC_LIBTOOL_WIN32_DLL' is obsolete.
+You should run autoupdate.])dnl
+AC_REQUIRE([AC_CANONICAL_HOST])dnl
+_LT_SET_OPTION([LT_INIT], [win32-dll])
+AC_DIAGNOSE([obsolete],
+[$0: Remove this warning and the call to _LT_SET_OPTION when you
+put the `win32-dll' option into LT_INIT's first parameter.])
+])
+m4trace:m4/ltoptions.m4:195: -1- AC_DEFUN([AC_ENABLE_SHARED], [_LT_SET_OPTION([LT_INIT], m4_if([$1], [no], [disable-])[shared])
+])
+m4trace:m4/ltoptions.m4:199: -1- AC_DEFUN([AC_DISABLE_SHARED], [_LT_SET_OPTION([LT_INIT], [disable-shared])
+])
+m4trace:m4/ltoptions.m4:203: -1- AU_DEFUN([AM_ENABLE_SHARED], [AC_ENABLE_SHARED($@)])
+m4trace:m4/ltoptions.m4:203: -1- AC_DEFUN([AM_ENABLE_SHARED], [AC_DIAGNOSE([obsolete], [The macro `AM_ENABLE_SHARED' is obsolete.
+You should run autoupdate.])dnl
+AC_ENABLE_SHARED($@)])
+m4trace:m4/ltoptions.m4:204: -1- AU_DEFUN([AM_DISABLE_SHARED], [AC_DISABLE_SHARED($@)])
+m4trace:m4/ltoptions.m4:204: -1- AC_DEFUN([AM_DISABLE_SHARED], [AC_DIAGNOSE([obsolete], [The macro `AM_DISABLE_SHARED' is obsolete.
+You should run autoupdate.])dnl
+AC_DISABLE_SHARED($@)])
+m4trace:m4/ltoptions.m4:249: -1- AC_DEFUN([AC_ENABLE_STATIC], [_LT_SET_OPTION([LT_INIT], m4_if([$1], [no], [disable-])[static])
+])
+m4trace:m4/ltoptions.m4:253: -1- AC_DEFUN([AC_DISABLE_STATIC], [_LT_SET_OPTION([LT_INIT], [disable-static])
+])
+m4trace:m4/ltoptions.m4:257: -1- AU_DEFUN([AM_ENABLE_STATIC], [AC_ENABLE_STATIC($@)])
+m4trace:m4/ltoptions.m4:257: -1- AC_DEFUN([AM_ENABLE_STATIC], [AC_DIAGNOSE([obsolete], [The macro `AM_ENABLE_STATIC' is obsolete.
+You should run autoupdate.])dnl
+AC_ENABLE_STATIC($@)])
+m4trace:m4/ltoptions.m4:258: -1- AU_DEFUN([AM_DISABLE_STATIC], [AC_DISABLE_STATIC($@)])
+m4trace:m4/ltoptions.m4:258: -1- AC_DEFUN([AM_DISABLE_STATIC], [AC_DIAGNOSE([obsolete], [The macro `AM_DISABLE_STATIC' is obsolete.
+You should run autoupdate.])dnl
+AC_DISABLE_STATIC($@)])
+m4trace:m4/ltoptions.m4:303: -1- AU_DEFUN([AC_ENABLE_FAST_INSTALL], [_LT_SET_OPTION([LT_INIT], m4_if([$1], [no], [disable-])[fast-install])
+AC_DIAGNOSE([obsolete],
+[$0: Remove this warning and the call to _LT_SET_OPTION when you put
+the `fast-install' option into LT_INIT's first parameter.])
+])
+m4trace:m4/ltoptions.m4:303: -1- AC_DEFUN([AC_ENABLE_FAST_INSTALL], [AC_DIAGNOSE([obsolete], [The macro `AC_ENABLE_FAST_INSTALL' is obsolete.
+You should run autoupdate.])dnl
+_LT_SET_OPTION([LT_INIT], m4_if([$1], [no], [disable-])[fast-install])
+AC_DIAGNOSE([obsolete],
+[$0: Remove this warning and the call to _LT_SET_OPTION when you put
+the `fast-install' option into LT_INIT's first parameter.])
+])
+m4trace:m4/ltoptions.m4:310: -1- AU_DEFUN([AC_DISABLE_FAST_INSTALL], [_LT_SET_OPTION([LT_INIT], [disable-fast-install])
+AC_DIAGNOSE([obsolete],
+[$0: Remove this warning and the call to _LT_SET_OPTION when you put
+the `disable-fast-install' option into LT_INIT's first parameter.])
+])
+m4trace:m4/ltoptions.m4:310: -1- AC_DEFUN([AC_DISABLE_FAST_INSTALL], [AC_DIAGNOSE([obsolete], [The macro `AC_DISABLE_FAST_INSTALL' is obsolete.
+You should run autoupdate.])dnl
+_LT_SET_OPTION([LT_INIT], [disable-fast-install])
+AC_DIAGNOSE([obsolete],
+[$0: Remove this warning and the call to _LT_SET_OPTION when you put
+the `disable-fast-install' option into LT_INIT's first parameter.])
+])
+m4trace:m4/ltoptions.m4:343: -1- AU_DEFUN([AC_LIBTOOL_PICMODE], [_LT_SET_OPTION([LT_INIT], [pic-only])
+AC_DIAGNOSE([obsolete],
+[$0: Remove this warning and the call to _LT_SET_OPTION when you
+put the `pic-only' option into LT_INIT's first parameter.])
+])
+m4trace:m4/ltoptions.m4:343: -1- AC_DEFUN([AC_LIBTOOL_PICMODE], [AC_DIAGNOSE([obsolete], [The macro `AC_LIBTOOL_PICMODE' is obsolete.
+You should run autoupdate.])dnl
+_LT_SET_OPTION([LT_INIT], [pic-only])
+AC_DIAGNOSE([obsolete],
+[$0: Remove this warning and the call to _LT_SET_OPTION when you
+put the `pic-only' option into LT_INIT's first parameter.])
+])
+m4trace:m4/ltsugar.m4:13: -1- AC_DEFUN([LTSUGAR_VERSION], [m4_if([0.1])])
+m4trace:m4/ltversion.m4:18: -1- AC_DEFUN([LTVERSION_VERSION], [macro_version='2.4'
+macro_revision='1.3294'
+_LT_DECL(, macro_version, 0, [Which release of libtool.m4 was used?])
+_LT_DECL(, macro_revision, 0)
+])
+m4trace:m4/lt~obsolete.m4:36: -1- AC_DEFUN([LTOBSOLETE_VERSION], [m4_if([1])])
+m4trace:m4/lt~obsolete.m4:40: -1- AC_DEFUN([_LT_AC_PROG_ECHO_BACKSLASH])
+m4trace:m4/lt~obsolete.m4:41: -1- AC_DEFUN([_LT_AC_SHELL_INIT])
+m4trace:m4/lt~obsolete.m4:42: -1- AC_DEFUN([_LT_AC_SYS_LIBPATH_AIX])
+m4trace:m4/lt~obsolete.m4:44: -1- AC_DEFUN([_LT_AC_TAGVAR])
+m4trace:m4/lt~obsolete.m4:45: -1- AC_DEFUN([AC_LTDL_ENABLE_INSTALL])
+m4trace:m4/lt~obsolete.m4:46: -1- AC_DEFUN([AC_LTDL_PREOPEN])
+m4trace:m4/lt~obsolete.m4:47: -1- AC_DEFUN([_LT_AC_SYS_COMPILER])
+m4trace:m4/lt~obsolete.m4:48: -1- AC_DEFUN([_LT_AC_LOCK])
+m4trace:m4/lt~obsolete.m4:49: -1- AC_DEFUN([AC_LIBTOOL_SYS_OLD_ARCHIVE])
+m4trace:m4/lt~obsolete.m4:50: -1- AC_DEFUN([_LT_AC_TRY_DLOPEN_SELF])
+m4trace:m4/lt~obsolete.m4:51: -1- AC_DEFUN([AC_LIBTOOL_PROG_CC_C_O])
+m4trace:m4/lt~obsolete.m4:52: -1- AC_DEFUN([AC_LIBTOOL_SYS_HARD_LINK_LOCKS])
+m4trace:m4/lt~obsolete.m4:53: -1- AC_DEFUN([AC_LIBTOOL_OBJDIR])
+m4trace:m4/lt~obsolete.m4:54: -1- AC_DEFUN([AC_LTDL_OBJDIR])
+m4trace:m4/lt~obsolete.m4:55: -1- AC_DEFUN([AC_LIBTOOL_PROG_LD_HARDCODE_LIBPATH])
+m4trace:m4/lt~obsolete.m4:56: -1- AC_DEFUN([AC_LIBTOOL_SYS_LIB_STRIP])
+m4trace:m4/lt~obsolete.m4:57: -1- AC_DEFUN([AC_PATH_MAGIC])
+m4trace:m4/lt~obsolete.m4:58: -1- AC_DEFUN([AC_PROG_LD_GNU])
+m4trace:m4/lt~obsolete.m4:59: -1- AC_DEFUN([AC_PROG_LD_RELOAD_FLAG])
+m4trace:m4/lt~obsolete.m4:60: -1- AC_DEFUN([AC_DEPLIBS_CHECK_METHOD])
+m4trace:m4/lt~obsolete.m4:61: -1- AC_DEFUN([AC_LIBTOOL_PROG_COMPILER_NO_RTTI])
+m4trace:m4/lt~obsolete.m4:62: -1- AC_DEFUN([AC_LIBTOOL_SYS_GLOBAL_SYMBOL_PIPE])
+m4trace:m4/lt~obsolete.m4:63: -1- AC_DEFUN([AC_LIBTOOL_PROG_COMPILER_PIC])
+m4trace:m4/lt~obsolete.m4:64: -1- AC_DEFUN([AC_LIBTOOL_PROG_LD_SHLIBS])
+m4trace:m4/lt~obsolete.m4:65: -1- AC_DEFUN([AC_LIBTOOL_POSTDEP_PREDEP])
+m4trace:m4/lt~obsolete.m4:66
