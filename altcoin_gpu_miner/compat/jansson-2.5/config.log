@@ -660,3 +660,126 @@ DUMPBIN=''
 ECHO_C=''
 ECHO_N='-n'
 ECHO_T=''
+EGREP='/bin/grep -E'
+EXEEXT='.exe'
+FGREP='/bin/grep -F'
+GCC_FALSE='#'
+GCC_TRUE=''
+GREP='/bin/grep'
+INSTALL_DATA='${INSTALL} -m 644'
+INSTALL_PROGRAM='${INSTALL}'
+INSTALL_SCRIPT='${INSTALL}'
+INSTALL_STRIP_PROGRAM='$(install_sh) -c -s'
+LD='d:/mingw/mingw32/bin/ld.exe'
+LDFLAGS=''
+LIBOBJS=''
+LIBS=''
+LIBTOOL='$(SHELL) $(top_builddir)/libtool'
+LIPO=''
+LN_S='cp -p'
+LTLIBOBJS=''
+MAKEINFO='${SHELL} /home/CY/altcoin-gpu-miner/compat/jansson-2.5/missing --run makeinfo'
+MANIFEST_TOOL=':'
+MKDIR_P='/bin/mkdir -p'
+NM='/mingw/bin/nm'
+NMEDIT=''
+OBJDUMP='objdump'
+OBJEXT='o'
+OTOOL64=''
+OTOOL=''
+PACKAGE='jansson'
+PACKAGE_BUGREPORT='petri@digip.org'
+PACKAGE_NAME='jansson'
+PACKAGE_STRING='jansson 2.5'
+PACKAGE_TARNAME='jansson'
+PACKAGE_URL=''
+PACKAGE_VERSION='2.5'
+PATH_SEPARATOR=':'
+RANLIB='ranlib'
+SED='/bin/sed'
+SET_MAKE=''
+SHELL='/bin/sh'
+STRIP='strip'
+VERSION='2.5'
+ac_ct_AR='ar'
+ac_ct_CC='gcc'
+ac_ct_DUMPBIN=''
+am__EXEEXT_FALSE='#'
+am__EXEEXT_TRUE=''
+am__fastdepCC_FALSE='#'
+am__fastdepCC_TRUE=''
+am__include='include'
+am__isrc=''
+am__leading_dot='.'
+am__quote=''
+am__tar='${AMTAR} chof - "$$tardir"'
+am__untar='${AMTAR} xf -'
+bindir='${exec_prefix}/bin'
+build='i686-pc-mingw32'
+build_alias=''
+build_cpu='i686'
+build_os='mingw32'
+build_vendor='pc'
+datadir='${datarootdir}'
+datarootdir='${prefix}/share'
+docdir='${datarootdir}/doc/${PACKAGE_TARNAME}'
+dvidir='${docdir}'
+exec_prefix='${prefix}'
+host='i686-pc-mingw32'
+host_alias=''
+host_cpu='i686'
+host_os='mingw32'
+host_vendor='pc'
+htmldir='${docdir}'
+includedir='${prefix}/include'
+infodir='${datarootdir}/info'
+install_sh='${SHELL} /home/CY/altcoin-gpu-miner/compat/jansson-2.5/install-sh'
+json_have_localeconv='1'
+json_have_long_long='1'
+json_inline='inline'
+libdir='${exec_prefix}/lib'
+libexecdir='${exec_prefix}/libexec'
+localedir='${datarootdir}/locale'
+localstatedir='${prefix}/var'
+mandir='${datarootdir}/man'
+mkdir_p='/bin/mkdir -p'
+oldincludedir='/usr/include'
+pdfdir='${docdir}'
+prefix='/usr/local'
+program_transform_name='s,x,x,'
+psdir='${docdir}'
+sbindir='${exec_prefix}/sbin'
+sharedstatedir='${prefix}/com'
+sysconfdir='${prefix}/etc'
+target_alias=''
+
+## ----------- ##
+## confdefs.h. ##
+## ----------- ##
+
+/* confdefs.h */
+#define PACKAGE_NAME "jansson"
+#define PACKAGE_TARNAME "jansson"
+#define PACKAGE_VERSION "2.5"
+#define PACKAGE_STRING "jansson 2.5"
+#define PACKAGE_BUGREPORT "petri@digip.org"
+#define PACKAGE_URL ""
+#define PACKAGE "jansson"
+#define VERSION "2.5"
+#define STDC_HEADERS 1
+#define HAVE_SYS_TYPES_H 1
+#define HAVE_SYS_STAT_H 1
+#define HAVE_STDLIB_H 1
+#define HAVE_STRING_H 1
+#define HAVE_MEMORY_H 1
+#define HAVE_STRINGS_H 1
+#define HAVE_INTTYPES_H 1
+#define HAVE_STDINT_H 1
+#define HAVE_UNISTD_H 1
+#define LT_OBJDIR ".libs/"
+#define HAVE_LOCALE_H 1
+#define HAVE_LONG_LONG_INT 1
+#define HAVE_STRTOLL 1
+#define HAVE_LOCALECONV 1
+
+configure: exit 0
