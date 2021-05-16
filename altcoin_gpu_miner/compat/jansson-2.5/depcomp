@@ -387,4 +387,244 @@ tru64)
    stat=$?
    if test $stat -eq 0; then :
    else
-      rm -f "$tmpdepfile1" "$tmpde
+      rm -f "$tmpdepfile1" "$tmpdepfile2" "$tmpdepfile3" "$tmpdepfile4"
+      exit $stat
+   fi
+
+   for tmpdepfile in "$tmpdepfile1" "$tmpdepfile2" "$tmpdepfile3" "$tmpdepfile4"
+   do
+     test -f "$tmpdepfile" && break
+   done
+   if test -f "$tmpdepfile"; then
+      sed -e "s,^.*\.[a-z]*:,$object:," < "$tmpdepfile" > "$depfile"
+      # That's a tab and a space in the [].
+      sed -e 's,^.*\.[a-z]*:[	 ]*,,' -e 's,$,:,' < "$tmpdepfile" >> "$depfile"
+   else
+      echo "#dummy" > "$depfile"
+   fi
+   rm -f "$tmpdepfile"
+   ;;
+
+#nosideeffect)
+  # This comment above is used by automake to tell side-effect
+  # dependency tracking mechanisms from slower ones.
+
+dashmstdout)
+  # Important note: in order to support this mode, a compiler *must*
+  # always write the preprocessed file to stdout, regardless of -o.
+  "$@" || exit $?
+
+  # Remove the call to Libtool.
+  if test "$libtool" = yes; then
+    while test "X$1" != 'X--mode=compile'; do
+      shift
+    done
+    shift
+  fi
+
+  # Remove `-o $object'.
+  IFS=" "
+  for arg
+  do
+    case $arg in
+    -o)
+      shift
+      ;;
+    $object)
+      shift
+      ;;
+    *)
+      set fnord "$@" "$arg"
+      shift # fnord
+      shift # $arg
+      ;;
+    esac
+  done
+
+  test -z "$dashmflag" && dashmflag=-M
+  # Require at least two characters before searching for `:'
+  # in the target name.  This is to cope with DOS-style filenames:
+  # a dependency such as `c:/foo/bar' could be seen as target `c' otherwise.
+  "$@" $dashmflag |
+    sed 's:^[  ]*[^: ][^:][^:]*\:[    ]*:'"$object"'\: :' > "$tmpdepfile"
+  rm -f "$depfile"
+  cat < "$tmpdepfile" > "$depfile"
+  tr ' ' '
+' < "$tmpdepfile" | \
+## Some versions of the HPUX 10.20 sed can't process this invocation
+## correctly.  Breaking it into two sed invocations is a workaround.
+    sed -e 's/^\\$//' -e '/^$/d' -e '/:$/d' | sed -e 's/$/ :/' >> "$depfile"
+  rm -f "$tmpdepfile"
+  ;;
+
+dashXmstdout)
+  # This case only exists to satisfy depend.m4.  It is never actually
+  # run, as this mode is specially recognized in the preamble.
+  exit 1
+  ;;
+
+makedepend)
+  "$@" || exit $?
+  # Remove any Libtool call
+  if test "$libtool" = yes; then
+    while test "X$1" != 'X--mode=compile'; do
+      shift
+    done
+    shift
+  fi
+  # X makedepend
+  shift
+  cleared=no eat=no
+  for arg
+  do
+    case $cleared in
+    no)
+      set ""; shift
+      cleared=yes ;;
+    esac
+    if test $eat = yes; then
+      eat=no
+      continue
+    fi
+    case "$arg" in
+    -D*|-I*)
+      set fnord "$@" "$arg"; shift ;;
+    # Strip any option that makedepend may not understand.  Remove
+    # the object too, otherwise makedepend will parse it as a source file.
+    -arch)
+      eat=yes ;;
+    -*|$object)
+      ;;
+    *)
+      set fnord "$@" "$arg"; shift ;;
+    esac
+  done
+  obj_suffix=`echo "$object" | sed 's/^.*\././'`
+  touch "$tmpdepfile"
+  ${MAKEDEPEND-makedepend} -o"$obj_suffix" -f"$tmpdepfile" "$@"
+  rm -f "$depfile"
+  cat < "$tmpdepfile" > "$depfile"
+  sed '1,2d' "$tmpdepfile" | tr ' ' '
+' | \
+## Some versions of the HPUX 10.20 sed can't process this invocation
+## correctly.  Breaking it into two sed invocations is a workaround.
+    sed -e 's/^\\$//' -e '/^$/d' -e '/:$/d' | sed -e 's/$/ :/' >> "$depfile"
+  rm -f "$tmpdepfile" "$tmpdepfile".bak
+  ;;
+
+cpp)
+  # Important note: in order to support this mode, a compiler *must*
+  # always write the preprocessed file to stdout.
+  "$@" || exit $?
+
+  # Remove the call to Libtool.
+  if test "$libtool" = yes; then
+    while test "X$1" != 'X--mode=compile'; do
+      shift
+    done
+    shift
+  fi
+
+  # Remove `-o $object'.
+  IFS=" "
+  for arg
+  do
+    case $arg in
+    -o)
+      shift
+      ;;
+    $object)
+      shift
+      ;;
+    *)
+      set fnord "$@" "$arg"
+      shift # fnord
+      shift # $arg
+      ;;
+    esac
+  done
+
+  "$@" -E |
+    sed -n -e '/^# [0-9][0-9]* "\([^"]*\)".*/ s:: \1 \\:p' \
+       -e '/^#line [0-9][0-9]* "\([^"]*\)".*/ s:: \1 \\:p' |
+    sed '$ s: \\$::' > "$tmpdepfile"
+  rm -f "$depfile"
+  echo "$object : \\" > "$depfile"
+  cat < "$tmpdepfile" >> "$depfile"
+  sed < "$tmpdepfile" '/^$/d;s/^ //;s/ \\$//;s/$/ :/' >> "$depfile"
+  rm -f "$tmpdepfile"
+  ;;
+
+msvisualcpp)
+  # Important note: in order to support this mode, a compiler *must*
+  # always write the preprocessed file to stdout.
+  "$@" || exit $?
+
+  # Remove the call to Libtool.
+  if test "$libtool" = yes; then
+    while test "X$1" != 'X--mode=compile'; do
+      shift
+    done
+    shift
+  fi
+
+  IFS=" "
+  for arg
+  do
+    case "$arg" in
+    -o)
+      shift
+      ;;
+    $object)
+      shift
+      ;;
+    "-Gm"|"/Gm"|"-Gi"|"/Gi"|"-ZI"|"/ZI")
+	set fnord "$@"
+	shift
+	shift
+	;;
+    *)
+	set fnord "$@" "$arg"
+	shift
+	shift
+	;;
+    esac
+  done
+  "$@" -E 2>/dev/null |
+  sed -n '/^#line [0-9][0-9]* "\([^"]*\)"/ s::\1:p' | $cygpath_u | sort -u > "$tmpdepfile"
+  rm -f "$depfile"
+  echo "$object : \\" > "$depfile"
+  sed < "$tmpdepfile" -n -e 's% %\\ %g' -e '/^\(.*\)$/ s::	\1 \\:p' >> "$depfile"
+  echo "	" >> "$depfile"
+  sed < "$tmpdepfile" -n -e 's% %\\ %g' -e '/^\(.*\)$/ s::\1\::p' >> "$depfile"
+  rm -f "$tmpdepfile"
+  ;;
+
+msvcmsys)
+  # This case exists only to let depend.m4 do its work.  It works by
+  # looking at the text of this script.  This case will never be run,
+  # since it is checked for above.
+  exit 1
+  ;;
+
+none)
+  exec "$@"
+  ;;
+
+*)
+  echo "Unknown depmode $depmode" 1>&2
+  exit 1
+  ;;
+esac
+
+exit 0
+
+# Local Variables:
+# mode: shell-script
+# sh-indentation: 2
+# eval: (add-hook 'write-file-hooks 'time-stamp)
+# time-stamp-start: "scriptversion="
+# time-stamp-format: "%:y-%02m-%02d.%02H"
+# time-stamp-time-zone: "UTC"
+# time-stamp-end: "; # UTC"
+# End:
