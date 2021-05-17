@@ -283,4 +283,238 @@ do
 		   q
 		 }
 		 /^X\(\/\/\)[^/].*/{
-		   s/
+		   s//\1/
+		   q
+		 }
+		 /^X\(\/\/\)$/{
+		   s//\1/
+		   q
+		 }
+		 /^X\(\/\).*/{
+		   s//\1/
+		   q
+		 }
+		 s/.*/./; q'
+      `
+
+      test -d "$dstdir"
+      dstdir_status=$?
+    fi
+  fi
+
+  obsolete_mkdir_used=false
+
+  if test $dstdir_status != 0; then
+    case $posix_mkdir in
+      '')
+	# Create intermediate dirs using mode 755 as modified by the umask.
+	# This is like FreeBSD 'install' as of 1997-10-28.
+	umask=`umask`
+	case $stripcmd.$umask in
+	  # Optimize common cases.
+	  *[2367][2367]) mkdir_umask=$umask;;
+	  .*0[02][02] | .[02][02] | .[02]) mkdir_umask=22;;
+
+	  *[0-7])
+	    mkdir_umask=`expr $umask + 22 \
+	      - $umask % 100 % 40 + $umask % 20 \
+	      - $umask % 10 % 4 + $umask % 2
+	    `;;
+	  *) mkdir_umask=$umask,go-w;;
+	esac
+
+	# With -d, create the new directory with the user-specified mode.
+	# Otherwise, rely on $mkdir_umask.
+	if test -n "$dir_arg"; then
+	  mkdir_mode=-m$mode
+	else
+	  mkdir_mode=
+	fi
+
+	posix_mkdir=false
+	case $umask in
+	  *[123567][0-7][0-7])
+	    # POSIX mkdir -p sets u+wx bits regardless of umask, which
+	    # is incompatible with FreeBSD 'install' when (umask & 300) != 0.
+	    ;;
+	  *)
+	    tmpdir=${TMPDIR-/tmp}/ins$RANDOM-$$
+	    trap 'ret=$?; rmdir "$tmpdir/d" "$tmpdir" 2>/dev/null; exit $ret' 0
+
+	    if (umask $mkdir_umask &&
+		exec $mkdirprog $mkdir_mode -p -- "$tmpdir/d") >/dev/null 2>&1
+	    then
+	      if test -z "$dir_arg" || {
+		   # Check for POSIX incompatibilities with -m.
+		   # HP-UX 11.23 and IRIX 6.5 mkdir -m -p sets group- or
+		   # other-writeable bit of parent directory when it shouldn't.
+		   # FreeBSD 6.1 mkdir -m -p sets mode of existing directory.
+		   ls_ld_tmpdir=`ls -ld "$tmpdir"`
+		   case $ls_ld_tmpdir in
+		     d????-?r-*) different_mode=700;;
+		     d????-?--*) different_mode=755;;
+		     *) false;;
+		   esac &&
+		   $mkdirprog -m$different_mode -p -- "$tmpdir" && {
+		     ls_ld_tmpdir_1=`ls -ld "$tmpdir"`
+		     test "$ls_ld_tmpdir" = "$ls_ld_tmpdir_1"
+		   }
+		 }
+	      then posix_mkdir=:
+	      fi
+	      rmdir "$tmpdir/d" "$tmpdir"
+	    else
+	      # Remove any dirs left behind by ancient mkdir implementations.
+	      rmdir ./$mkdir_mode ./-p ./-- 2>/dev/null
+	    fi
+	    trap '' 0;;
+	esac;;
+    esac
+
+    if
+      $posix_mkdir && (
+	umask $mkdir_umask &&
+	$doit_exec $mkdirprog $mkdir_mode -p -- "$dstdir"
+      )
+    then :
+    else
+
+      # The umask is ridiculous, or mkdir does not conform to POSIX,
+      # or it failed possibly due to a race condition.  Create the
+      # directory the slow way, step by step, checking for races as we go.
+
+      case $dstdir in
+	/*) prefix='/';;
+	-*) prefix='./';;
+	*)  prefix='';;
+      esac
+
+      eval "$initialize_posix_glob"
+
+      oIFS=$IFS
+      IFS=/
+      $posix_glob set -f
+      set fnord $dstdir
+      shift
+      $posix_glob set +f
+      IFS=$oIFS
+
+      prefixes=
+
+      for d
+      do
+	test -z "$d" && continue
+
+	prefix=$prefix$d
+	if test -d "$prefix"; then
+	  prefixes=
+	else
+	  if $posix_mkdir; then
+	    (umask=$mkdir_umask &&
+	     $doit_exec $mkdirprog $mkdir_mode -p -- "$dstdir") && break
+	    # Don't fail if two instances are running concurrently.
+	    test -d "$prefix" || exit 1
+	  else
+	    case $prefix in
+	      *\'*) qprefix=`echo "$prefix" | sed "s/'/'\\\\\\\\''/g"`;;
+	      *) qprefix=$prefix;;
+	    esac
+	    prefixes="$prefixes '$qprefix'"
+	  fi
+	fi
+	prefix=$prefix/
+      done
+
+      if test -n "$prefixes"; then
+	# Don't fail if two instances are running concurrently.
+	(umask $mkdir_umask &&
+	 eval "\$doit_exec \$mkdirprog $prefixes") ||
+	  test -d "$dstdir" || exit 1
+	obsolete_mkdir_used=true
+      fi
+    fi
+  fi
+
+  if test -n "$dir_arg"; then
+    { test -z "$chowncmd" || $doit $chowncmd "$dst"; } &&
+    { test -z "$chgrpcmd" || $doit $chgrpcmd "$dst"; } &&
+    { test "$obsolete_mkdir_used$chowncmd$chgrpcmd" = false ||
+      test -z "$chmodcmd" || $doit $chmodcmd $mode "$dst"; } || exit 1
+  else
+
+    # Make a couple of temp file names in the proper directory.
+    dsttmp=$dstdir/_inst.$$_
+    rmtmp=$dstdir/_rm.$$_
+
+    # Trap to clean up those temp files at exit.
+    trap 'ret=$?; rm -f "$dsttmp" "$rmtmp" && exit $ret' 0
+
+    # Copy the file name to the temp name.
+    (umask $cp_umask && $doit_exec $cpprog "$src" "$dsttmp") &&
+
+    # and set any options; do chmod last to preserve setuid bits.
+    #
+    # If any of these fail, we abort the whole thing.  If we want to
+    # ignore errors from any of these, just make sure not to ignore
+    # errors from the above "$doit $cpprog $src $dsttmp" command.
+    #
+    { test -z "$chowncmd" || $doit $chowncmd "$dsttmp"; } &&
+    { test -z "$chgrpcmd" || $doit $chgrpcmd "$dsttmp"; } &&
+    { test -z "$stripcmd" || $doit $stripcmd "$dsttmp"; } &&
+    { test -z "$chmodcmd" || $doit $chmodcmd $mode "$dsttmp"; } &&
+
+    # If -C, don't bother to copy if it wouldn't change the file.
+    if $copy_on_change &&
+       old=`LC_ALL=C ls -dlL "$dst"	2>/dev/null` &&
+       new=`LC_ALL=C ls -dlL "$dsttmp"	2>/dev/null` &&
+
+       eval "$initialize_posix_glob" &&
+       $posix_glob set -f &&
+       set X $old && old=:$2:$4:$5:$6 &&
+       set X $new && new=:$2:$4:$5:$6 &&
+       $posix_glob set +f &&
+
+       test "$old" = "$new" &&
+       $cmpprog "$dst" "$dsttmp" >/dev/null 2>&1
+    then
+      rm -f "$dsttmp"
+    else
+      # Rename the file to the real destination.
+      $doit $mvcmd -f "$dsttmp" "$dst" 2>/dev/null ||
+
+      # The rename failed, perhaps because mv can't rename something else
+      # to itself, or perhaps because mv is so ancient that it does not
+      # support -f.
+      {
+	# Now remove or move aside any old file at destination location.
+	# We try this two ways since rm can't unlink itself on some
+	# systems and the destination file might be busy for other
+	# reasons.  In this case, the final cleanup might fail but the new
+	# file should still install successfully.
+	{
+	  test ! -f "$dst" ||
+	  $doit $rmcmd -f "$dst" 2>/dev/null ||
+	  { $doit $mvcmd -f "$dst" "$rmtmp" 2>/dev/null &&
+	    { $doit $rmcmd -f "$rmtmp" 2>/dev/null; :; }
+	  } ||
+	  { echo "$0: cannot unlink or rename $dst" >&2
+	    (exit 1); exit 1
+	  }
+	} &&
+
+	# Now rename the file to the real destination.
+	$doit $mvcmd "$dsttmp" "$dst"
+      }
+    fi || exit 1
+
+    trap '' 0
+  fi
+done
+
+# Local variables:
+# eval: (add-hook 'write-file-hooks 'time-stamp)
+# time-stamp-start: "scriptversion="
+# time-stamp-format: "%:y-%02m-%02d.%02H"
+# time-stamp-time-zone: "UTC"
+# time-stamp-end: "; # UTC"
+# End:
