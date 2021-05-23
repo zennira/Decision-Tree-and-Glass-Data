@@ -183,4 +183,210 @@ if test -n "\${ZSH_VERSION+set}" ; then
    setopt NO_GLOB_SUBST
 fi
 ])
-if test 
+if test -n "${ZSH_VERSION+set}" ; then
+   setopt NO_GLOB_SUBST
+fi
+
+_LT_CHECK_OBJDIR
+
+m4_require([_LT_TAG_COMPILER])dnl
+
+case $host_os in
+aix3*)
+  # AIX sometimes has problems with the GCC collect2 program.  For some
+  # reason, if we set the COLLECT_NAMES environment variable, the problems
+  # vanish in a puff of smoke.
+  if test "X${COLLECT_NAMES+set}" != Xset; then
+    COLLECT_NAMES=
+    export COLLECT_NAMES
+  fi
+  ;;
+esac
+
+# Global variables:
+ofile=libtool
+can_build_shared=yes
+
+# All known linkers require a `.a' archive for static linking (except MSVC,
+# which needs '.lib').
+libext=a
+
+with_gnu_ld="$lt_cv_prog_gnu_ld"
+
+old_CC="$CC"
+old_CFLAGS="$CFLAGS"
+
+# Set sane defaults for various variables
+test -z "$CC" && CC=cc
+test -z "$LTCC" && LTCC=$CC
+test -z "$LTCFLAGS" && LTCFLAGS=$CFLAGS
+test -z "$LD" && LD=ld
+test -z "$ac_objext" && ac_objext=o
+
+_LT_CC_BASENAME([$compiler])
+
+# Only perform the check for file, if the check method requires it
+test -z "$MAGIC_CMD" && MAGIC_CMD=file
+case $deplibs_check_method in
+file_magic*)
+  if test "$file_magic_cmd" = '$MAGIC_CMD'; then
+    _LT_PATH_MAGIC
+  fi
+  ;;
+esac
+
+# Use C for the default configuration in the libtool script
+LT_SUPPORTED_TAG([CC])
+_LT_LANG_C_CONFIG
+_LT_LANG_DEFAULT_CONFIG
+_LT_CONFIG_COMMANDS
+])# _LT_SETUP
+
+
+# _LT_PREPARE_SED_QUOTE_VARS
+# --------------------------
+# Define a few sed substitution that help us do robust quoting.
+m4_defun([_LT_PREPARE_SED_QUOTE_VARS],
+[# Backslashify metacharacters that are still active within
+# double-quoted strings.
+sed_quote_subst='s/\([["`$\\]]\)/\\\1/g'
+
+# Same as above, but do not quote variable references.
+double_quote_subst='s/\([["`\\]]\)/\\\1/g'
+
+# Sed substitution to delay expansion of an escaped shell variable in a
+# double_quote_subst'ed string.
+delay_variable_subst='s/\\\\\\\\\\\$/\\\\\\$/g'
+
+# Sed substitution to delay expansion of an escaped single quote.
+delay_single_quote_subst='s/'\''/'\'\\\\\\\'\''/g'
+
+# Sed substitution to avoid accidental globbing in evaled expressions
+no_glob_subst='s/\*/\\\*/g'
+])
+
+# _LT_PROG_LTMAIN
+# ---------------
+# Note that this code is called both from `configure', and `config.status'
+# now that we use AC_CONFIG_COMMANDS to generate libtool.  Notably,
+# `config.status' has no value for ac_aux_dir unless we are using Automake,
+# so we pass a copy along to make sure it has a sensible value anyway.
+m4_defun([_LT_PROG_LTMAIN],
+[m4_ifdef([AC_REQUIRE_AUX_FILE], [AC_REQUIRE_AUX_FILE([ltmain.sh])])dnl
+_LT_CONFIG_LIBTOOL_INIT([ac_aux_dir='$ac_aux_dir'])
+ltmain="$ac_aux_dir/ltmain.sh"
+])# _LT_PROG_LTMAIN
+
+
+## ------------------------------------- ##
+## Accumulate code for creating libtool. ##
+## ------------------------------------- ##
+
+# So that we can recreate a full libtool script including additional
+# tags, we accumulate the chunks of code to send to AC_CONFIG_COMMANDS
+# in macros and then make a single call at the end using the `libtool'
+# label.
+
+
+# _LT_CONFIG_LIBTOOL_INIT([INIT-COMMANDS])
+# ----------------------------------------
+# Register INIT-COMMANDS to be passed to AC_CONFIG_COMMANDS later.
+m4_define([_LT_CONFIG_LIBTOOL_INIT],
+[m4_ifval([$1],
+          [m4_append([_LT_OUTPUT_LIBTOOL_INIT],
+                     [$1
+])])])
+
+# Initialize.
+m4_define([_LT_OUTPUT_LIBTOOL_INIT])
+
+
+# _LT_CONFIG_LIBTOOL([COMMANDS])
+# ------------------------------
+# Register COMMANDS to be passed to AC_CONFIG_COMMANDS later.
+m4_define([_LT_CONFIG_LIBTOOL],
+[m4_ifval([$1],
+          [m4_append([_LT_OUTPUT_LIBTOOL_COMMANDS],
+                     [$1
+])])])
+
+# Initialize.
+m4_define([_LT_OUTPUT_LIBTOOL_COMMANDS])
+
+
+# _LT_CONFIG_SAVE_COMMANDS([COMMANDS], [INIT_COMMANDS])
+# -----------------------------------------------------
+m4_defun([_LT_CONFIG_SAVE_COMMANDS],
+[_LT_CONFIG_LIBTOOL([$1])
+_LT_CONFIG_LIBTOOL_INIT([$2])
+])
+
+
+# _LT_FORMAT_COMMENT([COMMENT])
+# -----------------------------
+# Add leading comment marks to the start of each line, and a trailing
+# full-stop to the whole comment if one is not present already.
+m4_define([_LT_FORMAT_COMMENT],
+[m4_ifval([$1], [
+m4_bpatsubst([m4_bpatsubst([$1], [^ *], [# ])],
+              [['`$\]], [\\\&])]m4_bmatch([$1], [[!?.]$], [], [.])
+)])
+
+
+
+## ------------------------ ##
+## FIXME: Eliminate VARNAME ##
+## ------------------------ ##
+
+
+# _LT_DECL([CONFIGNAME], VARNAME, VALUE, [DESCRIPTION], [IS-TAGGED?])
+# -------------------------------------------------------------------
+# CONFIGNAME is the name given to the value in the libtool script.
+# VARNAME is the (base) name used in the configure script.
+# VALUE may be 0, 1 or 2 for a computed quote escaped value based on
+# VARNAME.  Any other value will be used directly.
+m4_define([_LT_DECL],
+[lt_if_append_uniq([lt_decl_varnames], [$2], [, ],
+    [lt_dict_add_subkey([lt_decl_dict], [$2], [libtool_name],
+	[m4_ifval([$1], [$1], [$2])])
+    lt_dict_add_subkey([lt_decl_dict], [$2], [value], [$3])
+    m4_ifval([$4],
+	[lt_dict_add_subkey([lt_decl_dict], [$2], [description], [$4])])
+    lt_dict_add_subkey([lt_decl_dict], [$2],
+	[tagged?], [m4_ifval([$5], [yes], [no])])])
+])
+
+
+# _LT_TAGDECL([CONFIGNAME], VARNAME, VALUE, [DESCRIPTION])
+# --------------------------------------------------------
+m4_define([_LT_TAGDECL], [_LT_DECL([$1], [$2], [$3], [$4], [yes])])
+
+
+# lt_decl_tag_varnames([SEPARATOR], [VARNAME1...])
+# ------------------------------------------------
+m4_define([lt_decl_tag_varnames],
+[_lt_decl_filter([tagged?], [yes], $@)])
+
+
+# _lt_decl_filter(SUBKEY, VALUE, [SEPARATOR], [VARNAME1..])
+# ---------------------------------------------------------
+m4_define([_lt_decl_filter],
+[m4_case([$#],
+  [0], [m4_fatal([$0: too few arguments: $#])],
+  [1], [m4_fatal([$0: too few arguments: $#: $1])],
+  [2], [lt_dict_filter([lt_decl_dict], [$1], [$2], [], lt_decl_varnames)],
+  [3], [lt_dict_filter([lt_decl_dict], [$1], [$2], [$3], lt_decl_varnames)],
+  [lt_dict_filter([lt_decl_dict], $@)])[]dnl
+])
+
+
+# lt_decl_quote_varnames([SEPARATOR], [VARNAME1...])
+# --------------------------------------------------
+m4_define([lt_decl_quote_varnames],
+[_lt_decl_filter([value], [1], $@)])
+
+
+# lt_decl_dquote_varnames([SEPARATOR], [VARNAME1...])
+# ---------------------------------------------------
+m4_define([lt_decl_dquote_varnames],
+[_lt_decl_filter([value], [2], 
