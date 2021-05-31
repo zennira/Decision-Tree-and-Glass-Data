@@ -1554,4 +1554,210 @@ AC_CACHE_VAL([lt_cv_sys_max_cmd_len], [dnl
 
   gnu*)
     # Under GNU Hurd, this test is not required because there is
-    
+    # no limit to the length of command line arguments.
+    # Libtool will interpret -1 as no limit whatsoever
+    lt_cv_sys_max_cmd_len=-1;
+    ;;
+
+  cygwin* | mingw* | cegcc*)
+    # On Win9x/ME, this test blows up -- it succeeds, but takes
+    # about 5 minutes as the teststring grows exponentially.
+    # Worse, since 9x/ME are not pre-emptively multitasking,
+    # you end up with a "frozen" computer, even though with patience
+    # the test eventually succeeds (with a max line length of 256k).
+    # Instead, let's just punt: use the minimum linelength reported by
+    # all of the supported platforms: 8192 (on NT/2K/XP).
+    lt_cv_sys_max_cmd_len=8192;
+    ;;
+
+  mint*)
+    # On MiNT this can take a long time and run out of memory.
+    lt_cv_sys_max_cmd_len=8192;
+    ;;
+
+  amigaos*)
+    # On AmigaOS with pdksh, this test takes hours, literally.
+    # So we just punt and use a minimum line length of 8192.
+    lt_cv_sys_max_cmd_len=8192;
+    ;;
+
+  netbsd* | freebsd* | openbsd* | darwin* | dragonfly*)
+    # This has been around since 386BSD, at least.  Likely further.
+    if test -x /sbin/sysctl; then
+      lt_cv_sys_max_cmd_len=`/sbin/sysctl -n kern.argmax`
+    elif test -x /usr/sbin/sysctl; then
+      lt_cv_sys_max_cmd_len=`/usr/sbin/sysctl -n kern.argmax`
+    else
+      lt_cv_sys_max_cmd_len=65536	# usable default for all BSDs
+    fi
+    # And add a safety zone
+    lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \/ 4`
+    lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \* 3`
+    ;;
+
+  interix*)
+    # We know the value 262144 and hardcode it with a safety zone (like BSD)
+    lt_cv_sys_max_cmd_len=196608
+    ;;
+
+  osf*)
+    # Dr. Hans Ekkehard Plesser reports seeing a kernel panic running configure
+    # due to this test when exec_disable_arg_limit is 1 on Tru64. It is not
+    # nice to cause kernel panics so lets avoid the loop below.
+    # First set a reasonable default.
+    lt_cv_sys_max_cmd_len=16384
+    #
+    if test -x /sbin/sysconfig; then
+      case `/sbin/sysconfig -q proc exec_disable_arg_limit` in
+        *1*) lt_cv_sys_max_cmd_len=-1 ;;
+      esac
+    fi
+    ;;
+  sco3.2v5*)
+    lt_cv_sys_max_cmd_len=102400
+    ;;
+  sysv5* | sco5v6* | sysv4.2uw2*)
+    kargmax=`grep ARG_MAX /etc/conf/cf.d/stune 2>/dev/null`
+    if test -n "$kargmax"; then
+      lt_cv_sys_max_cmd_len=`echo $kargmax | sed 's/.*[[	 ]]//'`
+    else
+      lt_cv_sys_max_cmd_len=32768
+    fi
+    ;;
+  *)
+    lt_cv_sys_max_cmd_len=`(getconf ARG_MAX) 2> /dev/null`
+    if test -n "$lt_cv_sys_max_cmd_len"; then
+      lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \/ 4`
+      lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \* 3`
+    else
+      # Make teststring a little bigger before we do anything with it.
+      # a 1K string should be a reasonable start.
+      for i in 1 2 3 4 5 6 7 8 ; do
+        teststring=$teststring$teststring
+      done
+      SHELL=${SHELL-${CONFIG_SHELL-/bin/sh}}
+      # If test is not a shell built-in, we'll probably end up computing a
+      # maximum length that is only half of the actual maximum length, but
+      # we can't tell.
+      while { test "X"`env echo "$teststring$teststring" 2>/dev/null` \
+	         = "X$teststring$teststring"; } >/dev/null 2>&1 &&
+	      test $i != 17 # 1/2 MB should be enough
+      do
+        i=`expr $i + 1`
+        teststring=$teststring$teststring
+      done
+      # Only check the string length outside the loop.
+      lt_cv_sys_max_cmd_len=`expr "X$teststring" : ".*" 2>&1`
+      teststring=
+      # Add a significant safety factor because C++ compilers can tack on
+      # massive amounts of additional arguments before passing them to the
+      # linker.  It appears as though 1/2 is a usable value.
+      lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \/ 2`
+    fi
+    ;;
+  esac
+])
+if test -n $lt_cv_sys_max_cmd_len ; then
+  AC_MSG_RESULT($lt_cv_sys_max_cmd_len)
+else
+  AC_MSG_RESULT(none)
+fi
+max_cmd_len=$lt_cv_sys_max_cmd_len
+_LT_DECL([], [max_cmd_len], [0],
+    [What is the maximum length of a command?])
+])# LT_CMD_MAX_LEN
+
+# Old name:
+AU_ALIAS([AC_LIBTOOL_SYS_MAX_CMD_LEN], [LT_CMD_MAX_LEN])
+dnl aclocal-1.4 backwards compatibility:
+dnl AC_DEFUN([AC_LIBTOOL_SYS_MAX_CMD_LEN], [])
+
+
+# _LT_HEADER_DLFCN
+# ----------------
+m4_defun([_LT_HEADER_DLFCN],
+[AC_CHECK_HEADERS([dlfcn.h], [], [], [AC_INCLUDES_DEFAULT])dnl
+])# _LT_HEADER_DLFCN
+
+
+# _LT_TRY_DLOPEN_SELF (ACTION-IF-TRUE, ACTION-IF-TRUE-W-USCORE,
+#                      ACTION-IF-FALSE, ACTION-IF-CROSS-COMPILING)
+# ----------------------------------------------------------------
+m4_defun([_LT_TRY_DLOPEN_SELF],
+[m4_require([_LT_HEADER_DLFCN])dnl
+if test "$cross_compiling" = yes; then :
+  [$4]
+else
+  lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
+  lt_status=$lt_dlunknown
+  cat > conftest.$ac_ext <<_LT_EOF
+[#line $LINENO "configure"
+#include "confdefs.h"
+
+#if HAVE_DLFCN_H
+#include <dlfcn.h>
+#endif
+
+#include <stdio.h>
+
+#ifdef RTLD_GLOBAL
+#  define LT_DLGLOBAL		RTLD_GLOBAL
+#else
+#  ifdef DL_GLOBAL
+#    define LT_DLGLOBAL		DL_GLOBAL
+#  else
+#    define LT_DLGLOBAL		0
+#  endif
+#endif
+
+/* We may have to define LT_DLLAZY_OR_NOW in the command line if we
+   find out it does not work in some platform. */
+#ifndef LT_DLLAZY_OR_NOW
+#  ifdef RTLD_LAZY
+#    define LT_DLLAZY_OR_NOW		RTLD_LAZY
+#  else
+#    ifdef DL_LAZY
+#      define LT_DLLAZY_OR_NOW		DL_LAZY
+#    else
+#      ifdef RTLD_NOW
+#        define LT_DLLAZY_OR_NOW	RTLD_NOW
+#      else
+#        ifdef DL_NOW
+#          define LT_DLLAZY_OR_NOW	DL_NOW
+#        else
+#          define LT_DLLAZY_OR_NOW	0
+#        endif
+#      endif
+#    endif
+#  endif
+#endif
+
+/* When -fvisbility=hidden is used, assume the code has been annotated
+   correspondingly for the symbols needed.  */
+#if defined(__GNUC__) && (((__GNUC__ == 3) && (__GNUC_MINOR__ >= 3)) || (__GNUC__ > 3))
+int fnord () __attribute__((visibility("default")));
+#endif
+
+int fnord () { return 42; }
+int main ()
+{
+  void *self = dlopen (0, LT_DLGLOBAL|LT_DLLAZY_OR_NOW);
+  int status = $lt_dlunknown;
+
+  if (self)
+    {
+      if (dlsym (self,"fnord"))       status = $lt_dlno_uscore;
+      else
+        {
+	  if (dlsym( self,"_fnord"))  status = $lt_dlneed_uscore;
+          else puts (dlerror ());
+	}
+      /* dlclose (self); */
+    }
+  else
+    puts (dlerror ());
+
+  return status;
+}]
+_LT_EOF
+  if AC_TRY_EVAL(ac_link) &&
