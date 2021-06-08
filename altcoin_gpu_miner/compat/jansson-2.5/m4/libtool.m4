@@ -1967,4 +1967,196 @@ _LT_COMPILER_C_O([$1])
 
 hard_links="nottested"
 if test "$_LT_TAGVAR(lt_cv_prog_compiler_c_o, $1)" = no && test "$need_locks" != no; then
-  # do not overwrite 
+  # do not overwrite the value of need_locks provided by the user
+  AC_MSG_CHECKING([if we can lock with hard links])
+  hard_links=yes
+  $RM conftest*
+  ln conftest.a conftest.b 2>/dev/null && hard_links=no
+  touch conftest.a
+  ln conftest.a conftest.b 2>&5 || hard_links=no
+  ln conftest.a conftest.b 2>/dev/null && hard_links=no
+  AC_MSG_RESULT([$hard_links])
+  if test "$hard_links" = no; then
+    AC_MSG_WARN([`$CC' does not support `-c -o', so `make -j' may be unsafe])
+    need_locks=warn
+  fi
+else
+  need_locks=no
+fi
+_LT_DECL([], [need_locks], [1], [Must we lock files when doing compilation?])
+])# _LT_COMPILER_FILE_LOCKS
+
+
+# _LT_CHECK_OBJDIR
+# ----------------
+m4_defun([_LT_CHECK_OBJDIR],
+[AC_CACHE_CHECK([for objdir], [lt_cv_objdir],
+[rm -f .libs 2>/dev/null
+mkdir .libs 2>/dev/null
+if test -d .libs; then
+  lt_cv_objdir=.libs
+else
+  # MS-DOS does not allow filenames that begin with a dot.
+  lt_cv_objdir=_libs
+fi
+rmdir .libs 2>/dev/null])
+objdir=$lt_cv_objdir
+_LT_DECL([], [objdir], [0],
+         [The name of the directory that contains temporary libtool files])dnl
+m4_pattern_allow([LT_OBJDIR])dnl
+AC_DEFINE_UNQUOTED(LT_OBJDIR, "$lt_cv_objdir/",
+  [Define to the sub-directory in which libtool stores uninstalled libraries.])
+])# _LT_CHECK_OBJDIR
+
+
+# _LT_LINKER_HARDCODE_LIBPATH([TAGNAME])
+# --------------------------------------
+# Check hardcoding attributes.
+m4_defun([_LT_LINKER_HARDCODE_LIBPATH],
+[AC_MSG_CHECKING([how to hardcode library paths into programs])
+_LT_TAGVAR(hardcode_action, $1)=
+if test -n "$_LT_TAGVAR(hardcode_libdir_flag_spec, $1)" ||
+   test -n "$_LT_TAGVAR(runpath_var, $1)" ||
+   test "X$_LT_TAGVAR(hardcode_automatic, $1)" = "Xyes" ; then
+
+  # We can hardcode non-existent directories.
+  if test "$_LT_TAGVAR(hardcode_direct, $1)" != no &&
+     # If the only mechanism to avoid hardcoding is shlibpath_var, we
+     # have to relink, otherwise we might link with an installed library
+     # when we should be linking with a yet-to-be-installed one
+     ## test "$_LT_TAGVAR(hardcode_shlibpath_var, $1)" != no &&
+     test "$_LT_TAGVAR(hardcode_minus_L, $1)" != no; then
+    # Linking always hardcodes the temporary library directory.
+    _LT_TAGVAR(hardcode_action, $1)=relink
+  else
+    # We can link without hardcoding, and we can hardcode nonexisting dirs.
+    _LT_TAGVAR(hardcode_action, $1)=immediate
+  fi
+else
+  # We cannot hardcode anything, or else we can only hardcode existing
+  # directories.
+  _LT_TAGVAR(hardcode_action, $1)=unsupported
+fi
+AC_MSG_RESULT([$_LT_TAGVAR(hardcode_action, $1)])
+
+if test "$_LT_TAGVAR(hardcode_action, $1)" = relink ||
+   test "$_LT_TAGVAR(inherit_rpath, $1)" = yes; then
+  # Fast installation is not supported
+  enable_fast_install=no
+elif test "$shlibpath_overrides_runpath" = yes ||
+     test "$enable_shared" = no; then
+  # Fast installation is not necessary
+  enable_fast_install=needless
+fi
+_LT_TAGDECL([], [hardcode_action], [0],
+    [How to hardcode a shared library path into an executable])
+])# _LT_LINKER_HARDCODE_LIBPATH
+
+
+# _LT_CMD_STRIPLIB
+# ----------------
+m4_defun([_LT_CMD_STRIPLIB],
+[m4_require([_LT_DECL_EGREP])
+striplib=
+old_striplib=
+AC_MSG_CHECKING([whether stripping libraries is possible])
+if test -n "$STRIP" && $STRIP -V 2>&1 | $GREP "GNU strip" >/dev/null; then
+  test -z "$old_striplib" && old_striplib="$STRIP --strip-debug"
+  test -z "$striplib" && striplib="$STRIP --strip-unneeded"
+  AC_MSG_RESULT([yes])
+else
+# FIXME - insert some real tests, host_os isn't really good enough
+  case $host_os in
+  darwin*)
+    if test -n "$STRIP" ; then
+      striplib="$STRIP -x"
+      old_striplib="$STRIP -S"
+      AC_MSG_RESULT([yes])
+    else
+      AC_MSG_RESULT([no])
+    fi
+    ;;
+  *)
+    AC_MSG_RESULT([no])
+    ;;
+  esac
+fi
+_LT_DECL([], [old_striplib], [1], [Commands to strip libraries])
+_LT_DECL([], [striplib], [1])
+])# _LT_CMD_STRIPLIB
+
+
+# _LT_SYS_DYNAMIC_LINKER([TAG])
+# -----------------------------
+# PORTME Fill in your ld.so characteristics
+m4_defun([_LT_SYS_DYNAMIC_LINKER],
+[AC_REQUIRE([AC_CANONICAL_HOST])dnl
+m4_require([_LT_DECL_EGREP])dnl
+m4_require([_LT_FILEUTILS_DEFAULTS])dnl
+m4_require([_LT_DECL_OBJDUMP])dnl
+m4_require([_LT_DECL_SED])dnl
+m4_require([_LT_CHECK_SHELL_FEATURES])dnl
+AC_MSG_CHECKING([dynamic linker characteristics])
+m4_if([$1],
+	[], [
+if test "$GCC" = yes; then
+  case $host_os in
+    darwin*) lt_awk_arg="/^libraries:/,/LR/" ;;
+    *) lt_awk_arg="/^libraries:/" ;;
+  esac
+  case $host_os in
+    mingw* | cegcc*) lt_sed_strip_eq="s,=\([[A-Za-z]]:\),\1,g" ;;
+    *) lt_sed_strip_eq="s,=/,/,g" ;;
+  esac
+  lt_search_path_spec=`$CC -print-search-dirs | awk $lt_awk_arg | $SED -e "s/^libraries://" -e $lt_sed_strip_eq`
+  case $lt_search_path_spec in
+  *\;*)
+    # if the path contains ";" then we assume it to be the separator
+    # otherwise default to the standard path separator (i.e. ":") - it is
+    # assumed that no part of a normal pathname contains ";" but that should
+    # okay in the real world where ";" in dirpaths is itself problematic.
+    lt_search_path_spec=`$ECHO "$lt_search_path_spec" | $SED 's/;/ /g'`
+    ;;
+  *)
+    lt_search_path_spec=`$ECHO "$lt_search_path_spec" | $SED "s/$PATH_SEPARATOR/ /g"`
+    ;;
+  esac
+  # Ok, now we have the path, separated by spaces, we can step through it
+  # and add multilib dir if necessary.
+  lt_tmp_lt_search_path_spec=
+  lt_multi_os_dir=`$CC $CPPFLAGS $CFLAGS $LDFLAGS -print-multi-os-directory 2>/dev/null`
+  for lt_sys_path in $lt_search_path_spec; do
+    if test -d "$lt_sys_path/$lt_multi_os_dir"; then
+      lt_tmp_lt_search_path_spec="$lt_tmp_lt_search_path_spec $lt_sys_path/$lt_multi_os_dir"
+    else
+      test -d "$lt_sys_path" && \
+	lt_tmp_lt_search_path_spec="$lt_tmp_lt_search_path_spec $lt_sys_path"
+    fi
+  done
+  lt_search_path_spec=`$ECHO "$lt_tmp_lt_search_path_spec" | awk '
+BEGIN {RS=" "; FS="/|\n";} {
+  lt_foo="";
+  lt_count=0;
+  for (lt_i = NF; lt_i > 0; lt_i--) {
+    if ($lt_i != "" && $lt_i != ".") {
+      if ($lt_i == "..") {
+        lt_count++;
+      } else {
+        if (lt_count == 0) {
+          lt_foo="/" $lt_i lt_foo;
+        } else {
+          lt_count--;
+        }
+      }
+    }
+  }
+  if (lt_foo != "") { lt_freq[[lt_foo]]++; }
+  if (lt_freq[[lt_foo]] == 1) { print lt_foo; }
+}'`
+  # AWK program above erroneously prepends '/' to C:/dos/paths
+  # for these hosts.
+  case $host_os in
+    mingw* | cegcc*) lt_search_path_spec=`$ECHO "$lt_search_path_spec" |\
+      $SED 's,/\([[A-Za-z]]:\),\1,g'` ;;
+  esac
+  sys_lib_search_path
