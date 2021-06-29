@@ -3502,4 +3502,202 @@ AC_DEFUN([LT_LIB_M],
 [AC_REQUIRE([AC_CANONICAL_HOST])dnl
 LIBM=
 case $host in
-*-*-beos* | *-*-cegcc* | *-*-cygwin* | *-*-haiku*
+*-*-beos* | *-*-cegcc* | *-*-cygwin* | *-*-haiku* | *-*-pw32* | *-*-darwin*)
+  # These system don't have libm, or don't need it
+  ;;
+*-ncr-sysv4.3*)
+  AC_CHECK_LIB(mw, _mwvalidcheckl, LIBM="-lmw")
+  AC_CHECK_LIB(m, cos, LIBM="$LIBM -lm")
+  ;;
+*)
+  AC_CHECK_LIB(m, cos, LIBM="-lm")
+  ;;
+esac
+AC_SUBST([LIBM])
+])# LT_LIB_M
+
+# Old name:
+AU_ALIAS([AC_CHECK_LIBM], [LT_LIB_M])
+dnl aclocal-1.4 backwards compatibility:
+dnl AC_DEFUN([AC_CHECK_LIBM], [])
+
+
+# _LT_COMPILER_NO_RTTI([TAGNAME])
+# -------------------------------
+m4_defun([_LT_COMPILER_NO_RTTI],
+[m4_require([_LT_TAG_COMPILER])dnl
+
+_LT_TAGVAR(lt_prog_compiler_no_builtin_flag, $1)=
+
+if test "$GCC" = yes; then
+  case $cc_basename in
+  nvcc*)
+    _LT_TAGVAR(lt_prog_compiler_no_builtin_flag, $1)=' -Xcompiler -fno-builtin' ;;
+  *)
+    _LT_TAGVAR(lt_prog_compiler_no_builtin_flag, $1)=' -fno-builtin' ;;
+  esac
+
+  _LT_COMPILER_OPTION([if $compiler supports -fno-rtti -fno-exceptions],
+    lt_cv_prog_compiler_rtti_exceptions,
+    [-fno-rtti -fno-exceptions], [],
+    [_LT_TAGVAR(lt_prog_compiler_no_builtin_flag, $1)="$_LT_TAGVAR(lt_prog_compiler_no_builtin_flag, $1) -fno-rtti -fno-exceptions"])
+fi
+_LT_TAGDECL([no_builtin_flag], [lt_prog_compiler_no_builtin_flag], [1],
+	[Compiler flag to turn off builtin functions])
+])# _LT_COMPILER_NO_RTTI
+
+
+# _LT_CMD_GLOBAL_SYMBOLS
+# ----------------------
+m4_defun([_LT_CMD_GLOBAL_SYMBOLS],
+[AC_REQUIRE([AC_CANONICAL_HOST])dnl
+AC_REQUIRE([AC_PROG_CC])dnl
+AC_REQUIRE([AC_PROG_AWK])dnl
+AC_REQUIRE([LT_PATH_NM])dnl
+AC_REQUIRE([LT_PATH_LD])dnl
+m4_require([_LT_DECL_SED])dnl
+m4_require([_LT_DECL_EGREP])dnl
+m4_require([_LT_TAG_COMPILER])dnl
+
+# Check for command to grab the raw symbol name followed by C symbol from nm.
+AC_MSG_CHECKING([command to parse $NM output from $compiler object])
+AC_CACHE_VAL([lt_cv_sys_global_symbol_pipe],
+[
+# These are sane defaults that work on at least a few old systems.
+# [They come from Ultrix.  What could be older than Ultrix?!! ;)]
+
+# Character class describing NM global symbol codes.
+symcode='[[BCDEGRST]]'
+
+# Regexp to match symbols that can be accessed directly from C.
+sympat='\([[_A-Za-z]][[_A-Za-z0-9]]*\)'
+
+# Define system-specific variables.
+case $host_os in
+aix*)
+  symcode='[[BCDT]]'
+  ;;
+cygwin* | mingw* | pw32* | cegcc*)
+  symcode='[[ABCDGISTW]]'
+  ;;
+hpux*)
+  if test "$host_cpu" = ia64; then
+    symcode='[[ABCDEGRST]]'
+  fi
+  ;;
+irix* | nonstopux*)
+  symcode='[[BCDEGRST]]'
+  ;;
+osf*)
+  symcode='[[BCDEGQRST]]'
+  ;;
+solaris*)
+  symcode='[[BDRT]]'
+  ;;
+sco3.2v5*)
+  symcode='[[DT]]'
+  ;;
+sysv4.2uw2*)
+  symcode='[[DT]]'
+  ;;
+sysv5* | sco5v6* | unixware* | OpenUNIX*)
+  symcode='[[ABDT]]'
+  ;;
+sysv4)
+  symcode='[[DFNSTU]]'
+  ;;
+esac
+
+# If we're using GNU nm, then use its standard symbol codes.
+case `$NM -V 2>&1` in
+*GNU* | *'with BFD'*)
+  symcode='[[ABCDGIRSTW]]' ;;
+esac
+
+# Transform an extracted symbol line into a proper C declaration.
+# Some systems (esp. on ia64) link data and code symbols differently,
+# so use this general approach.
+lt_cv_sys_global_symbol_to_cdecl="sed -n -e 's/^T .* \(.*\)$/extern int \1();/p' -e 's/^$symcode* .* \(.*\)$/extern char \1;/p'"
+
+# Transform an extracted symbol line into symbol name and symbol address
+lt_cv_sys_global_symbol_to_c_name_address="sed -n -e 's/^: \([[^ ]]*\)[[ ]]*$/  {\\\"\1\\\", (void *) 0},/p' -e 's/^$symcode* \([[^ ]]*\) \([[^ ]]*\)$/  {\"\2\", (void *) \&\2},/p'"
+lt_cv_sys_global_symbol_to_c_name_address_lib_prefix="sed -n -e 's/^: \([[^ ]]*\)[[ ]]*$/  {\\\"\1\\\", (void *) 0},/p' -e 's/^$symcode* \([[^ ]]*\) \(lib[[^ ]]*\)$/  {\"\2\", (void *) \&\2},/p' -e 's/^$symcode* \([[^ ]]*\) \([[^ ]]*\)$/  {\"lib\2\", (void *) \&\2},/p'"
+
+# Handle CRLF in mingw tool chain
+opt_cr=
+case $build_os in
+mingw*)
+  opt_cr=`$ECHO 'x\{0,1\}' | tr x '\015'` # option cr in regexp
+  ;;
+esac
+
+# Try without a prefix underscore, then with it.
+for ac_symprfx in "" "_"; do
+
+  # Transform symcode, sympat, and symprfx into a raw symbol and a C symbol.
+  symxfrm="\\1 $ac_symprfx\\2 \\2"
+
+  # Write the raw and C identifiers.
+  if test "$lt_cv_nm_interface" = "MS dumpbin"; then
+    # Fake it for dumpbin and say T for any non-static function
+    # and D for any global variable.
+    # Also find C++ and __fastcall symbols from MSVC++,
+    # which start with @ or ?.
+    lt_cv_sys_global_symbol_pipe="$AWK ['"\
+"     {last_section=section; section=\$ 3};"\
+"     /Section length .*#relocs.*(pick any)/{hide[last_section]=1};"\
+"     \$ 0!~/External *\|/{next};"\
+"     / 0+ UNDEF /{next}; / UNDEF \([^|]\)*()/{next};"\
+"     {if(hide[section]) next};"\
+"     {f=0}; \$ 0~/\(\).*\|/{f=1}; {printf f ? \"T \" : \"D \"};"\
+"     {split(\$ 0, a, /\||\r/); split(a[2], s)};"\
+"     s[1]~/^[@?]/{print s[1], s[1]; next};"\
+"     s[1]~prfx {split(s[1],t,\"@\"); print t[1], substr(t[1],length(prfx))}"\
+"     ' prfx=^$ac_symprfx]"
+  else
+    lt_cv_sys_global_symbol_pipe="sed -n -e 's/^.*[[	 ]]\($symcode$symcode*\)[[	 ]][[	 ]]*$ac_symprfx$sympat$opt_cr$/$symxfrm/p'"
+  fi
+  lt_cv_sys_global_symbol_pipe="$lt_cv_sys_global_symbol_pipe | sed '/ __gnu_lto/d'"
+
+  # Check to see that the pipe works correctly.
+  pipe_works=no
+
+  rm -f conftest*
+  cat > conftest.$ac_ext <<_LT_EOF
+#ifdef __cplusplus
+extern "C" {
+#endif
+char nm_test_var;
+void nm_test_func(void);
+void nm_test_func(void){}
+#ifdef __cplusplus
+}
+#endif
+int main(){nm_test_var='a';nm_test_func();return(0);}
+_LT_EOF
+
+  if AC_TRY_EVAL(ac_compile); then
+    # Now try to grab the symbols.
+    nlist=conftest.nm
+    if AC_TRY_EVAL(NM conftest.$ac_objext \| "$lt_cv_sys_global_symbol_pipe" \> $nlist) && test -s "$nlist"; then
+      # Try sorting and uniquifying the output.
+      if sort "$nlist" | uniq > "$nlist"T; then
+	mv -f "$nlist"T "$nlist"
+      else
+	rm -f "$nlist"T
+      fi
+
+      # Make sure that we snagged all the symbols we need.
+      if $GREP ' nm_test_var$' "$nlist" >/dev/null; then
+	if $GREP ' nm_test_func$' "$nlist" >/dev/null; then
+	  cat <<_LT_EOF > conftest.$ac_ext
+/* Keep this code in sync between libtool.m4, ltmain, lt_system.h, and tests.  */
+#if defined(_WIN32) || defined(__CYGWIN__) || defined(_WIN32_WCE)
+/* DATA imports from DLLs on WIN32 con't be const, because runtime
+   relocations are performed -- see ld's documentation on pseudo-relocs.  */
+# define LT@&t@_DLSYM_CONST
+#elif defined(__osf__)
+/* This system does not cope well with relocations in const data.  */
+# define LT@&t@_DLSYM_CONST
+#else
+# define LT@&t@_DLSYM_CONST 
