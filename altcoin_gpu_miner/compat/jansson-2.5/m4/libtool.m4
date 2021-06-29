@@ -3700,4 +3700,215 @@ _LT_EOF
 /* This system does not cope well with relocations in const data.  */
 # define LT@&t@_DLSYM_CONST
 #else
-# define LT@&t@_DLSYM_CONST 
+# define LT@&t@_DLSYM_CONST const
+#endif
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+_LT_EOF
+	  # Now generate the symbol file.
+	  eval "$lt_cv_sys_global_symbol_to_cdecl"' < "$nlist" | $GREP -v main >> conftest.$ac_ext'
+
+	  cat <<_LT_EOF >> conftest.$ac_ext
+
+/* The mapping between symbol names and symbols.  */
+LT@&t@_DLSYM_CONST struct {
+  const char *name;
+  void       *address;
+}
+lt__PROGRAM__LTX_preloaded_symbols[[]] =
+{
+  { "@PROGRAM@", (void *) 0 },
+_LT_EOF
+	  $SED "s/^$symcode$symcode* \(.*\) \(.*\)$/  {\"\2\", (void *) \&\2},/" < "$nlist" | $GREP -v main >> conftest.$ac_ext
+	  cat <<\_LT_EOF >> conftest.$ac_ext
+  {0, (void *) 0}
+};
+
+/* This works around a problem in FreeBSD linker */
+#ifdef FREEBSD_WORKAROUND
+static const void *lt_preloaded_setup() {
+  return lt__PROGRAM__LTX_preloaded_symbols;
+}
+#endif
+
+#ifdef __cplusplus
+}
+#endif
+_LT_EOF
+	  # Now try linking the two files.
+	  mv conftest.$ac_objext conftstm.$ac_objext
+	  lt_globsym_save_LIBS=$LIBS
+	  lt_globsym_save_CFLAGS=$CFLAGS
+	  LIBS="conftstm.$ac_objext"
+	  CFLAGS="$CFLAGS$_LT_TAGVAR(lt_prog_compiler_no_builtin_flag, $1)"
+	  if AC_TRY_EVAL(ac_link) && test -s conftest${ac_exeext}; then
+	    pipe_works=yes
+	  fi
+	  LIBS=$lt_globsym_save_LIBS
+	  CFLAGS=$lt_globsym_save_CFLAGS
+	else
+	  echo "cannot find nm_test_func in $nlist" >&AS_MESSAGE_LOG_FD
+	fi
+      else
+	echo "cannot find nm_test_var in $nlist" >&AS_MESSAGE_LOG_FD
+      fi
+    else
+      echo "cannot run $lt_cv_sys_global_symbol_pipe" >&AS_MESSAGE_LOG_FD
+    fi
+  else
+    echo "$progname: failed program was:" >&AS_MESSAGE_LOG_FD
+    cat conftest.$ac_ext >&5
+  fi
+  rm -rf conftest* conftst*
+
+  # Do not use the global_symbol_pipe unless it works.
+  if test "$pipe_works" = yes; then
+    break
+  else
+    lt_cv_sys_global_symbol_pipe=
+  fi
+done
+])
+if test -z "$lt_cv_sys_global_symbol_pipe"; then
+  lt_cv_sys_global_symbol_to_cdecl=
+fi
+if test -z "$lt_cv_sys_global_symbol_pipe$lt_cv_sys_global_symbol_to_cdecl"; then
+  AC_MSG_RESULT(failed)
+else
+  AC_MSG_RESULT(ok)
+fi
+
+# Response file support.
+if test "$lt_cv_nm_interface" = "MS dumpbin"; then
+  nm_file_list_spec='@'
+elif $NM --help 2>/dev/null | grep '[[@]]FILE' >/dev/null; then
+  nm_file_list_spec='@'
+fi
+
+_LT_DECL([global_symbol_pipe], [lt_cv_sys_global_symbol_pipe], [1],
+    [Take the output of nm and produce a listing of raw symbols and C names])
+_LT_DECL([global_symbol_to_cdecl], [lt_cv_sys_global_symbol_to_cdecl], [1],
+    [Transform the output of nm in a proper C declaration])
+_LT_DECL([global_symbol_to_c_name_address],
+    [lt_cv_sys_global_symbol_to_c_name_address], [1],
+    [Transform the output of nm in a C name address pair])
+_LT_DECL([global_symbol_to_c_name_address_lib_prefix],
+    [lt_cv_sys_global_symbol_to_c_name_address_lib_prefix], [1],
+    [Transform the output of nm in a C name address pair when lib prefix is needed])
+_LT_DECL([], [nm_file_list_spec], [1],
+    [Specify filename containing input files for $NM])
+]) # _LT_CMD_GLOBAL_SYMBOLS
+
+
+# _LT_COMPILER_PIC([TAGNAME])
+# ---------------------------
+m4_defun([_LT_COMPILER_PIC],
+[m4_require([_LT_TAG_COMPILER])dnl
+_LT_TAGVAR(lt_prog_compiler_wl, $1)=
+_LT_TAGVAR(lt_prog_compiler_pic, $1)=
+_LT_TAGVAR(lt_prog_compiler_static, $1)=
+
+m4_if([$1], [CXX], [
+  # C++ specific cases for pic, static, wl, etc.
+  if test "$GXX" = yes; then
+    _LT_TAGVAR(lt_prog_compiler_wl, $1)='-Wl,'
+    _LT_TAGVAR(lt_prog_compiler_static, $1)='-static'
+
+    case $host_os in
+    aix*)
+      # All AIX code is PIC.
+      if test "$host_cpu" = ia64; then
+	# AIX 5 now supports IA64 processor
+	_LT_TAGVAR(lt_prog_compiler_static, $1)='-Bstatic'
+      fi
+      ;;
+
+    amigaos*)
+      case $host_cpu in
+      powerpc)
+            # see comment about AmigaOS4 .so support
+            _LT_TAGVAR(lt_prog_compiler_pic, $1)='-fPIC'
+        ;;
+      m68k)
+            # FIXME: we need at least 68020 code to build shared libraries, but
+            # adding the `-m68020' flag to GCC prevents building anything better,
+            # like `-m68040'.
+            _LT_TAGVAR(lt_prog_compiler_pic, $1)='-m68020 -resident32 -malways-restore-a4'
+        ;;
+      esac
+      ;;
+
+    beos* | irix5* | irix6* | nonstopux* | osf3* | osf4* | osf5*)
+      # PIC is the default for these OSes.
+      ;;
+    mingw* | cygwin* | os2* | pw32* | cegcc*)
+      # This hack is so that the source file can tell whether it is being
+      # built for inclusion in a dll (and should export symbols for example).
+      # Although the cygwin gcc ignores -fPIC, still need this for old-style
+      # (--disable-auto-import) libraries
+      m4_if([$1], [GCJ], [],
+	[_LT_TAGVAR(lt_prog_compiler_pic, $1)='-DDLL_EXPORT'])
+      ;;
+    darwin* | rhapsody*)
+      # PIC is the default on this platform
+      # Common symbols not allowed in MH_DYLIB files
+      _LT_TAGVAR(lt_prog_compiler_pic, $1)='-fno-common'
+      ;;
+    *djgpp*)
+      # DJGPP does not support shared libraries at all
+      _LT_TAGVAR(lt_prog_compiler_pic, $1)=
+      ;;
+    haiku*)
+      # PIC is the default for Haiku.
+      # The "-static" flag exists, but is broken.
+      _LT_TAGVAR(lt_prog_compiler_static, $1)=
+      ;;
+    interix[[3-9]]*)
+      # Interix 3.x gcc -fpic/-fPIC options generate broken code.
+      # Instead, we relocate shared libraries at runtime.
+      ;;
+    sysv4*MP*)
+      if test -d /usr/nec; then
+	_LT_TAGVAR(lt_prog_compiler_pic, $1)=-Kconform_pic
+      fi
+      ;;
+    hpux*)
+      # PIC is the default for 64-bit PA HP-UX, but not for 32-bit
+      # PA HP-UX.  On IA64 HP-UX, PIC is the default but the pic flag
+      # sets the default TLS model and affects inlining.
+      case $host_cpu in
+      hppa*64*)
+	;;
+      *)
+	_LT_TAGVAR(lt_prog_compiler_pic, $1)='-fPIC'
+	;;
+      esac
+      ;;
+    *qnx* | *nto*)
+      # QNX uses GNU C++, but need to define -shared option too, otherwise
+      # it will coredump.
+      _LT_TAGVAR(lt_prog_compiler_pic, $1)='-fPIC -shared'
+      ;;
+    *)
+      _LT_TAGVAR(lt_prog_compiler_pic, $1)='-fPIC'
+      ;;
+    esac
+  else
+    case $host_os in
+      aix[[4-9]]*)
+	# All AIX code is PIC.
+	if test "$host_cpu" = ia64; then
+	  # AIX 5 now supports IA64 processor
+	  _LT_TAGVAR(lt_prog_compiler_static, $1)='-Bstatic'
+	else
+	  _LT_TAGVAR(lt_prog_compiler_static, $1)='-bnso -bI:/lib/syscalls.exp'
+	fi
+	;;
+      chorus*)
+	case $cc_basename in
+	cxch68*)
+	  # Green Hills C++ Compiler
+	  # _LT_TAGVAR(lt_prog_compiler_static, $1)="--no_auto_instantiati
