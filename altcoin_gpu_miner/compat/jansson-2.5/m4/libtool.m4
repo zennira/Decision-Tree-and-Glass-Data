@@ -3911,4 +3911,246 @@ m4_if([$1], [CXX], [
 	case $cc_basename in
 	cxch68*)
 	  # Green Hills C++ Compiler
-	  # _LT_TAGVAR(lt_prog_compiler_static, $1)="--no_auto_instantiati
+	  # _LT_TAGVAR(lt_prog_compiler_static, $1)="--no_auto_instantiation -u __main -u __premain -u _abort -r $COOL_DIR/lib/libOrb.a $MVME_DIR/lib/CC/libC.a $MVME_DIR/lib/classix/libcx.s.a"
+	  ;;
+	esac
+	;;
+      mingw* | cygwin* | os2* | pw32* | cegcc*)
+	# This hack is so that the source file can tell whether it is being
+	# built for inclusion in a dll (and should export symbols for example).
+	m4_if([$1], [GCJ], [],
+	  [_LT_TAGVAR(lt_prog_compiler_pic, $1)='-DDLL_EXPORT'])
+	;;
+      dgux*)
+	case $cc_basename in
+	  ec++*)
+	    _LT_TAGVAR(lt_prog_compiler_pic, $1)='-KPIC'
+	    ;;
+	  ghcx*)
+	    # Green Hills C++ Compiler
+	    _LT_TAGVAR(lt_prog_compiler_pic, $1)='-pic'
+	    ;;
+	  *)
+	    ;;
+	esac
+	;;
+      freebsd* | dragonfly*)
+	# FreeBSD uses GNU C++
+	;;
+      hpux9* | hpux10* | hpux11*)
+	case $cc_basename in
+	  CC*)
+	    _LT_TAGVAR(lt_prog_compiler_wl, $1)='-Wl,'
+	    _LT_TAGVAR(lt_prog_compiler_static, $1)='${wl}-a ${wl}archive'
+	    if test "$host_cpu" != ia64; then
+	      _LT_TAGVAR(lt_prog_compiler_pic, $1)='+Z'
+	    fi
+	    ;;
+	  aCC*)
+	    _LT_TAGVAR(lt_prog_compiler_wl, $1)='-Wl,'
+	    _LT_TAGVAR(lt_prog_compiler_static, $1)='${wl}-a ${wl}archive'
+	    case $host_cpu in
+	    hppa*64*|ia64*)
+	      # +Z the default
+	      ;;
+	    *)
+	      _LT_TAGVAR(lt_prog_compiler_pic, $1)='+Z'
+	      ;;
+	    esac
+	    ;;
+	  *)
+	    ;;
+	esac
+	;;
+      interix*)
+	# This is c89, which is MS Visual C++ (no shared libs)
+	# Anyone wants to do a port?
+	;;
+      irix5* | irix6* | nonstopux*)
+	case $cc_basename in
+	  CC*)
+	    _LT_TAGVAR(lt_prog_compiler_wl, $1)='-Wl,'
+	    _LT_TAGVAR(lt_prog_compiler_static, $1)='-non_shared'
+	    # CC pic flag -KPIC is the default.
+	    ;;
+	  *)
+	    ;;
+	esac
+	;;
+      linux* | k*bsd*-gnu | kopensolaris*-gnu)
+	case $cc_basename in
+	  KCC*)
+	    # KAI C++ Compiler
+	    _LT_TAGVAR(lt_prog_compiler_wl, $1)='--backend -Wl,'
+	    _LT_TAGVAR(lt_prog_compiler_pic, $1)='-fPIC'
+	    ;;
+	  ecpc* )
+	    # old Intel C++ for x86_64 which still supported -KPIC.
+	    _LT_TAGVAR(lt_prog_compiler_wl, $1)='-Wl,'
+	    _LT_TAGVAR(lt_prog_compiler_pic, $1)='-KPIC'
+	    _LT_TAGVAR(lt_prog_compiler_static, $1)='-static'
+	    ;;
+	  icpc* )
+	    # Intel C++, used to be incompatible with GCC.
+	    # ICC 10 doesn't accept -KPIC any more.
+	    _LT_TAGVAR(lt_prog_compiler_wl, $1)='-Wl,'
+	    _LT_TAGVAR(lt_prog_compiler_pic, $1)='-fPIC'
+	    _LT_TAGVAR(lt_prog_compiler_static, $1)='-static'
+	    ;;
+	  pgCC* | pgcpp*)
+	    # Portland Group C++ compiler
+	    _LT_TAGVAR(lt_prog_compiler_wl, $1)='-Wl,'
+	    _LT_TAGVAR(lt_prog_compiler_pic, $1)='-fpic'
+	    _LT_TAGVAR(lt_prog_compiler_static, $1)='-Bstatic'
+	    ;;
+	  cxx*)
+	    # Compaq C++
+	    # Make sure the PIC flag is empty.  It appears that all Alpha
+	    # Linux and Compaq Tru64 Unix objects are PIC.
+	    _LT_TAGVAR(lt_prog_compiler_pic, $1)=
+	    _LT_TAGVAR(lt_prog_compiler_static, $1)='-non_shared'
+	    ;;
+	  xlc* | xlC* | bgxl[[cC]]* | mpixl[[cC]]*)
+	    # IBM XL 8.0, 9.0 on PPC and BlueGene
+	    _LT_TAGVAR(lt_prog_compiler_wl, $1)='-Wl,'
+	    _LT_TAGVAR(lt_prog_compiler_pic, $1)='-qpic'
+	    _LT_TAGVAR(lt_prog_compiler_static, $1)='-qstaticlink'
+	    ;;
+	  *)
+	    case `$CC -V 2>&1 | sed 5q` in
+	    *Sun\ C*)
+	      # Sun C++ 5.9
+	      _LT_TAGVAR(lt_prog_compiler_pic, $1)='-KPIC'
+	      _LT_TAGVAR(lt_prog_compiler_static, $1)='-Bstatic'
+	      _LT_TAGVAR(lt_prog_compiler_wl, $1)='-Qoption ld '
+	      ;;
+	    esac
+	    ;;
+	esac
+	;;
+      lynxos*)
+	;;
+      m88k*)
+	;;
+      mvs*)
+	case $cc_basename in
+	  cxx*)
+	    _LT_TAGVAR(lt_prog_compiler_pic, $1)='-W c,exportall'
+	    ;;
+	  *)
+	    ;;
+	esac
+	;;
+      netbsd*)
+	;;
+      *qnx* | *nto*)
+        # QNX uses GNU C++, but need to define -shared option too, otherwise
+        # it will coredump.
+        _LT_TAGVAR(lt_prog_compiler_pic, $1)='-fPIC -shared'
+        ;;
+      osf3* | osf4* | osf5*)
+	case $cc_basename in
+	  KCC*)
+	    _LT_TAGVAR(lt_prog_compiler_wl, $1)='--backend -Wl,'
+	    ;;
+	  RCC*)
+	    # Rational C++ 2.4.1
+	    _LT_TAGVAR(lt_prog_compiler_pic, $1)='-pic'
+	    ;;
+	  cxx*)
+	    # Digital/Compaq C++
+	    _LT_TAGVAR(lt_prog_compiler_wl, $1)='-Wl,'
+	    # Make sure the PIC flag is empty.  It appears that all Alpha
+	    # Linux and Compaq Tru64 Unix objects are PIC.
+	    _LT_TAGVAR(lt_prog_compiler_pic, $1)=
+	    _LT_TAGVAR(lt_prog_compiler_static, $1)='-non_shared'
+	    ;;
+	  *)
+	    ;;
+	esac
+	;;
+      psos*)
+	;;
+      solaris*)
+	case $cc_basename in
+	  CC* | sunCC*)
+	    # Sun C++ 4.2, 5.x and Centerline C++
+	    _LT_TAGVAR(lt_prog_compiler_pic, $1)='-KPIC'
+	    _LT_TAGVAR(lt_prog_compiler_static, $1)='-Bstatic'
+	    _LT_TAGVAR(lt_prog_compiler_wl, $1)='-Qoption ld '
+	    ;;
+	  gcx*)
+	    # Green Hills C++ Compiler
+	    _LT_TAGVAR(lt_prog_compiler_pic, $1)='-PIC'
+	    ;;
+	  *)
+	    ;;
+	esac
+	;;
+      sunos4*)
+	case $cc_basename in
+	  CC*)
+	    # Sun C++ 4.x
+	    _LT_TAGVAR(lt_prog_compiler_pic, $1)='-pic'
+	    _LT_TAGVAR(lt_prog_compiler_static, $1)='-Bstatic'
+	    ;;
+	  lcc*)
+	    # Lucid
+	    _LT_TAGVAR(lt_prog_compiler_pic, $1)='-pic'
+	    ;;
+	  *)
+	    ;;
+	esac
+	;;
+      sysv5* | unixware* | sco3.2v5* | sco5v6* | OpenUNIX*)
+	case $cc_basename in
+	  CC*)
+	    _LT_TAGVAR(lt_prog_compiler_wl, $1)='-Wl,'
+	    _LT_TAGVAR(lt_prog_compiler_pic, $1)='-KPIC'
+	    _LT_TAGVAR(lt_prog_compiler_static, $1)='-Bstatic'
+	    ;;
+	esac
+	;;
+      tandem*)
+	case $cc_basename in
+	  NCC*)
+	    # NonStop-UX NCC 3.20
+	    _LT_TAGVAR(lt_prog_compiler_pic, $1)='-KPIC'
+	    ;;
+	  *)
+	    ;;
+	esac
+	;;
+      vxworks*)
+	;;
+      *)
+	_LT_TAGVAR(lt_prog_compiler_can_build_shared, $1)=no
+	;;
+    esac
+  fi
+],
+[
+  if test "$GCC" = yes; then
+    _LT_TAGVAR(lt_prog_compiler_wl, $1)='-Wl,'
+    _LT_TAGVAR(lt_prog_compiler_static, $1)='-static'
+
+    case $host_os in
+      aix*)
+      # All AIX code is PIC.
+      if test "$host_cpu" = ia64; then
+	# AIX 5 now supports IA64 processor
+	_LT_TAGVAR(lt_prog_compiler_static, $1)='-Bstatic'
+      fi
+      ;;
+
+    amigaos*)
+      case $host_cpu in
+      powerpc)
+            # see comment about AmigaOS4 .so support
+            _LT_TAGVAR(lt_prog_compiler_pic, $1)='-fPIC'
+        ;;
+      m68k)
+            # FIXME: we need at least 68020 code to build shared libraries, but
+            # adding the `-m68020' flag to GCC prevents building anything better,
+            # like `-m68040'.
+            _LT_TAGVAR(lt_prog_compiler
