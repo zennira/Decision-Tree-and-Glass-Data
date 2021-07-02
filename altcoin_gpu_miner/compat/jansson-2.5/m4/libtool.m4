@@ -4518,4 +4518,156 @@ m4_if([$1], [CXX], [
   _LT_TAGVAR(hardcode_direct_absolute, $1)=no
   _LT_TAGVAR(hardcode_libdir_flag_spec, $1)=
   _LT_TAGVAR(hardcode_libdir_flag_spec_ld, $1)=
-  _LT_TAGVAR(hardcode_libdir_separator
+  _LT_TAGVAR(hardcode_libdir_separator, $1)=
+  _LT_TAGVAR(hardcode_minus_L, $1)=no
+  _LT_TAGVAR(hardcode_shlibpath_var, $1)=unsupported
+  _LT_TAGVAR(inherit_rpath, $1)=no
+  _LT_TAGVAR(link_all_deplibs, $1)=unknown
+  _LT_TAGVAR(module_cmds, $1)=
+  _LT_TAGVAR(module_expsym_cmds, $1)=
+  _LT_TAGVAR(old_archive_from_new_cmds, $1)=
+  _LT_TAGVAR(old_archive_from_expsyms_cmds, $1)=
+  _LT_TAGVAR(thread_safe_flag_spec, $1)=
+  _LT_TAGVAR(whole_archive_flag_spec, $1)=
+  # include_expsyms should be a list of space-separated symbols to be *always*
+  # included in the symbol list
+  _LT_TAGVAR(include_expsyms, $1)=
+  # exclude_expsyms can be an extended regexp of symbols to exclude
+  # it will be wrapped by ` (' and `)$', so one must not match beginning or
+  # end of line.  Example: `a|bc|.*d.*' will exclude the symbols `a' and `bc',
+  # as well as any symbol that contains `d'.
+  _LT_TAGVAR(exclude_expsyms, $1)=['_GLOBAL_OFFSET_TABLE_|_GLOBAL__F[ID]_.*']
+  # Although _GLOBAL_OFFSET_TABLE_ is a valid symbol C name, most a.out
+  # platforms (ab)use it in PIC code, but their linkers get confused if
+  # the symbol is explicitly referenced.  Since portable code cannot
+  # rely on this symbol name, it's probably fine to never include it in
+  # preloaded symbol tables.
+  # Exclude shared library initialization/finalization symbols.
+dnl Note also adjust exclude_expsyms for C++ above.
+  extract_expsyms_cmds=
+
+  case $host_os in
+  cygwin* | mingw* | pw32* | cegcc*)
+    # FIXME: the MSVC++ port hasn't been tested in a loooong time
+    # When not using gcc, we currently assume that we are using
+    # Microsoft Visual C++.
+    if test "$GCC" != yes; then
+      with_gnu_ld=no
+    fi
+    ;;
+  interix*)
+    # we just hope/assume this is gcc and not c89 (= MSVC++)
+    with_gnu_ld=yes
+    ;;
+  openbsd*)
+    with_gnu_ld=no
+    ;;
+  esac
+
+  _LT_TAGVAR(ld_shlibs, $1)=yes
+
+  # On some targets, GNU ld is compatible enough with the native linker
+  # that we're better off using the native interface for both.
+  lt_use_gnu_ld_interface=no
+  if test "$with_gnu_ld" = yes; then
+    case $host_os in
+      aix*)
+	# The AIX port of GNU ld has always aspired to compatibility
+	# with the native linker.  However, as the warning in the GNU ld
+	# block says, versions before 2.19.5* couldn't really create working
+	# shared libraries, regardless of the interface used.
+	case `$LD -v 2>&1` in
+	  *\ \(GNU\ Binutils\)\ 2.19.5*) ;;
+	  *\ \(GNU\ Binutils\)\ 2.[[2-9]]*) ;;
+	  *\ \(GNU\ Binutils\)\ [[3-9]]*) ;;
+	  *)
+	    lt_use_gnu_ld_interface=yes
+	    ;;
+	esac
+	;;
+      *)
+	lt_use_gnu_ld_interface=yes
+	;;
+    esac
+  fi
+
+  if test "$lt_use_gnu_ld_interface" = yes; then
+    # If archive_cmds runs LD, not CC, wlarc should be empty
+    wlarc='${wl}'
+
+    # Set some defaults for GNU ld with shared library support. These
+    # are reset later if shared libraries are not supported. Putting them
+    # here allows them to be overridden if necessary.
+    runpath_var=LD_RUN_PATH
+    _LT_TAGVAR(hardcode_libdir_flag_spec, $1)='${wl}-rpath ${wl}$libdir'
+    _LT_TAGVAR(export_dynamic_flag_spec, $1)='${wl}--export-dynamic'
+    # ancient GNU ld didn't support --whole-archive et. al.
+    if $LD --help 2>&1 | $GREP 'no-whole-archive' > /dev/null; then
+      _LT_TAGVAR(whole_archive_flag_spec, $1)="$wlarc"'--whole-archive$convenience '"$wlarc"'--no-whole-archive'
+    else
+      _LT_TAGVAR(whole_archive_flag_spec, $1)=
+    fi
+    supports_anon_versioning=no
+    case `$LD -v 2>&1` in
+      *GNU\ gold*) supports_anon_versioning=yes ;;
+      *\ [[01]].* | *\ 2.[[0-9]].* | *\ 2.10.*) ;; # catch versions < 2.11
+      *\ 2.11.93.0.2\ *) supports_anon_versioning=yes ;; # RH7.3 ...
+      *\ 2.11.92.0.12\ *) supports_anon_versioning=yes ;; # Mandrake 8.2 ...
+      *\ 2.11.*) ;; # other 2.11 versions
+      *) supports_anon_versioning=yes ;;
+    esac
+
+    # See if GNU ld supports shared libraries.
+    case $host_os in
+    aix[[3-9]]*)
+      # On AIX/PPC, the GNU linker is very broken
+      if test "$host_cpu" != ia64; then
+	_LT_TAGVAR(ld_shlibs, $1)=no
+	cat <<_LT_EOF 1>&2
+
+*** Warning: the GNU linker, at least up to release 2.19, is reported
+*** to be unable to reliably create shared libraries on AIX.
+*** Therefore, libtool is disabling shared libraries support.  If you
+*** really care for shared libraries, you may want to install binutils
+*** 2.20 or above, or modify your PATH so that a non-GNU linker is found.
+*** You will then need to restart the configuration process.
+
+_LT_EOF
+      fi
+      ;;
+
+    amigaos*)
+      case $host_cpu in
+      powerpc)
+            # see comment about AmigaOS4 .so support
+            _LT_TAGVAR(archive_cmds, $1)='$CC -shared $libobjs $deplibs $compiler_flags ${wl}-soname $wl$soname -o $lib'
+            _LT_TAGVAR(archive_expsym_cmds, $1)=''
+        ;;
+      m68k)
+            _LT_TAGVAR(archive_cmds, $1)='$RM $output_objdir/a2ixlibrary.data~$ECHO "#define NAME $libname" > $output_objdir/a2ixlibrary.data~$ECHO "#define LIBRARY_ID 1" >> $output_objdir/a2ixlibrary.data~$ECHO "#define VERSION $major" >> $output_objdir/a2ixlibrary.data~$ECHO "#define REVISION $revision" >> $output_objdir/a2ixlibrary.data~$AR $AR_FLAGS $lib $libobjs~$RANLIB $lib~(cd $output_objdir && a2ixlibrary -32)'
+            _LT_TAGVAR(hardcode_libdir_flag_spec, $1)='-L$libdir'
+            _LT_TAGVAR(hardcode_minus_L, $1)=yes
+        ;;
+      esac
+      ;;
+
+    beos*)
+      if $LD --help 2>&1 | $GREP ': supported targets:.* elf' > /dev/null; then
+	_LT_TAGVAR(allow_undefined_flag, $1)=unsupported
+	# Joseph Beckenbach <jrb3@best.com> says some releases of gcc
+	# support --undefined.  This deserves some investigation.  FIXME
+	_LT_TAGVAR(archive_cmds, $1)='$CC -nostart $libobjs $deplibs $compiler_flags ${wl}-soname $wl$soname -o $lib'
+      else
+	_LT_TAGVAR(ld_shlibs, $1)=no
+      fi
+      ;;
+
+    cygwin* | mingw* | pw32* | cegcc*)
+      # _LT_TAGVAR(hardcode_libdir_flag_spec, $1) is actually meaningless,
+      # as there is no search path for DLLs.
+      _LT_TAGVAR(hardcode_libdir_flag_spec, $1)='-L$libdir'
+      _LT_TAGVAR(export_dynamic_flag_spec, $1)='${wl}--export-all-symbols'
+      _LT_TAGVAR(allow_undefined_flag, $1)=unsupported
+      _LT_TAGVAR(always_export_symbols, $1)=no
+      _LT_TAGVAR(enable_shared_with_static_runtimes, $1)=yes
+      _LT_TAGVAR(export_symbols_cmds, $1)='$NM $libobjs $convenience | $global_symbol_pipe | $SED -e '\''/^[[BCDGRS]][[ ]]/s/.*[[ ]]\([[^ ]]*\)/\1 DATA/;s/^.*[[ ]]__nm__\([[^ ]]*\)[[ ]][[^ ]]*/\1 DATA/;/^I[[ 
