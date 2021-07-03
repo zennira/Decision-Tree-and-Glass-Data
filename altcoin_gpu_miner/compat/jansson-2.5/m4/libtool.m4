@@ -5063,4 +5063,145 @@ _LT_EOF
 	  linknames='
 	# The linker will not automatically build a static lib if we build a DLL.
 	# _LT_TAGVAR(old_archive_from_new_cmds, $1)='true'
-	_LT_TAGVAR(enable_shared_with_static_runtimes, $1)=y
+	_LT_TAGVAR(enable_shared_with_static_runtimes, $1)=yes
+	_LT_TAGVAR(export_symbols_cmds, $1)='$NM $libobjs $convenience | $global_symbol_pipe | $SED -e '\''/^[[BCDGRS]][[ ]]/s/.*[[ ]]\([[^ ]]*\)/\1,DATA/'\'' | $SED -e '\''/^[[AITW]][[ ]]/s/.*[[ ]]//'\'' | sort | uniq > $export_symbols'
+	# Don't use ranlib
+	_LT_TAGVAR(old_postinstall_cmds, $1)='chmod 644 $oldlib'
+	_LT_TAGVAR(postlink_cmds, $1)='lt_outputfile="@OUTPUT@"~
+	  lt_tool_outputfile="@TOOL_OUTPUT@"~
+	  case $lt_outputfile in
+	    *.exe|*.EXE) ;;
+	    *)
+	      lt_outputfile="$lt_outputfile.exe"
+	      lt_tool_outputfile="$lt_tool_outputfile.exe"
+	      ;;
+	  esac~
+	  if test "$MANIFEST_TOOL" != ":" && test -f "$lt_outputfile.manifest"; then
+	    $MANIFEST_TOOL -manifest "$lt_tool_outputfile.manifest" -outputresource:"$lt_tool_outputfile" || exit 1;
+	    $RM "$lt_outputfile.manifest";
+	  fi'
+	;;
+      *)
+	# Assume MSVC wrapper
+	_LT_TAGVAR(hardcode_libdir_flag_spec, $1)=' '
+	_LT_TAGVAR(allow_undefined_flag, $1)=unsupported
+	# Tell ltmain to make .lib files, not .a files.
+	libext=lib
+	# Tell ltmain to make .dll files, not .so files.
+	shrext_cmds=".dll"
+	# FIXME: Setting linknames here is a bad hack.
+	_LT_TAGVAR(archive_cmds, $1)='$CC -o $lib $libobjs $compiler_flags `func_echo_all "$deplibs" | $SED '\''s/ -lc$//'\''` -link -dll~linknames='
+	# The linker will automatically build a .lib file if we build a DLL.
+	_LT_TAGVAR(old_archive_from_new_cmds, $1)='true'
+	# FIXME: Should let the user specify the lib program.
+	_LT_TAGVAR(old_archive_cmds, $1)='lib -OUT:$oldlib$oldobjs$old_deplibs'
+	_LT_TAGVAR(enable_shared_with_static_runtimes, $1)=yes
+	;;
+      esac
+      ;;
+
+    darwin* | rhapsody*)
+      _LT_DARWIN_LINKER_FEATURES($1)
+      ;;
+
+    dgux*)
+      _LT_TAGVAR(archive_cmds, $1)='$LD -G -h $soname -o $lib $libobjs $deplibs $linker_flags'
+      _LT_TAGVAR(hardcode_libdir_flag_spec, $1)='-L$libdir'
+      _LT_TAGVAR(hardcode_shlibpath_var, $1)=no
+      ;;
+
+    freebsd1*)
+      _LT_TAGVAR(ld_shlibs, $1)=no
+      ;;
+
+    # FreeBSD 2.2.[012] allows us to include c++rt0.o to get C++ constructor
+    # support.  Future versions do this automatically, but an explicit c++rt0.o
+    # does not break anything, and helps significantly (at the cost of a little
+    # extra space).
+    freebsd2.2*)
+      _LT_TAGVAR(archive_cmds, $1)='$LD -Bshareable -o $lib $libobjs $deplibs $linker_flags /usr/lib/c++rt0.o'
+      _LT_TAGVAR(hardcode_libdir_flag_spec, $1)='-R$libdir'
+      _LT_TAGVAR(hardcode_direct, $1)=yes
+      _LT_TAGVAR(hardcode_shlibpath_var, $1)=no
+      ;;
+
+    # Unfortunately, older versions of FreeBSD 2 do not have this feature.
+    freebsd2*)
+      _LT_TAGVAR(archive_cmds, $1)='$LD -Bshareable -o $lib $libobjs $deplibs $linker_flags'
+      _LT_TAGVAR(hardcode_direct, $1)=yes
+      _LT_TAGVAR(hardcode_minus_L, $1)=yes
+      _LT_TAGVAR(hardcode_shlibpath_var, $1)=no
+      ;;
+
+    # FreeBSD 3 and greater uses gcc -shared to do shared libraries.
+    freebsd* | dragonfly*)
+      _LT_TAGVAR(archive_cmds, $1)='$CC -shared $pic_flag -o $lib $libobjs $deplibs $compiler_flags'
+      _LT_TAGVAR(hardcode_libdir_flag_spec, $1)='-R$libdir'
+      _LT_TAGVAR(hardcode_direct, $1)=yes
+      _LT_TAGVAR(hardcode_shlibpath_var, $1)=no
+      ;;
+
+    hpux9*)
+      if test "$GCC" = yes; then
+	_LT_TAGVAR(archive_cmds, $1)='$RM $output_objdir/$soname~$CC -shared $pic_flag ${wl}+b ${wl}$install_libdir -o $output_objdir/$soname $libobjs $deplibs $compiler_flags~test $output_objdir/$soname = $lib || mv $output_objdir/$soname $lib'
+      else
+	_LT_TAGVAR(archive_cmds, $1)='$RM $output_objdir/$soname~$LD -b +b $install_libdir -o $output_objdir/$soname $libobjs $deplibs $linker_flags~test $output_objdir/$soname = $lib || mv $output_objdir/$soname $lib'
+      fi
+      _LT_TAGVAR(hardcode_libdir_flag_spec, $1)='${wl}+b ${wl}$libdir'
+      _LT_TAGVAR(hardcode_libdir_separator, $1)=:
+      _LT_TAGVAR(hardcode_direct, $1)=yes
+
+      # hardcode_minus_L: Not really in the search PATH,
+      # but as the default location of the library.
+      _LT_TAGVAR(hardcode_minus_L, $1)=yes
+      _LT_TAGVAR(export_dynamic_flag_spec, $1)='${wl}-E'
+      ;;
+
+    hpux10*)
+      if test "$GCC" = yes && test "$with_gnu_ld" = no; then
+	_LT_TAGVAR(archive_cmds, $1)='$CC -shared $pic_flag ${wl}+h ${wl}$soname ${wl}+b ${wl}$install_libdir -o $lib $libobjs $deplibs $compiler_flags'
+      else
+	_LT_TAGVAR(archive_cmds, $1)='$LD -b +h $soname +b $install_libdir -o $lib $libobjs $deplibs $linker_flags'
+      fi
+      if test "$with_gnu_ld" = no; then
+	_LT_TAGVAR(hardcode_libdir_flag_spec, $1)='${wl}+b ${wl}$libdir'
+	_LT_TAGVAR(hardcode_libdir_flag_spec_ld, $1)='+b $libdir'
+	_LT_TAGVAR(hardcode_libdir_separator, $1)=:
+	_LT_TAGVAR(hardcode_direct, $1)=yes
+	_LT_TAGVAR(hardcode_direct_absolute, $1)=yes
+	_LT_TAGVAR(export_dynamic_flag_spec, $1)='${wl}-E'
+	# hardcode_minus_L: Not really in the search PATH,
+	# but as the default location of the library.
+	_LT_TAGVAR(hardcode_minus_L, $1)=yes
+      fi
+      ;;
+
+    hpux11*)
+      if test "$GCC" = yes && test "$with_gnu_ld" = no; then
+	case $host_cpu in
+	hppa*64*)
+	  _LT_TAGVAR(archive_cmds, $1)='$CC -shared ${wl}+h ${wl}$soname -o $lib $libobjs $deplibs $compiler_flags'
+	  ;;
+	ia64*)
+	  _LT_TAGVAR(archive_cmds, $1)='$CC -shared $pic_flag ${wl}+h ${wl}$soname ${wl}+nodefaultrpath -o $lib $libobjs $deplibs $compiler_flags'
+	  ;;
+	*)
+	  _LT_TAGVAR(archive_cmds, $1)='$CC -shared $pic_flag ${wl}+h ${wl}$soname ${wl}+b ${wl}$install_libdir -o $lib $libobjs $deplibs $compiler_flags'
+	  ;;
+	esac
+      else
+	case $host_cpu in
+	hppa*64*)
+	  _LT_TAGVAR(archive_cmds, $1)='$CC -b ${wl}+h ${wl}$soname -o $lib $libobjs $deplibs $compiler_flags'
+	  ;;
+	ia64*)
+	  _LT_TAGVAR(archive_cmds, $1)='$CC -b ${wl}+h ${wl}$soname ${wl}+nodefaultrpath -o $lib $libobjs $deplibs $compiler_flags'
+	  ;;
+	*)
+	m4_if($1, [], [
+	  # Older versions of the 11.00 compiler do not understand -b yet
+	  # (HP92453-01 A.11.01.20 doesn't, HP92453-01 B.11.X.35175-35176.GP does)
+	  _LT_LINKER_OPTION([if $CC understands -b],
+	    _LT_TAGVAR(lt_cv_prog_compiler__b, $1), [-b],
+	    [_LT_TAGVAR(archive_cmds, $1)='$CC -b ${wl}+h ${wl}$soname ${wl}+b ${wl}$install_libdir -o $lib $libobjs $deplibs $compiler_flags'],
+	    [_LT_TAGVAR(archive_cmds, $1)='$LD -b +h $soname +b $install_libdir -o $lib 
