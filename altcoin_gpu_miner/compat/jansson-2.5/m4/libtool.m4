@@ -5610,4 +5610,182 @@ _LT_TAGDECL([], [hardcode_libdir_flag_spec], [1],
 _LT_TAGDECL([], [hardcode_libdir_flag_spec_ld], [1],
     [[If ld is used when linking, flag to hardcode $libdir into a binary
     during linking.  This must work even if $libdir does not exist]])
-_LT_TAGDECL([], [hardcode_libdir_separator
+_LT_TAGDECL([], [hardcode_libdir_separator], [1],
+    [Whether we need a single "-rpath" flag with a separated argument])
+_LT_TAGDECL([], [hardcode_direct], [0],
+    [Set to "yes" if using DIR/libNAME${shared_ext} during linking hardcodes
+    DIR into the resulting binary])
+_LT_TAGDECL([], [hardcode_direct_absolute], [0],
+    [Set to "yes" if using DIR/libNAME${shared_ext} during linking hardcodes
+    DIR into the resulting binary and the resulting library dependency is
+    "absolute", i.e impossible to change by setting ${shlibpath_var} if the
+    library is relocated])
+_LT_TAGDECL([], [hardcode_minus_L], [0],
+    [Set to "yes" if using the -LDIR flag during linking hardcodes DIR
+    into the resulting binary])
+_LT_TAGDECL([], [hardcode_shlibpath_var], [0],
+    [Set to "yes" if using SHLIBPATH_VAR=DIR during linking hardcodes DIR
+    into the resulting binary])
+_LT_TAGDECL([], [hardcode_automatic], [0],
+    [Set to "yes" if building a shared library automatically hardcodes DIR
+    into the library and all subsequent libraries and executables linked
+    against it])
+_LT_TAGDECL([], [inherit_rpath], [0],
+    [Set to yes if linker adds runtime paths of dependent libraries
+    to runtime path list])
+_LT_TAGDECL([], [link_all_deplibs], [0],
+    [Whether libtool must link a program against all its dependency libraries])
+_LT_TAGDECL([], [always_export_symbols], [0],
+    [Set to "yes" if exported symbols are required])
+_LT_TAGDECL([], [export_symbols_cmds], [2],
+    [The commands to list exported symbols])
+_LT_TAGDECL([], [exclude_expsyms], [1],
+    [Symbols that should not be listed in the preloaded symbols])
+_LT_TAGDECL([], [include_expsyms], [1],
+    [Symbols that must always be exported])
+_LT_TAGDECL([], [prelink_cmds], [2],
+    [Commands necessary for linking programs (against libraries) with templates])
+_LT_TAGDECL([], [postlink_cmds], [2],
+    [Commands necessary for finishing linking programs])
+_LT_TAGDECL([], [file_list_spec], [1],
+    [Specify filename containing input files])
+dnl FIXME: Not yet implemented
+dnl _LT_TAGDECL([], [thread_safe_flag_spec], [1],
+dnl    [Compiler flag to generate thread safe objects])
+])# _LT_LINKER_SHLIBS
+
+
+# _LT_LANG_C_CONFIG([TAG])
+# ------------------------
+# Ensure that the configuration variables for a C compiler are suitably
+# defined.  These variables are subsequently used by _LT_CONFIG to write
+# the compiler configuration to `libtool'.
+m4_defun([_LT_LANG_C_CONFIG],
+[m4_require([_LT_DECL_EGREP])dnl
+lt_save_CC="$CC"
+AC_LANG_PUSH(C)
+
+# Source file extension for C test sources.
+ac_ext=c
+
+# Object file extension for compiled C test sources.
+objext=o
+_LT_TAGVAR(objext, $1)=$objext
+
+# Code to be used in simple compile tests
+lt_simple_compile_test_code="int some_variable = 0;"
+
+# Code to be used in simple link tests
+lt_simple_link_test_code='int main(){return(0);}'
+
+_LT_TAG_COMPILER
+# Save the default compiler, since it gets overwritten when the other
+# tags are being tested, and _LT_TAGVAR(compiler, []) is a NOP.
+compiler_DEFAULT=$CC
+
+# save warnings/boilerplate of simple test code
+_LT_COMPILER_BOILERPLATE
+_LT_LINKER_BOILERPLATE
+
+## CAVEAT EMPTOR:
+## There is no encapsulation within the following macros, do not change
+## the running order or otherwise move them around unless you know exactly
+## what you are doing...
+if test -n "$compiler"; then
+  _LT_COMPILER_NO_RTTI($1)
+  _LT_COMPILER_PIC($1)
+  _LT_COMPILER_C_O($1)
+  _LT_COMPILER_FILE_LOCKS($1)
+  _LT_LINKER_SHLIBS($1)
+  _LT_SYS_DYNAMIC_LINKER($1)
+  _LT_LINKER_HARDCODE_LIBPATH($1)
+  LT_SYS_DLOPEN_SELF
+  _LT_CMD_STRIPLIB
+
+  # Report which library types will actually be built
+  AC_MSG_CHECKING([if libtool supports shared libraries])
+  AC_MSG_RESULT([$can_build_shared])
+
+  AC_MSG_CHECKING([whether to build shared libraries])
+  test "$can_build_shared" = "no" && enable_shared=no
+
+  # On AIX, shared libraries and static libraries use the same namespace, and
+  # are all built from PIC.
+  case $host_os in
+  aix3*)
+    test "$enable_shared" = yes && enable_static=no
+    if test -n "$RANLIB"; then
+      archive_cmds="$archive_cmds~\$RANLIB \$lib"
+      postinstall_cmds='$RANLIB $lib'
+    fi
+    ;;
+
+  aix[[4-9]]*)
+    if test "$host_cpu" != ia64 && test "$aix_use_runtimelinking" = no ; then
+      test "$enable_shared" = yes && enable_static=no
+    fi
+    ;;
+  esac
+  AC_MSG_RESULT([$enable_shared])
+
+  AC_MSG_CHECKING([whether to build static libraries])
+  # Make sure either enable_shared or enable_static is yes.
+  test "$enable_shared" = yes || enable_static=yes
+  AC_MSG_RESULT([$enable_static])
+
+  _LT_CONFIG($1)
+fi
+AC_LANG_POP
+CC="$lt_save_CC"
+])# _LT_LANG_C_CONFIG
+
+
+# _LT_LANG_CXX_CONFIG([TAG])
+# --------------------------
+# Ensure that the configuration variables for a C++ compiler are suitably
+# defined.  These variables are subsequently used by _LT_CONFIG to write
+# the compiler configuration to `libtool'.
+m4_defun([_LT_LANG_CXX_CONFIG],
+[m4_require([_LT_FILEUTILS_DEFAULTS])dnl
+m4_require([_LT_DECL_EGREP])dnl
+m4_require([_LT_PATH_MANIFEST_TOOL])dnl
+if test -n "$CXX" && ( test "X$CXX" != "Xno" &&
+    ( (test "X$CXX" = "Xg++" && `g++ -v >/dev/null 2>&1` ) ||
+    (test "X$CXX" != "Xg++"))) ; then
+  AC_PROG_CXXCPP
+else
+  _lt_caught_CXX_error=yes
+fi
+
+AC_LANG_PUSH(C++)
+_LT_TAGVAR(archive_cmds_need_lc, $1)=no
+_LT_TAGVAR(allow_undefined_flag, $1)=
+_LT_TAGVAR(always_export_symbols, $1)=no
+_LT_TAGVAR(archive_expsym_cmds, $1)=
+_LT_TAGVAR(compiler_needs_object, $1)=no
+_LT_TAGVAR(export_dynamic_flag_spec, $1)=
+_LT_TAGVAR(hardcode_direct, $1)=no
+_LT_TAGVAR(hardcode_direct_absolute, $1)=no
+_LT_TAGVAR(hardcode_libdir_flag_spec, $1)=
+_LT_TAGVAR(hardcode_libdir_flag_spec_ld, $1)=
+_LT_TAGVAR(hardcode_libdir_separator, $1)=
+_LT_TAGVAR(hardcode_minus_L, $1)=no
+_LT_TAGVAR(hardcode_shlibpath_var, $1)=unsupported
+_LT_TAGVAR(hardcode_automatic, $1)=no
+_LT_TAGVAR(inherit_rpath, $1)=no
+_LT_TAGVAR(module_cmds, $1)=
+_LT_TAGVAR(module_expsym_cmds, $1)=
+_LT_TAGVAR(link_all_deplibs, $1)=unknown
+_LT_TAGVAR(old_archive_cmds, $1)=$old_archive_cmds
+_LT_TAGVAR(reload_flag, $1)=$reload_flag
+_LT_TAGVAR(reload_cmds, $1)=$reload_cmds
+_LT_TAGVAR(no_undefined_flag, $1)=
+_LT_TAGVAR(whole_archive_flag_spec, $1)=
+_LT_TAGVAR(enable_shared_with_static_runtimes, $1)=no
+
+# Source file extension for C++ test sources.
+ac_ext=cpp
+
+# Object file extension for compiled C++ test sources.
+objext=o
+_LT
