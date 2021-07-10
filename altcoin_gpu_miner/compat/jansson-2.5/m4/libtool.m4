@@ -5788,4 +5788,170 @@ ac_ext=cpp
 
 # Object file extension for compiled C++ test sources.
 objext=o
-_LT
+_LT_TAGVAR(objext, $1)=$objext
+
+# No sense in running all these tests if we already determined that
+# the CXX compiler isn't working.  Some variables (like enable_shared)
+# are currently assumed to apply to all compilers on this platform,
+# and will be corrupted by setting them based on a non-working compiler.
+if test "$_lt_caught_CXX_error" != yes; then
+  # Code to be used in simple compile tests
+  lt_simple_compile_test_code="int some_variable = 0;"
+
+  # Code to be used in simple link tests
+  lt_simple_link_test_code='int main(int, char *[[]]) { return(0); }'
+
+  # ltmain only uses $CC for tagged configurations so make sure $CC is set.
+  _LT_TAG_COMPILER
+
+  # save warnings/boilerplate of simple test code
+  _LT_COMPILER_BOILERPLATE
+  _LT_LINKER_BOILERPLATE
+
+  # Allow CC to be a program name with arguments.
+  lt_save_CC=$CC
+  lt_save_CFLAGS=$CFLAGS
+  lt_save_LD=$LD
+  lt_save_GCC=$GCC
+  GCC=$GXX
+  lt_save_with_gnu_ld=$with_gnu_ld
+  lt_save_path_LD=$lt_cv_path_LD
+  if test -n "${lt_cv_prog_gnu_ldcxx+set}"; then
+    lt_cv_prog_gnu_ld=$lt_cv_prog_gnu_ldcxx
+  else
+    $as_unset lt_cv_prog_gnu_ld
+  fi
+  if test -n "${lt_cv_path_LDCXX+set}"; then
+    lt_cv_path_LD=$lt_cv_path_LDCXX
+  else
+    $as_unset lt_cv_path_LD
+  fi
+  test -z "${LDCXX+set}" || LD=$LDCXX
+  CC=${CXX-"c++"}
+  CFLAGS=$CXXFLAGS
+  compiler=$CC
+  _LT_TAGVAR(compiler, $1)=$CC
+  _LT_CC_BASENAME([$compiler])
+
+  if test -n "$compiler"; then
+    # We don't want -fno-exception when compiling C++ code, so set the
+    # no_builtin_flag separately
+    if test "$GXX" = yes; then
+      _LT_TAGVAR(lt_prog_compiler_no_builtin_flag, $1)=' -fno-builtin'
+    else
+      _LT_TAGVAR(lt_prog_compiler_no_builtin_flag, $1)=
+    fi
+
+    if test "$GXX" = yes; then
+      # Set up default GNU C++ configuration
+
+      LT_PATH_LD
+
+      # Check if GNU C++ uses GNU ld as the underlying linker, since the
+      # archiving commands below assume that GNU ld is being used.
+      if test "$with_gnu_ld" = yes; then
+        _LT_TAGVAR(archive_cmds, $1)='$CC $pic_flag -shared -nostdlib $predep_objects $libobjs $deplibs $postdep_objects $compiler_flags ${wl}-soname $wl$soname -o $lib'
+        _LT_TAGVAR(archive_expsym_cmds, $1)='$CC $pic_flag -shared -nostdlib $predep_objects $libobjs $deplibs $postdep_objects $compiler_flags ${wl}-soname $wl$soname ${wl}-retain-symbols-file $wl$export_symbols -o $lib'
+
+        _LT_TAGVAR(hardcode_libdir_flag_spec, $1)='${wl}-rpath ${wl}$libdir'
+        _LT_TAGVAR(export_dynamic_flag_spec, $1)='${wl}--export-dynamic'
+
+        # If archive_cmds runs LD, not CC, wlarc should be empty
+        # XXX I think wlarc can be eliminated in ltcf-cxx, but I need to
+        #     investigate it a little bit more. (MM)
+        wlarc='${wl}'
+
+        # ancient GNU ld didn't support --whole-archive et. al.
+        if eval "`$CC -print-prog-name=ld` --help 2>&1" |
+	  $GREP 'no-whole-archive' > /dev/null; then
+          _LT_TAGVAR(whole_archive_flag_spec, $1)="$wlarc"'--whole-archive$convenience '"$wlarc"'--no-whole-archive'
+        else
+          _LT_TAGVAR(whole_archive_flag_spec, $1)=
+        fi
+      else
+        with_gnu_ld=no
+        wlarc=
+
+        # A generic and very simple default shared library creation
+        # command for GNU C++ for the case where it uses the native
+        # linker, instead of GNU ld.  If possible, this setting should
+        # overridden to take advantage of the native linker features on
+        # the platform it is being used on.
+        _LT_TAGVAR(archive_cmds, $1)='$CC -shared -nostdlib $predep_objects $libobjs $deplibs $postdep_objects $compiler_flags -o $lib'
+      fi
+
+      # Commands to make compiler produce verbose output that lists
+      # what "hidden" libraries, object files and flags are used when
+      # linking a shared library.
+      output_verbose_link_cmd='$CC -shared $CFLAGS -v conftest.$objext 2>&1 | $GREP -v "^Configured with:" | $GREP "\-L"'
+
+    else
+      GXX=no
+      with_gnu_ld=no
+      wlarc=
+    fi
+
+    # PORTME: fill in a description of your system's C++ link characteristics
+    AC_MSG_CHECKING([whether the $compiler linker ($LD) supports shared libraries])
+    _LT_TAGVAR(ld_shlibs, $1)=yes
+    case $host_os in
+      aix3*)
+        # FIXME: insert proper C++ library support
+        _LT_TAGVAR(ld_shlibs, $1)=no
+        ;;
+      aix[[4-9]]*)
+        if test "$host_cpu" = ia64; then
+          # On IA64, the linker does run time linking by default, so we don't
+          # have to do anything special.
+          aix_use_runtimelinking=no
+          exp_sym_flag='-Bexport'
+          no_entry_flag=""
+        else
+          aix_use_runtimelinking=no
+
+          # Test if we are trying to use run time linking or normal
+          # AIX style linking. If -brtl is somewhere in LDFLAGS, we
+          # need to do runtime linking.
+          case $host_os in aix4.[[23]]|aix4.[[23]].*|aix[[5-9]]*)
+	    for ld_flag in $LDFLAGS; do
+	      case $ld_flag in
+	      *-brtl*)
+	        aix_use_runtimelinking=yes
+	        break
+	        ;;
+	      esac
+	    done
+	    ;;
+          esac
+
+          exp_sym_flag='-bexport'
+          no_entry_flag='-bnoentry'
+        fi
+
+        # When large executables or shared objects are built, AIX ld can
+        # have problems creating the table of contents.  If linking a library
+        # or program results in "error TOC overflow" add -mminimal-toc to
+        # CXXFLAGS/CFLAGS for g++/gcc.  In the cases where that is not
+        # enough to fix the problem, add -Wl,-bbigtoc to LDFLAGS.
+
+        _LT_TAGVAR(archive_cmds, $1)=''
+        _LT_TAGVAR(hardcode_direct, $1)=yes
+        _LT_TAGVAR(hardcode_direct_absolute, $1)=yes
+        _LT_TAGVAR(hardcode_libdir_separator, $1)=':'
+        _LT_TAGVAR(link_all_deplibs, $1)=yes
+        _LT_TAGVAR(file_list_spec, $1)='${wl}-f,'
+
+        if test "$GXX" = yes; then
+          case $host_os in aix4.[[012]]|aix4.[[012]].*)
+          # We only want to do this on AIX 4.2 and lower, the check
+          # below for broken collect2 doesn't work under 4.3+
+	  collect2name=`${CC} -print-prog-name=collect2`
+	  if test -f "$collect2name" &&
+	     strings "$collect2name" | $GREP resolve_lib_name >/dev/null
+	  then
+	    # We have reworked collect2
+	    :
+	  else
+	    # We have old collect2
+	    _LT_TAGVAR(hardcode_direct, $1)=unsupported
+	    # It fails to find uninstalled libraries when the unin
