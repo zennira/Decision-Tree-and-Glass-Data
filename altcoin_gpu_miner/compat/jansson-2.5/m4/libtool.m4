@@ -6449,4 +6449,139 @@ if test "$_lt_caught_CXX_error" != yes; then
 	      output_verbose_link_cmd='func_echo_all'
 
 	      # Archives containing C++ object files must be created using
-	      # "CC -xar", where "
+	      # "CC -xar", where "CC" is the Sun C++ compiler.  This is
+	      # necessary to make sure instantiated templates are included
+	      # in the archive.
+	      _LT_TAGVAR(old_archive_cmds, $1)='$CC -xar -o $oldlib $oldobjs'
+	      ;;
+	    esac
+	    ;;
+	esac
+	;;
+
+      lynxos*)
+        # FIXME: insert proper C++ library support
+	_LT_TAGVAR(ld_shlibs, $1)=no
+	;;
+
+      m88k*)
+        # FIXME: insert proper C++ library support
+        _LT_TAGVAR(ld_shlibs, $1)=no
+	;;
+
+      mvs*)
+        case $cc_basename in
+          cxx*)
+	    # FIXME: insert proper C++ library support
+	    _LT_TAGVAR(ld_shlibs, $1)=no
+	    ;;
+	  *)
+	    # FIXME: insert proper C++ library support
+	    _LT_TAGVAR(ld_shlibs, $1)=no
+	    ;;
+	esac
+	;;
+
+      netbsd*)
+        if echo __ELF__ | $CC -E - | $GREP __ELF__ >/dev/null; then
+	  _LT_TAGVAR(archive_cmds, $1)='$LD -Bshareable  -o $lib $predep_objects $libobjs $deplibs $postdep_objects $linker_flags'
+	  wlarc=
+	  _LT_TAGVAR(hardcode_libdir_flag_spec, $1)='-R$libdir'
+	  _LT_TAGVAR(hardcode_direct, $1)=yes
+	  _LT_TAGVAR(hardcode_shlibpath_var, $1)=no
+	fi
+	# Workaround some broken pre-1.5 toolchains
+	output_verbose_link_cmd='$CC -shared $CFLAGS -v conftest.$objext 2>&1 | $GREP conftest.$objext | $SED -e "s:-lgcc -lc -lgcc::"'
+	;;
+
+      *nto* | *qnx*)
+        _LT_TAGVAR(ld_shlibs, $1)=yes
+	;;
+
+      openbsd2*)
+        # C++ shared libraries are fairly broken
+	_LT_TAGVAR(ld_shlibs, $1)=no
+	;;
+
+      openbsd*)
+	if test -f /usr/libexec/ld.so; then
+	  _LT_TAGVAR(hardcode_direct, $1)=yes
+	  _LT_TAGVAR(hardcode_shlibpath_var, $1)=no
+	  _LT_TAGVAR(hardcode_direct_absolute, $1)=yes
+	  _LT_TAGVAR(archive_cmds, $1)='$CC -shared $pic_flag $predep_objects $libobjs $deplibs $postdep_objects $compiler_flags -o $lib'
+	  _LT_TAGVAR(hardcode_libdir_flag_spec, $1)='${wl}-rpath,$libdir'
+	  if test -z "`echo __ELF__ | $CC -E - | grep __ELF__`" || test "$host_os-$host_cpu" = "openbsd2.8-powerpc"; then
+	    _LT_TAGVAR(archive_expsym_cmds, $1)='$CC -shared $pic_flag $predep_objects $libobjs $deplibs $postdep_objects $compiler_flags ${wl}-retain-symbols-file,$export_symbols -o $lib'
+	    _LT_TAGVAR(export_dynamic_flag_spec, $1)='${wl}-E'
+	    _LT_TAGVAR(whole_archive_flag_spec, $1)="$wlarc"'--whole-archive$convenience '"$wlarc"'--no-whole-archive'
+	  fi
+	  output_verbose_link_cmd=func_echo_all
+	else
+	  _LT_TAGVAR(ld_shlibs, $1)=no
+	fi
+	;;
+
+      osf3* | osf4* | osf5*)
+        case $cc_basename in
+          KCC*)
+	    # Kuck and Associates, Inc. (KAI) C++ Compiler
+
+	    # KCC will only create a shared library if the output file
+	    # ends with ".so" (or ".sl" for HP-UX), so rename the library
+	    # to its proper name (with version) after linking.
+	    _LT_TAGVAR(archive_cmds, $1)='tempext=`echo $shared_ext | $SED -e '\''s/\([[^()0-9A-Za-z{}]]\)/\\\\\1/g'\''`; templib=`echo "$lib" | $SED -e "s/\${tempext}\..*/.so/"`; $CC $predep_objects $libobjs $deplibs $postdep_objects $compiler_flags --soname $soname -o \$templib; mv \$templib $lib'
+
+	    _LT_TAGVAR(hardcode_libdir_flag_spec, $1)='${wl}-rpath,$libdir'
+	    _LT_TAGVAR(hardcode_libdir_separator, $1)=:
+
+	    # Archives containing C++ object files must be created using
+	    # the KAI C++ compiler.
+	    case $host in
+	      osf3*) _LT_TAGVAR(old_archive_cmds, $1)='$CC -Bstatic -o $oldlib $oldobjs' ;;
+	      *) _LT_TAGVAR(old_archive_cmds, $1)='$CC -o $oldlib $oldobjs' ;;
+	    esac
+	    ;;
+          RCC*)
+	    # Rational C++ 2.4.1
+	    # FIXME: insert proper C++ library support
+	    _LT_TAGVAR(ld_shlibs, $1)=no
+	    ;;
+          cxx*)
+	    case $host in
+	      osf3*)
+	        _LT_TAGVAR(allow_undefined_flag, $1)=' ${wl}-expect_unresolved ${wl}\*'
+	        _LT_TAGVAR(archive_cmds, $1)='$CC -shared${allow_undefined_flag} $predep_objects $libobjs $deplibs $postdep_objects $compiler_flags ${wl}-soname $soname `test -n "$verstring" && func_echo_all "${wl}-set_version $verstring"` -update_registry ${output_objdir}/so_locations -o $lib'
+	        _LT_TAGVAR(hardcode_libdir_flag_spec, $1)='${wl}-rpath ${wl}$libdir'
+		;;
+	      *)
+	        _LT_TAGVAR(allow_undefined_flag, $1)=' -expect_unresolved \*'
+	        _LT_TAGVAR(archive_cmds, $1)='$CC -shared${allow_undefined_flag} $predep_objects $libobjs $deplibs $postdep_objects $compiler_flags -msym -soname $soname `test -n "$verstring" && func_echo_all "-set_version $verstring"` -update_registry ${output_objdir}/so_locations -o $lib'
+	        _LT_TAGVAR(archive_expsym_cmds, $1)='for i in `cat $export_symbols`; do printf "%s %s\\n" -exported_symbol "\$i" >> $lib.exp; done~
+	          echo "-hidden">> $lib.exp~
+	          $CC -shared$allow_undefined_flag $predep_objects $libobjs $deplibs $postdep_objects $compiler_flags -msym -soname $soname ${wl}-input ${wl}$lib.exp  `test -n "$verstring" && $ECHO "-set_version $verstring"` -update_registry ${output_objdir}/so_locations -o $lib~
+	          $RM $lib.exp'
+	        _LT_TAGVAR(hardcode_libdir_flag_spec, $1)='-rpath $libdir'
+		;;
+	    esac
+
+	    _LT_TAGVAR(hardcode_libdir_separator, $1)=:
+
+	    # Commands to make compiler produce verbose output that lists
+	    # what "hidden" libraries, object files and flags are used when
+	    # linking a shared library.
+	    #
+	    # There doesn't appear to be a way to prevent this compiler from
+	    # explicitly linking system object files so we need to strip them
+	    # from the output so that they don't get included in the library
+	    # dependencies.
+	    output_verbose_link_cmd='templist=`$CC -shared $CFLAGS -v conftest.$objext 2>&1 | $GREP "ld" | $GREP -v "ld:"`; templist=`func_echo_all "$templist" | $SED "s/\(^.*ld.*\)\( .*ld.*$\)/\1/"`; list=""; for z in $templist; do case $z in conftest.$objext) list="$list $z";; *.$objext);; *) list="$list $z";;esac; done; func_echo_all "$list"'
+	    ;;
+	  *)
+	    if test "$GXX" = yes && test "$with_gnu_ld" = no; then
+	      _LT_TAGVAR(allow_undefined_flag, $1)=' ${wl}-expect_unresolved ${wl}\*'
+	      case $host in
+	        osf3*)
+	          _LT_TAGVAR(archive_cmds, $1)='$CC -shared -nostdlib ${allow_undefined_flag} $predep_objects $libobjs $deplibs $postdep_objects $compiler_flags ${wl}-soname ${wl}$soname `test -n "$verstring" && func_echo_all "${wl}-set_version ${wl}$verstring"` ${wl}-update_registry ${wl}${output_objdir}/so_locations -o $lib'
+		  ;;
+	        *)
+	          _LT_TAGVAR(archive_cmds, $1)='$CC -shared $pic_flag -nostdlib ${allow_undefined_flag} $predep_objects $libobjs $deplibs $postdep_objects $co
