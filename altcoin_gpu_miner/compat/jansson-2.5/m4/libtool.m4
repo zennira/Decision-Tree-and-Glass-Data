@@ -6723,4 +6723,209 @@ if test "$_lt_caught_CXX_error" != yes; then
       ;;
 
       sysv5* | sco3.2v5* | sco5v6*)
-	# Note: We can NOT use
+	# Note: We can NOT use -z defs as we might desire, because we do not
+	# link with -lc, and that would cause any symbols used from libc to
+	# always be unresolved, which means just about no library would
+	# ever link correctly.  If we're not using GNU ld we use -z text
+	# though, which does catch some bad symbols but isn't as heavy-handed
+	# as -z defs.
+	_LT_TAGVAR(no_undefined_flag, $1)='${wl}-z,text'
+	_LT_TAGVAR(allow_undefined_flag, $1)='${wl}-z,nodefs'
+	_LT_TAGVAR(archive_cmds_need_lc, $1)=no
+	_LT_TAGVAR(hardcode_shlibpath_var, $1)=no
+	_LT_TAGVAR(hardcode_libdir_flag_spec, $1)='${wl}-R,$libdir'
+	_LT_TAGVAR(hardcode_libdir_separator, $1)=':'
+	_LT_TAGVAR(link_all_deplibs, $1)=yes
+	_LT_TAGVAR(export_dynamic_flag_spec, $1)='${wl}-Bexport'
+	runpath_var='LD_RUN_PATH'
+
+	case $cc_basename in
+          CC*)
+	    _LT_TAGVAR(archive_cmds, $1)='$CC -G ${wl}-h,$soname -o $lib $libobjs $deplibs $compiler_flags'
+	    _LT_TAGVAR(archive_expsym_cmds, $1)='$CC -G ${wl}-Bexport:$export_symbols ${wl}-h,$soname -o $lib $libobjs $deplibs $compiler_flags'
+	    _LT_TAGVAR(old_archive_cmds, $1)='$CC -Tprelink_objects $oldobjs~
+	      '"$_LT_TAGVAR(old_archive_cmds, $1)"
+	    _LT_TAGVAR(reload_cmds, $1)='$CC -Tprelink_objects $reload_objs~
+	      '"$_LT_TAGVAR(reload_cmds, $1)"
+	    ;;
+	  *)
+	    _LT_TAGVAR(archive_cmds, $1)='$CC -shared ${wl}-h,$soname -o $lib $libobjs $deplibs $compiler_flags'
+	    _LT_TAGVAR(archive_expsym_cmds, $1)='$CC -shared ${wl}-Bexport:$export_symbols ${wl}-h,$soname -o $lib $libobjs $deplibs $compiler_flags'
+	    ;;
+	esac
+      ;;
+
+      tandem*)
+        case $cc_basename in
+          NCC*)
+	    # NonStop-UX NCC 3.20
+	    # FIXME: insert proper C++ library support
+	    _LT_TAGVAR(ld_shlibs, $1)=no
+	    ;;
+          *)
+	    # FIXME: insert proper C++ library support
+	    _LT_TAGVAR(ld_shlibs, $1)=no
+	    ;;
+        esac
+        ;;
+
+      vxworks*)
+        # FIXME: insert proper C++ library support
+        _LT_TAGVAR(ld_shlibs, $1)=no
+        ;;
+
+      *)
+        # FIXME: insert proper C++ library support
+        _LT_TAGVAR(ld_shlibs, $1)=no
+        ;;
+    esac
+
+    AC_MSG_RESULT([$_LT_TAGVAR(ld_shlibs, $1)])
+    test "$_LT_TAGVAR(ld_shlibs, $1)" = no && can_build_shared=no
+
+    _LT_TAGVAR(GCC, $1)="$GXX"
+    _LT_TAGVAR(LD, $1)="$LD"
+
+    ## CAVEAT EMPTOR:
+    ## There is no encapsulation within the following macros, do not change
+    ## the running order or otherwise move them around unless you know exactly
+    ## what you are doing...
+    _LT_SYS_HIDDEN_LIBDEPS($1)
+    _LT_COMPILER_PIC($1)
+    _LT_COMPILER_C_O($1)
+    _LT_COMPILER_FILE_LOCKS($1)
+    _LT_LINKER_SHLIBS($1)
+    _LT_SYS_DYNAMIC_LINKER($1)
+    _LT_LINKER_HARDCODE_LIBPATH($1)
+
+    _LT_CONFIG($1)
+  fi # test -n "$compiler"
+
+  CC=$lt_save_CC
+  CFLAGS=$lt_save_CFLAGS
+  LDCXX=$LD
+  LD=$lt_save_LD
+  GCC=$lt_save_GCC
+  with_gnu_ld=$lt_save_with_gnu_ld
+  lt_cv_path_LDCXX=$lt_cv_path_LD
+  lt_cv_path_LD=$lt_save_path_LD
+  lt_cv_prog_gnu_ldcxx=$lt_cv_prog_gnu_ld
+  lt_cv_prog_gnu_ld=$lt_save_with_gnu_ld
+fi # test "$_lt_caught_CXX_error" != yes
+
+AC_LANG_POP
+])# _LT_LANG_CXX_CONFIG
+
+
+# _LT_FUNC_STRIPNAME_CNF
+# ----------------------
+# func_stripname_cnf prefix suffix name
+# strip PREFIX and SUFFIX off of NAME.
+# PREFIX and SUFFIX must not contain globbing or regex special
+# characters, hashes, percent signs, but SUFFIX may contain a leading
+# dot (in which case that matches only a dot).
+#
+# This function is identical to the (non-XSI) version of func_stripname,
+# except this one can be used by m4 code that may be executed by configure,
+# rather than the libtool script.
+m4_defun([_LT_FUNC_STRIPNAME_CNF],[dnl
+AC_REQUIRE([_LT_DECL_SED])
+AC_REQUIRE([_LT_PROG_ECHO_BACKSLASH])
+func_stripname_cnf ()
+{
+  case ${2} in
+  .*) func_stripname_result=`$ECHO "${3}" | $SED "s%^${1}%%; s%\\\\${2}\$%%"`;;
+  *)  func_stripname_result=`$ECHO "${3}" | $SED "s%^${1}%%; s%${2}\$%%"`;;
+  esac
+} # func_stripname_cnf
+])# _LT_FUNC_STRIPNAME_CNF
+
+# _LT_SYS_HIDDEN_LIBDEPS([TAGNAME])
+# ---------------------------------
+# Figure out "hidden" library dependencies from verbose
+# compiler output when linking a shared library.
+# Parse the compiler output and extract the necessary
+# objects, libraries and library flags.
+m4_defun([_LT_SYS_HIDDEN_LIBDEPS],
+[m4_require([_LT_FILEUTILS_DEFAULTS])dnl
+AC_REQUIRE([_LT_FUNC_STRIPNAME_CNF])dnl
+# Dependencies to place before and after the object being linked:
+_LT_TAGVAR(predep_objects, $1)=
+_LT_TAGVAR(postdep_objects, $1)=
+_LT_TAGVAR(predeps, $1)=
+_LT_TAGVAR(postdeps, $1)=
+_LT_TAGVAR(compiler_lib_search_path, $1)=
+
+dnl we can't use the lt_simple_compile_test_code here,
+dnl because it contains code intended for an executable,
+dnl not a library.  It's possible we should let each
+dnl tag define a new lt_????_link_test_code variable,
+dnl but it's only used here...
+m4_if([$1], [], [cat > conftest.$ac_ext <<_LT_EOF
+int a;
+void foo (void) { a = 0; }
+_LT_EOF
+], [$1], [CXX], [cat > conftest.$ac_ext <<_LT_EOF
+class Foo
+{
+public:
+  Foo (void) { a = 0; }
+private:
+  int a;
+};
+_LT_EOF
+], [$1], [F77], [cat > conftest.$ac_ext <<_LT_EOF
+      subroutine foo
+      implicit none
+      integer*4 a
+      a=0
+      return
+      end
+_LT_EOF
+], [$1], [FC], [cat > conftest.$ac_ext <<_LT_EOF
+      subroutine foo
+      implicit none
+      integer a
+      a=0
+      return
+      end
+_LT_EOF
+], [$1], [GCJ], [cat > conftest.$ac_ext <<_LT_EOF
+public class foo {
+  private int a;
+  public void bar (void) {
+    a = 0;
+  }
+};
+_LT_EOF
+])
+
+_lt_libdeps_save_CFLAGS=$CFLAGS
+case "$CC $CFLAGS " in #(
+*\ -flto*\ *) CFLAGS="$CFLAGS -fno-lto" ;;
+*\ -fwhopr*\ *) CFLAGS="$CFLAGS -fno-whopr" ;;
+esac
+
+dnl Parse the compiler output and extract the necessary
+dnl objects, libraries and library flags.
+if AC_TRY_EVAL(ac_compile); then
+  # Parse the compiler output and extract the necessary
+  # objects, libraries and library flags.
+
+  # Sentinel used to keep track of whether or not we are before
+  # the conftest object file.
+  pre_test_object_deps_done=no
+
+  for p in `eval "$output_verbose_link_cmd"`; do
+    case ${prev}${p} in
+
+    -L* | -R* | -l*)
+       # Some compilers place space between "-{L,R}" and the path.
+       # Remove the space.
+       if test $p = "-L" ||
+          test $p = "-R"; then
+	 prev=$p
+	 continue
+       fi
+
+     
