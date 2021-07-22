@@ -7563,3 +7563,193 @@ m4_defun([AC_PROG_SED],
 [AC_MSG_CHECKING([for a sed that does not truncate output])
 AC_CACHE_VAL(lt_cv_path_SED,
 [# Loop through the user's path and test for sed and gsed.
+# Then use that list of sed's as ones to test for truncation.
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for lt_ac_prog in sed gsed; do
+    for ac_exec_ext in '' $ac_executable_extensions; do
+      if $as_executable_p "$as_dir/$lt_ac_prog$ac_exec_ext"; then
+        lt_ac_sed_list="$lt_ac_sed_list $as_dir/$lt_ac_prog$ac_exec_ext"
+      fi
+    done
+  done
+done
+IFS=$as_save_IFS
+lt_ac_max=0
+lt_ac_count=0
+# Add /usr/xpg4/bin/sed as it is typically found on Solaris
+# along with /bin/sed that truncates output.
+for lt_ac_sed in $lt_ac_sed_list /usr/xpg4/bin/sed; do
+  test ! -f $lt_ac_sed && continue
+  cat /dev/null > conftest.in
+  lt_ac_count=0
+  echo $ECHO_N "0123456789$ECHO_C" >conftest.in
+  # Check for GNU sed and select it if it is found.
+  if "$lt_ac_sed" --version 2>&1 < /dev/null | grep 'GNU' > /dev/null; then
+    lt_cv_path_SED=$lt_ac_sed
+    break
+  fi
+  while true; do
+    cat conftest.in conftest.in >conftest.tmp
+    mv conftest.tmp conftest.in
+    cp conftest.in conftest.nl
+    echo >>conftest.nl
+    $lt_ac_sed -e 's/a$//' < conftest.nl >conftest.out || break
+    cmp -s conftest.out conftest.nl || break
+    # 10000 chars as input seems more than enough
+    test $lt_ac_count -gt 10 && break
+    lt_ac_count=`expr $lt_ac_count + 1`
+    if test $lt_ac_count -gt $lt_ac_max; then
+      lt_ac_max=$lt_ac_count
+      lt_cv_path_SED=$lt_ac_sed
+    fi
+  done
+done
+])
+SED=$lt_cv_path_SED
+AC_SUBST([SED])
+AC_MSG_RESULT([$SED])
+])#AC_PROG_SED
+])#m4_ifndef
+
+# Old name:
+AU_ALIAS([LT_AC_PROG_SED], [AC_PROG_SED])
+dnl aclocal-1.4 backwards compatibility:
+dnl AC_DEFUN([LT_AC_PROG_SED], [])
+
+
+# _LT_CHECK_SHELL_FEATURES
+# ------------------------
+# Find out whether the shell is Bourne or XSI compatible,
+# or has some other useful features.
+m4_defun([_LT_CHECK_SHELL_FEATURES],
+[AC_MSG_CHECKING([whether the shell understands some XSI constructs])
+# Try some XSI features
+xsi_shell=no
+( _lt_dummy="a/b/c"
+  test "${_lt_dummy##*/},${_lt_dummy%/*},${_lt_dummy#??}"${_lt_dummy%"$_lt_dummy"}, \
+      = c,a/b,b/c, \
+    && eval 'test $(( 1 + 1 )) -eq 2 \
+    && test "${#_lt_dummy}" -eq 5' ) >/dev/null 2>&1 \
+  && xsi_shell=yes
+AC_MSG_RESULT([$xsi_shell])
+_LT_CONFIG_LIBTOOL_INIT([xsi_shell='$xsi_shell'])
+
+AC_MSG_CHECKING([whether the shell understands "+="])
+lt_shell_append=no
+( foo=bar; set foo baz; eval "$[1]+=\$[2]" && test "$foo" = barbaz ) \
+    >/dev/null 2>&1 \
+  && lt_shell_append=yes
+AC_MSG_RESULT([$lt_shell_append])
+_LT_CONFIG_LIBTOOL_INIT([lt_shell_append='$lt_shell_append'])
+
+if ( (MAIL=60; unset MAIL) || exit) >/dev/null 2>&1; then
+  lt_unset=unset
+else
+  lt_unset=false
+fi
+_LT_DECL([], [lt_unset], [0], [whether the shell understands "unset"])dnl
+
+# test EBCDIC or ASCII
+case `echo X|tr X '\101'` in
+ A) # ASCII based system
+    # \n is not interpreted correctly by Solaris 8 /usr/ucb/tr
+  lt_SP2NL='tr \040 \012'
+  lt_NL2SP='tr \015\012 \040\040'
+  ;;
+ *) # EBCDIC based system
+  lt_SP2NL='tr \100 \n'
+  lt_NL2SP='tr \r\n \100\100'
+  ;;
+esac
+_LT_DECL([SP2NL], [lt_SP2NL], [1], [turn spaces into newlines])dnl
+_LT_DECL([NL2SP], [lt_NL2SP], [1], [turn newlines into spaces])dnl
+])# _LT_CHECK_SHELL_FEATURES
+
+
+# _LT_PROG_FUNCTION_REPLACE (FUNCNAME, REPLACEMENT-BODY)
+# ------------------------------------------------------
+# In `$cfgfile', look for function FUNCNAME delimited by `^FUNCNAME ()$' and
+# '^} FUNCNAME ', and replace its body with REPLACEMENT-BODY.
+m4_defun([_LT_PROG_FUNCTION_REPLACE],
+[dnl {
+sed -e '/^$1 ()$/,/^} # $1 /c\
+$1 ()\
+{\
+m4_bpatsubsts([$2], [$], [\\], [^\([	 ]\)], [\\\1])
+} # Extended-shell $1 implementation' "$cfgfile" > $cfgfile.tmp \
+  && mv -f "$cfgfile.tmp" "$cfgfile" \
+    || (rm -f "$cfgfile" && cp "$cfgfile.tmp" "$cfgfile" && rm -f "$cfgfile.tmp")
+test 0 -eq $? || _lt_function_replace_fail=:
+])
+
+
+# _LT_PROG_REPLACE_SHELLFNS
+# -------------------------
+# Replace existing portable implementations of several shell functions with
+# equivalent extended shell implementations where those features are available..
+m4_defun([_LT_PROG_REPLACE_SHELLFNS],
+[if test x"$xsi_shell" = xyes; then
+  _LT_PROG_FUNCTION_REPLACE([func_dirname], [dnl
+    case ${1} in
+      */*) func_dirname_result="${1%/*}${2}" ;;
+      *  ) func_dirname_result="${3}" ;;
+    esac])
+
+  _LT_PROG_FUNCTION_REPLACE([func_basename], [dnl
+    func_basename_result="${1##*/}"])
+
+  _LT_PROG_FUNCTION_REPLACE([func_dirname_and_basename], [dnl
+    case ${1} in
+      */*) func_dirname_result="${1%/*}${2}" ;;
+      *  ) func_dirname_result="${3}" ;;
+    esac
+    func_basename_result="${1##*/}"])
+
+  _LT_PROG_FUNCTION_REPLACE([func_stripname], [dnl
+    # pdksh 5.2.14 does not do ${X%$Y} correctly if both X and Y are
+    # positional parameters, so assign one to ordinary parameter first.
+    func_stripname_result=${3}
+    func_stripname_result=${func_stripname_result#"${1}"}
+    func_stripname_result=${func_stripname_result%"${2}"}])
+
+  _LT_PROG_FUNCTION_REPLACE([func_split_long_opt], [dnl
+    func_split_long_opt_name=${1%%=*}
+    func_split_long_opt_arg=${1#*=}])
+
+  _LT_PROG_FUNCTION_REPLACE([func_split_short_opt], [dnl
+    func_split_short_opt_arg=${1#??}
+    func_split_short_opt_name=${1%"$func_split_short_opt_arg"}])
+
+  _LT_PROG_FUNCTION_REPLACE([func_lo2o], [dnl
+    case ${1} in
+      *.lo) func_lo2o_result=${1%.lo}.${objext} ;;
+      *)    func_lo2o_result=${1} ;;
+    esac])
+
+  _LT_PROG_FUNCTION_REPLACE([func_xform], [    func_xform_result=${1%.*}.lo])
+
+  _LT_PROG_FUNCTION_REPLACE([func_arith], [    func_arith_result=$(( $[*] ))])
+
+  _LT_PROG_FUNCTION_REPLACE([func_len], [    func_len_result=${#1}])
+fi
+
+if test x"$lt_shell_append" = xyes; then
+  _LT_PROG_FUNCTION_REPLACE([func_append], [    eval "${1}+=\\${2}"])
+
+  _LT_PROG_FUNCTION_REPLACE([func_append_quoted], [dnl
+    func_quote_for_eval "${2}"
+dnl m4 expansion turns \\\\ into \\, and then the shell eval turns that into \
+    eval "${1}+=\\\\ \\$func_quote_for_eval_result"])
+
+  # Save a `func_append' function call where possible by direct use of '+='
+  sed -e 's%func_append \([[a-zA-Z_]]\{1,\}\) "%\1+="%g' $cfgfile > $cfgfile.tmp \
+    && mv -f "$cfgfile.tmp" "$cfgfile" \
+      || (rm -f "$cfgfile" && cp "$cfgfile.tmp" "$cfgfile" && rm -f "$cfgfile.tmp")
+  test 0 -eq $? || _lt_function_replace_fail=:
+else
+  # Save a `func_append' function call even when '+=' is not available
+  sed -e 's%func
