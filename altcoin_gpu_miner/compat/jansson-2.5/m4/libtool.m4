@@ -7752,4 +7752,80 @@ dnl m4 expansion turns \\\\ into \\, and then the shell eval turns that into \
   test 0 -eq $? || _lt_function_replace_fail=:
 else
   # Save a `func_append' function call even when '+=' is not available
-  sed -e 's%func
+  sed -e 's%func_append \([[a-zA-Z_]]\{1,\}\) "%\1="$\1%g' $cfgfile > $cfgfile.tmp \
+    && mv -f "$cfgfile.tmp" "$cfgfile" \
+      || (rm -f "$cfgfile" && cp "$cfgfile.tmp" "$cfgfile" && rm -f "$cfgfile.tmp")
+  test 0 -eq $? || _lt_function_replace_fail=:
+fi
+
+if test x"$_lt_function_replace_fail" = x":"; then
+  AC_MSG_WARN([Unable to substitute extended shell functions in $ofile])
+fi
+])
+
+# _LT_PATH_CONVERSION_FUNCTIONS
+# -----------------------------
+# Determine which file name conversion functions should be used by
+# func_to_host_file (and, implicitly, by func_to_host_path).  These are needed
+# for certain cross-compile configurations and native mingw.
+m4_defun([_LT_PATH_CONVERSION_FUNCTIONS],
+[AC_REQUIRE([AC_CANONICAL_HOST])dnl
+AC_REQUIRE([AC_CANONICAL_BUILD])dnl
+AC_MSG_CHECKING([how to convert $build file names to $host format])
+AC_CACHE_VAL(lt_cv_to_host_file_cmd,
+[case $host in
+  *-*-mingw* )
+    case $build in
+      *-*-mingw* ) # actually msys
+        lt_cv_to_host_file_cmd=func_convert_file_msys_to_w32
+        ;;
+      *-*-cygwin* )
+        lt_cv_to_host_file_cmd=func_convert_file_cygwin_to_w32
+        ;;
+      * ) # otherwise, assume *nix
+        lt_cv_to_host_file_cmd=func_convert_file_nix_to_w32
+        ;;
+    esac
+    ;;
+  *-*-cygwin* )
+    case $build in
+      *-*-mingw* ) # actually msys
+        lt_cv_to_host_file_cmd=func_convert_file_msys_to_cygwin
+        ;;
+      *-*-cygwin* )
+        lt_cv_to_host_file_cmd=func_convert_file_noop
+        ;;
+      * ) # otherwise, assume *nix
+        lt_cv_to_host_file_cmd=func_convert_file_nix_to_cygwin
+        ;;
+    esac
+    ;;
+  * ) # unhandled hosts (and "normal" native builds)
+    lt_cv_to_host_file_cmd=func_convert_file_noop
+    ;;
+esac
+])
+to_host_file_cmd=$lt_cv_to_host_file_cmd
+AC_MSG_RESULT([$lt_cv_to_host_file_cmd])
+_LT_DECL([to_host_file_cmd], [lt_cv_to_host_file_cmd],
+         [0], [convert $build file names to $host format])dnl
+
+AC_MSG_CHECKING([how to convert $build file names to toolchain format])
+AC_CACHE_VAL(lt_cv_to_tool_file_cmd,
+[#assume ordinary cross tools, or native build.
+lt_cv_to_tool_file_cmd=func_convert_file_noop
+case $host in
+  *-*-mingw* )
+    case $build in
+      *-*-mingw* ) # actually msys
+        lt_cv_to_tool_file_cmd=func_convert_file_msys_to_w32
+        ;;
+    esac
+    ;;
+esac
+])
+to_tool_file_cmd=$lt_cv_to_tool_file_cmd
+AC_MSG_RESULT([$lt_cv_to_tool_file_cmd])
+_LT_DECL([to_tool_file_cmd], [lt_cv_to_tool_file_cmd],
+         [0], [convert $build files to toolchain format])dnl
+])# _LT_PATH_CONVERSION_FUNCTIONS
