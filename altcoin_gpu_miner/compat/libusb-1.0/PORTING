@@ -1,0 +1,11 @@
+PORTING LIBUSB TO OTHER PLATFORMS
+
+Introduction
+============
+
+This document is aimed at developers wishing to port libusb to unsupported
+platforms. I believe the libusb API is OS-independent, so by supporting
+multiple operating systems we pave the way for cross-platform USB device
+drivers.
+
+Implementation-wise, the basic idea is that you provide an interf
