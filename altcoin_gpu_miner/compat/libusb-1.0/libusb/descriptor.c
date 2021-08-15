@@ -809,3 +809,65 @@ int API_EXPORTED libusb_parse_bos_descriptor(const void *buf, int len,
 	len = len;
 	bos_desc = calloc (1, sizeof (*bos_desc));
 	if (!bos_desc) {
+		return LIBUSB_ERROR_NO_MEM;
+	}
+
+	usbi_parse_descriptor(buffer, "bbwb", bos_desc, 0);
+	buffer += LIBUSB_DT_BOS_SIZE;
+
+	/* Get the device capability descriptors */
+	for (i = 0; i < bos_desc->bNumDeviceCaps; ++i) {
+		if (buffer[2] == LIBUSB_USB_CAP_TYPE_EXT) {
+			if (!bos_desc->usb_2_0_ext_cap) {
+				bos_desc->usb_2_0_ext_cap =
+					(struct libusb_usb_2_0_device_capability_descriptor *)
+					malloc(sizeof(*bos_desc->usb_2_0_ext_cap));
+				usbi_parse_descriptor(buffer, "bbbd",
+						      bos_desc->usb_2_0_ext_cap, 0);
+			} else
+				usbi_warn(NULL,
+					  "usb_2_0_ext_cap was already allocated");
+
+			/* move to the next device capability descriptor */
+			buffer += LIBUSB_USB_2_0_EXTENSION_DEVICE_CAPABILITY_SIZE;
+		} else if (buffer[2] == LIBUSB_SS_USB_CAP_TYPE) {
+			if (!bos_desc->ss_usb_cap) {
+				bos_desc->ss_usb_cap =
+					(struct libusb_ss_usb_device_capability_descriptor *)
+					malloc(sizeof(*bos_desc->ss_usb_cap));
+				usbi_parse_descriptor(buffer, "bbbbwbbw",
+						      bos_desc->ss_usb_cap, 0);
+			} else
+				usbi_warn(NULL,
+					  "ss_usb_cap was already allocated");
+
+			/* move to the next device capability descriptor */
+			buffer += LIBUSB_SS_USB_DEVICE_CAPABILITY_SIZE;
+		} else {
+			usbi_info(NULL, "wireless/container_id capability "
+				  "descriptor");
+
+			/* move to the next device capability descriptor */
+			buffer += buffer[0];
+		}
+	}
+
+	*bos = bos_desc;
+
+	return LIBUSB_SUCCESS;
+}
+
+void API_EXPORTED libusb_free_bos_descriptor(struct libusb_bos_descriptor *bos)
+{
+	assert(bos);
+
+	if (bos->usb_2_0_ext_cap) {
+		free(bos->usb_2_0_ext_cap);
+	}
+
+	if (bos->ss_usb_cap) {
+		free(bos->ss_usb_cap);
+	}
+
+	free(bos);
+}
