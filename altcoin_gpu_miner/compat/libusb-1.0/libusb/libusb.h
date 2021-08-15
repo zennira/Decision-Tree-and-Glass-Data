@@ -258,4 +258,242 @@ enum libusb_descriptor_type {
 					(LIBUSB_SS_USB_DEVICE_CAPABILITY_SIZE))
 
 #define LIBUSB_ENDPOINT_ADDRESS_MASK	0x0f    /* in bEndpointAddress */
-#define LIBUSB_ENDPOINT_DIR_MASK	
+#define LIBUSB_ENDPOINT_DIR_MASK		0x80
+
+/** \ingroup desc
+ * Endpoint direction. Values for bit 7 of the
+ * \ref libusb_endpoint_descriptor::bEndpointAddress "endpoint address" scheme.
+ */
+enum libusb_endpoint_direction {
+	/** In: device-to-host */
+	LIBUSB_ENDPOINT_IN = 0x80,
+
+	/** Out: host-to-device */
+	LIBUSB_ENDPOINT_OUT = 0x00
+};
+
+#define LIBUSB_TRANSFER_TYPE_MASK			0x03    /* in bmAttributes */
+
+/** \ingroup desc
+ * Endpoint transfer type. Values for bits 0:1 of the
+ * \ref libusb_endpoint_descriptor::bmAttributes "endpoint attributes" field.
+ */
+enum libusb_transfer_type {
+	/** Control endpoint */
+	LIBUSB_TRANSFER_TYPE_CONTROL = 0,
+
+	/** Isochronous endpoint */
+	LIBUSB_TRANSFER_TYPE_ISOCHRONOUS = 1,
+
+	/** Bulk endpoint */
+	LIBUSB_TRANSFER_TYPE_BULK = 2,
+
+	/** Interrupt endpoint */
+	LIBUSB_TRANSFER_TYPE_INTERRUPT = 3
+};
+
+/** \ingroup misc
+ * Standard requests, as defined in table 9-3 of the USB2 specifications */
+enum libusb_standard_request {
+	/** Request status of the specific recipient */
+	LIBUSB_REQUEST_GET_STATUS = 0x00,
+
+	/** Clear or disable a specific feature */
+	LIBUSB_REQUEST_CLEAR_FEATURE = 0x01,
+
+	/* 0x02 is reserved */
+
+	/** Set or enable a specific feature */
+	LIBUSB_REQUEST_SET_FEATURE = 0x03,
+
+	/* 0x04 is reserved */
+
+	/** Set device address for all future accesses */
+	LIBUSB_REQUEST_SET_ADDRESS = 0x05,
+
+	/** Get the specified descriptor */
+	LIBUSB_REQUEST_GET_DESCRIPTOR = 0x06,
+
+	/** Used to update existing descriptors or add new descriptors */
+	LIBUSB_REQUEST_SET_DESCRIPTOR = 0x07,
+
+	/** Get the current device configuration value */
+	LIBUSB_REQUEST_GET_CONFIGURATION = 0x08,
+
+	/** Set device configuration */
+	LIBUSB_REQUEST_SET_CONFIGURATION = 0x09,
+
+	/** Return the selected alternate setting for the specified interface */
+	LIBUSB_REQUEST_GET_INTERFACE = 0x0A,
+
+	/** Select an alternate interface for the specified interface */
+	LIBUSB_REQUEST_SET_INTERFACE = 0x0B,
+
+	/** Set then report an endpoint's synchronization frame */
+	LIBUSB_REQUEST_SYNCH_FRAME = 0x0C,
+};
+
+/** \ingroup misc
+ * Request type bits of the
+ * \ref libusb_control_setup::bmRequestType "bmRequestType" field in control
+ * transfers. */
+enum libusb_request_type {
+	/** Standard */
+	LIBUSB_REQUEST_TYPE_STANDARD = (0x00 << 5),
+
+	/** Class */
+	LIBUSB_REQUEST_TYPE_CLASS = (0x01 << 5),
+
+	/** Vendor */
+	LIBUSB_REQUEST_TYPE_VENDOR = (0x02 << 5),
+
+	/** Reserved */
+	LIBUSB_REQUEST_TYPE_RESERVED = (0x03 << 5)
+};
+
+/** \ingroup misc
+ * Recipient bits of the
+ * \ref libusb_control_setup::bmRequestType "bmRequestType" field in control
+ * transfers. Values 4 through 31 are reserved. */
+enum libusb_request_recipient {
+	/** Device */
+	LIBUSB_RECIPIENT_DEVICE = 0x00,
+
+	/** Interface */
+	LIBUSB_RECIPIENT_INTERFACE = 0x01,
+
+	/** Endpoint */
+	LIBUSB_RECIPIENT_ENDPOINT = 0x02,
+
+	/** Other */
+	LIBUSB_RECIPIENT_OTHER = 0x03,
+};
+
+#define LIBUSB_ISO_SYNC_TYPE_MASK		0x0C
+
+/** \ingroup desc
+ * Synchronization type for isochronous endpoints. Values for bits 2:3 of the
+ * \ref libusb_endpoint_descriptor::bmAttributes "bmAttributes" field in
+ * libusb_endpoint_descriptor.
+ */
+enum libusb_iso_sync_type {
+	/** No synchronization */
+	LIBUSB_ISO_SYNC_TYPE_NONE = 0,
+
+	/** Asynchronous */
+	LIBUSB_ISO_SYNC_TYPE_ASYNC = 1,
+
+	/** Adaptive */
+	LIBUSB_ISO_SYNC_TYPE_ADAPTIVE = 2,
+
+	/** Synchronous */
+	LIBUSB_ISO_SYNC_TYPE_SYNC = 3
+};
+
+#define LIBUSB_ISO_USAGE_TYPE_MASK 0x30
+
+/** \ingroup desc
+ * Usage type for isochronous endpoints. Values for bits 4:5 of the
+ * \ref libusb_endpoint_descriptor::bmAttributes "bmAttributes" field in
+ * libusb_endpoint_descriptor.
+ */
+enum libusb_iso_usage_type {
+	/** Data endpoint */
+	LIBUSB_ISO_USAGE_TYPE_DATA = 0,
+
+	/** Feedback endpoint */
+	LIBUSB_ISO_USAGE_TYPE_FEEDBACK = 1,
+
+	/** Implicit feedback Data endpoint */
+	LIBUSB_ISO_USAGE_TYPE_IMPLICIT = 2,
+};
+
+/** \ingroup desc
+ * A structure representing the standard USB device descriptor. This
+ * descriptor is documented in section 9.6.1 of the USB 2.0 specification.
+ * All multiple-byte fields are represented in host-endian format.
+ */
+struct libusb_device_descriptor {
+	/** Size of this descriptor (in bytes) */
+	uint8_t  bLength;
+
+	/** Descriptor type. Will have value
+	 * \ref libusb_descriptor_type::LIBUSB_DT_DEVICE LIBUSB_DT_DEVICE in this
+	 * context. */
+	uint8_t  bDescriptorType;
+
+	/** USB specification release number in binary-coded decimal. A value of
+	 * 0x0200 indicates USB 2.0, 0x0110 indicates USB 1.1, etc. */
+	uint16_t bcdUSB;
+
+	/** USB-IF class code for the device. See \ref libusb_class_code. */
+	uint8_t  bDeviceClass;
+
+	/** USB-IF subclass code for the device, qualified by the bDeviceClass
+	 * value */
+	uint8_t  bDeviceSubClass;
+
+	/** USB-IF protocol code for the device, qualified by the bDeviceClass and
+	 * bDeviceSubClass values */
+	uint8_t  bDeviceProtocol;
+
+	/** Maximum packet size for endpoint 0 */
+	uint8_t  bMaxPacketSize0;
+
+	/** USB-IF vendor ID */
+	uint16_t idVendor;
+
+	/** USB-IF product ID */
+	uint16_t idProduct;
+
+	/** Device release number in binary-coded decimal */
+	uint16_t bcdDevice;
+
+	/** Index of string descriptor describing manufacturer */
+	uint8_t  iManufacturer;
+
+	/** Index of string descriptor describing product */
+	uint8_t  iProduct;
+
+	/** Index of string descriptor containing device serial number */
+	uint8_t  iSerialNumber;
+
+	/** Number of possible configurations */
+	uint8_t  bNumConfigurations;
+};
+
+/** \ingroup desc
+ * A structure representing the superspeed endpoint companion
+ * descriptor. This descriptor is documented in section 9.6.7 of
+ * the USB 3.0 specification. All ultiple-byte fields are represented in
+ * host-endian format.
+ */
+struct libusb_ss_endpoint_companion_descriptor {
+
+	/** Size of this descriptor (in bytes) */
+	uint8_t  bLength;
+
+	/** Descriptor type. Will have value
+	 * \ref libusb_descriptor_type::LIBUSB_DT_SS_ENDPOINT_COMPANION in
+	 * this context. */
+	uint8_t  bDescriptorType;
+
+
+	/** The maximum number of packets the endpoint can send or
+	 *  recieve as part of a burst. */
+	uint8_t  bMaxBurst;
+
+	/** In bulk EP:	bits 4:0 represents the	maximum	number of
+	 *  streams the	EP supports. In	isochronous EP:	bits 1:0
+	 *  represents the Mult	- a zero based value that determines
+	 *  the	maximum	number of packets within a service interval  */
+	uint8_t  bmAttributes;
+
+	/** The	total number of bytes this EP will transfer every
+	 *  service interval. valid only for periodic EPs. */
+	uint16_t wBytesPerInterval;
+};
+
+/** \ingroup desc
+ * A structure representing the standard USB endpoint descriptor. This
+ * descriptor is documented in section 9.6.3 of the U
