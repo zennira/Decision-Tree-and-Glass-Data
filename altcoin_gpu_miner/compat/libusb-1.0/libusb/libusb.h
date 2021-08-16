@@ -496,4 +496,198 @@ struct libusb_ss_endpoint_companion_descriptor {
 
 /** \ingroup desc
  * A structure representing the standard USB endpoint descriptor. This
- * descriptor is documented in section 9.6.3 of the U
+ * descriptor is documented in section 9.6.3 of the USB 2.0 specification.
+ * All multiple-byte fields are represented in host-endian format.
+ */
+struct libusb_endpoint_descriptor {
+	/** Size of this descriptor (in bytes) */
+	uint8_t  bLength;
+
+	/** Descriptor type. Will have value
+	 * \ref libusb_descriptor_type::LIBUSB_DT_ENDPOINT LIBUSB_DT_ENDPOINT in
+	 * this context. */
+	uint8_t  bDescriptorType;
+
+	/** The address of the endpoint described by this descriptor. Bits 0:3 are
+	 * the endpoint number. Bits 4:6 are reserved. Bit 7 indicates direction,
+	 * see \ref libusb_endpoint_direction.
+	 */
+	uint8_t  bEndpointAddress;
+
+	/** Attributes which apply to the endpoint when it is configured using
+	 * the bConfigurationValue. Bits 0:1 determine the transfer type and
+	 * correspond to \ref libusb_transfer_type. Bits 2:3 are only used for
+	 * isochronous endpoints and correspond to \ref libusb_iso_sync_type.
+	 * Bits 4:5 are also only used for isochronous endpoints and correspond to
+	 * \ref libusb_iso_usage_type. Bits 6:7 are reserved.
+	 */
+	uint8_t  bmAttributes;
+
+	/** Maximum packet size this endpoint is capable of sending/receiving. */
+	uint16_t wMaxPacketSize;
+
+	/** Interval for polling endpoint for data transfers. */
+	uint8_t  bInterval;
+
+	/** For audio devices only: the rate at which synchronization feedback
+	 * is provided. */
+	uint8_t  bRefresh;
+
+	/** For audio devices only: the address if the synch endpoint */
+	uint8_t  bSynchAddress;
+
+	/** Extra descriptors. If libusb encounters unknown endpoint descriptors,
+	 * it will store them here, should you wish to parse them. */
+	const unsigned char *extra;
+
+	/** Length of the extra descriptors, in bytes. */
+	int extra_length;
+};
+
+
+/** \ingroup desc
+ * A structure representing the standard USB interface descriptor. This
+ * descriptor is documented in section 9.6.5 of the USB 2.0 specification.
+ * All multiple-byte fields are represented in host-endian format.
+ */
+struct libusb_interface_descriptor {
+	/** Size of this descriptor (in bytes) */
+	uint8_t  bLength;
+
+	/** Descriptor type. Will have value
+	 * \ref libusb_descriptor_type::LIBUSB_DT_INTERFACE LIBUSB_DT_INTERFACE
+	 * in this context. */
+	uint8_t  bDescriptorType;
+
+	/** Number of this interface */
+	uint8_t  bInterfaceNumber;
+
+	/** Value used to select this alternate setting for this interface */
+	uint8_t  bAlternateSetting;
+
+	/** Number of endpoints used by this interface (excluding the control
+	 * endpoint). */
+	uint8_t  bNumEndpoints;
+
+	/** USB-IF class code for this interface. See \ref libusb_class_code. */
+	uint8_t  bInterfaceClass;
+
+	/** USB-IF subclass code for this interface, qualified by the
+	 * bInterfaceClass value */
+	uint8_t  bInterfaceSubClass;
+
+	/** USB-IF protocol code for this interface, qualified by the
+	 * bInterfaceClass and bInterfaceSubClass values */
+	uint8_t  bInterfaceProtocol;
+
+	/** Index of string descriptor describing this interface */
+	uint8_t  iInterface;
+
+	/** Array of endpoint descriptors. This length of this array is determined
+	 * by the bNumEndpoints field. */
+	const struct libusb_endpoint_descriptor *endpoint;
+
+	/** Extra descriptors. If libusb encounters unknown interface descriptors,
+	 * it will store them here, should you wish to parse them. */
+	const unsigned char *extra;
+
+	/** Length of the extra descriptors, in bytes. */
+	int extra_length;
+};
+
+/** \ingroup desc
+ * A collection of alternate settings for a particular USB interface.
+ */
+struct libusb_interface {
+	/** Array of interface descriptors. The length of this array is determined
+	 * by the num_altsetting field. */
+	const struct libusb_interface_descriptor *altsetting;
+
+	/** The number of alternate settings that belong to this interface */
+	int num_altsetting;
+};
+
+/** \ingroup desc
+ * A structure representing the standard USB configuration descriptor. This
+ * descriptor is documented in section 9.6.3 of the USB 2.0 specification.
+ * All multiple-byte fields are represented in host-endian format.
+ */
+struct libusb_config_descriptor {
+	/** Size of this descriptor (in bytes) */
+	uint8_t  bLength;
+
+	/** Descriptor type. Will have value
+	 * \ref libusb_descriptor_type::LIBUSB_DT_CONFIG LIBUSB_DT_CONFIG
+	 * in this context. */
+	uint8_t  bDescriptorType;
+
+	/** Total length of data returned for this configuration */
+	uint16_t wTotalLength;
+
+	/** Number of interfaces supported by this configuration */
+	uint8_t  bNumInterfaces;
+
+	/** Identifier value for this configuration */
+	uint8_t  bConfigurationValue;
+
+	/** Index of string descriptor describing this configuration */
+	uint8_t  iConfiguration;
+
+	/** Configuration characteristics */
+	uint8_t  bmAttributes;
+
+	/** Maximum power consumption of the USB device from this bus in this
+	 * configuration when the device is fully opreation. Expressed in units
+	 * of 2 mA. */
+	uint8_t  MaxPower;
+
+	/** Array of interfaces supported by this configuration. The length of
+	 * this array is determined by the bNumInterfaces field. */
+	const struct libusb_interface *interface;
+
+	/** Extra descriptors. If libusb encounters unknown configuration
+	 * descriptors, it will store them here, should you wish to parse them. */
+	const unsigned char *extra;
+
+	/** Length of the extra descriptors, in bytes. */
+	int extra_length;
+};
+
+/** \ingroup desc
+ * A structure representing the BOS descriptor. This
+ * descriptor is documented in section 9.6.2 of the USB 3.0
+ * specification. All multiple-byte fields are represented in
+ * host-endian format.
+ */
+struct libusb_bos_descriptor {
+	/** Size of this descriptor (in bytes) */
+	uint8_t  bLength;
+
+	/** Descriptor type. Will have value
+	 * \ref libusb_descriptor_type::LIBUSB_DT_BOS LIBUSB_DT_BOS
+	 * in this context. */
+	uint8_t  bDescriptorType;
+
+	/** Length of this descriptor and all of its sub descriptors */
+	uint16_t wTotalLength;
+
+	/** The number of separate device capability descriptors in
+	 * the BOS */
+	uint8_t  bNumDeviceCaps;
+
+	/** USB 2.0 extension capability descriptor */
+	struct libusb_usb_2_0_device_capability_descriptor *usb_2_0_ext_cap;
+
+	/** SuperSpeed capabilty descriptor */
+	struct libusb_ss_usb_device_capability_descriptor *ss_usb_cap;
+};
+
+/** \ingroup desc
+ * A structure representing the device capability descriptor for
+ * USB 2.0. This descriptor is documented in section 9.6.2.1 of
+ * the USB 3.0 specification. All mutiple-byte fields are represented
+ * in host-endian format.
+ */
+struct libusb_usb_2_0_device_capability_descriptor {
+	/** Size of this descriptor (in bytes) */
+	u
