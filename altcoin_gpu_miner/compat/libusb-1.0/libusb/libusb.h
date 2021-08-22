@@ -690,4 +690,191 @@ struct libusb_bos_descriptor {
  */
 struct libusb_usb_2_0_device_capability_descriptor {
 	/** Size of this descriptor (in bytes) */
-	u
+	uint8_t  bLength;
+
+	/** Descriptor type. Will have value
+	 * \ref libusb_descriptor_type::LIBUSB_DT_DEVICE_CAPABILITY
+	 * LIBUSB_DT_DEVICE_CAPABILITY in this context. */
+	uint8_t  bDescriptorType;
+
+	/** Capability type. Will have value
+	 * \ref libusb_capability_type::LIBUSB_USB_CAP_TYPE_EXT
+	 * LIBUSB_USB_CAP_TYPE_EXT in this context. */
+	uint8_t  bDevCapabilityType;
+
+	/** Bitmap encoding of supported device level features.
+	 * A value of one in a bit location indicates a feature is
+	 * supported; a value of zero indicates it is not supported.
+	 * See \ref libusb_capability_attributes. */
+	uint32_t  bmAttributes;
+};
+
+/** \ingroup desc
+ * A structure representing the device capability descriptor for
+ * USB 3.0. This descriptor is documented in section 9.6.2.2 of
+ * the USB 3.0 specification. All mutiple-byte fields are represented
+ * in host-endian format.
+ */
+struct libusb_ss_usb_device_capability_descriptor {
+	/** Size of this descriptor (in bytes) */
+	uint8_t  bLength;
+
+	/** Descriptor type. Will have value
+	 * \ref libusb_descriptor_type::LIBUSB_DT_DEVICE_CAPABILITY
+	 * LIBUSB_DT_DEVICE_CAPABILITY in this context. */
+	uint8_t  bDescriptorType;
+
+	/** Capability type. Will have value
+	 * \ref libusb_capability_type::LIBUSB_SS_USB_CAP_TYPE
+	 * LIBUSB_SS_USB_CAP_TYPE in this context. */
+	uint8_t  bDevCapabilityType;
+
+	/** Bitmap encoding of supported device level features.
+	 * A value of one in a bit location indicates a feature is
+	 * supported; a value of zero indicates it is not supported.
+	 * See \ref libusb_capability_attributes. */
+	uint8_t  bmAttributes;
+
+	/** Bitmap encoding of the speed supported by this device when
+	 * operating in SuperSpeed mode. See \ref libusb_supported_speed. */
+	uint16_t wSpeedSupported;
+
+	/** The lowest speed at which all the functionality supported
+	 * by the device is available to the user. For example if the
+	 * device supports all its functionality when connected at
+	 * full speed and above then it sets this value to 1. */
+	uint8_t  bFunctionalitySupport;
+
+	/** U1 Device Exit Latency. */
+	uint8_t  bU1DevExitLat;
+
+	/** U2 Device Exit Latency. */
+	uint16_t bU2DevExitLat;
+};
+
+
+/** \ingroup asyncio
+ * Setup packet for control transfers. */
+struct libusb_control_setup {
+	/** Request type. Bits 0:4 determine recipient, see
+	 * \ref libusb_request_recipient. Bits 5:6 determine type, see
+	 * \ref libusb_request_type. Bit 7 determines data transfer direction, see
+	 * \ref libusb_endpoint_direction.
+	 */
+	uint8_t  bmRequestType;
+
+	/** Request. If the type bits of bmRequestType are equal to
+	 * \ref libusb_request_type::LIBUSB_REQUEST_TYPE_STANDARD
+	 * "LIBUSB_REQUEST_TYPE_STANDARD" then this field refers to
+	 * \ref libusb_standard_request. For other cases, use of this field is
+	 * application-specific. */
+	uint8_t  bRequest;
+
+	/** Value. Varies according to request */
+	uint16_t wValue;
+
+	/** Index. Varies according to request, typically used to pass an index
+	 * or offset */
+	uint16_t wIndex;
+
+	/** Number of bytes to transfer */
+	uint16_t wLength;
+};
+
+#define LIBUSB_CONTROL_SETUP_SIZE (sizeof(struct libusb_control_setup))
+
+/* libusb */
+
+struct libusb_context;
+struct libusb_device;
+struct libusb_device_handle;
+struct libusb_hotplug_callback;
+
+/** \ingroup lib
+ * Structure representing the libusb version.
+ */
+struct libusb_version {
+	/** Library major version. */
+	const uint16_t major;
+
+	/** Library minor version. */
+	const uint16_t minor;
+
+	/** Library micro version. */
+	const uint16_t micro;
+
+	/** Library nano version. This field is only nonzero on Windows. */
+	const uint16_t nano;
+
+	/** Library release candidate suffix string, e.g. "-rc4". */
+	const char *rc;
+
+	/** Output of `git describe --tags` at library build time. */
+	const char *describe;
+};
+
+/** \ingroup lib
+ * Structure representing a libusb session. The concept of individual libusb
+ * sessions allows for your program to use two libraries (or dynamically
+ * load two modules) which both independently use libusb. This will prevent
+ * interference between the individual libusb users - for example
+ * libusb_set_debug() will not affect the other user of the library, and
+ * libusb_exit() will not destroy resources that the other user is still
+ * using.
+ *
+ * Sessions are created by libusb_init() and destroyed through libusb_exit().
+ * If your application is guaranteed to only ever include a single libusb
+ * user (i.e. you), you do not have to worry about contexts: pass NULL in
+ * every function call where a context is required. The default context
+ * will be used.
+ *
+ * For more information, see \ref contexts.
+ */
+typedef struct libusb_context libusb_context;
+
+/** \ingroup dev
+ * Structure representing a USB device detected on the system. This is an
+ * opaque type for which you are only ever provided with a pointer, usually
+ * originating from libusb_get_device_list().
+ *
+ * Certain operations can be performed on a device, but in order to do any
+ * I/O you will have to first obtain a device handle using libusb_open().
+ *
+ * Devices are reference counted with libusb_ref_device() and
+ * libusb_unref_device(), and are freed when the reference count reaches 0.
+ * New devices presented by libusb_get_device_list() have a reference count of
+ * 1, and libusb_free_device_list() can optionally decrease the reference count
+ * on all devices in the list. libusb_open() adds another reference which is
+ * later destroyed by libusb_close().
+ */
+typedef struct libusb_device libusb_device;
+
+
+/** \ingroup dev
+ * Structure representing a handle on a USB device. This is an opaque type for
+ * which you are only ever provided with a pointer, usually originating from
+ * libusb_open().
+ *
+ * A device handle is used to perform I/O and other operations. When finished
+ * with a device handle, you should call libusb_close().
+ */
+typedef struct libusb_device_handle libusb_device_handle;
+
+/** \ingroup dev
+ * Speed codes. Indicates the speed at which the device is operating.
+ */
+enum libusb_speed {
+    /** The OS doesn't report or know the device speed. */
+    LIBUSB_SPEED_UNKNOWN = 0,
+
+    /** The device is operating at low speed (1.5MBit/s). */
+    LIBUSB_SPEED_LOW = 1,
+
+    /** The device is operating at full speed (12MBit/s). */
+    LIBUSB_SPEED_FULL = 2,
+
+    /** The device is operating at high speed (480MBit/s). */
+    LIBUSB_SPEED_HIGH = 3,
+
+    /** The device is operating at super speed (5000MBit/s). */
+    LI
