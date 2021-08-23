@@ -877,4 +877,218 @@ enum libusb_speed {
     LIBUSB_SPEED_HIGH = 3,
 
     /** The device is operating at super speed (5000MBit/s). */
-    LI
+    LIBUSB_SPEED_SUPER = 4,
+};
+
+/** \ingroup dev
+ * Supported speeds (wSpeedSupported) bitfield. Indicates what
+ * speeds the device supports.
+ */
+enum libusb_supported_speed {
+	/** Low speed operation supported (1.5MBit/s). */
+	LIBUSB_LOW_SPEED_OPERATION  = 1,
+
+	/** Full speed operation supported (12MBit/s). */
+	LIBUSB_FULL_SPEED_OPERATION = 2,
+
+	/** High speed operation supported (480MBit/s). */
+	LIBUSB_HIGH_SPEED_OPERATION = 4,
+
+	/** Superspeed operation supported (5000MBit/s). */
+	LIBUSB_5GBPS_OPERATION      = 8,
+};
+
+/** \ingroup dev
+ * Capability attributes
+ */
+enum libusb_capability_attributes {
+	/** Supports Link Power Management (LPM) */
+	LIBUSB_LPM_SUPPORT = 2,
+};
+
+/** \ingroup dev
+ * USB capability types
+ */
+enum libusb_capability_type {
+	/** USB 2.0 extension capability type */
+	LIBUSB_USB_CAP_TYPE_EXT = 2,
+
+	/** SuperSpeed capability type */
+	LIBUSB_SS_USB_CAP_TYPE  = 3,
+};
+
+/** \ingroup misc
+ * Error codes. Most libusb functions return 0 on success or one of these
+ * codes on failure.
+ * You can call \ref libusb_error_name() to retrieve a string representation
+ * of an error code or \ret libusb_strerror() to get an english description
+ * of an error code.
+ */
+enum libusb_error {
+	/** Success (no error) */
+	LIBUSB_SUCCESS = 0,
+
+	/** Input/output error */
+	LIBUSB_ERROR_IO = -1,
+
+	/** Invalid parameter */
+	LIBUSB_ERROR_INVALID_PARAM = -2,
+
+	/** Access denied (insufficient permissions) */
+	LIBUSB_ERROR_ACCESS = -3,
+
+	/** No such device (it may have been disconnected) */
+	LIBUSB_ERROR_NO_DEVICE = -4,
+
+	/** Entity not found */
+	LIBUSB_ERROR_NOT_FOUND = -5,
+
+	/** Resource busy */
+	LIBUSB_ERROR_BUSY = -6,
+
+	/** Operation timed out */
+	LIBUSB_ERROR_TIMEOUT = -7,
+
+	/** Overflow */
+	LIBUSB_ERROR_OVERFLOW = -8,
+
+	/** Pipe error */
+	LIBUSB_ERROR_PIPE = -9,
+
+	/** System call interrupted (perhaps due to signal) */
+	LIBUSB_ERROR_INTERRUPTED = -10,
+
+	/** Insufficient memory */
+	LIBUSB_ERROR_NO_MEM = -11,
+
+	/** Operation not supported or unimplemented on this platform */
+	LIBUSB_ERROR_NOT_SUPPORTED = -12,
+
+	/* NB! Remember to update libusb_error_name() and
+	   libusb_strerror() when adding new error codes here. */
+
+	/** Other error */
+	LIBUSB_ERROR_OTHER = -99,
+};
+
+/** \ingroup asyncio
+ * Transfer status codes */
+enum libusb_transfer_status {
+	/** Transfer completed without error. Note that this does not indicate
+	 * that the entire amount of requested data was transferred. */
+	LIBUSB_TRANSFER_COMPLETED,
+
+	/** Transfer failed */
+	LIBUSB_TRANSFER_ERROR,
+
+	/** Transfer timed out */
+	LIBUSB_TRANSFER_TIMED_OUT,
+
+	/** Transfer was cancelled */
+	LIBUSB_TRANSFER_CANCELLED,
+
+	/** For bulk/interrupt endpoints: halt condition detected (endpoint
+	 * stalled). For control endpoints: control request not supported. */
+	LIBUSB_TRANSFER_STALL,
+
+	/** Device was disconnected */
+	LIBUSB_TRANSFER_NO_DEVICE,
+
+	/** Device sent more data than requested */
+	LIBUSB_TRANSFER_OVERFLOW,
+};
+
+/** \ingroup asyncio
+ * libusb_transfer.flags values */
+enum libusb_transfer_flags {
+	/** Report short frames as errors */
+	LIBUSB_TRANSFER_SHORT_NOT_OK = 1<<0,
+
+	/** Automatically free() transfer buffer during libusb_free_transfer() */
+	LIBUSB_TRANSFER_FREE_BUFFER = 1<<1,
+
+	/** Automatically call libusb_free_transfer() after callback returns.
+	 * If this flag is set, it is illegal to call libusb_free_transfer()
+	 * from your transfer callback, as this will result in a double-free
+	 * when this flag is acted upon. */
+	LIBUSB_TRANSFER_FREE_TRANSFER = 1<<2,
+
+	/** Terminate transfers that are a multiple of the endpoint's
+	 * wMaxPacketSize with an extra zero length packet. This is useful
+	 * when a device protocol mandates that each logical request is
+	 * terminated by an incomplete packet (i.e. the logical requests are
+	 * not separated by other means).
+	 *
+	 * This flag only affects host-to-device transfers to bulk and interrupt
+	 * endpoints. In other situations, it is ignored.
+	 *
+	 * This flag only affects transfers with a length that is a multiple of
+	 * the endpoint's wMaxPacketSize. On transfers of other lengths, this
+	 * flag has no effect. Therefore, if you are working with a device that
+	 * needs a ZLP whenever the end of the logical request falls on a packet
+	 * boundary, then it is sensible to set this flag on <em>every</em>
+	 * transfer (you do not have to worry about only setting it on transfers
+	 * that end on the boundary).
+	 *
+	 * This flag is currently only supported on Linux.
+	 * On other systems, libusb_submit_transfer() will return
+	 * LIBUSB_ERROR_NOT_SUPPORTED for every transfer where this flag is set.
+	 *
+	 * Available since libusb-1.0.9.
+	 */
+	LIBUSB_TRANSFER_ADD_ZERO_PACKET = 1 << 3,
+};
+
+/** \ingroup asyncio
+ * Isochronous packet descriptor. */
+struct libusb_iso_packet_descriptor {
+	/** Length of data to request in this packet */
+	unsigned int length;
+
+	/** Amount of data that was actually transferred */
+	unsigned int actual_length;
+
+	/** Status code for this packet */
+	enum libusb_transfer_status status;
+};
+
+struct libusb_transfer;
+
+/** \ingroup asyncio
+ * Asynchronous transfer callback function type. When submitting asynchronous
+ * transfers, you pass a pointer to a callback function of this type via the
+ * \ref libusb_transfer::callback "callback" member of the libusb_transfer
+ * structure. libusb will call this function later, when the transfer has
+ * completed or failed. See \ref asyncio for more information.
+ * \param transfer The libusb_transfer struct the callback function is being
+ * notified about.
+ */
+typedef void (LIBUSB_CALL *libusb_transfer_cb_fn)(struct libusb_transfer *transfer);
+
+/** \ingroup asyncio
+ * The generic USB transfer structure. The user populates this structure and
+ * then submits it in order to request a transfer. After the transfer has
+ * completed, the library populates the transfer with the results and passes
+ * it back to the user.
+ */
+struct libusb_transfer {
+	/** Handle of the device that this transfer will be submitted to */
+	libusb_device_handle *dev_handle;
+
+	/** A bitwise OR combination of \ref libusb_transfer_flags. */
+	uint8_t flags;
+
+	/** Address of the endpoint where this transfer will be sent. */
+	unsigned char endpoint;
+
+	/** Type of the endpoint from \ref libusb_transfer_type */
+	unsigned char type;
+
+	/** Timeout for this transfer in millseconds. A value of 0 indicates no
+	 * timeout. */
+	unsigned int timeout;
+
+	/** The status of the transfer. Read-only, and only for use within
+	 * transfer callback function.
+	 *
+	 * If this is an isochronous transfer, this field may read COMP
