@@ -1091,4 +1091,170 @@ struct libusb_transfer {
 	/** The status of the transfer. Read-only, and only for use within
 	 * transfer callback function.
 	 *
-	 * If this is an isochronous transfer, this field may read COMP
+	 * If this is an isochronous transfer, this field may read COMPLETED even
+	 * if there were errors in the frames. Use the
+	 * \ref libusb_iso_packet_descriptor::status "status" field in each packet
+	 * to determine if errors occurred. */
+	enum libusb_transfer_status status;
+
+	/** Length of the data buffer */
+	int length;
+
+	/** Actual length of data that was transferred. Read-only, and only for
+	 * use within transfer callback function. Not valid for isochronous
+	 * endpoint transfers. */
+	int actual_length;
+
+	/** Callback function. This will be invoked when the transfer completes,
+	 * fails, or is cancelled. */
+	libusb_transfer_cb_fn callback;
+
+	/** User context data to pass to the callback function. */
+	void *user_data;
+
+	/** Data buffer */
+	unsigned char *buffer;
+
+	/** Number of isochronous packets. Only used for I/O with isochronous
+	 * endpoints. */
+	int num_iso_packets;
+
+	/** Isochronous packet descriptors, for isochronous transfers only. */
+	struct libusb_iso_packet_descriptor iso_packet_desc
+#if defined(__STDC_VERSION__) && (__STDC_VERSION__ >= 199901L)
+	[] /* valid C99 code */
+#else
+	[0] /* non-standard, but usually working code */
+#endif
+	;
+};
+
+/** \ingroup misc
+ * Capabilities supported by this instance of libusb. Test if the loaded
+ * library supports a given capability by calling
+ * \ref libusb_has_capability().
+ */
+enum libusb_capability {
+	/** The libusb_has_capability() API is available. */
+	LIBUSB_CAP_HAS_CAPABILITY = 0,
+	/** The libusb hotplug API is available. */
+	LIBUSB_CAP_HAS_HOTPLUG    = 1,
+};
+
+int LIBUSB_CALL libusb_init(libusb_context **ctx);
+void LIBUSB_CALL libusb_exit(libusb_context *ctx);
+void LIBUSB_CALL libusb_set_debug(libusb_context *ctx, int level);
+const struct libusb_version * LIBUSB_CALL libusb_get_version(void);
+int LIBUSB_CALL libusb_has_capability(uint32_t capability);
+const char * LIBUSB_CALL libusb_error_name(int errcode);
+const char * LIBUSB_CALL libusb_strerror(enum libusb_error errcode);
+
+ssize_t LIBUSB_CALL libusb_get_device_list(libusb_context *ctx,
+	libusb_device ***list);
+void LIBUSB_CALL libusb_free_device_list(libusb_device **list,
+	int unref_devices);
+libusb_device * LIBUSB_CALL libusb_ref_device(libusb_device *dev);
+void LIBUSB_CALL libusb_unref_device(libusb_device *dev);
+
+int LIBUSB_CALL libusb_get_configuration(libusb_device_handle *dev,
+	int *config);
+int LIBUSB_CALL libusb_get_device_descriptor(libusb_device *dev,
+	struct libusb_device_descriptor *desc);
+int LIBUSB_CALL libusb_get_active_config_descriptor(libusb_device *dev,
+	struct libusb_config_descriptor **config);
+int LIBUSB_CALL libusb_get_config_descriptor(libusb_device *dev,
+	uint8_t config_index, struct libusb_config_descriptor **config);
+int LIBUSB_CALL libusb_get_config_descriptor_by_value(libusb_device *dev,
+	uint8_t bConfigurationValue, struct libusb_config_descriptor **config);
+void LIBUSB_CALL libusb_free_config_descriptor(
+	struct libusb_config_descriptor *config);
+uint8_t LIBUSB_CALL libusb_get_bus_number(libusb_device *dev);
+uint8_t LIBUSB_CALL libusb_get_device_address(libusb_device *dev);
+int LIBUSB_CALL libusb_get_device_speed(libusb_device *dev);
+int LIBUSB_CALL libusb_get_max_packet_size(libusb_device *dev,
+	unsigned char endpoint);
+int LIBUSB_CALL libusb_get_max_iso_packet_size(libusb_device *dev,
+	unsigned char endpoint);
+
+int LIBUSB_CALL libusb_open(libusb_device *dev, libusb_device_handle **handle);
+void LIBUSB_CALL libusb_close(libusb_device_handle *dev_handle);
+libusb_device * LIBUSB_CALL libusb_get_device(libusb_device_handle *dev_handle);
+
+int LIBUSB_CALL libusb_set_configuration(libusb_device_handle *dev,
+	int configuration);
+int LIBUSB_CALL libusb_claim_interface(libusb_device_handle *dev,
+	int interface_number);
+int LIBUSB_CALL libusb_release_interface(libusb_device_handle *dev,
+	int interface_number);
+
+libusb_device_handle * LIBUSB_CALL libusb_open_device_with_vid_pid(
+	libusb_context *ctx, uint16_t vendor_id, uint16_t product_id);
+
+int LIBUSB_CALL libusb_set_interface_alt_setting(libusb_device_handle *dev,
+	int interface_number, int alternate_setting);
+int LIBUSB_CALL libusb_clear_halt(libusb_device_handle *dev,
+	unsigned char endpoint);
+int LIBUSB_CALL libusb_reset_device(libusb_device_handle *dev);
+
+int LIBUSB_CALL libusb_kernel_driver_active(libusb_device_handle *dev,
+	int interface_number);
+int LIBUSB_CALL libusb_detach_kernel_driver(libusb_device_handle *dev,
+	int interface_number);
+int LIBUSB_CALL libusb_attach_kernel_driver(libusb_device_handle *dev,
+	int interface_number);
+
+/* async I/O */
+
+/** \ingroup asyncio
+ * Get the data section of a control transfer. This convenience function is here
+ * to remind you that the data does not start until 8 bytes into the actual
+ * buffer, as the setup packet comes first.
+ *
+ * Calling this function only makes sense from a transfer callback function,
+ * or situations where you have already allocated a suitably sized buffer at
+ * transfer->buffer.
+ *
+ * \param transfer a transfer
+ * \returns pointer to the first byte of the data section
+ */
+static inline unsigned char *libusb_control_transfer_get_data(
+	struct libusb_transfer *transfer)
+{
+	return transfer->buffer + LIBUSB_CONTROL_SETUP_SIZE;
+}
+
+/** \ingroup asyncio
+ * Get the control setup packet of a control transfer. This convenience
+ * function is here to remind you that the control setup occupies the first
+ * 8 bytes of the transfer data buffer.
+ *
+ * Calling this function only makes sense from a transfer callback function,
+ * or situations where you have already allocated a suitably sized buffer at
+ * transfer->buffer.
+ *
+ * \param transfer a transfer
+ * \returns a casted pointer to the start of the transfer data buffer
+ */
+static inline struct libusb_control_setup *libusb_control_transfer_get_setup(
+	struct libusb_transfer *transfer)
+{
+	return (struct libusb_control_setup *) transfer->buffer;
+}
+
+/** \ingroup asyncio
+ * Helper function to populate the setup packet (first 8 bytes of the data
+ * buffer) for a control transfer. The wIndex, wValue and wLength values should
+ * be given in host-endian byte order.
+ *
+ * \param buffer buffer to output the setup packet into
+ * \param bmRequestType see the
+ * \ref libusb_control_setup::bmRequestType "bmRequestType" field of
+ * \ref libusb_control_setup
+ * \param bRequest see the
+ * \ref libusb_control_setup::bRequest "bRequest" field of
+ * \ref libusb_control_setup
+ * \param wValue see the
+ * \ref libusb_control_setup::wValue "wValue" field of
+ * \ref libusb_control_setup
+ * \param wIndex see the
+ * \ref libusb_control_setup:
