@@ -1257,4 +1257,155 @@ static inline struct libusb_control_setup *libusb_control_transfer_get_setup(
  * \ref libusb_control_setup::wValue "wValue" field of
  * \ref libusb_control_setup
  * \param wIndex see the
- * \ref libusb_control_setup:
+ * \ref libusb_control_setup::wIndex "wIndex" field of
+ * \ref libusb_control_setup
+ * \param wLength see the
+ * \ref libusb_control_setup::wLength "wLength" field of
+ * \ref libusb_control_setup
+ */
+static inline void libusb_fill_control_setup(unsigned char *buffer,
+	uint8_t bmRequestType, uint8_t bRequest, uint16_t wValue, uint16_t wIndex,
+	uint16_t wLength)
+{
+	struct libusb_control_setup *setup = (struct libusb_control_setup *) buffer;
+	setup->bmRequestType = bmRequestType;
+	setup->bRequest = bRequest;
+	setup->wValue = libusb_cpu_to_le16(wValue);
+	setup->wIndex = libusb_cpu_to_le16(wIndex);
+	setup->wLength = libusb_cpu_to_le16(wLength);
+}
+
+struct libusb_transfer * LIBUSB_CALL libusb_alloc_transfer(int iso_packets);
+int LIBUSB_CALL libusb_submit_transfer(struct libusb_transfer *transfer);
+int LIBUSB_CALL libusb_cancel_transfer(struct libusb_transfer *transfer);
+void LIBUSB_CALL libusb_free_transfer(struct libusb_transfer *transfer);
+
+/** \ingroup asyncio
+ * Helper function to populate the required \ref libusb_transfer fields
+ * for a control transfer.
+ *
+ * If you pass a transfer buffer to this function, the first 8 bytes will
+ * be interpreted as a control setup packet, and the wLength field will be
+ * used to automatically populate the \ref libusb_transfer::length "length"
+ * field of the transfer. Therefore the recommended approach is:
+ * -# Allocate a suitably sized data buffer (including space for control setup)
+ * -# Call libusb_fill_control_setup()
+ * -# If this is a host-to-device transfer with a data stage, put the data
+ *    in place after the setup packet
+ * -# Call this function
+ * -# Call libusb_submit_transfer()
+ *
+ * It is also legal to pass a NULL buffer to this function, in which case this
+ * function will not attempt to populate the length field. Remember that you
+ * must then populate the buffer and length fields later.
+ *
+ * \param transfer the transfer to populate
+ * \param dev_handle handle of the device that will handle the transfer
+ * \param buffer data buffer. If provided, this function will interpret the
+ * first 8 bytes as a setup packet and infer the transfer length from that.
+ * \param callback callback function to be invoked on transfer completion
+ * \param user_data user data to pass to callback function
+ * \param timeout timeout for the transfer in milliseconds
+ */
+static inline void libusb_fill_control_transfer(
+	struct libusb_transfer *transfer, libusb_device_handle *dev_handle,
+	unsigned char *buffer, libusb_transfer_cb_fn callback, void *user_data,
+	unsigned int timeout)
+{
+	struct libusb_control_setup *setup = (struct libusb_control_setup *) buffer;
+	transfer->dev_handle = dev_handle;
+	transfer->endpoint = 0;
+	transfer->type = LIBUSB_TRANSFER_TYPE_CONTROL;
+	transfer->timeout = timeout;
+	transfer->buffer = buffer;
+	if (setup)
+		transfer->length = LIBUSB_CONTROL_SETUP_SIZE
+			+ libusb_le16_to_cpu(setup->wLength);
+	transfer->user_data = user_data;
+	transfer->callback = callback;
+}
+
+/** \ingroup asyncio
+ * Helper function to populate the required \ref libusb_transfer fields
+ * for a bulk transfer.
+ *
+ * \param transfer the transfer to populate
+ * \param dev_handle handle of the device that will handle the transfer
+ * \param endpoint address of the endpoint where this transfer will be sent
+ * \param buffer data buffer
+ * \param length length of data buffer
+ * \param callback callback function to be invoked on transfer completion
+ * \param user_data user data to pass to callback function
+ * \param timeout timeout for the transfer in milliseconds
+ */
+static inline void libusb_fill_bulk_transfer(struct libusb_transfer *transfer,
+	libusb_device_handle *dev_handle, unsigned char endpoint,
+	unsigned char *buffer, int length, libusb_transfer_cb_fn callback,
+	void *user_data, unsigned int timeout)
+{
+	transfer->dev_handle = dev_handle;
+	transfer->endpoint = endpoint;
+	transfer->type = LIBUSB_TRANSFER_TYPE_BULK;
+	transfer->timeout = timeout;
+	transfer->buffer = buffer;
+	transfer->length = length;
+	transfer->user_data = user_data;
+	transfer->callback = callback;
+}
+
+/** \ingroup asyncio
+ * Helper function to populate the required \ref libusb_transfer fields
+ * for an interrupt transfer.
+ *
+ * \param transfer the transfer to populate
+ * \param dev_handle handle of the device that will handle the transfer
+ * \param endpoint address of the endpoint where this transfer will be sent
+ * \param buffer data buffer
+ * \param length length of data buffer
+ * \param callback callback function to be invoked on transfer completion
+ * \param user_data user data to pass to callback function
+ * \param timeout timeout for the transfer in milliseconds
+ */
+static inline void libusb_fill_interrupt_transfer(
+	struct libusb_transfer *transfer, libusb_device_handle *dev_handle,
+	unsigned char endpoint, unsigned char *buffer, int length,
+	libusb_transfer_cb_fn callback, void *user_data, unsigned int timeout)
+{
+	transfer->dev_handle = dev_handle;
+	transfer->endpoint = endpoint;
+	transfer->type = LIBUSB_TRANSFER_TYPE_INTERRUPT;
+	transfer->timeout = timeout;
+	transfer->buffer = buffer;
+	transfer->length = length;
+	transfer->user_data = user_data;
+	transfer->callback = callback;
+}
+
+/** \ingroup asyncio
+ * Helper function to populate the required \ref libusb_transfer fields
+ * for an isochronous transfer.
+ *
+ * \param transfer the transfer to populate
+ * \param dev_handle handle of the device that will handle the transfer
+ * \param endpoint address of the endpoint where this transfer will be sent
+ * \param buffer data buffer
+ * \param length length of data buffer
+ * \param num_iso_packets the number of isochronous packets
+ * \param callback callback function to be invoked on transfer completion
+ * \param user_data user data to pass to callback function
+ * \param timeout timeout for the transfer in milliseconds
+ */
+static inline void libusb_fill_iso_transfer(struct libusb_transfer *transfer,
+	libusb_device_handle *dev_handle, unsigned char endpoint,
+	unsigned char *buffer, int length, int num_iso_packets,
+	libusb_transfer_cb_fn callback, void *user_data, unsigned int timeout)
+{
+	transfer->dev_handle = dev_handle;
+	transfer->endpoint = endpoint;
+	transfer->type = LIBUSB_TRANSFER_TYPE_ISOCHRONOUS;
+	transfer->timeout = timeout;
+	transfer->buffer = buffer;
+	transfer->length = length;
+	transfer->num_iso_packets = num_iso_packets;
+	transfer->user_data = user_data;
+	transfer->callback = callback;
