@@ -1740,4 +1740,40 @@ typedef int (LIBUSB_CALL *libusb_hotplug_callback_fn)(libusb_context *ctx,
  * or the supplied callback returns 1 to indicate it is finished processing events.
  *
  * \param[in] ctx context to register this callback with
- * \param[in] events bitwise o
+ * \param[in] events bitwise or of events that will trigger this callback. See \ref
+ *            libusb_hotplug_event
+ * \param[in] flags hotplug callback flags. See \ref libusb_hotplug_flag
+ * \param[in] vendor_id the vendor id to match or \ref LIBUSB_HOTPLUG_MATCH_ANY
+ * \param[in] product_id the product id to match or \ref LIBUSB_HOTPLUG_MATCH_ANY
+ * \param[in] dev_class the device class to match or \ref LIBUSB_HOTPLUG_MATCH_ANY
+ * \param[in] cb_fn the function to be invoked on a matching event/device
+ * \param[in] user_data user data to pass to the callback function
+ * \param[out] handle pointer to store the handle of the allocated callback (can be NULL)
+ * \returns LIBUSB_SUCCESS on success LIBUSB_ERROR code on failure
+ */
+int LIBUSB_CALL libusb_hotplug_register_callback(libusb_context *ctx,
+						 libusb_hotplug_event events,
+						 libusb_hotplug_flag flags,
+						 int vendor_id, int product_id,
+						 int dev_class,
+						 libusb_hotplug_callback_fn cb_fn,
+						 void *user_data,
+						 libusb_hotplug_callback_handle *handle);
+
+/** \ingroup hotplug
+ * Deregisters a hotplug callback.
+ *
+ * Deregister a callback from a libusb_context. This function is safe to call from within
+ * a hotplug callback.
+ *
+ * \param[in] ctx context this callback is registered with
+ * \param[in] handle the handle of the callback to deregister
+ */
+void LIBUSB_CALL libusb_hotplug_deregister_callback(libusb_context *ctx,
+						    libusb_hotplug_callback_handle handle);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif
