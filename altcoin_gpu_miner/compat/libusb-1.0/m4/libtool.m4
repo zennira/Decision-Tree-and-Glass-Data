@@ -403,4 +403,181 @@ m4_define([_lt_decl_varnames_tagged],
 [m4_ifval([$3], [lt_combine([$1], [$2], [_], $3)])])
 
 
-# lt
+# lt_decl_all_varnames([SEPARATOR], [VARNAME1...])
+# ------------------------------------------------
+m4_define([lt_decl_all_varnames],
+[_$0(m4_quote(m4_default([$1], [[, ]])),
+     m4_if([$2], [],
+	   m4_quote(lt_decl_varnames),
+	m4_quote(m4_shift($@))))[]dnl
+])
+m4_define([_lt_decl_all_varnames],
+[lt_join($@, lt_decl_varnames_tagged([$1],
+			lt_decl_tag_varnames([[, ]], m4_shift($@))))dnl
+])
+
+
+# _LT_CONFIG_STATUS_DECLARE([VARNAME])
+# ------------------------------------
+# Quote a variable value, and forward it to `config.status' so that its
+# declaration there will have the same value as in `configure'.  VARNAME
+# must have a single quote delimited value for this to work.
+m4_define([_LT_CONFIG_STATUS_DECLARE],
+[$1='`$ECHO "$][$1" | $SED "$delay_single_quote_subst"`'])
+
+
+# _LT_CONFIG_STATUS_DECLARATIONS
+# ------------------------------
+# We delimit libtool config variables with single quotes, so when
+# we write them to config.status, we have to be sure to quote all
+# embedded single quotes properly.  In configure, this macro expands
+# each variable declared with _LT_DECL (and _LT_TAGDECL) into:
+#
+#    <var>='`$ECHO "$<var>" | $SED "$delay_single_quote_subst"`'
+m4_defun([_LT_CONFIG_STATUS_DECLARATIONS],
+[m4_foreach([_lt_var], m4_quote(lt_decl_all_varnames),
+    [m4_n([_LT_CONFIG_STATUS_DECLARE(_lt_var)])])])
+
+
+# _LT_LIBTOOL_TAGS
+# ----------------
+# Output comment and list of tags supported by the script
+m4_defun([_LT_LIBTOOL_TAGS],
+[_LT_FORMAT_COMMENT([The names of the tagged configurations supported by this script])dnl
+available_tags="_LT_TAGS"dnl
+])
+
+
+# _LT_LIBTOOL_DECLARE(VARNAME, [TAG])
+# -----------------------------------
+# Extract the dictionary values for VARNAME (optionally with TAG) and
+# expand to a commented shell variable setting:
+#
+#    # Some comment about what VAR is for.
+#    visible_name=$lt_internal_name
+m4_define([_LT_LIBTOOL_DECLARE],
+[_LT_FORMAT_COMMENT(m4_quote(lt_dict_fetch([lt_decl_dict], [$1],
+					   [description])))[]dnl
+m4_pushdef([_libtool_name],
+    m4_quote(lt_dict_fetch([lt_decl_dict], [$1], [libtool_name])))[]dnl
+m4_case(m4_quote(lt_dict_fetch([lt_decl_dict], [$1], [value])),
+    [0], [_libtool_name=[$]$1],
+    [1], [_libtool_name=$lt_[]$1],
+    [2], [_libtool_name=$lt_[]$1],
+    [_libtool_name=lt_dict_fetch([lt_decl_dict], [$1], [value])])[]dnl
+m4_ifval([$2], [_$2])[]m4_popdef([_libtool_name])[]dnl
+])
+
+
+# _LT_LIBTOOL_CONFIG_VARS
+# -----------------------
+# Produce commented declarations of non-tagged libtool config variables
+# suitable for insertion in the LIBTOOL CONFIG section of the `libtool'
+# script.  Tagged libtool config variables (even for the LIBTOOL CONFIG
+# section) are produced by _LT_LIBTOOL_TAG_VARS.
+m4_defun([_LT_LIBTOOL_CONFIG_VARS],
+[m4_foreach([_lt_var],
+    m4_quote(_lt_decl_filter([tagged?], [no], [], lt_decl_varnames)),
+    [m4_n([_LT_LIBTOOL_DECLARE(_lt_var)])])])
+
+
+# _LT_LIBTOOL_TAG_VARS(TAG)
+# -------------------------
+m4_define([_LT_LIBTOOL_TAG_VARS],
+[m4_foreach([_lt_var], m4_quote(lt_decl_tag_varnames),
+    [m4_n([_LT_LIBTOOL_DECLARE(_lt_var, [$1])])])])
+
+
+# _LT_TAGVAR(VARNAME, [TAGNAME])
+# ------------------------------
+m4_define([_LT_TAGVAR], [m4_ifval([$2], [$1_$2], [$1])])
+
+
+# _LT_CONFIG_COMMANDS
+# -------------------
+# Send accumulated output to $CONFIG_STATUS.  Thanks to the lists of
+# variables for single and double quote escaping we saved from calls
+# to _LT_DECL, we can put quote escaped variables declarations
+# into `config.status', and then the shell code to quote escape them in
+# for loops in `config.status'.  Finally, any additional code accumulated
+# from calls to _LT_CONFIG_LIBTOOL_INIT is expanded.
+m4_defun([_LT_CONFIG_COMMANDS],
+[AC_PROVIDE_IFELSE([LT_OUTPUT],
+	dnl If the libtool generation code has been placed in $CONFIG_LT,
+	dnl instead of duplicating it all over again into config.status,
+	dnl then we will have config.status run $CONFIG_LT later, so it
+	dnl needs to know what name is stored there:
+        [AC_CONFIG_COMMANDS([libtool],
+            [$SHELL $CONFIG_LT || AS_EXIT(1)], [CONFIG_LT='$CONFIG_LT'])],
+    dnl If the libtool generation code is destined for config.status,
+    dnl expand the accumulated commands and init code now:
+    [AC_CONFIG_COMMANDS([libtool],
+        [_LT_OUTPUT_LIBTOOL_COMMANDS], [_LT_OUTPUT_LIBTOOL_COMMANDS_INIT])])
+])#_LT_CONFIG_COMMANDS
+
+
+# Initialize.
+m4_define([_LT_OUTPUT_LIBTOOL_COMMANDS_INIT],
+[
+
+# The HP-UX ksh and POSIX shell print the target directory to stdout
+# if CDPATH is set.
+(unset CDPATH) >/dev/null 2>&1 && unset CDPATH
+
+sed_quote_subst='$sed_quote_subst'
+double_quote_subst='$double_quote_subst'
+delay_variable_subst='$delay_variable_subst'
+_LT_CONFIG_STATUS_DECLARATIONS
+LTCC='$LTCC'
+LTCFLAGS='$LTCFLAGS'
+compiler='$compiler_DEFAULT'
+
+# A function that is used when there is no print builtin or printf.
+func_fallback_echo ()
+{
+  eval 'cat <<_LTECHO_EOF
+\$[]1
+_LTECHO_EOF'
+}
+
+# Quote evaled strings.
+for var in lt_decl_all_varnames([[ \
+]], lt_decl_quote_varnames); do
+    case \`eval \\\\\$ECHO \\\\""\\\\\$\$var"\\\\"\` in
+    *[[\\\\\\\`\\"\\\$]]*)
+      eval "lt_\$var=\\\\\\"\\\`\\\$ECHO \\"\\\$\$var\\" | \\\$SED \\"\\\$sed_quote_subst\\"\\\`\\\\\\""
+      ;;
+    *)
+      eval "lt_\$var=\\\\\\"\\\$\$var\\\\\\""
+      ;;
+    esac
+done
+
+# Double-quote double-evaled strings.
+for var in lt_decl_all_varnames([[ \
+]], lt_decl_dquote_varnames); do
+    case \`eval \\\\\$ECHO \\\\""\\\\\$\$var"\\\\"\` in
+    *[[\\\\\\\`\\"\\\$]]*)
+      eval "lt_\$var=\\\\\\"\\\`\\\$ECHO \\"\\\$\$var\\" | \\\$SED -e \\"\\\$double_quote_subst\\" -e \\"\\\$sed_quote_subst\\" -e \\"\\\$delay_variable_subst\\"\\\`\\\\\\""
+      ;;
+    *)
+      eval "lt_\$var=\\\\\\"\\\$\$var\\\\\\""
+      ;;
+    esac
+done
+
+_LT_OUTPUT_LIBTOOL_INIT
+])
+
+# _LT_GENERATED_FILE_INIT(FILE, [COMMENT])
+# ------------------------------------
+# Generate a child script FILE with all initialization necessary to
+# reuse the environment learned by the parent script, and make the
+# file executable.  If COMMENT is supplied, it is inserted after the
+# `#!' sequence but before initialization text begins.  After this
+# macro, additional text can be appended to FILE to form the body of
+# the child script.  The macro ends with non-zero status if the
+# file could not be fully written (such as if the disk is full).
+m4_ifdef([AS_INIT_GENERATED],
+[m4_defun([_LT_GENERATED_FILE_INIT],[AS_INIT_GENERATED($@)])],
+[m4_defun([_LT_
