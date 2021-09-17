@@ -808,3 +808,184 @@ m4_case([$1],
   [m4_ifdef([_LT_LANG_]$1[_CONFIG],
     [_LT_LANG($1)],
     [m4_fatal([$0: unsupported language: "$1"])])])dnl
+])# LT_LANG
+
+
+# _LT_LANG(LANGNAME)
+# ------------------
+m4_defun([_LT_LANG],
+[m4_ifdef([_LT_LANG_]$1[_enabled], [],
+  [LT_SUPPORTED_TAG([$1])dnl
+  m4_append([_LT_TAGS], [$1 ])dnl
+  m4_define([_LT_LANG_]$1[_enabled], [])dnl
+  _LT_LANG_$1_CONFIG($1)])dnl
+])# _LT_LANG
+
+
+# _LT_LANG_DEFAULT_CONFIG
+# -----------------------
+m4_defun([_LT_LANG_DEFAULT_CONFIG],
+[AC_PROVIDE_IFELSE([AC_PROG_CXX],
+  [LT_LANG(CXX)],
+  [m4_define([AC_PROG_CXX], defn([AC_PROG_CXX])[LT_LANG(CXX)])])
+
+AC_PROVIDE_IFELSE([AC_PROG_F77],
+  [LT_LANG(F77)],
+  [m4_define([AC_PROG_F77], defn([AC_PROG_F77])[LT_LANG(F77)])])
+
+AC_PROVIDE_IFELSE([AC_PROG_FC],
+  [LT_LANG(FC)],
+  [m4_define([AC_PROG_FC], defn([AC_PROG_FC])[LT_LANG(FC)])])
+
+dnl The call to [A][M_PROG_GCJ] is quoted like that to stop aclocal
+dnl pulling things in needlessly.
+AC_PROVIDE_IFELSE([AC_PROG_GCJ],
+  [LT_LANG(GCJ)],
+  [AC_PROVIDE_IFELSE([A][M_PROG_GCJ],
+    [LT_LANG(GCJ)],
+    [AC_PROVIDE_IFELSE([LT_PROG_GCJ],
+      [LT_LANG(GCJ)],
+      [m4_ifdef([AC_PROG_GCJ],
+	[m4_define([AC_PROG_GCJ], defn([AC_PROG_GCJ])[LT_LANG(GCJ)])])
+       m4_ifdef([A][M_PROG_GCJ],
+	[m4_define([A][M_PROG_GCJ], defn([A][M_PROG_GCJ])[LT_LANG(GCJ)])])
+       m4_ifdef([LT_PROG_GCJ],
+	[m4_define([LT_PROG_GCJ], defn([LT_PROG_GCJ])[LT_LANG(GCJ)])])])])])
+
+AC_PROVIDE_IFELSE([LT_PROG_RC],
+  [LT_LANG(RC)],
+  [m4_define([LT_PROG_RC], defn([LT_PROG_RC])[LT_LANG(RC)])])
+])# _LT_LANG_DEFAULT_CONFIG
+
+# Obsolete macros:
+AU_DEFUN([AC_LIBTOOL_CXX], [LT_LANG(C++)])
+AU_DEFUN([AC_LIBTOOL_F77], [LT_LANG(Fortran 77)])
+AU_DEFUN([AC_LIBTOOL_FC], [LT_LANG(Fortran)])
+AU_DEFUN([AC_LIBTOOL_GCJ], [LT_LANG(Java)])
+AU_DEFUN([AC_LIBTOOL_RC], [LT_LANG(Windows Resource)])
+dnl aclocal-1.4 backwards compatibility:
+dnl AC_DEFUN([AC_LIBTOOL_CXX], [])
+dnl AC_DEFUN([AC_LIBTOOL_F77], [])
+dnl AC_DEFUN([AC_LIBTOOL_FC], [])
+dnl AC_DEFUN([AC_LIBTOOL_GCJ], [])
+dnl AC_DEFUN([AC_LIBTOOL_RC], [])
+
+
+# _LT_TAG_COMPILER
+# ----------------
+m4_defun([_LT_TAG_COMPILER],
+[AC_REQUIRE([AC_PROG_CC])dnl
+
+_LT_DECL([LTCC], [CC], [1], [A C compiler])dnl
+_LT_DECL([LTCFLAGS], [CFLAGS], [1], [LTCC compiler flags])dnl
+_LT_TAGDECL([CC], [compiler], [1], [A language specific compiler])dnl
+_LT_TAGDECL([with_gcc], [GCC], [0], [Is the compiler the GNU compiler?])dnl
+
+# If no C compiler was specified, use CC.
+LTCC=${LTCC-"$CC"}
+
+# If no C compiler flags were specified, use CFLAGS.
+LTCFLAGS=${LTCFLAGS-"$CFLAGS"}
+
+# Allow CC to be a program name with arguments.
+compiler=$CC
+])# _LT_TAG_COMPILER
+
+
+# _LT_COMPILER_BOILERPLATE
+# ------------------------
+# Check for compiler boilerplate output or warnings with
+# the simple compiler test code.
+m4_defun([_LT_COMPILER_BOILERPLATE],
+[m4_require([_LT_DECL_SED])dnl
+ac_outfile=conftest.$ac_objext
+echo "$lt_simple_compile_test_code" >conftest.$ac_ext
+eval "$ac_compile" 2>&1 >/dev/null | $SED '/^$/d; /^ *+/d' >conftest.err
+_lt_compiler_boilerplate=`cat conftest.err`
+$RM conftest*
+])# _LT_COMPILER_BOILERPLATE
+
+
+# _LT_LINKER_BOILERPLATE
+# ----------------------
+# Check for linker boilerplate output or warnings with
+# the simple link test code.
+m4_defun([_LT_LINKER_BOILERPLATE],
+[m4_require([_LT_DECL_SED])dnl
+ac_outfile=conftest.$ac_objext
+echo "$lt_simple_link_test_code" >conftest.$ac_ext
+eval "$ac_link" 2>&1 >/dev/null | $SED '/^$/d; /^ *+/d' >conftest.err
+_lt_linker_boilerplate=`cat conftest.err`
+$RM -r conftest*
+])# _LT_LINKER_BOILERPLATE
+
+# _LT_REQUIRED_DARWIN_CHECKS
+# -------------------------
+m4_defun_once([_LT_REQUIRED_DARWIN_CHECKS],[
+  case $host_os in
+    rhapsody* | darwin*)
+    AC_CHECK_TOOL([DSYMUTIL], [dsymutil], [:])
+    AC_CHECK_TOOL([NMEDIT], [nmedit], [:])
+    AC_CHECK_TOOL([LIPO], [lipo], [:])
+    AC_CHECK_TOOL([OTOOL], [otool], [:])
+    AC_CHECK_TOOL([OTOOL64], [otool64], [:])
+    _LT_DECL([], [DSYMUTIL], [1],
+      [Tool to manipulate archived DWARF debug symbol files on Mac OS X])
+    _LT_DECL([], [NMEDIT], [1],
+      [Tool to change global to local symbols on Mac OS X])
+    _LT_DECL([], [LIPO], [1],
+      [Tool to manipulate fat objects and archives on Mac OS X])
+    _LT_DECL([], [OTOOL], [1],
+      [ldd/readelf like tool for Mach-O binaries on Mac OS X])
+    _LT_DECL([], [OTOOL64], [1],
+      [ldd/readelf like tool for 64 bit Mach-O binaries on Mac OS X 10.4])
+
+    AC_CACHE_CHECK([for -single_module linker flag],[lt_cv_apple_cc_single_mod],
+      [lt_cv_apple_cc_single_mod=no
+      if test -z "${LT_MULTI_MODULE}"; then
+	# By default we will add the -single_module flag. You can override
+	# by either setting the environment variable LT_MULTI_MODULE
+	# non-empty at configure time, or by adding -multi_module to the
+	# link flags.
+	rm -rf libconftest.dylib*
+	echo "int foo(void){return 1;}" > conftest.c
+	echo "$LTCC $LTCFLAGS $LDFLAGS -o libconftest.dylib \
+-dynamiclib -Wl,-single_module conftest.c" >&AS_MESSAGE_LOG_FD
+	$LTCC $LTCFLAGS $LDFLAGS -o libconftest.dylib \
+	  -dynamiclib -Wl,-single_module conftest.c 2>conftest.err
+        _lt_result=$?
+	if test -f libconftest.dylib && test ! -s conftest.err && test $_lt_result = 0; then
+	  lt_cv_apple_cc_single_mod=yes
+	else
+	  cat conftest.err >&AS_MESSAGE_LOG_FD
+	fi
+	rm -rf libconftest.dylib*
+	rm -f conftest.*
+      fi])
+    AC_CACHE_CHECK([for -exported_symbols_list linker flag],
+      [lt_cv_ld_exported_symbols_list],
+      [lt_cv_ld_exported_symbols_list=no
+      save_LDFLAGS=$LDFLAGS
+      echo "_main" > conftest.sym
+      LDFLAGS="$LDFLAGS -Wl,-exported_symbols_list,conftest.sym"
+      AC_LINK_IFELSE([AC_LANG_PROGRAM([],[])],
+	[lt_cv_ld_exported_symbols_list=yes],
+	[lt_cv_ld_exported_symbols_list=no])
+	LDFLAGS="$save_LDFLAGS"
+    ])
+    AC_CACHE_CHECK([for -force_load linker flag],[lt_cv_ld_force_load],
+      [lt_cv_ld_force_load=no
+      cat > conftest.c << _LT_EOF
+int forced_loaded() { return 2;}
+_LT_EOF
+      echo "$LTCC $LTCFLAGS -c -o conftest.o conftest.c" >&AS_MESSAGE_LOG_FD
+      $LTCC $LTCFLAGS -c -o conftest.o conftest.c 2>&AS_MESSAGE_LOG_FD
+      echo "$AR cru libconftest.a conftest.o" >&AS_MESSAGE_LOG_FD
+      $AR cru libconftest.a conftest.o 2>&AS_MESSAGE_LOG_FD
+      echo "$RANLIB libconftest.a" >&AS_MESSAGE_LOG_FD
+      $RANLIB libconftest.a 2>&AS_MESSAGE_LOG_FD
+      cat > conftest.c << _LT_EOF
+int main() { return 0;}
+_LT_EOF
+      echo "$LTCC $LTCFLAGS $LDFLAGS -o conftest conftest.c -Wl,-force_load,./libconftest.a" >&AS_MESSAGE_LOG_FD
+      $LTCC $LTCF
