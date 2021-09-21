@@ -1126,4 +1126,252 @@ m4_define([_LT_SHELL_INIT],
 # of the generated configure script which will find a shell with a builtin
 # printf (which we can use as an echo command).
 m4_defun([_LT_PROG_ECHO_BACKSLASH],
-[ECHO='\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+[ECHO='\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\'
+ECHO=$ECHO$ECHO$ECHO$ECHO$ECHO
+ECHO=$ECHO$ECHO$ECHO$ECHO$ECHO$ECHO
+
+AC_MSG_CHECKING([how to print strings])
+# Test print first, because it will be a builtin if present.
+if test "X`( print -r -- -n ) 2>/dev/null`" = X-n && \
+   test "X`print -r -- $ECHO 2>/dev/null`" = "X$ECHO"; then
+  ECHO='print -r --'
+elif test "X`printf %s $ECHO 2>/dev/null`" = "X$ECHO"; then
+  ECHO='printf %s\n'
+else
+  # Use this function as a fallback that always works.
+  func_fallback_echo ()
+  {
+    eval 'cat <<_LTECHO_EOF
+$[]1
+_LTECHO_EOF'
+  }
+  ECHO='func_fallback_echo'
+fi
+
+# func_echo_all arg...
+# Invoke $ECHO with all args, space-separated.
+func_echo_all ()
+{
+    $ECHO "$*" 
+}
+
+case "$ECHO" in
+  printf*) AC_MSG_RESULT([printf]) ;;
+  print*) AC_MSG_RESULT([print -r]) ;;
+  *) AC_MSG_RESULT([cat]) ;;
+esac
+
+m4_ifdef([_AS_DETECT_SUGGESTED],
+[_AS_DETECT_SUGGESTED([
+  test -n "${ZSH_VERSION+set}${BASH_VERSION+set}" || (
+    ECHO='\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\'
+    ECHO=$ECHO$ECHO$ECHO$ECHO$ECHO
+    ECHO=$ECHO$ECHO$ECHO$ECHO$ECHO$ECHO
+    PATH=/empty FPATH=/empty; export PATH FPATH
+    test "X`printf %s $ECHO`" = "X$ECHO" \
+      || test "X`print -r -- $ECHO`" = "X$ECHO" )])])
+
+_LT_DECL([], [SHELL], [1], [Shell to use when invoking shell scripts])
+_LT_DECL([], [ECHO], [1], [An echo program that protects backslashes])
+])# _LT_PROG_ECHO_BACKSLASH
+
+
+# _LT_WITH_SYSROOT
+# ----------------
+AC_DEFUN([_LT_WITH_SYSROOT],
+[AC_MSG_CHECKING([for sysroot])
+AC_ARG_WITH([sysroot],
+[  --with-sysroot[=DIR] Search for dependent libraries within DIR
+                        (or the compiler's sysroot if not specified).],
+[], [with_sysroot=no])
+
+dnl lt_sysroot will always be passed unquoted.  We quote it here
+dnl in case the user passed a directory name.
+lt_sysroot=
+case ${with_sysroot} in #(
+ yes)
+   if test "$GCC" = yes; then
+     lt_sysroot=`$CC --print-sysroot 2>/dev/null`
+   fi
+   ;; #(
+ /*)
+   lt_sysroot=`echo "$with_sysroot" | sed -e "$sed_quote_subst"`
+   ;; #(
+ no|'')
+   ;; #(
+ *)
+   AC_MSG_RESULT([${with_sysroot}])
+   AC_MSG_ERROR([The sysroot must be an absolute path.])
+   ;;
+esac
+
+ AC_MSG_RESULT([${lt_sysroot:-no}])
+_LT_DECL([], [lt_sysroot], [0], [The root where to search for ]dnl
+[dependent libraries, and in which our libraries should be installed.])])
+
+# _LT_ENABLE_LOCK
+# ---------------
+m4_defun([_LT_ENABLE_LOCK],
+[AC_ARG_ENABLE([libtool-lock],
+  [AS_HELP_STRING([--disable-libtool-lock],
+    [avoid locking (might break parallel builds)])])
+test "x$enable_libtool_lock" != xno && enable_libtool_lock=yes
+
+# Some flags need to be propagated to the compiler or linker for good
+# libtool support.
+case $host in
+ia64-*-hpux*)
+  # Find out which ABI we are using.
+  echo 'int i;' > conftest.$ac_ext
+  if AC_TRY_EVAL(ac_compile); then
+    case `/usr/bin/file conftest.$ac_objext` in
+      *ELF-32*)
+	HPUX_IA64_MODE="32"
+	;;
+      *ELF-64*)
+	HPUX_IA64_MODE="64"
+	;;
+    esac
+  fi
+  rm -rf conftest*
+  ;;
+*-*-irix6*)
+  # Find out which ABI we are using.
+  echo '[#]line '$LINENO' "configure"' > conftest.$ac_ext
+  if AC_TRY_EVAL(ac_compile); then
+    if test "$lt_cv_prog_gnu_ld" = yes; then
+      case `/usr/bin/file conftest.$ac_objext` in
+	*32-bit*)
+	  LD="${LD-ld} -melf32bsmip"
+	  ;;
+	*N32*)
+	  LD="${LD-ld} -melf32bmipn32"
+	  ;;
+	*64-bit*)
+	  LD="${LD-ld} -melf64bmip"
+	;;
+      esac
+    else
+      case `/usr/bin/file conftest.$ac_objext` in
+	*32-bit*)
+	  LD="${LD-ld} -32"
+	  ;;
+	*N32*)
+	  LD="${LD-ld} -n32"
+	  ;;
+	*64-bit*)
+	  LD="${LD-ld} -64"
+	  ;;
+      esac
+    fi
+  fi
+  rm -rf conftest*
+  ;;
+
+x86_64-*kfreebsd*-gnu|x86_64-*linux*|ppc*-*linux*|powerpc*-*linux*| \
+s390*-*linux*|s390*-*tpf*|sparc*-*linux*)
+  # Find out which ABI we are using.
+  echo 'int i;' > conftest.$ac_ext
+  if AC_TRY_EVAL(ac_compile); then
+    case `/usr/bin/file conftest.o` in
+      *32-bit*)
+	case $host in
+	  x86_64-*kfreebsd*-gnu)
+	    LD="${LD-ld} -m elf_i386_fbsd"
+	    ;;
+	  x86_64-*linux*)
+	    LD="${LD-ld} -m elf_i386"
+	    ;;
+	  ppc64-*linux*|powerpc64-*linux*)
+	    LD="${LD-ld} -m elf32ppclinux"
+	    ;;
+	  s390x-*linux*)
+	    LD="${LD-ld} -m elf_s390"
+	    ;;
+	  sparc64-*linux*)
+	    LD="${LD-ld} -m elf32_sparc"
+	    ;;
+	esac
+	;;
+      *64-bit*)
+	case $host in
+	  x86_64-*kfreebsd*-gnu)
+	    LD="${LD-ld} -m elf_x86_64_fbsd"
+	    ;;
+	  x86_64-*linux*)
+	    LD="${LD-ld} -m elf_x86_64"
+	    ;;
+	  ppc*-*linux*|powerpc*-*linux*)
+	    LD="${LD-ld} -m elf64ppc"
+	    ;;
+	  s390*-*linux*|s390*-*tpf*)
+	    LD="${LD-ld} -m elf64_s390"
+	    ;;
+	  sparc*-*linux*)
+	    LD="${LD-ld} -m elf64_sparc"
+	    ;;
+	esac
+	;;
+    esac
+  fi
+  rm -rf conftest*
+  ;;
+
+*-*-sco3.2v5*)
+  # On SCO OpenServer 5, we need -belf to get full-featured binaries.
+  SAVE_CFLAGS="$CFLAGS"
+  CFLAGS="$CFLAGS -belf"
+  AC_CACHE_CHECK([whether the C compiler needs -belf], lt_cv_cc_needs_belf,
+    [AC_LANG_PUSH(C)
+     AC_LINK_IFELSE([AC_LANG_PROGRAM([[]],[[]])],[lt_cv_cc_needs_belf=yes],[lt_cv_cc_needs_belf=no])
+     AC_LANG_POP])
+  if test x"$lt_cv_cc_needs_belf" != x"yes"; then
+    # this is probably gcc 2.8.0, egcs 1.0 or newer; no need for -belf
+    CFLAGS="$SAVE_CFLAGS"
+  fi
+  ;;
+sparc*-*solaris*)
+  # Find out which ABI we are using.
+  echo 'int i;' > conftest.$ac_ext
+  if AC_TRY_EVAL(ac_compile); then
+    case `/usr/bin/file conftest.o` in
+    *64-bit*)
+      case $lt_cv_prog_gnu_ld in
+      yes*) LD="${LD-ld} -m elf64_sparc" ;;
+      *)
+	if ${LD-ld} -64 -r -o conftest2.o conftest.o >/dev/null 2>&1; then
+	  LD="${LD-ld} -64"
+	fi
+	;;
+      esac
+      ;;
+    esac
+  fi
+  rm -rf conftest*
+  ;;
+esac
+
+need_locks="$enable_libtool_lock"
+])# _LT_ENABLE_LOCK
+
+
+# _LT_PROG_AR
+# -----------
+m4_defun([_LT_PROG_AR],
+[AC_CHECK_TOOLS(AR, [ar], false)
+: ${AR=ar}
+: ${AR_FLAGS=cru}
+_LT_DECL([], [AR], [1], [The archiver])
+_LT_DECL([], [AR_FLAGS], [1], [Flags to create an archive])
+
+AC_CACHE_CHECK([for archiver @FILE support], [lt_cv_ar_at_file],
+  [lt_cv_ar_at_file=no
+   AC_COMPILE_IFELSE([AC_LANG_PROGRAM],
+     [echo conftest.$ac_objext > conftest.lst
+      lt_ar_try='$AR $AR_FLAGS libconftest.a @conftest.lst >&AS_MESSAGE_LOG_FD'
+      AC_TRY_EVAL([lt_ar_try])
+      if test "$ac_status" -eq 0; then
+	# Ensure the archiver fails upon bogus file names.
+	rm -f conftest.$ac_objext libconftest.a
+	AC_TRY_EVAL([lt_ar_try])
+	if test "$ac
