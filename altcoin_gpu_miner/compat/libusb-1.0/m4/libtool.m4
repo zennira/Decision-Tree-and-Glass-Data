@@ -1374,4 +1374,207 @@ AC_CACHE_CHECK([for archiver @FILE support], [lt_cv_ar_at_file],
 	# Ensure the archiver fails upon bogus file names.
 	rm -f conftest.$ac_objext libconftest.a
 	AC_TRY_EVAL([lt_ar_try])
-	if test "$ac
+	if test "$ac_status" -ne 0; then
+          lt_cv_ar_at_file=@
+        fi
+      fi
+      rm -f conftest.* libconftest.a
+     ])
+  ])
+
+if test "x$lt_cv_ar_at_file" = xno; then
+  archiver_list_spec=
+else
+  archiver_list_spec=$lt_cv_ar_at_file
+fi
+_LT_DECL([], [archiver_list_spec], [1],
+  [How to feed a file listing to the archiver])
+])# _LT_PROG_AR
+
+
+# _LT_CMD_OLD_ARCHIVE
+# -------------------
+m4_defun([_LT_CMD_OLD_ARCHIVE],
+[_LT_PROG_AR
+
+AC_CHECK_TOOL(STRIP, strip, :)
+test -z "$STRIP" && STRIP=:
+_LT_DECL([], [STRIP], [1], [A symbol stripping program])
+
+AC_CHECK_TOOL(RANLIB, ranlib, :)
+test -z "$RANLIB" && RANLIB=:
+_LT_DECL([], [RANLIB], [1],
+    [Commands used to install an old-style archive])
+
+# Determine commands to create old-style static archives.
+old_archive_cmds='$AR $AR_FLAGS $oldlib$oldobjs'
+old_postinstall_cmds='chmod 644 $oldlib'
+old_postuninstall_cmds=
+
+if test -n "$RANLIB"; then
+  case $host_os in
+  openbsd*)
+    old_postinstall_cmds="$old_postinstall_cmds~\$RANLIB -t \$oldlib"
+    ;;
+  *)
+    old_postinstall_cmds="$old_postinstall_cmds~\$RANLIB \$oldlib"
+    ;;
+  esac
+  old_archive_cmds="$old_archive_cmds~\$RANLIB \$oldlib"
+fi
+
+case $host_os in
+  darwin*)
+    lock_old_archive_extraction=yes ;;
+  *)
+    lock_old_archive_extraction=no ;;
+esac
+_LT_DECL([], [old_postinstall_cmds], [2])
+_LT_DECL([], [old_postuninstall_cmds], [2])
+_LT_TAGDECL([], [old_archive_cmds], [2],
+    [Commands used to build an old-style archive])
+_LT_DECL([], [lock_old_archive_extraction], [0],
+    [Whether to use a lock for old archive extraction])
+])# _LT_CMD_OLD_ARCHIVE
+
+
+# _LT_COMPILER_OPTION(MESSAGE, VARIABLE-NAME, FLAGS,
+#		[OUTPUT-FILE], [ACTION-SUCCESS], [ACTION-FAILURE])
+# ----------------------------------------------------------------
+# Check whether the given compiler option works
+AC_DEFUN([_LT_COMPILER_OPTION],
+[m4_require([_LT_FILEUTILS_DEFAULTS])dnl
+m4_require([_LT_DECL_SED])dnl
+AC_CACHE_CHECK([$1], [$2],
+  [$2=no
+   m4_if([$4], , [ac_outfile=conftest.$ac_objext], [ac_outfile=$4])
+   echo "$lt_simple_compile_test_code" > conftest.$ac_ext
+   lt_compiler_flag="$3"
+   # Insert the option either (1) after the last *FLAGS variable, or
+   # (2) before a word containing "conftest.", or (3) at the end.
+   # Note that $ac_compile itself does not contain backslashes and begins
+   # with a dollar sign (not a hyphen), so the echo should work correctly.
+   # The option is referenced via a variable to avoid confusing sed.
+   lt_compile=`echo "$ac_compile" | $SED \
+   -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
+   -e 's: [[^ ]]*conftest\.: $lt_compiler_flag&:; t' \
+   -e 's:$: $lt_compiler_flag:'`
+   (eval echo "\"\$as_me:$LINENO: $lt_compile\"" >&AS_MESSAGE_LOG_FD)
+   (eval "$lt_compile" 2>conftest.err)
+   ac_status=$?
+   cat conftest.err >&AS_MESSAGE_LOG_FD
+   echo "$as_me:$LINENO: \$? = $ac_status" >&AS_MESSAGE_LOG_FD
+   if (exit $ac_status) && test -s "$ac_outfile"; then
+     # The compiler can only warn and ignore the option if not recognized
+     # So say no if there are warnings other than the usual output.
+     $ECHO "$_lt_compiler_boilerplate" | $SED '/^$/d' >conftest.exp
+     $SED '/^$/d; /^ *+/d' conftest.err >conftest.er2
+     if test ! -s conftest.er2 || diff conftest.exp conftest.er2 >/dev/null; then
+       $2=yes
+     fi
+   fi
+   $RM conftest*
+])
+
+if test x"[$]$2" = xyes; then
+    m4_if([$5], , :, [$5])
+else
+    m4_if([$6], , :, [$6])
+fi
+])# _LT_COMPILER_OPTION
+
+# Old name:
+AU_ALIAS([AC_LIBTOOL_COMPILER_OPTION], [_LT_COMPILER_OPTION])
+dnl aclocal-1.4 backwards compatibility:
+dnl AC_DEFUN([AC_LIBTOOL_COMPILER_OPTION], [])
+
+
+# _LT_LINKER_OPTION(MESSAGE, VARIABLE-NAME, FLAGS,
+#                  [ACTION-SUCCESS], [ACTION-FAILURE])
+# ----------------------------------------------------
+# Check whether the given linker option works
+AC_DEFUN([_LT_LINKER_OPTION],
+[m4_require([_LT_FILEUTILS_DEFAULTS])dnl
+m4_require([_LT_DECL_SED])dnl
+AC_CACHE_CHECK([$1], [$2],
+  [$2=no
+   save_LDFLAGS="$LDFLAGS"
+   LDFLAGS="$LDFLAGS $3"
+   echo "$lt_simple_link_test_code" > conftest.$ac_ext
+   if (eval $ac_link 2>conftest.err) && test -s conftest$ac_exeext; then
+     # The linker can only warn and ignore the option if not recognized
+     # So say no if there are warnings
+     if test -s conftest.err; then
+       # Append any errors to the config.log.
+       cat conftest.err 1>&AS_MESSAGE_LOG_FD
+       $ECHO "$_lt_linker_boilerplate" | $SED '/^$/d' > conftest.exp
+       $SED '/^$/d; /^ *+/d' conftest.err >conftest.er2
+       if diff conftest.exp conftest.er2 >/dev/null; then
+         $2=yes
+       fi
+     else
+       $2=yes
+     fi
+   fi
+   $RM -r conftest*
+   LDFLAGS="$save_LDFLAGS"
+])
+
+if test x"[$]$2" = xyes; then
+    m4_if([$4], , :, [$4])
+else
+    m4_if([$5], , :, [$5])
+fi
+])# _LT_LINKER_OPTION
+
+# Old name:
+AU_ALIAS([AC_LIBTOOL_LINKER_OPTION], [_LT_LINKER_OPTION])
+dnl aclocal-1.4 backwards compatibility:
+dnl AC_DEFUN([AC_LIBTOOL_LINKER_OPTION], [])
+
+
+# LT_CMD_MAX_LEN
+#---------------
+AC_DEFUN([LT_CMD_MAX_LEN],
+[AC_REQUIRE([AC_CANONICAL_HOST])dnl
+# find the maximum length of command line arguments
+AC_MSG_CHECKING([the maximum length of command line arguments])
+AC_CACHE_VAL([lt_cv_sys_max_cmd_len], [dnl
+  i=0
+  teststring="ABCD"
+
+  case $build_os in
+  msdosdjgpp*)
+    # On DJGPP, this test can blow up pretty badly due to problems in libc
+    # (any single argument exceeding 2000 bytes causes a buffer overrun
+    # during glob expansion).  Even if it were fixed, the result of this
+    # check would be larger than it should be.
+    lt_cv_sys_max_cmd_len=12288;    # 12K is about right
+    ;;
+
+  gnu*)
+    # Under GNU Hurd, this test is not required because there is
+    # no limit to the length of command line arguments.
+    # Libtool will interpret -1 as no limit whatsoever
+    lt_cv_sys_max_cmd_len=-1;
+    ;;
+
+  cygwin* | mingw* | cegcc*)
+    # On Win9x/ME, this test blows up -- it succeeds, but takes
+    # about 5 minutes as the teststring grows exponentially.
+    # Worse, since 9x/ME are not pre-emptively multitasking,
+    # you end up with a "frozen" computer, even though with patience
+    # the test eventually succeeds (with a max line length of 256k).
+    # Instead, let's just punt: use the minimum linelength reported by
+    # all of the supported platforms: 8192 (on NT/2K/XP).
+    lt_cv_sys_max_cmd_len=8192;
+    ;;
+
+  mint*)
+    # On MiNT this can take a long time and run out of memory.
+    lt_cv_sys_max_cmd_len=8192;
+    ;;
+
+  amigaos*)
+    # On AmigaOS with pdksh, this test takes hours, literally.
+   
