@@ -2877,4 +2877,229 @@ AC_CACHE_VAL(lt_cv_path_MAGIC_CMD,
   lt_cv_path_MAGIC_CMD="$MAGIC_CMD" # Let the user override the test with a path.
   ;;
 *)
-  lt_
+  lt_save_MAGIC_CMD="$MAGIC_CMD"
+  lt_save_ifs="$IFS"; IFS=$PATH_SEPARATOR
+dnl $ac_dummy forces splitting on constant user-supplied paths.
+dnl POSIX.2 word splitting is done only on the output of word expansions,
+dnl not every word.  This closes a longstanding sh security hole.
+  ac_dummy="m4_if([$2], , $PATH, [$2])"
+  for ac_dir in $ac_dummy; do
+    IFS="$lt_save_ifs"
+    test -z "$ac_dir" && ac_dir=.
+    if test -f $ac_dir/$1; then
+      lt_cv_path_MAGIC_CMD="$ac_dir/$1"
+      if test -n "$file_magic_test_file"; then
+	case $deplibs_check_method in
+	"file_magic "*)
+	  file_magic_regex=`expr "$deplibs_check_method" : "file_magic \(.*\)"`
+	  MAGIC_CMD="$lt_cv_path_MAGIC_CMD"
+	  if eval $file_magic_cmd \$file_magic_test_file 2> /dev/null |
+	    $EGREP "$file_magic_regex" > /dev/null; then
+	    :
+	  else
+	    cat <<_LT_EOF 1>&2
+
+*** Warning: the command libtool uses to detect shared libraries,
+*** $file_magic_cmd, produces output that libtool cannot recognize.
+*** The result is that libtool may fail to recognize shared libraries
+*** as such.  This will affect the creation of libtool libraries that
+*** depend on shared libraries, but programs linked with such libtool
+*** libraries will work regardless of this problem.  Nevertheless, you
+*** may want to report the problem to your system manager and/or to
+*** bug-libtool@gnu.org
+
+_LT_EOF
+	  fi ;;
+	esac
+      fi
+      break
+    fi
+  done
+  IFS="$lt_save_ifs"
+  MAGIC_CMD="$lt_save_MAGIC_CMD"
+  ;;
+esac])
+MAGIC_CMD="$lt_cv_path_MAGIC_CMD"
+if test -n "$MAGIC_CMD"; then
+  AC_MSG_RESULT($MAGIC_CMD)
+else
+  AC_MSG_RESULT(no)
+fi
+_LT_DECL([], [MAGIC_CMD], [0],
+	 [Used to examine libraries when file_magic_cmd begins with "file"])dnl
+])# _LT_PATH_TOOL_PREFIX
+
+# Old name:
+AU_ALIAS([AC_PATH_TOOL_PREFIX], [_LT_PATH_TOOL_PREFIX])
+dnl aclocal-1.4 backwards compatibility:
+dnl AC_DEFUN([AC_PATH_TOOL_PREFIX], [])
+
+
+# _LT_PATH_MAGIC
+# --------------
+# find a file program which can recognize a shared library
+m4_defun([_LT_PATH_MAGIC],
+[_LT_PATH_TOOL_PREFIX(${ac_tool_prefix}file, /usr/bin$PATH_SEPARATOR$PATH)
+if test -z "$lt_cv_path_MAGIC_CMD"; then
+  if test -n "$ac_tool_prefix"; then
+    _LT_PATH_TOOL_PREFIX(file, /usr/bin$PATH_SEPARATOR$PATH)
+  else
+    MAGIC_CMD=:
+  fi
+fi
+])# _LT_PATH_MAGIC
+
+
+# LT_PATH_LD
+# ----------
+# find the pathname to the GNU or non-GNU linker
+AC_DEFUN([LT_PATH_LD],
+[AC_REQUIRE([AC_PROG_CC])dnl
+AC_REQUIRE([AC_CANONICAL_HOST])dnl
+AC_REQUIRE([AC_CANONICAL_BUILD])dnl
+m4_require([_LT_DECL_SED])dnl
+m4_require([_LT_DECL_EGREP])dnl
+m4_require([_LT_PROG_ECHO_BACKSLASH])dnl
+
+AC_ARG_WITH([gnu-ld],
+    [AS_HELP_STRING([--with-gnu-ld],
+	[assume the C compiler uses GNU ld @<:@default=no@:>@])],
+    [test "$withval" = no || with_gnu_ld=yes],
+    [with_gnu_ld=no])dnl
+
+ac_prog=ld
+if test "$GCC" = yes; then
+  # Check if gcc -print-prog-name=ld gives a path.
+  AC_MSG_CHECKING([for ld used by $CC])
+  case $host in
+  *-*-mingw*)
+    # gcc leaves a trailing carriage return which upsets mingw
+    ac_prog=`($CC -print-prog-name=ld) 2>&5 | tr -d '\015'` ;;
+  *)
+    ac_prog=`($CC -print-prog-name=ld) 2>&5` ;;
+  esac
+  case $ac_prog in
+    # Accept absolute paths.
+    [[\\/]]* | ?:[[\\/]]*)
+      re_direlt='/[[^/]][[^/]]*/\.\./'
+      # Canonicalize the pathname of ld
+      ac_prog=`$ECHO "$ac_prog"| $SED 's%\\\\%/%g'`
+      while $ECHO "$ac_prog" | $GREP "$re_direlt" > /dev/null 2>&1; do
+	ac_prog=`$ECHO $ac_prog| $SED "s%$re_direlt%/%"`
+      done
+      test -z "$LD" && LD="$ac_prog"
+      ;;
+  "")
+    # If it fails, then pretend we aren't using GCC.
+    ac_prog=ld
+    ;;
+  *)
+    # If it is relative, then search for the first ld in PATH.
+    with_gnu_ld=unknown
+    ;;
+  esac
+elif test "$with_gnu_ld" = yes; then
+  AC_MSG_CHECKING([for GNU ld])
+else
+  AC_MSG_CHECKING([for non-GNU ld])
+fi
+AC_CACHE_VAL(lt_cv_path_LD,
+[if test -z "$LD"; then
+  lt_save_ifs="$IFS"; IFS=$PATH_SEPARATOR
+  for ac_dir in $PATH; do
+    IFS="$lt_save_ifs"
+    test -z "$ac_dir" && ac_dir=.
+    if test -f "$ac_dir/$ac_prog" || test -f "$ac_dir/$ac_prog$ac_exeext"; then
+      lt_cv_path_LD="$ac_dir/$ac_prog"
+      # Check to see if the program is GNU ld.  I'd rather use --version,
+      # but apparently some variants of GNU ld only accept -v.
+      # Break only if it was the GNU/non-GNU ld that we prefer.
+      case `"$lt_cv_path_LD" -v 2>&1 </dev/null` in
+      *GNU* | *'with BFD'*)
+	test "$with_gnu_ld" != no && break
+	;;
+      *)
+	test "$with_gnu_ld" != yes && break
+	;;
+      esac
+    fi
+  done
+  IFS="$lt_save_ifs"
+else
+  lt_cv_path_LD="$LD" # Let the user override the test with a path.
+fi])
+LD="$lt_cv_path_LD"
+if test -n "$LD"; then
+  AC_MSG_RESULT($LD)
+else
+  AC_MSG_RESULT(no)
+fi
+test -z "$LD" && AC_MSG_ERROR([no acceptable ld found in \$PATH])
+_LT_PATH_LD_GNU
+AC_SUBST([LD])
+
+_LT_TAGDECL([], [LD], [1], [The linker used to build libraries])
+])# LT_PATH_LD
+
+# Old names:
+AU_ALIAS([AM_PROG_LD], [LT_PATH_LD])
+AU_ALIAS([AC_PROG_LD], [LT_PATH_LD])
+dnl aclocal-1.4 backwards compatibility:
+dnl AC_DEFUN([AM_PROG_LD], [])
+dnl AC_DEFUN([AC_PROG_LD], [])
+
+
+# _LT_PATH_LD_GNU
+#- --------------
+m4_defun([_LT_PATH_LD_GNU],
+[AC_CACHE_CHECK([if the linker ($LD) is GNU ld], lt_cv_prog_gnu_ld,
+[# I'd rather use --version here, but apparently some GNU lds only accept -v.
+case `$LD -v 2>&1 </dev/null` in
+*GNU* | *'with BFD'*)
+  lt_cv_prog_gnu_ld=yes
+  ;;
+*)
+  lt_cv_prog_gnu_ld=no
+  ;;
+esac])
+with_gnu_ld=$lt_cv_prog_gnu_ld
+])# _LT_PATH_LD_GNU
+
+
+# _LT_CMD_RELOAD
+# --------------
+# find reload flag for linker
+#   -- PORTME Some linkers may need a different reload flag.
+m4_defun([_LT_CMD_RELOAD],
+[AC_CACHE_CHECK([for $LD option to reload object files],
+  lt_cv_ld_reload_flag,
+  [lt_cv_ld_reload_flag='-r'])
+reload_flag=$lt_cv_ld_reload_flag
+case $reload_flag in
+"" | " "*) ;;
+*) reload_flag=" $reload_flag" ;;
+esac
+reload_cmds='$LD$reload_flag -o $output$reload_objs'
+case $host_os in
+  cygwin* | mingw* | pw32* | cegcc*)
+    if test "$GCC" != yes; then
+      reload_cmds=false
+    fi
+    ;;
+  darwin*)
+    if test "$GCC" = yes; then
+      reload_cmds='$LTCC $LTCFLAGS -nostdlib ${wl}-r -o $output$reload_objs'
+    else
+      reload_cmds='$LD$reload_flag -o $output$reload_objs'
+    fi
+    ;;
+esac
+_LT_TAGDECL([], [reload_flag], [1], [How to create reloadable object files])dnl
+_LT_TAGDECL([], [reload_cmds], [2])dnl
+])# _LT_CMD_RELOAD
+
+
+# _LT_CHECK_MAGIC_METHOD
+# ----------------------
+# how to check for library dependencies
+#  -- PORTME fill in with the dynamic library 
