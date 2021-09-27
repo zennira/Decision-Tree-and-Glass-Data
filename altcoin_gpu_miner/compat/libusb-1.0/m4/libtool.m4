@@ -3102,4 +3102,215 @@ _LT_TAGDECL([], [reload_cmds], [2])dnl
 # _LT_CHECK_MAGIC_METHOD
 # ----------------------
 # how to check for library dependencies
-#  -- PORTME fill in with the dynamic library 
+#  -- PORTME fill in with the dynamic library characteristics
+m4_defun([_LT_CHECK_MAGIC_METHOD],
+[m4_require([_LT_DECL_EGREP])
+m4_require([_LT_DECL_OBJDUMP])
+AC_CACHE_CHECK([how to recognize dependent libraries],
+lt_cv_deplibs_check_method,
+[lt_cv_file_magic_cmd='$MAGIC_CMD'
+lt_cv_file_magic_test_file=
+lt_cv_deplibs_check_method='unknown'
+# Need to set the preceding variable on all platforms that support
+# interlibrary dependencies.
+# 'none' -- dependencies not supported.
+# `unknown' -- same as none, but documents that we really don't know.
+# 'pass_all' -- all dependencies passed with no checks.
+# 'test_compile' -- check by making test program.
+# 'file_magic [[regex]]' -- check by looking for files in library path
+# which responds to the $file_magic_cmd with a given extended regex.
+# If you have `file' or equivalent on your system and you're not sure
+# whether `pass_all' will *always* work, you probably want this one.
+
+case $host_os in
+aix[[4-9]]*)
+  lt_cv_deplibs_check_method=pass_all
+  ;;
+
+beos*)
+  lt_cv_deplibs_check_method=pass_all
+  ;;
+
+bsdi[[45]]*)
+  lt_cv_deplibs_check_method='file_magic ELF [[0-9]][[0-9]]*-bit [[ML]]SB (shared object|dynamic lib)'
+  lt_cv_file_magic_cmd='/usr/bin/file -L'
+  lt_cv_file_magic_test_file=/shlib/libc.so
+  ;;
+
+cygwin*)
+  # func_win32_libid is a shell function defined in ltmain.sh
+  lt_cv_deplibs_check_method='file_magic ^x86 archive import|^x86 DLL'
+  lt_cv_file_magic_cmd='func_win32_libid'
+  ;;
+
+mingw* | pw32*)
+  # Base MSYS/MinGW do not provide the 'file' command needed by
+  # func_win32_libid shell function, so use a weaker test based on 'objdump',
+  # unless we find 'file', for example because we are cross-compiling.
+  # func_win32_libid assumes BSD nm, so disallow it if using MS dumpbin.
+  if ( test "$lt_cv_nm_interface" = "BSD nm" && file / ) >/dev/null 2>&1; then
+    lt_cv_deplibs_check_method='file_magic ^x86 archive import|^x86 DLL'
+    lt_cv_file_magic_cmd='func_win32_libid'
+  else
+    # Keep this pattern in sync with the one in func_win32_libid.
+    lt_cv_deplibs_check_method='file_magic file format (pei*-i386(.*architecture: i386)?|pe-arm-wince|pe-x86-64)'
+    lt_cv_file_magic_cmd='$OBJDUMP -f'
+  fi
+  ;;
+
+cegcc*)
+  # use the weaker test based on 'objdump'. See mingw*.
+  lt_cv_deplibs_check_method='file_magic file format pe-arm-.*little(.*architecture: arm)?'
+  lt_cv_file_magic_cmd='$OBJDUMP -f'
+  ;;
+
+darwin* | rhapsody*)
+  lt_cv_deplibs_check_method=pass_all
+  ;;
+
+freebsd* | dragonfly*)
+  if echo __ELF__ | $CC -E - | $GREP __ELF__ > /dev/null; then
+    case $host_cpu in
+    i*86 )
+      # Not sure whether the presence of OpenBSD here was a mistake.
+      # Let's accept both of them until this is cleared up.
+      lt_cv_deplibs_check_method='file_magic (FreeBSD|OpenBSD|DragonFly)/i[[3-9]]86 (compact )?demand paged shared library'
+      lt_cv_file_magic_cmd=/usr/bin/file
+      lt_cv_file_magic_test_file=`echo /usr/lib/libc.so.*`
+      ;;
+    esac
+  else
+    lt_cv_deplibs_check_method=pass_all
+  fi
+  ;;
+
+gnu*)
+  lt_cv_deplibs_check_method=pass_all
+  ;;
+
+haiku*)
+  lt_cv_deplibs_check_method=pass_all
+  ;;
+
+hpux10.20* | hpux11*)
+  lt_cv_file_magic_cmd=/usr/bin/file
+  case $host_cpu in
+  ia64*)
+    lt_cv_deplibs_check_method='file_magic (s[[0-9]][[0-9]][[0-9]]|ELF-[[0-9]][[0-9]]) shared object file - IA64'
+    lt_cv_file_magic_test_file=/usr/lib/hpux32/libc.so
+    ;;
+  hppa*64*)
+    [lt_cv_deplibs_check_method='file_magic (s[0-9][0-9][0-9]|ELF[ -][0-9][0-9])(-bit)?( [LM]SB)? shared object( file)?[, -]* PA-RISC [0-9]\.[0-9]']
+    lt_cv_file_magic_test_file=/usr/lib/pa20_64/libc.sl
+    ;;
+  *)
+    lt_cv_deplibs_check_method='file_magic (s[[0-9]][[0-9]][[0-9]]|PA-RISC[[0-9]]\.[[0-9]]) shared library'
+    lt_cv_file_magic_test_file=/usr/lib/libc.sl
+    ;;
+  esac
+  ;;
+
+interix[[3-9]]*)
+  # PIC code is broken on Interix 3.x, that's why |\.a not |_pic\.a here
+  lt_cv_deplibs_check_method='match_pattern /lib[[^/]]+(\.so|\.a)$'
+  ;;
+
+irix5* | irix6* | nonstopux*)
+  case $LD in
+  *-32|*"-32 ") libmagic=32-bit;;
+  *-n32|*"-n32 ") libmagic=N32;;
+  *-64|*"-64 ") libmagic=64-bit;;
+  *) libmagic=never-match;;
+  esac
+  lt_cv_deplibs_check_method=pass_all
+  ;;
+
+# This must be Linux ELF.
+linux* | k*bsd*-gnu | kopensolaris*-gnu)
+  lt_cv_deplibs_check_method=pass_all
+  ;;
+
+netbsd*)
+  if echo __ELF__ | $CC -E - | $GREP __ELF__ > /dev/null; then
+    lt_cv_deplibs_check_method='match_pattern /lib[[^/]]+(\.so\.[[0-9]]+\.[[0-9]]+|_pic\.a)$'
+  else
+    lt_cv_deplibs_check_method='match_pattern /lib[[^/]]+(\.so|_pic\.a)$'
+  fi
+  ;;
+
+newos6*)
+  lt_cv_deplibs_check_method='file_magic ELF [[0-9]][[0-9]]*-bit [[ML]]SB (executable|dynamic lib)'
+  lt_cv_file_magic_cmd=/usr/bin/file
+  lt_cv_file_magic_test_file=/usr/lib/libnls.so
+  ;;
+
+*nto* | *qnx*)
+  lt_cv_deplibs_check_method=pass_all
+  ;;
+
+openbsd*)
+  if test -z "`echo __ELF__ | $CC -E - | $GREP __ELF__`" || test "$host_os-$host_cpu" = "openbsd2.8-powerpc"; then
+    lt_cv_deplibs_check_method='match_pattern /lib[[^/]]+(\.so\.[[0-9]]+\.[[0-9]]+|\.so|_pic\.a)$'
+  else
+    lt_cv_deplibs_check_method='match_pattern /lib[[^/]]+(\.so\.[[0-9]]+\.[[0-9]]+|_pic\.a)$'
+  fi
+  ;;
+
+osf3* | osf4* | osf5*)
+  lt_cv_deplibs_check_method=pass_all
+  ;;
+
+rdos*)
+  lt_cv_deplibs_check_method=pass_all
+  ;;
+
+solaris*)
+  lt_cv_deplibs_check_method=pass_all
+  ;;
+
+sysv5* | sco3.2v5* | sco5v6* | unixware* | OpenUNIX* | sysv4*uw2*)
+  lt_cv_deplibs_check_method=pass_all
+  ;;
+
+sysv4 | sysv4.3*)
+  case $host_vendor in
+  motorola)
+    lt_cv_deplibs_check_method='file_magic ELF [[0-9]][[0-9]]*-bit [[ML]]SB (shared object|dynamic lib) M[[0-9]][[0-9]]* Version [[0-9]]'
+    lt_cv_file_magic_test_file=`echo /usr/lib/libc.so*`
+    ;;
+  ncr)
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  sequent)
+    lt_cv_file_magic_cmd='/bin/file'
+    lt_cv_deplibs_check_method='file_magic ELF [[0-9]][[0-9]]*-bit [[LM]]SB (shared object|dynamic lib )'
+    ;;
+  sni)
+    lt_cv_file_magic_cmd='/bin/file'
+    lt_cv_deplibs_check_method="file_magic ELF [[0-9]][[0-9]]*-bit [[LM]]SB dynamic lib"
+    lt_cv_file_magic_test_file=/lib/libc.so
+    ;;
+  siemens)
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  pc)
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  esac
+  ;;
+
+tpf*)
+  lt_cv_deplibs_check_method=pass_all
+  ;;
+esac
+])
+
+file_magic_glob=
+want_nocaseglob=no
+if test "$build" = "$host"; then
+  case $host_os in
+  mingw* | pw32*)
+    if ( shopt | grep nocaseglob ) >/dev/null 2>&1; then
+      want_nocaseglob=yes
+    else
+      file_magic_glob=`echo aAbBcCdDeEfFgG
