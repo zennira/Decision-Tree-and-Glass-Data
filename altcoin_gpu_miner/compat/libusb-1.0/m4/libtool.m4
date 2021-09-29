@@ -4378,4 +4378,158 @@ m4_if([$1], [CXX], [
 
     sysv4 | sysv4.2uw2* | sysv4.3*)
       _LT_TAGVAR(lt_prog_compiler_wl, $1)='-Wl,'
-      _LT_TAGVAR(lt_prog_compiler_pi
+      _LT_TAGVAR(lt_prog_compiler_pic, $1)='-KPIC'
+      _LT_TAGVAR(lt_prog_compiler_static, $1)='-Bstatic'
+      ;;
+
+    sysv4*MP*)
+      if test -d /usr/nec ;then
+	_LT_TAGVAR(lt_prog_compiler_pic, $1)='-Kconform_pic'
+	_LT_TAGVAR(lt_prog_compiler_static, $1)='-Bstatic'
+      fi
+      ;;
+
+    sysv5* | unixware* | sco3.2v5* | sco5v6* | OpenUNIX*)
+      _LT_TAGVAR(lt_prog_compiler_wl, $1)='-Wl,'
+      _LT_TAGVAR(lt_prog_compiler_pic, $1)='-KPIC'
+      _LT_TAGVAR(lt_prog_compiler_static, $1)='-Bstatic'
+      ;;
+
+    unicos*)
+      _LT_TAGVAR(lt_prog_compiler_wl, $1)='-Wl,'
+      _LT_TAGVAR(lt_prog_compiler_can_build_shared, $1)=no
+      ;;
+
+    uts4*)
+      _LT_TAGVAR(lt_prog_compiler_pic, $1)='-pic'
+      _LT_TAGVAR(lt_prog_compiler_static, $1)='-Bstatic'
+      ;;
+
+    *)
+      _LT_TAGVAR(lt_prog_compiler_can_build_shared, $1)=no
+      ;;
+    esac
+  fi
+])
+case $host_os in
+  # For platforms which do not support PIC, -DPIC is meaningless:
+  *djgpp*)
+    _LT_TAGVAR(lt_prog_compiler_pic, $1)=
+    ;;
+  *)
+    _LT_TAGVAR(lt_prog_compiler_pic, $1)="$_LT_TAGVAR(lt_prog_compiler_pic, $1)@&t@m4_if([$1],[],[ -DPIC],[m4_if([$1],[CXX],[ -DPIC],[])])"
+    ;;
+esac
+
+AC_CACHE_CHECK([for $compiler option to produce PIC],
+  [_LT_TAGVAR(lt_cv_prog_compiler_pic, $1)],
+  [_LT_TAGVAR(lt_cv_prog_compiler_pic, $1)=$_LT_TAGVAR(lt_prog_compiler_pic, $1)])
+_LT_TAGVAR(lt_prog_compiler_pic, $1)=$_LT_TAGVAR(lt_cv_prog_compiler_pic, $1)
+
+#
+# Check to make sure the PIC flag actually works.
+#
+if test -n "$_LT_TAGVAR(lt_prog_compiler_pic, $1)"; then
+  _LT_COMPILER_OPTION([if $compiler PIC flag $_LT_TAGVAR(lt_prog_compiler_pic, $1) works],
+    [_LT_TAGVAR(lt_cv_prog_compiler_pic_works, $1)],
+    [$_LT_TAGVAR(lt_prog_compiler_pic, $1)@&t@m4_if([$1],[],[ -DPIC],[m4_if([$1],[CXX],[ -DPIC],[])])], [],
+    [case $_LT_TAGVAR(lt_prog_compiler_pic, $1) in
+     "" | " "*) ;;
+     *) _LT_TAGVAR(lt_prog_compiler_pic, $1)=" $_LT_TAGVAR(lt_prog_compiler_pic, $1)" ;;
+     esac],
+    [_LT_TAGVAR(lt_prog_compiler_pic, $1)=
+     _LT_TAGVAR(lt_prog_compiler_can_build_shared, $1)=no])
+fi
+_LT_TAGDECL([pic_flag], [lt_prog_compiler_pic], [1],
+	[Additional compiler flags for building library objects])
+
+_LT_TAGDECL([wl], [lt_prog_compiler_wl], [1],
+	[How to pass a linker flag through the compiler])
+#
+# Check to make sure the static flag actually works.
+#
+wl=$_LT_TAGVAR(lt_prog_compiler_wl, $1) eval lt_tmp_static_flag=\"$_LT_TAGVAR(lt_prog_compiler_static, $1)\"
+_LT_LINKER_OPTION([if $compiler static flag $lt_tmp_static_flag works],
+  _LT_TAGVAR(lt_cv_prog_compiler_static_works, $1),
+  $lt_tmp_static_flag,
+  [],
+  [_LT_TAGVAR(lt_prog_compiler_static, $1)=])
+_LT_TAGDECL([link_static_flag], [lt_prog_compiler_static], [1],
+	[Compiler flag to prevent dynamic linking])
+])# _LT_COMPILER_PIC
+
+
+# _LT_LINKER_SHLIBS([TAGNAME])
+# ----------------------------
+# See if the linker supports building shared libraries.
+m4_defun([_LT_LINKER_SHLIBS],
+[AC_REQUIRE([LT_PATH_LD])dnl
+AC_REQUIRE([LT_PATH_NM])dnl
+m4_require([_LT_PATH_MANIFEST_TOOL])dnl
+m4_require([_LT_FILEUTILS_DEFAULTS])dnl
+m4_require([_LT_DECL_EGREP])dnl
+m4_require([_LT_DECL_SED])dnl
+m4_require([_LT_CMD_GLOBAL_SYMBOLS])dnl
+m4_require([_LT_TAG_COMPILER])dnl
+AC_MSG_CHECKING([whether the $compiler linker ($LD) supports shared libraries])
+m4_if([$1], [CXX], [
+  _LT_TAGVAR(export_symbols_cmds, $1)='$NM $libobjs $convenience | $global_symbol_pipe | $SED '\''s/.* //'\'' | sort | uniq > $export_symbols'
+  _LT_TAGVAR(exclude_expsyms, $1)=['_GLOBAL_OFFSET_TABLE_|_GLOBAL__F[ID]_.*']
+  case $host_os in
+  aix[[4-9]]*)
+    # If we're using GNU nm, then we don't want the "-C" option.
+    # -C means demangle to AIX nm, but means don't demangle with GNU nm
+    # Also, AIX nm treats weak defined symbols like other global defined
+    # symbols, whereas GNU nm marks them as "W".
+    if $NM -V 2>&1 | $GREP 'GNU' > /dev/null; then
+      _LT_TAGVAR(export_symbols_cmds, $1)='$NM -Bpg $libobjs $convenience | awk '\''{ if (((\$ 2 == "T") || (\$ 2 == "D") || (\$ 2 == "B") || (\$ 2 == "W")) && ([substr](\$ 3,1,1) != ".")) { print \$ 3 } }'\'' | sort -u > $export_symbols'
+    else
+      _LT_TAGVAR(export_symbols_cmds, $1)='$NM -BCpg $libobjs $convenience | awk '\''{ if (((\$ 2 == "T") || (\$ 2 == "D") || (\$ 2 == "B")) && ([substr](\$ 3,1,1) != ".")) { print \$ 3 } }'\'' | sort -u > $export_symbols'
+    fi
+    ;;
+  pw32*)
+    _LT_TAGVAR(export_symbols_cmds, $1)="$ltdll_cmds"
+    ;;
+  cygwin* | mingw* | cegcc*)
+    case $cc_basename in
+    cl*) ;;
+    *)
+      _LT_TAGVAR(export_symbols_cmds, $1)='$NM $libobjs $convenience | $global_symbol_pipe | $SED -e '\''/^[[BCDGRS]][[ ]]/s/.*[[ ]]\([[^ ]]*\)/\1 DATA/;s/^.*[[ ]]__nm__\([[^ ]]*\)[[ ]][[^ ]]*/\1 DATA/;/^I[[ ]]/d;/^[[AITW]][[ ]]/s/.* //'\'' | sort | uniq > $export_symbols'
+      _LT_TAGVAR(exclude_expsyms, $1)=['[_]+GLOBAL_OFFSET_TABLE_|[_]+GLOBAL__[FID]_.*|[_]+head_[A-Za-z0-9_]+_dll|[A-Za-z0-9_]+_dll_iname']
+      ;;
+    esac
+    ;;
+  *)
+    _LT_TAGVAR(export_symbols_cmds, $1)='$NM $libobjs $convenience | $global_symbol_pipe | $SED '\''s/.* //'\'' | sort | uniq > $export_symbols'
+    ;;
+  esac
+], [
+  runpath_var=
+  _LT_TAGVAR(allow_undefined_flag, $1)=
+  _LT_TAGVAR(always_export_symbols, $1)=no
+  _LT_TAGVAR(archive_cmds, $1)=
+  _LT_TAGVAR(archive_expsym_cmds, $1)=
+  _LT_TAGVAR(compiler_needs_object, $1)=no
+  _LT_TAGVAR(enable_shared_with_static_runtimes, $1)=no
+  _LT_TAGVAR(export_dynamic_flag_spec, $1)=
+  _LT_TAGVAR(export_symbols_cmds, $1)='$NM $libobjs $convenience | $global_symbol_pipe | $SED '\''s/.* //'\'' | sort | uniq > $export_symbols'
+  _LT_TAGVAR(hardcode_automatic, $1)=no
+  _LT_TAGVAR(hardcode_direct, $1)=no
+  _LT_TAGVAR(hardcode_direct_absolute, $1)=no
+  _LT_TAGVAR(hardcode_libdir_flag_spec, $1)=
+  _LT_TAGVAR(hardcode_libdir_flag_spec_ld, $1)=
+  _LT_TAGVAR(hardcode_libdir_separator, $1)=
+  _LT_TAGVAR(hardcode_minus_L, $1)=no
+  _LT_TAGVAR(hardcode_shlibpath_var, $1)=unsupported
+  _LT_TAGVAR(inherit_rpath, $1)=no
+  _LT_TAGVAR(link_all_deplibs, $1)=unknown
+  _LT_TAGVAR(module_cmds, $1)=
+  _LT_TAGVAR(module_expsym_cmds, $1)=
+  _LT_TAGVAR(old_archive_from_new_cmds, $1)=
+  _LT_TAGVAR(old_archive_from_expsyms_cmds, $1)=
+  _LT_TAGVAR(thread_safe_flag_spec, $1)=
+  _LT_TAGVAR(whole_archive_flag_spec, $1)=
+  # include_expsyms should be a list of space-separated symbols to be *always*
+  # included in the symbol list
+  _LT_TAGVAR(include_expsyms, $1)=
+  # exclude_expsym
