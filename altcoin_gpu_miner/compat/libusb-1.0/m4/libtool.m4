@@ -4796,4 +4796,149 @@ _LT_EOF
 
     solaris*)
       if $LD -v 2>&1 | $GREP 'BFD 2\.8' > /dev/null; then
-	_LT_TAGVAR(
+	_LT_TAGVAR(ld_shlibs, $1)=no
+	cat <<_LT_EOF 1>&2
+
+*** Warning: The releases 2.8.* of the GNU linker cannot reliably
+*** create shared libraries on Solaris systems.  Therefore, libtool
+*** is disabling shared libraries support.  We urge you to upgrade GNU
+*** binutils to release 2.9.1 or newer.  Another option is to modify
+*** your PATH or compiler configuration so that the native linker is
+*** used, and then restart.
+
+_LT_EOF
+      elif $LD --help 2>&1 | $GREP ': supported targets:.* elf' > /dev/null; then
+	_LT_TAGVAR(archive_cmds, $1)='$CC -shared $pic_flag $libobjs $deplibs $compiler_flags ${wl}-soname $wl$soname -o $lib'
+	_LT_TAGVAR(archive_expsym_cmds, $1)='$CC -shared $pic_flag $libobjs $deplibs $compiler_flags ${wl}-soname $wl$soname ${wl}-retain-symbols-file $wl$export_symbols -o $lib'
+      else
+	_LT_TAGVAR(ld_shlibs, $1)=no
+      fi
+      ;;
+
+    sysv5* | sco3.2v5* | sco5v6* | unixware* | OpenUNIX*)
+      case `$LD -v 2>&1` in
+        *\ [[01]].* | *\ 2.[[0-9]].* | *\ 2.1[[0-5]].*)
+	_LT_TAGVAR(ld_shlibs, $1)=no
+	cat <<_LT_EOF 1>&2
+
+*** Warning: Releases of the GNU linker prior to 2.16.91.0.3 can not
+*** reliably create shared libraries on SCO systems.  Therefore, libtool
+*** is disabling shared libraries support.  We urge you to upgrade GNU
+*** binutils to release 2.16.91.0.3 or newer.  Another option is to modify
+*** your PATH or compiler configuration so that the native linker is
+*** used, and then restart.
+
+_LT_EOF
+	;;
+	*)
+	  # For security reasons, it is highly recommended that you always
+	  # use absolute paths for naming shared libraries, and exclude the
+	  # DT_RUNPATH tag from executables and libraries.  But doing so
+	  # requires that you compile everything twice, which is a pain.
+	  if $LD --help 2>&1 | $GREP ': supported targets:.* elf' > /dev/null; then
+	    _LT_TAGVAR(hardcode_libdir_flag_spec, $1)='${wl}-rpath ${wl}$libdir'
+	    _LT_TAGVAR(archive_cmds, $1)='$CC -shared $libobjs $deplibs $compiler_flags ${wl}-soname $wl$soname -o $lib'
+	    _LT_TAGVAR(archive_expsym_cmds, $1)='$CC -shared $libobjs $deplibs $compiler_flags ${wl}-soname $wl$soname ${wl}-retain-symbols-file $wl$export_symbols -o $lib'
+	  else
+	    _LT_TAGVAR(ld_shlibs, $1)=no
+	  fi
+	;;
+      esac
+      ;;
+
+    sunos4*)
+      _LT_TAGVAR(archive_cmds, $1)='$LD -assert pure-text -Bshareable -o $lib $libobjs $deplibs $linker_flags'
+      wlarc=
+      _LT_TAGVAR(hardcode_direct, $1)=yes
+      _LT_TAGVAR(hardcode_shlibpath_var, $1)=no
+      ;;
+
+    *)
+      if $LD --help 2>&1 | $GREP ': supported targets:.* elf' > /dev/null; then
+	_LT_TAGVAR(archive_cmds, $1)='$CC -shared $pic_flag $libobjs $deplibs $compiler_flags ${wl}-soname $wl$soname -o $lib'
+	_LT_TAGVAR(archive_expsym_cmds, $1)='$CC -shared $pic_flag $libobjs $deplibs $compiler_flags ${wl}-soname $wl$soname ${wl}-retain-symbols-file $wl$export_symbols -o $lib'
+      else
+	_LT_TAGVAR(ld_shlibs, $1)=no
+      fi
+      ;;
+    esac
+
+    if test "$_LT_TAGVAR(ld_shlibs, $1)" = no; then
+      runpath_var=
+      _LT_TAGVAR(hardcode_libdir_flag_spec, $1)=
+      _LT_TAGVAR(export_dynamic_flag_spec, $1)=
+      _LT_TAGVAR(whole_archive_flag_spec, $1)=
+    fi
+  else
+    # PORTME fill in a description of your system's linker (not GNU ld)
+    case $host_os in
+    aix3*)
+      _LT_TAGVAR(allow_undefined_flag, $1)=unsupported
+      _LT_TAGVAR(always_export_symbols, $1)=yes
+      _LT_TAGVAR(archive_expsym_cmds, $1)='$LD -o $output_objdir/$soname $libobjs $deplibs $linker_flags -bE:$export_symbols -T512 -H512 -bM:SRE~$AR $AR_FLAGS $lib $output_objdir/$soname'
+      # Note: this linker hardcodes the directories in LIBPATH if there
+      # are no directories specified by -L.
+      _LT_TAGVAR(hardcode_minus_L, $1)=yes
+      if test "$GCC" = yes && test -z "$lt_prog_compiler_static"; then
+	# Neither direct hardcoding nor static linking is supported with a
+	# broken collect2.
+	_LT_TAGVAR(hardcode_direct, $1)=unsupported
+      fi
+      ;;
+
+    aix[[4-9]]*)
+      if test "$host_cpu" = ia64; then
+	# On IA64, the linker does run time linking by default, so we don't
+	# have to do anything special.
+	aix_use_runtimelinking=no
+	exp_sym_flag='-Bexport'
+	no_entry_flag=""
+      else
+	# If we're using GNU nm, then we don't want the "-C" option.
+	# -C means demangle to AIX nm, but means don't demangle with GNU nm
+	# Also, AIX nm treats weak defined symbols like other global
+	# defined symbols, whereas GNU nm marks them as "W".
+	if $NM -V 2>&1 | $GREP 'GNU' > /dev/null; then
+	  _LT_TAGVAR(export_symbols_cmds, $1)='$NM -Bpg $libobjs $convenience | awk '\''{ if (((\$ 2 == "T") || (\$ 2 == "D") || (\$ 2 == "B") || (\$ 2 == "W")) && ([substr](\$ 3,1,1) != ".")) { print \$ 3 } }'\'' | sort -u > $export_symbols'
+	else
+	  _LT_TAGVAR(export_symbols_cmds, $1)='$NM -BCpg $libobjs $convenience | awk '\''{ if (((\$ 2 == "T") || (\$ 2 == "D") || (\$ 2 == "B")) && ([substr](\$ 3,1,1) != ".")) { print \$ 3 } }'\'' | sort -u > $export_symbols'
+	fi
+	aix_use_runtimelinking=no
+
+	# Test if we are trying to use run time linking or normal
+	# AIX style linking. If -brtl is somewhere in LDFLAGS, we
+	# need to do runtime linking.
+	case $host_os in aix4.[[23]]|aix4.[[23]].*|aix[[5-9]]*)
+	  for ld_flag in $LDFLAGS; do
+	  if (test $ld_flag = "-brtl" || test $ld_flag = "-Wl,-brtl"); then
+	    aix_use_runtimelinking=yes
+	    break
+	  fi
+	  done
+	  ;;
+	esac
+
+	exp_sym_flag='-bexport'
+	no_entry_flag='-bnoentry'
+      fi
+
+      # When large executables or shared objects are built, AIX ld can
+      # have problems creating the table of contents.  If linking a library
+      # or program results in "error TOC overflow" add -mminimal-toc to
+      # CXXFLAGS/CFLAGS for g++/gcc.  In the cases where that is not
+      # enough to fix the problem, add -Wl,-bbigtoc to LDFLAGS.
+
+      _LT_TAGVAR(archive_cmds, $1)=''
+      _LT_TAGVAR(hardcode_direct, $1)=yes
+      _LT_TAGVAR(hardcode_direct_absolute, $1)=yes
+      _LT_TAGVAR(hardcode_libdir_separator, $1)=':'
+      _LT_TAGVAR(link_all_deplibs, $1)=yes
+      _LT_TAGVAR(file_list_spec, $1)='${wl}-f,'
+
+      if test "$GCC" = yes; then
+	case $host_os in aix4.[[012]]|aix4.[[012]].*)
+	# We only want to do this on AIX 4.2 and lower, the check
+	# below for broken collect2 doesn't work under 4.3+
+	  collect2name=`${CC} -print-prog-name=collect2`
+	  if test -f "$collect2name" &&
+	   strings "$collect2name" | $GRE
