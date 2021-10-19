@@ -5335,4 +5335,135 @@ _LT_EOF
 	_LT_TAGVAR(archive_cmds, $1)='$CC -shared${allow_undefined_flag} $libobjs $deplibs $compiler_flags -soname $soname `test -n "$verstring" && func_echo_all "-set_version $verstring"` -update_registry ${output_objdir}/so_locations -o $lib'
       fi
       _LT_TAGVAR(archive_cmds_need_lc, $1)='no'
-      _LT_TAGVA
+      _LT_TAGVAR(hardcode_libdir_flag_spec, $1)='${wl}-rpath ${wl}$libdir'
+      _LT_TAGVAR(hardcode_libdir_separator, $1)=:
+      ;;
+
+    osf4* | osf5*)	# as osf3* with the addition of -msym flag
+      if test "$GCC" = yes; then
+	_LT_TAGVAR(allow_undefined_flag, $1)=' ${wl}-expect_unresolved ${wl}\*'
+	_LT_TAGVAR(archive_cmds, $1)='$CC -shared${allow_undefined_flag} $pic_flag $libobjs $deplibs $compiler_flags ${wl}-msym ${wl}-soname ${wl}$soname `test -n "$verstring" && func_echo_all "${wl}-set_version ${wl}$verstring"` ${wl}-update_registry ${wl}${output_objdir}/so_locations -o $lib'
+	_LT_TAGVAR(hardcode_libdir_flag_spec, $1)='${wl}-rpath ${wl}$libdir'
+      else
+	_LT_TAGVAR(allow_undefined_flag, $1)=' -expect_unresolved \*'
+	_LT_TAGVAR(archive_cmds, $1)='$CC -shared${allow_undefined_flag} $libobjs $deplibs $compiler_flags -msym -soname $soname `test -n "$verstring" && func_echo_all "-set_version $verstring"` -update_registry ${output_objdir}/so_locations -o $lib'
+	_LT_TAGVAR(archive_expsym_cmds, $1)='for i in `cat $export_symbols`; do printf "%s %s\\n" -exported_symbol "\$i" >> $lib.exp; done; printf "%s\\n" "-hidden">> $lib.exp~
+	$CC -shared${allow_undefined_flag} ${wl}-input ${wl}$lib.exp $compiler_flags $libobjs $deplibs -soname $soname `test -n "$verstring" && $ECHO "-set_version $verstring"` -update_registry ${output_objdir}/so_locations -o $lib~$RM $lib.exp'
+
+	# Both c and cxx compiler support -rpath directly
+	_LT_TAGVAR(hardcode_libdir_flag_spec, $1)='-rpath $libdir'
+      fi
+      _LT_TAGVAR(archive_cmds_need_lc, $1)='no'
+      _LT_TAGVAR(hardcode_libdir_separator, $1)=:
+      ;;
+
+    solaris*)
+      _LT_TAGVAR(no_undefined_flag, $1)=' -z defs'
+      if test "$GCC" = yes; then
+	wlarc='${wl}'
+	_LT_TAGVAR(archive_cmds, $1)='$CC -shared $pic_flag ${wl}-z ${wl}text ${wl}-h ${wl}$soname -o $lib $libobjs $deplibs $compiler_flags'
+	_LT_TAGVAR(archive_expsym_cmds, $1)='echo "{ global:" > $lib.exp~cat $export_symbols | $SED -e "s/\(.*\)/\1;/" >> $lib.exp~echo "local: *; };" >> $lib.exp~
+	  $CC -shared $pic_flag ${wl}-z ${wl}text ${wl}-M ${wl}$lib.exp ${wl}-h ${wl}$soname -o $lib $libobjs $deplibs $compiler_flags~$RM $lib.exp'
+      else
+	case `$CC -V 2>&1` in
+	*"Compilers 5.0"*)
+	  wlarc=''
+	  _LT_TAGVAR(archive_cmds, $1)='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linker_flags'
+	  _LT_TAGVAR(archive_expsym_cmds, $1)='echo "{ global:" > $lib.exp~cat $export_symbols | $SED -e "s/\(.*\)/\1;/" >> $lib.exp~echo "local: *; };" >> $lib.exp~
+	  $LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linker_flags~$RM $lib.exp'
+	  ;;
+	*)
+	  wlarc='${wl}'
+	  _LT_TAGVAR(archive_cmds, $1)='$CC -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $compiler_flags'
+	  _LT_TAGVAR(archive_expsym_cmds, $1)='echo "{ global:" > $lib.exp~cat $export_symbols | $SED -e "s/\(.*\)/\1;/" >> $lib.exp~echo "local: *; };" >> $lib.exp~
+	  $CC -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $compiler_flags~$RM $lib.exp'
+	  ;;
+	esac
+      fi
+      _LT_TAGVAR(hardcode_libdir_flag_spec, $1)='-R$libdir'
+      _LT_TAGVAR(hardcode_shlibpath_var, $1)=no
+      case $host_os in
+      solaris2.[[0-5]] | solaris2.[[0-5]].*) ;;
+      *)
+	# The compiler driver will combine and reorder linker options,
+	# but understands `-z linker_flag'.  GCC discards it without `$wl',
+	# but is careful enough not to reorder.
+	# Supported since Solaris 2.6 (maybe 2.5.1?)
+	if test "$GCC" = yes; then
+	  _LT_TAGVAR(whole_archive_flag_spec, $1)='${wl}-z ${wl}allextract$convenience ${wl}-z ${wl}defaultextract'
+	else
+	  _LT_TAGVAR(whole_archive_flag_spec, $1)='-z allextract$convenience -z defaultextract'
+	fi
+	;;
+      esac
+      _LT_TAGVAR(link_all_deplibs, $1)=yes
+      ;;
+
+    sunos4*)
+      if test "x$host_vendor" = xsequent; then
+	# Use $CC to link under sequent, because it throws in some extra .o
+	# files that make .init and .fini sections work.
+	_LT_TAGVAR(archive_cmds, $1)='$CC -G ${wl}-h $soname -o $lib $libobjs $deplibs $compiler_flags'
+      else
+	_LT_TAGVAR(archive_cmds, $1)='$LD -assert pure-text -Bstatic -o $lib $libobjs $deplibs $linker_flags'
+      fi
+      _LT_TAGVAR(hardcode_libdir_flag_spec, $1)='-L$libdir'
+      _LT_TAGVAR(hardcode_direct, $1)=yes
+      _LT_TAGVAR(hardcode_minus_L, $1)=yes
+      _LT_TAGVAR(hardcode_shlibpath_var, $1)=no
+      ;;
+
+    sysv4)
+      case $host_vendor in
+	sni)
+	  _LT_TAGVAR(archive_cmds, $1)='$LD -G -h $soname -o $lib $libobjs $deplibs $linker_flags'
+	  _LT_TAGVAR(hardcode_direct, $1)=yes # is this really true???
+	;;
+	siemens)
+	  ## LD is ld it makes a PLAMLIB
+	  ## CC just makes a GrossModule.
+	  _LT_TAGVAR(archive_cmds, $1)='$LD -G -o $lib $libobjs $deplibs $linker_flags'
+	  _LT_TAGVAR(reload_cmds, $1)='$CC -r -o $output$reload_objs'
+	  _LT_TAGVAR(hardcode_direct, $1)=no
+        ;;
+	motorola)
+	  _LT_TAGVAR(archive_cmds, $1)='$LD -G -h $soname -o $lib $libobjs $deplibs $linker_flags'
+	  _LT_TAGVAR(hardcode_direct, $1)=no #Motorola manual says yes, but my tests say they lie
+	;;
+      esac
+      runpath_var='LD_RUN_PATH'
+      _LT_TAGVAR(hardcode_shlibpath_var, $1)=no
+      ;;
+
+    sysv4.3*)
+      _LT_TAGVAR(archive_cmds, $1)='$LD -G -h $soname -o $lib $libobjs $deplibs $linker_flags'
+      _LT_TAGVAR(hardcode_shlibpath_var, $1)=no
+      _LT_TAGVAR(export_dynamic_flag_spec, $1)='-Bexport'
+      ;;
+
+    sysv4*MP*)
+      if test -d /usr/nec; then
+	_LT_TAGVAR(archive_cmds, $1)='$LD -G -h $soname -o $lib $libobjs $deplibs $linker_flags'
+	_LT_TAGVAR(hardcode_shlibpath_var, $1)=no
+	runpath_var=LD_RUN_PATH
+	hardcode_runpath_var=yes
+	_LT_TAGVAR(ld_shlibs, $1)=yes
+      fi
+      ;;
+
+    sysv4*uw2* | sysv5OpenUNIX* | sysv5UnixWare7.[[01]].[[10]]* | unixware7* | sco3.2v5.0.[[024]]*)
+      _LT_TAGVAR(no_undefined_flag, $1)='${wl}-z,text'
+      _LT_TAGVAR(archive_cmds_need_lc, $1)=no
+      _LT_TAGVAR(hardcode_shlibpath_var, $1)=no
+      runpath_var='LD_RUN_PATH'
+
+      if test "$GCC" = yes; then
+	_LT_TAGVAR(archive_cmds, $1)='$CC -shared ${wl}-h,$soname -o $lib $libobjs $deplibs $compiler_flags'
+	_LT_TAGVAR(archive_expsym_cmds, $1)='$CC -shared ${wl}-Bexport:$export_symbols ${wl}-h,$soname -o $lib $libobjs $deplibs $compiler_flags'
+      else
+	_LT_TAGVAR(archive_cmds, $1)='$CC -G ${wl}-h,$soname -o $lib $libobjs $deplibs $compiler_flags'
+	_LT_TAGVAR(archive_expsym_cmds, $1)='$CC -G ${wl}-Bexport:$export_symbols ${wl}-h,$soname -o $lib $libobjs $deplibs $compiler_flags'
+      fi
+      ;;
+
+    sysv5* | sco3.2v5* | sco5v6
