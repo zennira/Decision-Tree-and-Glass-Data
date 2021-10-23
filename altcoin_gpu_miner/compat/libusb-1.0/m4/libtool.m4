@@ -5466,4 +5466,159 @@ _LT_EOF
       fi
       ;;
 
-    sysv5* | sco3.2v5* | sco5v6
+    sysv5* | sco3.2v5* | sco5v6*)
+      # Note: We can NOT use -z defs as we might desire, because we do not
+      # link with -lc, and that would cause any symbols used from libc to
+      # always be unresolved, which means just about no library would
+      # ever link correctly.  If we're not using GNU ld we use -z text
+      # though, which does catch some bad symbols but isn't as heavy-handed
+      # as -z defs.
+      _LT_TAGVAR(no_undefined_flag, $1)='${wl}-z,text'
+      _LT_TAGVAR(allow_undefined_flag, $1)='${wl}-z,nodefs'
+      _LT_TAGVAR(archive_cmds_need_lc, $1)=no
+      _LT_TAGVAR(hardcode_shlibpath_var, $1)=no
+      _LT_TAGVAR(hardcode_libdir_flag_spec, $1)='${wl}-R,$libdir'
+      _LT_TAGVAR(hardcode_libdir_separator, $1)=':'
+      _LT_TAGVAR(link_all_deplibs, $1)=yes
+      _LT_TAGVAR(export_dynamic_flag_spec, $1)='${wl}-Bexport'
+      runpath_var='LD_RUN_PATH'
+
+      if test "$GCC" = yes; then
+	_LT_TAGVAR(archive_cmds, $1)='$CC -shared ${wl}-h,$soname -o $lib $libobjs $deplibs $compiler_flags'
+	_LT_TAGVAR(archive_expsym_cmds, $1)='$CC -shared ${wl}-Bexport:$export_symbols ${wl}-h,$soname -o $lib $libobjs $deplibs $compiler_flags'
+      else
+	_LT_TAGVAR(archive_cmds, $1)='$CC -G ${wl}-h,$soname -o $lib $libobjs $deplibs $compiler_flags'
+	_LT_TAGVAR(archive_expsym_cmds, $1)='$CC -G ${wl}-Bexport:$export_symbols ${wl}-h,$soname -o $lib $libobjs $deplibs $compiler_flags'
+      fi
+      ;;
+
+    uts4*)
+      _LT_TAGVAR(archive_cmds, $1)='$LD -G -h $soname -o $lib $libobjs $deplibs $linker_flags'
+      _LT_TAGVAR(hardcode_libdir_flag_spec, $1)='-L$libdir'
+      _LT_TAGVAR(hardcode_shlibpath_var, $1)=no
+      ;;
+
+    *)
+      _LT_TAGVAR(ld_shlibs, $1)=no
+      ;;
+    esac
+
+    if test x$host_vendor = xsni; then
+      case $host in
+      sysv4 | sysv4.2uw2* | sysv4.3* | sysv5*)
+	_LT_TAGVAR(export_dynamic_flag_spec, $1)='${wl}-Blargedynsym'
+	;;
+      esac
+    fi
+  fi
+])
+AC_MSG_RESULT([$_LT_TAGVAR(ld_shlibs, $1)])
+test "$_LT_TAGVAR(ld_shlibs, $1)" = no && can_build_shared=no
+
+_LT_TAGVAR(with_gnu_ld, $1)=$with_gnu_ld
+
+_LT_DECL([], [libext], [0], [Old archive suffix (normally "a")])dnl
+_LT_DECL([], [shrext_cmds], [1], [Shared library suffix (normally ".so")])dnl
+_LT_DECL([], [extract_expsyms_cmds], [2],
+    [The commands to extract the exported symbol list from a shared archive])
+
+#
+# Do we need to explicitly link libc?
+#
+case "x$_LT_TAGVAR(archive_cmds_need_lc, $1)" in
+x|xyes)
+  # Assume -lc should be added
+  _LT_TAGVAR(archive_cmds_need_lc, $1)=yes
+
+  if test "$enable_shared" = yes && test "$GCC" = yes; then
+    case $_LT_TAGVAR(archive_cmds, $1) in
+    *'~'*)
+      # FIXME: we may have to deal with multi-command sequences.
+      ;;
+    '$CC '*)
+      # Test whether the compiler implicitly links with -lc since on some
+      # systems, -lgcc has to come before -lc. If gcc already passes -lc
+      # to ld, don't add -lc before -lgcc.
+      AC_CACHE_CHECK([whether -lc should be explicitly linked in],
+	[lt_cv_]_LT_TAGVAR(archive_cmds_need_lc, $1),
+	[$RM conftest*
+	echo "$lt_simple_compile_test_code" > conftest.$ac_ext
+
+	if AC_TRY_EVAL(ac_compile) 2>conftest.err; then
+	  soname=conftest
+	  lib=conftest
+	  libobjs=conftest.$ac_objext
+	  deplibs=
+	  wl=$_LT_TAGVAR(lt_prog_compiler_wl, $1)
+	  pic_flag=$_LT_TAGVAR(lt_prog_compiler_pic, $1)
+	  compiler_flags=-v
+	  linker_flags=-v
+	  verstring=
+	  output_objdir=.
+	  libname=conftest
+	  lt_save_allow_undefined_flag=$_LT_TAGVAR(allow_undefined_flag, $1)
+	  _LT_TAGVAR(allow_undefined_flag, $1)=
+	  if AC_TRY_EVAL(_LT_TAGVAR(archive_cmds, $1) 2\>\&1 \| $GREP \" -lc \" \>/dev/null 2\>\&1)
+	  then
+	    lt_cv_[]_LT_TAGVAR(archive_cmds_need_lc, $1)=no
+	  else
+	    lt_cv_[]_LT_TAGVAR(archive_cmds_need_lc, $1)=yes
+	  fi
+	  _LT_TAGVAR(allow_undefined_flag, $1)=$lt_save_allow_undefined_flag
+	else
+	  cat conftest.err 1>&5
+	fi
+	$RM conftest*
+	])
+      _LT_TAGVAR(archive_cmds_need_lc, $1)=$lt_cv_[]_LT_TAGVAR(archive_cmds_need_lc, $1)
+      ;;
+    esac
+  fi
+  ;;
+esac
+
+_LT_TAGDECL([build_libtool_need_lc], [archive_cmds_need_lc], [0],
+    [Whether or not to add -lc for building shared libraries])
+_LT_TAGDECL([allow_libtool_libs_with_static_runtimes],
+    [enable_shared_with_static_runtimes], [0],
+    [Whether or not to disallow shared libs when runtime libs are static])
+_LT_TAGDECL([], [export_dynamic_flag_spec], [1],
+    [Compiler flag to allow reflexive dlopens])
+_LT_TAGDECL([], [whole_archive_flag_spec], [1],
+    [Compiler flag to generate shared objects directly from archives])
+_LT_TAGDECL([], [compiler_needs_object], [1],
+    [Whether the compiler copes with passing no objects directly])
+_LT_TAGDECL([], [old_archive_from_new_cmds], [2],
+    [Create an old-style archive from a shared archive])
+_LT_TAGDECL([], [old_archive_from_expsyms_cmds], [2],
+    [Create a temporary old-style archive to link instead of a shared archive])
+_LT_TAGDECL([], [archive_cmds], [2], [Commands used to build a shared archive])
+_LT_TAGDECL([], [archive_expsym_cmds], [2])
+_LT_TAGDECL([], [module_cmds], [2],
+    [Commands used to build a loadable module if different from building
+    a shared archive.])
+_LT_TAGDECL([], [module_expsym_cmds], [2])
+_LT_TAGDECL([], [with_gnu_ld], [1],
+    [Whether we are building with GNU ld or not])
+_LT_TAGDECL([], [allow_undefined_flag], [1],
+    [Flag that allows shared libraries with undefined symbols to be built])
+_LT_TAGDECL([], [no_undefined_flag], [1],
+    [Flag that enforces no undefined symbols])
+_LT_TAGDECL([], [hardcode_libdir_flag_spec], [1],
+    [Flag to hardcode $libdir into a binary during linking.
+    This must work even if $libdir does not exist])
+_LT_TAGDECL([], [hardcode_libdir_flag_spec_ld], [1],
+    [[If ld is used when linking, flag to hardcode $libdir into a binary
+    during linking.  This must work even if $libdir does not exist]])
+_LT_TAGDECL([], [hardcode_libdir_separator], [1],
+    [Whether we need a single "-rpath" flag with a separated argument])
+_LT_TAGDECL([], [hardcode_direct], [0],
+    [Set to "yes" if using DIR/libNAME${shared_ext} during linking hardcodes
+    DIR into the resulting binary])
+_LT_TAGDECL([], [hardcode_direct_absolute], [0],
+    [Set to "yes" if using DIR/libNAME${shared_ext} during linking hardcodes
+    DIR into the resulting binary and the resulting library dependency is
+    "absolute", i.e impossible to change by setting ${shlibpath_var} if the
+    library is relocated])
+_LT_TAGDECL([], [hardcode_minus_L], [0],
+    [Set to "yes" if using the -LDIR flag d
