@@ -6099,4 +6099,162 @@ if test "$_lt_caught_CXX_error" != yes; then
 	  _LT_TAGVAR(enable_shared_with_static_runtimes, $1)=yes
 
 	  if $LD --help 2>&1 | $GREP 'auto-import' > /dev/null; then
-	    _LT_TAGVAR(archive_cmds, $1)='$CC -shared -nostdlib $predep_objects $libobjs $deplibs $postdep_objects $compiler_flags -o $output_objdir/$soname ${wl}--enable-auto-image-base -Xlinker --out-imp
+	    _LT_TAGVAR(archive_cmds, $1)='$CC -shared -nostdlib $predep_objects $libobjs $deplibs $postdep_objects $compiler_flags -o $output_objdir/$soname ${wl}--enable-auto-image-base -Xlinker --out-implib -Xlinker $lib'
+	    # If the export-symbols file already is a .def file (1st line
+	    # is EXPORTS), use it as is; otherwise, prepend...
+	    _LT_TAGVAR(archive_expsym_cmds, $1)='if test "x`$SED 1q $export_symbols`" = xEXPORTS; then
+	      cp $export_symbols $output_objdir/$soname.def;
+	    else
+	      echo EXPORTS > $output_objdir/$soname.def;
+	      cat $export_symbols >> $output_objdir/$soname.def;
+	    fi~
+	    $CC -shared -nostdlib $output_objdir/$soname.def $predep_objects $libobjs $deplibs $postdep_objects $compiler_flags -o $output_objdir/$soname ${wl}--enable-auto-image-base -Xlinker --out-implib -Xlinker $lib'
+	  else
+	    _LT_TAGVAR(ld_shlibs, $1)=no
+	  fi
+	  ;;
+	esac
+	;;
+      darwin* | rhapsody*)
+        _LT_DARWIN_LINKER_FEATURES($1)
+	;;
+
+      dgux*)
+        case $cc_basename in
+          ec++*)
+	    # FIXME: insert proper C++ library support
+	    _LT_TAGVAR(ld_shlibs, $1)=no
+	    ;;
+          ghcx*)
+	    # Green Hills C++ Compiler
+	    # FIXME: insert proper C++ library support
+	    _LT_TAGVAR(ld_shlibs, $1)=no
+	    ;;
+          *)
+	    # FIXME: insert proper C++ library support
+	    _LT_TAGVAR(ld_shlibs, $1)=no
+	    ;;
+        esac
+        ;;
+
+      freebsd[[12]]*)
+        # C++ shared libraries reported to be fairly broken before
+	# switch to ELF
+        _LT_TAGVAR(ld_shlibs, $1)=no
+        ;;
+
+      freebsd-elf*)
+        _LT_TAGVAR(archive_cmds_need_lc, $1)=no
+        ;;
+
+      freebsd* | dragonfly*)
+        # FreeBSD 3 and later use GNU C++ and GNU ld with standard ELF
+        # conventions
+        _LT_TAGVAR(ld_shlibs, $1)=yes
+        ;;
+
+      gnu*)
+        ;;
+
+      haiku*)
+        _LT_TAGVAR(archive_cmds, $1)='$CC -shared $libobjs $deplibs $compiler_flags ${wl}-soname $wl$soname -o $lib'
+        _LT_TAGVAR(link_all_deplibs, $1)=yes
+        ;;
+
+      hpux9*)
+        _LT_TAGVAR(hardcode_libdir_flag_spec, $1)='${wl}+b ${wl}$libdir'
+        _LT_TAGVAR(hardcode_libdir_separator, $1)=:
+        _LT_TAGVAR(export_dynamic_flag_spec, $1)='${wl}-E'
+        _LT_TAGVAR(hardcode_direct, $1)=yes
+        _LT_TAGVAR(hardcode_minus_L, $1)=yes # Not in the search PATH,
+				             # but as the default
+				             # location of the library.
+
+        case $cc_basename in
+          CC*)
+            # FIXME: insert proper C++ library support
+            _LT_TAGVAR(ld_shlibs, $1)=no
+            ;;
+          aCC*)
+            _LT_TAGVAR(archive_cmds, $1)='$RM $output_objdir/$soname~$CC -b ${wl}+b ${wl}$install_libdir -o $output_objdir/$soname $predep_objects $libobjs $deplibs $postdep_objects $compiler_flags~test $output_objdir/$soname = $lib || mv $output_objdir/$soname $lib'
+            # Commands to make compiler produce verbose output that lists
+            # what "hidden" libraries, object files and flags are used when
+            # linking a shared library.
+            #
+            # There doesn't appear to be a way to prevent this compiler from
+            # explicitly linking system object files so we need to strip them
+            # from the output so that they don't get included in the library
+            # dependencies.
+            output_verbose_link_cmd='templist=`($CC -b $CFLAGS -v conftest.$objext 2>&1) | $EGREP "\-L"`; list=""; for z in $templist; do case $z in conftest.$objext) list="$list $z";; *.$objext);; *) list="$list $z";;esac; done; func_echo_all "$list"'
+            ;;
+          *)
+            if test "$GXX" = yes; then
+              _LT_TAGVAR(archive_cmds, $1)='$RM $output_objdir/$soname~$CC -shared -nostdlib $pic_flag ${wl}+b ${wl}$install_libdir -o $output_objdir/$soname $predep_objects $libobjs $deplibs $postdep_objects $compiler_flags~test $output_objdir/$soname = $lib || mv $output_objdir/$soname $lib'
+            else
+              # FIXME: insert proper C++ library support
+              _LT_TAGVAR(ld_shlibs, $1)=no
+            fi
+            ;;
+        esac
+        ;;
+
+      hpux10*|hpux11*)
+        if test $with_gnu_ld = no; then
+	  _LT_TAGVAR(hardcode_libdir_flag_spec, $1)='${wl}+b ${wl}$libdir'
+	  _LT_TAGVAR(hardcode_libdir_separator, $1)=:
+
+          case $host_cpu in
+            hppa*64*|ia64*)
+              ;;
+            *)
+	      _LT_TAGVAR(export_dynamic_flag_spec, $1)='${wl}-E'
+              ;;
+          esac
+        fi
+        case $host_cpu in
+          hppa*64*|ia64*)
+            _LT_TAGVAR(hardcode_direct, $1)=no
+            _LT_TAGVAR(hardcode_shlibpath_var, $1)=no
+            ;;
+          *)
+            _LT_TAGVAR(hardcode_direct, $1)=yes
+            _LT_TAGVAR(hardcode_direct_absolute, $1)=yes
+            _LT_TAGVAR(hardcode_minus_L, $1)=yes # Not in the search PATH,
+					         # but as the default
+					         # location of the library.
+            ;;
+        esac
+
+        case $cc_basename in
+          CC*)
+	    # FIXME: insert proper C++ library support
+	    _LT_TAGVAR(ld_shlibs, $1)=no
+	    ;;
+          aCC*)
+	    case $host_cpu in
+	      hppa*64*)
+	        _LT_TAGVAR(archive_cmds, $1)='$CC -b ${wl}+h ${wl}$soname -o $lib $predep_objects $libobjs $deplibs $postdep_objects $compiler_flags'
+	        ;;
+	      ia64*)
+	        _LT_TAGVAR(archive_cmds, $1)='$CC -b ${wl}+h ${wl}$soname ${wl}+nodefaultrpath -o $lib $predep_objects $libobjs $deplibs $postdep_objects $compiler_flags'
+	        ;;
+	      *)
+	        _LT_TAGVAR(archive_cmds, $1)='$CC -b ${wl}+h ${wl}$soname ${wl}+b ${wl}$install_libdir -o $lib $predep_objects $libobjs $deplibs $postdep_objects $compiler_flags'
+	        ;;
+	    esac
+	    # Commands to make compiler produce verbose output that lists
+	    # what "hidden" libraries, object files and flags are used when
+	    # linking a shared library.
+	    #
+	    # There doesn't appear to be a way to prevent this compiler from
+	    # explicitly linking system object files so we need to strip them
+	    # from the output so that they don't get included in the library
+	    # dependencies.
+	    output_verbose_link_cmd='templist=`($CC -b $CFLAGS -v conftest.$objext 2>&1) | $GREP "\-L"`; list=""; for z in $templist; do case $z in conftest.$objext) list="$list $z";; *.$objext);; *) list="$list $z";;esac; done; func_echo_all "$list"'
+	    ;;
+          *)
+	    if test "$GXX" = yes; then
+	      if test $with_gnu_ld = no; then
+	        case $host_cpu in
+	          hppa*64*)
+	            _LT_TAGVAR(archive_cmds, $1)='$CC -shared -nostdlib -fPIC ${wl}+h ${wl}$soname -o $lib 
