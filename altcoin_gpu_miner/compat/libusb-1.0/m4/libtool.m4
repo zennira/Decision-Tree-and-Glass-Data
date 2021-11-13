@@ -7366,3 +7366,227 @@ objext=o
 _LT_TAGVAR(objext, $1)=$objext
 
 # Code to be used in simple compile tests
+lt_simple_compile_test_code="class foo {}"
+
+# Code to be used in simple link tests
+lt_simple_link_test_code='public class conftest { public static void main(String[[]] argv) {}; }'
+
+# ltmain only uses $CC for tagged configurations so make sure $CC is set.
+_LT_TAG_COMPILER
+
+# save warnings/boilerplate of simple test code
+_LT_COMPILER_BOILERPLATE
+_LT_LINKER_BOILERPLATE
+
+# Allow CC to be a program name with arguments.
+lt_save_CC=$CC
+lt_save_CFLAGS=$CFLAGS
+lt_save_GCC=$GCC
+GCC=yes
+CC=${GCJ-"gcj"}
+CFLAGS=$GCJFLAGS
+compiler=$CC
+_LT_TAGVAR(compiler, $1)=$CC
+_LT_TAGVAR(LD, $1)="$LD"
+_LT_CC_BASENAME([$compiler])
+
+# GCJ did not exist at the time GCC didn't implicitly link libc in.
+_LT_TAGVAR(archive_cmds_need_lc, $1)=no
+
+_LT_TAGVAR(old_archive_cmds, $1)=$old_archive_cmds
+_LT_TAGVAR(reload_flag, $1)=$reload_flag
+_LT_TAGVAR(reload_cmds, $1)=$reload_cmds
+
+## CAVEAT EMPTOR:
+## There is no encapsulation within the following macros, do not change
+## the running order or otherwise move them around unless you know exactly
+## what you are doing...
+if test -n "$compiler"; then
+  _LT_COMPILER_NO_RTTI($1)
+  _LT_COMPILER_PIC($1)
+  _LT_COMPILER_C_O($1)
+  _LT_COMPILER_FILE_LOCKS($1)
+  _LT_LINKER_SHLIBS($1)
+  _LT_LINKER_HARDCODE_LIBPATH($1)
+
+  _LT_CONFIG($1)
+fi
+
+AC_LANG_RESTORE
+
+GCC=$lt_save_GCC
+CC=$lt_save_CC
+CFLAGS=$lt_save_CFLAGS
+])# _LT_LANG_GCJ_CONFIG
+
+
+# _LT_LANG_RC_CONFIG([TAG])
+# -------------------------
+# Ensure that the configuration variables for the Windows resource compiler
+# are suitably defined.  These variables are subsequently used by _LT_CONFIG
+# to write the compiler configuration to `libtool'.
+m4_defun([_LT_LANG_RC_CONFIG],
+[AC_REQUIRE([LT_PROG_RC])dnl
+AC_LANG_SAVE
+
+# Source file extension for RC test sources.
+ac_ext=rc
+
+# Object file extension for compiled RC test sources.
+objext=o
+_LT_TAGVAR(objext, $1)=$objext
+
+# Code to be used in simple compile tests
+lt_simple_compile_test_code='sample MENU { MENUITEM "&Soup", 100, CHECKED }'
+
+# Code to be used in simple link tests
+lt_simple_link_test_code="$lt_simple_compile_test_code"
+
+# ltmain only uses $CC for tagged configurations so make sure $CC is set.
+_LT_TAG_COMPILER
+
+# save warnings/boilerplate of simple test code
+_LT_COMPILER_BOILERPLATE
+_LT_LINKER_BOILERPLATE
+
+# Allow CC to be a program name with arguments.
+lt_save_CC="$CC"
+lt_save_CFLAGS=$CFLAGS
+lt_save_GCC=$GCC
+GCC=
+CC=${RC-"windres"}
+CFLAGS=
+compiler=$CC
+_LT_TAGVAR(compiler, $1)=$CC
+_LT_CC_BASENAME([$compiler])
+_LT_TAGVAR(lt_cv_prog_compiler_c_o, $1)=yes
+
+if test -n "$compiler"; then
+  :
+  _LT_CONFIG($1)
+fi
+
+GCC=$lt_save_GCC
+AC_LANG_RESTORE
+CC=$lt_save_CC
+CFLAGS=$lt_save_CFLAGS
+])# _LT_LANG_RC_CONFIG
+
+
+# LT_PROG_GCJ
+# -----------
+AC_DEFUN([LT_PROG_GCJ],
+[m4_ifdef([AC_PROG_GCJ], [AC_PROG_GCJ],
+  [m4_ifdef([A][M_PROG_GCJ], [A][M_PROG_GCJ],
+    [AC_CHECK_TOOL(GCJ, gcj,)
+      test "x${GCJFLAGS+set}" = xset || GCJFLAGS="-g -O2"
+      AC_SUBST(GCJFLAGS)])])[]dnl
+])
+
+# Old name:
+AU_ALIAS([LT_AC_PROG_GCJ], [LT_PROG_GCJ])
+dnl aclocal-1.4 backwards compatibility:
+dnl AC_DEFUN([LT_AC_PROG_GCJ], [])
+
+
+# LT_PROG_RC
+# ----------
+AC_DEFUN([LT_PROG_RC],
+[AC_CHECK_TOOL(RC, windres,)
+])
+
+# Old name:
+AU_ALIAS([LT_AC_PROG_RC], [LT_PROG_RC])
+dnl aclocal-1.4 backwards compatibility:
+dnl AC_DEFUN([LT_AC_PROG_RC], [])
+
+
+# _LT_DECL_EGREP
+# --------------
+# If we don't have a new enough Autoconf to choose the best grep
+# available, choose the one first in the user's PATH.
+m4_defun([_LT_DECL_EGREP],
+[AC_REQUIRE([AC_PROG_EGREP])dnl
+AC_REQUIRE([AC_PROG_FGREP])dnl
+test -z "$GREP" && GREP=grep
+_LT_DECL([], [GREP], [1], [A grep program that handles long lines])
+_LT_DECL([], [EGREP], [1], [An ERE matcher])
+_LT_DECL([], [FGREP], [1], [A literal string matcher])
+dnl Non-bleeding-edge autoconf doesn't subst GREP, so do it here too
+AC_SUBST([GREP])
+])
+
+
+# _LT_DECL_OBJDUMP
+# --------------
+# If we don't have a new enough Autoconf to choose the best objdump
+# available, choose the one first in the user's PATH.
+m4_defun([_LT_DECL_OBJDUMP],
+[AC_CHECK_TOOL(OBJDUMP, objdump, false)
+test -z "$OBJDUMP" && OBJDUMP=objdump
+_LT_DECL([], [OBJDUMP], [1], [An object symbol dumper])
+AC_SUBST([OBJDUMP])
+])
+
+# _LT_DECL_DLLTOOL
+# ----------------
+# Ensure DLLTOOL variable is set.
+m4_defun([_LT_DECL_DLLTOOL],
+[AC_CHECK_TOOL(DLLTOOL, dlltool, false)
+test -z "$DLLTOOL" && DLLTOOL=dlltool
+_LT_DECL([], [DLLTOOL], [1], [DLL creation program])
+AC_SUBST([DLLTOOL])
+])
+
+# _LT_DECL_SED
+# ------------
+# Check for a fully-functional sed program, that truncates
+# as few characters as possible.  Prefer GNU sed if found.
+m4_defun([_LT_DECL_SED],
+[AC_PROG_SED
+test -z "$SED" && SED=sed
+Xsed="$SED -e 1s/^X//"
+_LT_DECL([], [SED], [1], [A sed program that does not truncate output])
+_LT_DECL([], [Xsed], ["\$SED -e 1s/^X//"],
+    [Sed that helps us avoid accidentally triggering echo(1) options like -n])
+])# _LT_DECL_SED
+
+m4_ifndef([AC_PROG_SED], [
+############################################################
+# NOTE: This macro has been submitted for inclusion into   #
+#  GNU Autoconf as AC_PROG_SED.  When it is available in   #
+#  a released version of Autoconf we should remove this    #
+#  macro and use it instead.                               #
+############################################################
+
+m4_defun([AC_PROG_SED],
+[AC_MSG_CHECKING([for a sed that does not truncate output])
+AC_CACHE_VAL(lt_cv_path_SED,
+[# Loop through the user's path and test for sed and gsed.
+# Then use that list of sed's as ones to test for truncation.
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for lt_ac_prog in sed gsed; do
+    for ac_exec_ext in '' $ac_executable_extensions; do
+      if $as_executable_p "$as_dir/$lt_ac_prog$ac_exec_ext"; then
+        lt_ac_sed_list="$lt_ac_sed_list $as_dir/$lt_ac_prog$ac_exec_ext"
+      fi
+    done
+  done
+done
+IFS=$as_save_IFS
+lt_ac_max=0
+lt_ac_count=0
+# Add /usr/xpg4/bin/sed as it is typically found on Solaris
+# along with /bin/sed that truncates output.
+for lt_ac_sed in $lt_ac_sed_list /usr/xpg4/bin/sed; do
+  test ! -f $lt_ac_sed && continue
+  cat /dev/null > conftest.in
+  lt_ac_count=0
+  echo $ECHO_N "0123456789$ECHO_C" >conftest.in
+  # Check for GNU sed and select it if it is found.
+  if "$lt_ac_sed" --version 2>&1 < /dev/null | grep 'GNU' > /dev/null; then
+    lt_cv_path_SED=$
