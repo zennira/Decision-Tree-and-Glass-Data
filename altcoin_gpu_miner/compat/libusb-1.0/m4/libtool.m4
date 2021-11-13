@@ -7148,4 +7148,221 @@ if test "$_lt_disable_F77" != yes; then
   _LT_LINKER_BOILERPLATE
 
   # Allow CC to be a program name with arguments.
-  lt_
+  lt_save_CC="$CC"
+  lt_save_GCC=$GCC
+  lt_save_CFLAGS=$CFLAGS
+  CC=${F77-"f77"}
+  CFLAGS=$FFLAGS
+  compiler=$CC
+  _LT_TAGVAR(compiler, $1)=$CC
+  _LT_CC_BASENAME([$compiler])
+  GCC=$G77
+  if test -n "$compiler"; then
+    AC_MSG_CHECKING([if libtool supports shared libraries])
+    AC_MSG_RESULT([$can_build_shared])
+
+    AC_MSG_CHECKING([whether to build shared libraries])
+    test "$can_build_shared" = "no" && enable_shared=no
+
+    # On AIX, shared libraries and static libraries use the same namespace, and
+    # are all built from PIC.
+    case $host_os in
+      aix3*)
+        test "$enable_shared" = yes && enable_static=no
+        if test -n "$RANLIB"; then
+          archive_cmds="$archive_cmds~\$RANLIB \$lib"
+          postinstall_cmds='$RANLIB $lib'
+        fi
+        ;;
+      aix[[4-9]]*)
+	if test "$host_cpu" != ia64 && test "$aix_use_runtimelinking" = no ; then
+	  test "$enable_shared" = yes && enable_static=no
+	fi
+        ;;
+    esac
+    AC_MSG_RESULT([$enable_shared])
+
+    AC_MSG_CHECKING([whether to build static libraries])
+    # Make sure either enable_shared or enable_static is yes.
+    test "$enable_shared" = yes || enable_static=yes
+    AC_MSG_RESULT([$enable_static])
+
+    _LT_TAGVAR(GCC, $1)="$G77"
+    _LT_TAGVAR(LD, $1)="$LD"
+
+    ## CAVEAT EMPTOR:
+    ## There is no encapsulation within the following macros, do not change
+    ## the running order or otherwise move them around unless you know exactly
+    ## what you are doing...
+    _LT_COMPILER_PIC($1)
+    _LT_COMPILER_C_O($1)
+    _LT_COMPILER_FILE_LOCKS($1)
+    _LT_LINKER_SHLIBS($1)
+    _LT_SYS_DYNAMIC_LINKER($1)
+    _LT_LINKER_HARDCODE_LIBPATH($1)
+
+    _LT_CONFIG($1)
+  fi # test -n "$compiler"
+
+  GCC=$lt_save_GCC
+  CC="$lt_save_CC"
+  CFLAGS="$lt_save_CFLAGS"
+fi # test "$_lt_disable_F77" != yes
+
+AC_LANG_POP
+])# _LT_LANG_F77_CONFIG
+
+
+# _LT_LANG_FC_CONFIG([TAG])
+# -------------------------
+# Ensure that the configuration variables for a Fortran compiler are
+# suitably defined.  These variables are subsequently used by _LT_CONFIG
+# to write the compiler configuration to `libtool'.
+m4_defun([_LT_LANG_FC_CONFIG],
+[AC_LANG_PUSH(Fortran)
+
+if test -z "$FC" || test "X$FC" = "Xno"; then
+  _lt_disable_FC=yes
+fi
+
+_LT_TAGVAR(archive_cmds_need_lc, $1)=no
+_LT_TAGVAR(allow_undefined_flag, $1)=
+_LT_TAGVAR(always_export_symbols, $1)=no
+_LT_TAGVAR(archive_expsym_cmds, $1)=
+_LT_TAGVAR(export_dynamic_flag_spec, $1)=
+_LT_TAGVAR(hardcode_direct, $1)=no
+_LT_TAGVAR(hardcode_direct_absolute, $1)=no
+_LT_TAGVAR(hardcode_libdir_flag_spec, $1)=
+_LT_TAGVAR(hardcode_libdir_flag_spec_ld, $1)=
+_LT_TAGVAR(hardcode_libdir_separator, $1)=
+_LT_TAGVAR(hardcode_minus_L, $1)=no
+_LT_TAGVAR(hardcode_automatic, $1)=no
+_LT_TAGVAR(inherit_rpath, $1)=no
+_LT_TAGVAR(module_cmds, $1)=
+_LT_TAGVAR(module_expsym_cmds, $1)=
+_LT_TAGVAR(link_all_deplibs, $1)=unknown
+_LT_TAGVAR(old_archive_cmds, $1)=$old_archive_cmds
+_LT_TAGVAR(reload_flag, $1)=$reload_flag
+_LT_TAGVAR(reload_cmds, $1)=$reload_cmds
+_LT_TAGVAR(no_undefined_flag, $1)=
+_LT_TAGVAR(whole_archive_flag_spec, $1)=
+_LT_TAGVAR(enable_shared_with_static_runtimes, $1)=no
+
+# Source file extension for fc test sources.
+ac_ext=${ac_fc_srcext-f}
+
+# Object file extension for compiled fc test sources.
+objext=o
+_LT_TAGVAR(objext, $1)=$objext
+
+# No sense in running all these tests if we already determined that
+# the FC compiler isn't working.  Some variables (like enable_shared)
+# are currently assumed to apply to all compilers on this platform,
+# and will be corrupted by setting them based on a non-working compiler.
+if test "$_lt_disable_FC" != yes; then
+  # Code to be used in simple compile tests
+  lt_simple_compile_test_code="\
+      subroutine t
+      return
+      end
+"
+
+  # Code to be used in simple link tests
+  lt_simple_link_test_code="\
+      program t
+      end
+"
+
+  # ltmain only uses $CC for tagged configurations so make sure $CC is set.
+  _LT_TAG_COMPILER
+
+  # save warnings/boilerplate of simple test code
+  _LT_COMPILER_BOILERPLATE
+  _LT_LINKER_BOILERPLATE
+
+  # Allow CC to be a program name with arguments.
+  lt_save_CC="$CC"
+  lt_save_GCC=$GCC
+  lt_save_CFLAGS=$CFLAGS
+  CC=${FC-"f95"}
+  CFLAGS=$FCFLAGS
+  compiler=$CC
+  GCC=$ac_cv_fc_compiler_gnu
+
+  _LT_TAGVAR(compiler, $1)=$CC
+  _LT_CC_BASENAME([$compiler])
+
+  if test -n "$compiler"; then
+    AC_MSG_CHECKING([if libtool supports shared libraries])
+    AC_MSG_RESULT([$can_build_shared])
+
+    AC_MSG_CHECKING([whether to build shared libraries])
+    test "$can_build_shared" = "no" && enable_shared=no
+
+    # On AIX, shared libraries and static libraries use the same namespace, and
+    # are all built from PIC.
+    case $host_os in
+      aix3*)
+        test "$enable_shared" = yes && enable_static=no
+        if test -n "$RANLIB"; then
+          archive_cmds="$archive_cmds~\$RANLIB \$lib"
+          postinstall_cmds='$RANLIB $lib'
+        fi
+        ;;
+      aix[[4-9]]*)
+	if test "$host_cpu" != ia64 && test "$aix_use_runtimelinking" = no ; then
+	  test "$enable_shared" = yes && enable_static=no
+	fi
+        ;;
+    esac
+    AC_MSG_RESULT([$enable_shared])
+
+    AC_MSG_CHECKING([whether to build static libraries])
+    # Make sure either enable_shared or enable_static is yes.
+    test "$enable_shared" = yes || enable_static=yes
+    AC_MSG_RESULT([$enable_static])
+
+    _LT_TAGVAR(GCC, $1)="$ac_cv_fc_compiler_gnu"
+    _LT_TAGVAR(LD, $1)="$LD"
+
+    ## CAVEAT EMPTOR:
+    ## There is no encapsulation within the following macros, do not change
+    ## the running order or otherwise move them around unless you know exactly
+    ## what you are doing...
+    _LT_SYS_HIDDEN_LIBDEPS($1)
+    _LT_COMPILER_PIC($1)
+    _LT_COMPILER_C_O($1)
+    _LT_COMPILER_FILE_LOCKS($1)
+    _LT_LINKER_SHLIBS($1)
+    _LT_SYS_DYNAMIC_LINKER($1)
+    _LT_LINKER_HARDCODE_LIBPATH($1)
+
+    _LT_CONFIG($1)
+  fi # test -n "$compiler"
+
+  GCC=$lt_save_GCC
+  CC=$lt_save_CC
+  CFLAGS=$lt_save_CFLAGS
+fi # test "$_lt_disable_FC" != yes
+
+AC_LANG_POP
+])# _LT_LANG_FC_CONFIG
+
+
+# _LT_LANG_GCJ_CONFIG([TAG])
+# --------------------------
+# Ensure that the configuration variables for the GNU Java Compiler compiler
+# are suitably defined.  These variables are subsequently used by _LT_CONFIG
+# to write the compiler configuration to `libtool'.
+m4_defun([_LT_LANG_GCJ_CONFIG],
+[AC_REQUIRE([LT_PROG_GCJ])dnl
+AC_LANG_SAVE
+
+# Source file extension for Java test sources.
+ac_ext=java
+
+# Object file extension for compiled Java test sources.
+objext=o
+_LT_TAGVAR(objext, $1)=$objext
+
+# Code to be used in simple compile tests
