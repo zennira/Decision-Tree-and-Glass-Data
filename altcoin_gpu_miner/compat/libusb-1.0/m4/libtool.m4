@@ -6939,4 +6939,213 @@ if AC_TRY_EVAL(ac_compile); then
        case $p in
        =*) func_stripname_cnf '=' '' "$p"; p=$lt_sysroot$func_stripname_result ;;
        esac
-       if test 
+       if test "$pre_test_object_deps_done" = no; then
+	 case ${prev} in
+	 -L | -R)
+	   # Internal compiler library paths should come after those
+	   # provided the user.  The postdeps already come after the
+	   # user supplied libs so there is no need to process them.
+	   if test -z "$_LT_TAGVAR(compiler_lib_search_path, $1)"; then
+	     _LT_TAGVAR(compiler_lib_search_path, $1)="${prev}${p}"
+	   else
+	     _LT_TAGVAR(compiler_lib_search_path, $1)="${_LT_TAGVAR(compiler_lib_search_path, $1)} ${prev}${p}"
+	   fi
+	   ;;
+	 # The "-l" case would never come before the object being
+	 # linked, so don't bother handling this case.
+	 esac
+       else
+	 if test -z "$_LT_TAGVAR(postdeps, $1)"; then
+	   _LT_TAGVAR(postdeps, $1)="${prev}${p}"
+	 else
+	   _LT_TAGVAR(postdeps, $1)="${_LT_TAGVAR(postdeps, $1)} ${prev}${p}"
+	 fi
+       fi
+       prev=
+       ;;
+
+    *.lto.$objext) ;; # Ignore GCC LTO objects
+    *.$objext)
+       # This assumes that the test object file only shows up
+       # once in the compiler output.
+       if test "$p" = "conftest.$objext"; then
+	 pre_test_object_deps_done=yes
+	 continue
+       fi
+
+       if test "$pre_test_object_deps_done" = no; then
+	 if test -z "$_LT_TAGVAR(predep_objects, $1)"; then
+	   _LT_TAGVAR(predep_objects, $1)="$p"
+	 else
+	   _LT_TAGVAR(predep_objects, $1)="$_LT_TAGVAR(predep_objects, $1) $p"
+	 fi
+       else
+	 if test -z "$_LT_TAGVAR(postdep_objects, $1)"; then
+	   _LT_TAGVAR(postdep_objects, $1)="$p"
+	 else
+	   _LT_TAGVAR(postdep_objects, $1)="$_LT_TAGVAR(postdep_objects, $1) $p"
+	 fi
+       fi
+       ;;
+
+    *) ;; # Ignore the rest.
+
+    esac
+  done
+
+  # Clean up.
+  rm -f a.out a.exe
+else
+  echo "libtool.m4: error: problem compiling $1 test program"
+fi
+
+$RM -f confest.$objext
+CFLAGS=$_lt_libdeps_save_CFLAGS
+
+# PORTME: override above test on systems where it is broken
+m4_if([$1], [CXX],
+[case $host_os in
+interix[[3-9]]*)
+  # Interix 3.5 installs completely hosed .la files for C++, so rather than
+  # hack all around it, let's just trust "g++" to DTRT.
+  _LT_TAGVAR(predep_objects,$1)=
+  _LT_TAGVAR(postdep_objects,$1)=
+  _LT_TAGVAR(postdeps,$1)=
+  ;;
+
+linux*)
+  case `$CC -V 2>&1 | sed 5q` in
+  *Sun\ C*)
+    # Sun C++ 5.9
+
+    # The more standards-conforming stlport4 library is
+    # incompatible with the Cstd library. Avoid specifying
+    # it if it's in CXXFLAGS. Ignore libCrun as
+    # -library=stlport4 depends on it.
+    case " $CXX $CXXFLAGS " in
+    *" -library=stlport4 "*)
+      solaris_use_stlport4=yes
+      ;;
+    esac
+
+    if test "$solaris_use_stlport4" != yes; then
+      _LT_TAGVAR(postdeps,$1)='-library=Cstd -library=Crun'
+    fi
+    ;;
+  esac
+  ;;
+
+solaris*)
+  case $cc_basename in
+  CC* | sunCC*)
+    # The more standards-conforming stlport4 library is
+    # incompatible with the Cstd library. Avoid specifying
+    # it if it's in CXXFLAGS. Ignore libCrun as
+    # -library=stlport4 depends on it.
+    case " $CXX $CXXFLAGS " in
+    *" -library=stlport4 "*)
+      solaris_use_stlport4=yes
+      ;;
+    esac
+
+    # Adding this requires a known-good setup of shared libraries for
+    # Sun compiler versions before 5.6, else PIC objects from an old
+    # archive will be linked into the output, leading to subtle bugs.
+    if test "$solaris_use_stlport4" != yes; then
+      _LT_TAGVAR(postdeps,$1)='-library=Cstd -library=Crun'
+    fi
+    ;;
+  esac
+  ;;
+esac
+])
+
+case " $_LT_TAGVAR(postdeps, $1) " in
+*" -lc "*) _LT_TAGVAR(archive_cmds_need_lc, $1)=no ;;
+esac
+ _LT_TAGVAR(compiler_lib_search_dirs, $1)=
+if test -n "${_LT_TAGVAR(compiler_lib_search_path, $1)}"; then
+ _LT_TAGVAR(compiler_lib_search_dirs, $1)=`echo " ${_LT_TAGVAR(compiler_lib_search_path, $1)}" | ${SED} -e 's! -L! !g' -e 's!^ !!'`
+fi
+_LT_TAGDECL([], [compiler_lib_search_dirs], [1],
+    [The directories searched by this compiler when creating a shared library])
+_LT_TAGDECL([], [predep_objects], [1],
+    [Dependencies to place before and after the objects being linked to
+    create a shared library])
+_LT_TAGDECL([], [postdep_objects], [1])
+_LT_TAGDECL([], [predeps], [1])
+_LT_TAGDECL([], [postdeps], [1])
+_LT_TAGDECL([], [compiler_lib_search_path], [1],
+    [The library search path used internally by the compiler when linking
+    a shared library])
+])# _LT_SYS_HIDDEN_LIBDEPS
+
+
+# _LT_LANG_F77_CONFIG([TAG])
+# --------------------------
+# Ensure that the configuration variables for a Fortran 77 compiler are
+# suitably defined.  These variables are subsequently used by _LT_CONFIG
+# to write the compiler configuration to `libtool'.
+m4_defun([_LT_LANG_F77_CONFIG],
+[AC_LANG_PUSH(Fortran 77)
+if test -z "$F77" || test "X$F77" = "Xno"; then
+  _lt_disable_F77=yes
+fi
+
+_LT_TAGVAR(archive_cmds_need_lc, $1)=no
+_LT_TAGVAR(allow_undefined_flag, $1)=
+_LT_TAGVAR(always_export_symbols, $1)=no
+_LT_TAGVAR(archive_expsym_cmds, $1)=
+_LT_TAGVAR(export_dynamic_flag_spec, $1)=
+_LT_TAGVAR(hardcode_direct, $1)=no
+_LT_TAGVAR(hardcode_direct_absolute, $1)=no
+_LT_TAGVAR(hardcode_libdir_flag_spec, $1)=
+_LT_TAGVAR(hardcode_libdir_flag_spec_ld, $1)=
+_LT_TAGVAR(hardcode_libdir_separator, $1)=
+_LT_TAGVAR(hardcode_minus_L, $1)=no
+_LT_TAGVAR(hardcode_automatic, $1)=no
+_LT_TAGVAR(inherit_rpath, $1)=no
+_LT_TAGVAR(module_cmds, $1)=
+_LT_TAGVAR(module_expsym_cmds, $1)=
+_LT_TAGVAR(link_all_deplibs, $1)=unknown
+_LT_TAGVAR(old_archive_cmds, $1)=$old_archive_cmds
+_LT_TAGVAR(reload_flag, $1)=$reload_flag
+_LT_TAGVAR(reload_cmds, $1)=$reload_cmds
+_LT_TAGVAR(no_undefined_flag, $1)=
+_LT_TAGVAR(whole_archive_flag_spec, $1)=
+_LT_TAGVAR(enable_shared_with_static_runtimes, $1)=no
+
+# Source file extension for f77 test sources.
+ac_ext=f
+
+# Object file extension for compiled f77 test sources.
+objext=o
+_LT_TAGVAR(objext, $1)=$objext
+
+# No sense in running all these tests if we already determined that
+# the F77 compiler isn't working.  Some variables (like enable_shared)
+# are currently assumed to apply to all compilers on this platform,
+# and will be corrupted by setting them based on a non-working compiler.
+if test "$_lt_disable_F77" != yes; then
+  # Code to be used in simple compile tests
+  lt_simple_compile_test_code="\
+      subroutine t
+      return
+      end
+"
+
+  # Code to be used in simple link tests
+  lt_simple_link_test_code="\
+      program t
+      end
+"
+
+  # ltmain only uses $CC for tagged configurations so make sure $CC is set.
+  _LT_TAG_COMPILER
+
+  # save warnings/boilerplate of simple test code
+  _LT_COMPILER_BOILERPLATE
+  _LT_LINKER_BOILERPLATE
+
+  # Allow CC to be a program name with arguments.
+  lt_
