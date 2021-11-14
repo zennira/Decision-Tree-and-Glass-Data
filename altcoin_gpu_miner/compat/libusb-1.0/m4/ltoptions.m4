@@ -343,4 +343,27 @@ LT_OPTION_DEFINE([LT_INIT], [no-pic], [_LT_WITH_PIC([no])])
 AU_DEFUN([AC_LIBTOOL_PICMODE],
 [_LT_SET_OPTION([LT_INIT], [pic-only])
 AC_DIAGNOSE([obsolete],
-[$0:
+[$0: Remove this warning and the call to _LT_SET_OPTION when you
+put the `pic-only' option into LT_INIT's first parameter.])
+])
+
+dnl aclocal-1.4 backwards compatibility:
+dnl AC_DEFUN([AC_LIBTOOL_PICMODE], [])
+
+## ----------------- ##
+## LTDL_INIT Options ##
+## ----------------- ##
+
+m4_define([_LTDL_MODE], [])
+LT_OPTION_DEFINE([LTDL_INIT], [nonrecursive],
+		 [m4_define([_LTDL_MODE], [nonrecursive])])
+LT_OPTION_DEFINE([LTDL_INIT], [recursive],
+		 [m4_define([_LTDL_MODE], [recursive])])
+LT_OPTION_DEFINE([LTDL_INIT], [subproject],
+		 [m4_define([_LTDL_MODE], [subproject])])
+
+m4_define([_LTDL_TYPE], [])
+LT_OPTION_DEFINE([LTDL_INIT], [installable],
+		 [m4_define([_LTDL_TYPE], [installable])])
+LT_OPTION_DEFINE([LTDL_INIT], [convenience],
+		 [m4_define([_LTDL_TYPE], [convenience])])
