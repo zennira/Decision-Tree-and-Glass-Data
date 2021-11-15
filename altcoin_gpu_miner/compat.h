@@ -79,4 +79,10 @@ typedef long suseconds_t;
 #define PTH(thr) ((thr)->pth)
 #else
 #define PTH(thr) ((thr)->pth.p)
-#e
+#endif
+
+#else
+#define PTH(thr) ((thr)->pth)
+#endif /* WIN32 */
+
+#endif /* __COMPAT_H__ */
