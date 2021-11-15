@@ -3153,3 +3153,937 @@ configure: failed program was:
 | #ifdef HAVE_UNISTD_H
 | # include <unistd.h>
 | #endif
+| int
+| main ()
+| {
+| if (sizeof ((size_t)))
+| 	    return 0;
+|   ;
+|   return 0;
+| }
+configure:15502: result: yes
+configure:15515: checking for working alloca.h
+configure:15532: gcc -o conftest.exe -O2 -msse2   conftest.c  >&5
+conftest.c:49:20: fatal error: alloca.h: No such file or directory
+compilation terminated.
+configure:15532: $? = 1
+configure: failed program was:
+| /* confdefs.h */
+| #define PACKAGE_NAME "ALTMiner"
+| #define PACKAGE_TARNAME "altminer"
+| #define PACKAGE_VERSION "0.5.4pre1"
+| #define PACKAGE_STRING "ALTMiner 0.5.4pre1"
+| #define PACKAGE_BUGREPORT ""
+| #define PACKAGE_URL ""
+| #define PACKAGE "altminer"
+| #define VERSION "0.5.4pre1"
+| #define STDC_HEADERS 1
+| #define HAVE_SYS_TYPES_H 1
+| #define HAVE_SYS_STAT_H 1
+| #define HAVE_STDLIB_H 1
+| #define HAVE_STRING_H 1
+| #define HAVE_MEMORY_H 1
+| #define HAVE_STRINGS_H 1
+| #define HAVE_INTTYPES_H 1
+| #define HAVE_STDINT_H 1
+| #define HAVE_UNISTD_H 1
+| #define __EXTENSIONS__ 1
+| #define _ALL_SOURCE 1
+| #define _GNU_SOURCE 1
+| #define _POSIX_PTHREAD_SEMANTICS 1
+| #define _TANDEM_SOURCE 1
+| #define CGMINER_MAJOR_VERSION 0
+| #define CGMINER_MINOR_VERSION 5
+| #define CGMINER_MINOR_SUBVERSION 4pre1
+| #define LT_OBJDIR ".libs/"
+| #define HAVE_WCHAR_H 1
+| #define HAVE_STDINT_H 1
+| #define HAVE_MPROTECT 1
+| #define HAVE_DECL_MEMMEM 0
+| #define restrict __restrict
+| #define uid_t int
+| #define gid_t int
+| #define HAVE_WCHAR_T 1
+| #define HAVE_UNSIGNED_LONG_LONG_INT 1
+| #define HAVE_LONG_LONG_INT 1
+| #define HAVE_RAW_DECL_STRDUP 1
+| #define HAVE_RAW_DECL_STRNCAT 1
+| #define HAVE_RAW_DECL_STRPBRK 1
+| #define GNULIB_TEST_MEMCHR 1
+| #define GNULIB_TEST_MEMMEM 1
+| #define GNULIB_TEST_SIGACTION 1
+| #define HAVE_SIGSET_T 1
+| #define GNULIB_TEST_SIGPROCMASK 1
+| #define STDC_HEADERS 1
+| /* end confdefs.h.  */
+| #include <alloca.h>
+| int
+| main ()
+| {
+| char *p = (char *) alloca (2 * sizeof (int));
+| 			  if (p) return 0;
+|   ;
+|   return 0;
+| }
+configure:15540: result: no
+configure:15548: checking for alloca
+configure:15585: gcc -o conftest.exe -O2 -msse2   conftest.c  >&5
+configure:15585: $? = 0
+configure:15593: result: yes
+configure:15790: checking for OpenCL
+configure:15813: gcc -o conftest.exe -O2 -msse2    conftest.c  -lOpenCL >&5
+configure:15813: $? = 0
+configure:15814: result: yes
+configure:15848: checking for nanosleep in -lwinpthread
+configure:15873: gcc -o conftest.exe -O2 -msse2   conftest.c -lwinpthread   >&5
+d:/mingw/bin/../lib/gcc/mingw32/4.6.2/../../../../mingw32/bin/ld.exe: cannot find -lwinpthread
+collect2: ld returned 1 exit status
+configure:15873: $? = 1
+configure: failed program was:
+| /* confdefs.h */
+| #define PACKAGE_NAME "ALTMiner"
+| #define PACKAGE_TARNAME "altminer"
+| #define PACKAGE_VERSION "0.5.4pre1"
+| #define PACKAGE_STRING "ALTMiner 0.5.4pre1"
+| #define PACKAGE_BUGREPORT ""
+| #define PACKAGE_URL ""
+| #define PACKAGE "altminer"
+| #define VERSION "0.5.4pre1"
+| #define STDC_HEADERS 1
+| #define HAVE_SYS_TYPES_H 1
+| #define HAVE_SYS_STAT_H 1
+| #define HAVE_STDLIB_H 1
+| #define HAVE_STRING_H 1
+| #define HAVE_MEMORY_H 1
+| #define HAVE_STRINGS_H 1
+| #define HAVE_INTTYPES_H 1
+| #define HAVE_STDINT_H 1
+| #define HAVE_UNISTD_H 1
+| #define __EXTENSIONS__ 1
+| #define _ALL_SOURCE 1
+| #define _GNU_SOURCE 1
+| #define _POSIX_PTHREAD_SEMANTICS 1
+| #define _TANDEM_SOURCE 1
+| #define CGMINER_MAJOR_VERSION 0
+| #define CGMINER_MINOR_VERSION 5
+| #define CGMINER_MINOR_SUBVERSION 4pre1
+| #define LT_OBJDIR ".libs/"
+| #define HAVE_WCHAR_H 1
+| #define HAVE_STDINT_H 1
+| #define HAVE_MPROTECT 1
+| #define HAVE_DECL_MEMMEM 0
+| #define restrict __restrict
+| #define uid_t int
+| #define gid_t int
+| #define HAVE_WCHAR_T 1
+| #define HAVE_UNSIGNED_LONG_LONG_INT 1
+| #define HAVE_LONG_LONG_INT 1
+| #define HAVE_RAW_DECL_STRDUP 1
+| #define HAVE_RAW_DECL_STRNCAT 1
+| #define HAVE_RAW_DECL_STRPBRK 1
+| #define GNULIB_TEST_MEMCHR 1
+| #define GNULIB_TEST_MEMMEM 1
+| #define GNULIB_TEST_SIGACTION 1
+| #define HAVE_SIGSET_T 1
+| #define GNULIB_TEST_SIGPROCMASK 1
+| #define STDC_HEADERS 1
+| #define HAVE_ALLOCA 1
+| #define _WIN32_WINNT 0x0501
+| #define HAVE_OPENCL 1
+| /* end confdefs.h.  */
+| 
+| /* Override any GCC internal prototype to avoid an error.
+|    Use char because int might match the return type of a GCC
+|    builtin and then its argument prototype would still apply.  */
+| #ifdef __cplusplus
+| extern "C"
+| #endif
+| char nanosleep ();
+| int
+| main ()
+| {
+| return nanosleep ();
+|   ;
+|   return 0;
+| }
+configure:15882: result: no
+configure:15899: checking for pthread_create in -lpthread
+configure:15924: gcc -o conftest.exe -O2 -msse2   conftest.c -lpthread   >&5
+configure:15924: $? = 0
+configure:15933: result: yes
+configure:15962: checking for ./ADL_SDK/adl_sdk.h
+configure:15976: result: yes
+configure:16253: checking for library containing addstr
+configure:16284: gcc -o conftest.exe -O2 -msse2   conftest.c -lpthread  >&5
+C:\Users\CY\AppData\Local\Temp\cco0T8Ne.o:conftest.c:(.text.startup+0xc): undefined reference to `addstr'
+collect2: ld returned 1 exit status
+configure:16284: $? = 1
+configure: failed program was:
+| /* confdefs.h */
+| #define PACKAGE_NAME "ALTMiner"
+| #define PACKAGE_TARNAME "altminer"
+| #define PACKAGE_VERSION "0.5.4pre1"
+| #define PACKAGE_STRING "ALTMiner 0.5.4pre1"
+| #define PACKAGE_BUGREPORT ""
+| #define PACKAGE_URL ""
+| #define PACKAGE "altminer"
+| #define VERSION "0.5.4pre1"
+| #define STDC_HEADERS 1
+| #define HAVE_SYS_TYPES_H 1
+| #define HAVE_SYS_STAT_H 1
+| #define HAVE_STDLIB_H 1
+| #define HAVE_STRING_H 1
+| #define HAVE_MEMORY_H 1
+| #define HAVE_STRINGS_H 1
+| #define HAVE_INTTYPES_H 1
+| #define HAVE_STDINT_H 1
+| #define HAVE_UNISTD_H 1
+| #define __EXTENSIONS__ 1
+| #define _ALL_SOURCE 1
+| #define _GNU_SOURCE 1
+| #define _POSIX_PTHREAD_SEMANTICS 1
+| #define _TANDEM_SOURCE 1
+| #define CGMINER_MAJOR_VERSION 0
+| #define CGMINER_MINOR_VERSION 5
+| #define CGMINER_MINOR_SUBVERSION 4pre1
+| #define LT_OBJDIR ".libs/"
+| #define HAVE_WCHAR_H 1
+| #define HAVE_STDINT_H 1
+| #define HAVE_MPROTECT 1
+| #define HAVE_DECL_MEMMEM 0
+| #define restrict __restrict
+| #define uid_t int
+| #define gid_t int
+| #define HAVE_WCHAR_T 1
+| #define HAVE_UNSIGNED_LONG_LONG_INT 1
+| #define HAVE_LONG_LONG_INT 1
+| #define HAVE_RAW_DECL_STRDUP 1
+| #define HAVE_RAW_DECL_STRNCAT 1
+| #define HAVE_RAW_DECL_STRPBRK 1
+| #define GNULIB_TEST_MEMCHR 1
+| #define GNULIB_TEST_MEMMEM 1
+| #define GNULIB_TEST_SIGACTION 1
+| #define HAVE_SIGSET_T 1
+| #define GNULIB_TEST_SIGPROCMASK 1
+| #define STDC_HEADERS 1
+| #define HAVE_ALLOCA 1
+| #define _WIN32_WINNT 0x0501
+| #define HAVE_OPENCL 1
+| #define HAVE_LIBPTHREAD 1
+| #define HAVE_ADL 1
+| #define USE_SCRYPT 1
+| /* end confdefs.h.  */
+| 
+| /* Override any GCC internal prototype to avoid an error.
+|    Use char because int might match the return type of a GCC
+|    builtin and then its argument prototype would still apply.  */
+| #ifdef __cplusplus
+| extern "C"
+| #endif
+| char addstr ();
+| int
+| main ()
+| {
+| return addstr ();
+|   ;
+|   return 0;
+| }
+configure:16284: gcc -o conftest.exe -O2 -msse2   conftest.c -lncurses  -lpthread  >&5
+d:/mingw/bin/../lib/gcc/mingw32/4.6.2/../../../../mingw32/bin/ld.exe: cannot find -lncurses
+collect2: ld returned 1 exit status
+configure:16284: $? = 1
+configure: failed program was:
+| /* confdefs.h */
+| #define PACKAGE_NAME "ALTMiner"
+| #define PACKAGE_TARNAME "altminer"
+| #define PACKAGE_VERSION "0.5.4pre1"
+| #define PACKAGE_STRING "ALTMiner 0.5.4pre1"
+| #define PACKAGE_BUGREPORT ""
+| #define PACKAGE_URL ""
+| #define PACKAGE "altminer"
+| #define VERSION "0.5.4pre1"
+| #define STDC_HEADERS 1
+| #define HAVE_SYS_TYPES_H 1
+| #define HAVE_SYS_STAT_H 1
+| #define HAVE_STDLIB_H 1
+| #define HAVE_STRING_H 1
+| #define HAVE_MEMORY_H 1
+| #define HAVE_STRINGS_H 1
+| #define HAVE_INTTYPES_H 1
+| #define HAVE_STDINT_H 1
+| #define HAVE_UNISTD_H 1
+| #define __EXTENSIONS__ 1
+| #define _ALL_SOURCE 1
+| #define _GNU_SOURCE 1
+| #define _POSIX_PTHREAD_SEMANTICS 1
+| #define _TANDEM_SOURCE 1
+| #define CGMINER_MAJOR_VERSION 0
+| #define CGMINER_MINOR_VERSION 5
+| #define CGMINER_MINOR_SUBVERSION 4pre1
+| #define LT_OBJDIR ".libs/"
+| #define HAVE_WCHAR_H 1
+| #define HAVE_STDINT_H 1
+| #define HAVE_MPROTECT 1
+| #define HAVE_DECL_MEMMEM 0
+| #define restrict __restrict
+| #define uid_t int
+| #define gid_t int
+| #define HAVE_WCHAR_T 1
+| #define HAVE_UNSIGNED_LONG_LONG_INT 1
+| #define HAVE_LONG_LONG_INT 1
+| #define HAVE_RAW_DECL_STRDUP 1
+| #define HAVE_RAW_DECL_STRNCAT 1
+| #define HAVE_RAW_DECL_STRPBRK 1
+| #define GNULIB_TEST_MEMCHR 1
+| #define GNULIB_TEST_MEMMEM 1
+| #define GNULIB_TEST_SIGACTION 1
+| #define HAVE_SIGSET_T 1
+| #define GNULIB_TEST_SIGPROCMASK 1
+| #define STDC_HEADERS 1
+| #define HAVE_ALLOCA 1
+| #define _WIN32_WINNT 0x0501
+| #define HAVE_OPENCL 1
+| #define HAVE_LIBPTHREAD 1
+| #define HAVE_ADL 1
+| #define USE_SCRYPT 1
+| /* end confdefs.h.  */
+| 
+| /* Override any GCC internal prototype to avoid an error.
+|    Use char because int might match the return type of a GCC
+|    builtin and then its argument prototype would still apply.  */
+| #ifdef __cplusplus
+| extern "C"
+| #endif
+| char addstr ();
+| int
+| main ()
+| {
+| return addstr ();
+|   ;
+|   return 0;
+| }
+configure:16284: gcc -o conftest.exe -O2 -msse2   conftest.c -lpdcurses  -lpthread  >&5
+configure:16284: $? = 0
+configure:16301: result: -lpdcurses
+configure:16678: checking for pkg-config
+configure:16696: found /mingw/bin/pkg-config
+configure:16708: result: /mingw/bin/pkg-config
+configure:16733: checking pkg-config is at least version 0.9.0
+configure:16736: result: yes
+configure:16983: checking for LIBCURL
+configure:16990: $PKG_CONFIG --exists --print-errors "libcurl >= 7.25.0"
+configure:16993: $? = 0
+configure:17007: $PKG_CONFIG --exists --print-errors "libcurl >= 7.25.0"
+configure:17010: $? = 0
+configure:17048: result: yes
+configure:17072: gcc -c -O2 -msse2  conftest.c >&5
+configure:17072: $? = 0
+configure:17090: gcc -c -O2 -msse2  conftest.c >&5
+configure:17090: $? = 0
+configure:17100: gcc -c -O2 -msse2  conftest.c >&5
+configure:17100: $? = 0
+configure:17110: gcc -c -O2 -msse2  conftest.c >&5
+conftest.c: In function 'cleanup':
+conftest.c:61:55: warning: incompatible implicit declaration of built-in function 'exit' [enabled by default]
+configure:17110: $? = 0
+configure:17120: gcc -c -O2 -msse2  conftest.c >&5
+configure:17120: $? = 0
+configure:17130: gcc -c -O2 -msse2  conftest.c >&5
+configure:17130: $? = 0
+configure:17140: gcc -c -O2 -msse2  conftest.c >&5
+configure:17140: $? = 0
+configure:17150: gcc -o conftest.exe -O2 -msse2   conftest.c -lpdcurses -lpthread  >&5
+configure:17150: $? = 0
+configure:17161: gcc -o conftest.exe -O2 -msse2   conftest.c -lpdcurses -lpthread  >&5
+configure:17161: $? = 0
+configure:17172: gcc -c -O2 -msse2  conftest.c >&5
+configure:17172: $? = 0
+configure:17482: creating ./config.status
+
+## ---------------------- ##
+## Running config.status. ##
+## ---------------------- ##
+
+This file was extended by ALTMiner config.status 0.5.4pre1, which was
+generated by GNU Autoconf 2.68.  Invocation command line was
+
+  CONFIG_FILES    = 
+  CONFIG_HEADERS  = 
+  CONFIG_LINKS    = 
+  CONFIG_COMMANDS = 
+  $ ./config.status 
+
+on CY-PC
+
+config.status:1352: creating Makefile
+config.status:1352: creating compat/Makefile
+config.status:1352: creating ccan/Makefile
+config.status:1352: creating lib/Makefile
+config.status:1352: creating config.h
+config.status:1533: config.h is unchanged
+config.status:1581: executing depfiles commands
+config.status:1581: executing libtool commands
+configure:19790: === configuring in compat/jansson-2.5 (/home/CY/altcoin-gpu-miner/compat/jansson-2.5)
+configure:19853: running /bin/sh ./configure --disable-option-checking '--prefix=/usr/local'  '--enable-scrypt' 'CFLAGS=-O2 -msse2' --cache-file=/dev/null --srcdir=.
+
+## ---------------- ##
+## Cache variables. ##
+## ---------------- ##
+
+ac_cv_build=i686-pc-mingw32
+ac_cv_c_compiler_gnu=yes
+ac_cv_c_inline=inline
+ac_cv_c_restrict=__restrict
+ac_cv_env_CC_set=
+ac_cv_env_CC_value=
+ac_cv_env_CFLAGS_set=set
+ac_cv_env_CFLAGS_value='-O2 -msse2'
+ac_cv_env_CPPFLAGS_set=
+ac_cv_env_CPPFLAGS_value=
+ac_cv_env_CPP_set=
+ac_cv_env_CPP_value=
+ac_cv_env_LDFLAGS_set=
+ac_cv_env_LDFLAGS_value=
+ac_cv_env_LIBCURL_CFLAGS_set=
+ac_cv_env_LIBCURL_CFLAGS_value=
+ac_cv_env_LIBCURL_LIBS_set=
+ac_cv_env_LIBCURL_LIBS_value=
+ac_cv_env_LIBS_set=
+ac_cv_env_LIBS_value=
+ac_cv_env_LIBUSB_CFLAGS_set=
+ac_cv_env_LIBUSB_CFLAGS_value=
+ac_cv_env_LIBUSB_LIBS_set=
+ac_cv_env_LIBUSB_LIBS_value=
+ac_cv_env_PKG_CONFIG_LIBDIR_set=
+ac_cv_env_PKG_CONFIG_LIBDIR_value=
+ac_cv_env_PKG_CONFIG_PATH_set=
+ac_cv_env_PKG_CONFIG_PATH_value=
+ac_cv_env_PKG_CONFIG_set=
+ac_cv_env_PKG_CONFIG_value=
+ac_cv_env_build_alias_set=
+ac_cv_env_build_alias_value=
+ac_cv_env_host_alias_set=
+ac_cv_env_host_alias_value=
+ac_cv_env_target_alias_set=
+ac_cv_env_target_alias_value=
+ac_cv_exeext=.exe
+ac_cv_file___ADL_SDK_adl_sdk_h=yes
+ac_cv_func_alloca_works=yes
+ac_cv_func_memmem=no
+ac_cv_func_mmap=no
+ac_cv_func_mprotect=yes
+ac_cv_func_sigaction=no
+ac_cv_func_sigaltstack=no
+ac_cv_func_siginterrupt=no
+ac_cv_have_decl_memmem=no
+ac_cv_have_decl_strdup=yes
+ac_cv_have_decl_strncat=yes
+ac_cv_have_decl_strpbrk=yes
+ac_cv_header_dlfcn_h=no
+ac_cv_header_inttypes_h=yes
+ac_cv_header_memory_h=yes
+ac_cv_header_minix_config_h=no
+ac_cv_header_stdc=yes
+ac_cv_header_stdint_h=yes
+ac_cv_header_stdlib_h=yes
+ac_cv_header_string_h=yes
+ac_cv_header_strings_h=yes
+ac_cv_header_sys_mman_h=no
+ac_cv_header_sys_stat_h=yes
+ac_cv_header_sys_types_h=yes
+ac_cv_header_syslog_h=no
+ac_cv_header_unistd_h=yes
+ac_cv_header_wchar_h=yes
+ac_cv_host=i686-pc-mingw32
+ac_cv_lib_pthread_pthread_create=yes
+ac_cv_lib_winpthread_nanosleep=no
+ac_cv_objext=o
+ac_cv_path_EGREP='/bin/grep -E'
+ac_cv_path_FGREP='/bin/grep -F'
+ac_cv_path_GREP=/bin/grep
+ac_cv_path_SED=/bin/sed
+ac_cv_path_ac_pt_PKG_CONFIG=/mingw/bin/pkg-config
+ac_cv_path_install='/bin/install -c'
+ac_cv_path_mkdir=/bin/mkdir
+ac_cv_prog_AWK=gawk
+ac_cv_prog_CPP='gcc -E'
+ac_cv_prog_ac_ct_AR=ar
+ac_cv_prog_ac_ct_CC=gcc
+ac_cv_prog_ac_ct_DLLTOOL=dlltool
+ac_cv_prog_ac_ct_OBJDUMP=objdump
+ac_cv_prog_ac_ct_RANLIB=ranlib
+ac_cv_prog_ac_ct_STRIP=strip
+ac_cv_prog_cc_c89=
+ac_cv_prog_cc_g=yes
+ac_cv_prog_cc_gcc_c_o=yes
+ac_cv_prog_gcc_traditional=no
+ac_cv_prog_make_make_set=yes
+ac_cv_safe_to_define___extensions__=yes
+ac_cv_search_addstr=-lpdcurses
+ac_cv_target=i686-pc-mingw32
+ac_cv_type_long_long_int=yes
+ac_cv_type_sighandler_t=no
+ac_cv_type_siginfo_t=no
+ac_cv_type_sigset_t=yes
+ac_cv_type_size_t=yes
+ac_cv_type_uid_t=no
+ac_cv_type_unsigned_long_long_int=yes
+ac_cv_type_volatile_sig_atomic_t=yes
+ac_cv_working_alloca_h=no
+am_cv_CC_dependencies_compiler_type=gcc3
+gl_cv_c_multiarch=no
+gl_cv_decl_null_works=yes
+gl_cv_func_memchr_works=yes
+gl_cv_have_include_next=yes
+gl_cv_have_raw_decl_memmem=no
+gl_cv_have_raw_decl_mempcpy=no
+gl_cv_have_raw_decl_memrchr=no
+gl_cv_have_raw_decl_rawmemchr=no
+gl_cv_have_raw_decl_sigaction=no
+gl_cv_have_raw_decl_sigaddset=no
+gl_cv_have_raw_decl_sigdelset=no
+gl_cv_have_raw_decl_sigemptyset=no
+gl_cv_have_raw_decl_sigfillset=no
+gl_cv_have_raw_decl_sigismember=no
+gl_cv_have_raw_decl_sigpending=no
+gl_cv_have_raw_decl_sigprocmask=no
+gl_cv_have_raw_decl_stpcpy=no
+gl_cv_have_raw_decl_stpncpy=no
+gl_cv_have_raw_decl_strcasestr=no
+gl_cv_have_raw_decl_strchrnul=no
+gl_cv_have_raw_decl_strdup=yes
+gl_cv_have_raw_decl_strerror_r=no
+gl_cv_have_raw_decl_strncat=yes
+gl_cv_have_raw_decl_strndup=no
+gl_cv_have_raw_decl_strnlen=no
+gl_cv_have_raw_decl_strpbrk=yes
+gl_cv_have_raw_decl_strsep=no
+gl_cv_have_raw_decl_strsignal=no
+gl_cv_have_raw_decl_strtok_r=no
+gl_cv_have_raw_decl_strverscmp=no
+gl_cv_header_working_stdint_h=yes
+gl_cv_next_signal_h='<signal.h>'
+gl_cv_next_stdint_h='<stdint.h>'
+gl_cv_next_string_h='<string.h>'
+gl_cv_pragma_columns=no
+gl_cv_type_sigset_t=yes
+gt_cv_c_wchar_t=yes
+lt_cv_ar_at_file=@
+lt_cv_deplibs_check_method='file_magic ^x86 archive import|^x86 DLL'
+lt_cv_file_magic_cmd=func_win32_libid
+lt_cv_file_magic_test_file=
+lt_cv_ld_reload_flag=-r
+lt_cv_nm_interface='BSD nm'
+lt_cv_objdir=.libs
+lt_cv_path_LD=d:/mingw/mingw32/bin/ld.exe
+lt_cv_path_NM=/mingw/bin/nm
+lt_cv_path_mainfest_tool=no
+lt_cv_prog_compiler_c_o=yes
+lt_cv_prog_compiler_pic='-DDLL_EXPORT -DPIC'
+lt_cv_prog_compiler_pic_works=yes
+lt_cv_prog_compiler_rtti_exceptions=no
+lt_cv_prog_compiler_static_works=yes
+lt_cv_prog_gnu_ld=yes
+lt_cv_sharedlib_from_linklib_cmd=func_cygming_dll_for_implib
+lt_cv_sys_global_symbol_pipe='sed -n -e '\''s/^.*[	 ]\([ABCDGIRSTW][ABCDGIRSTW]*\)[	 ][	 ]*_\([_A-Za-z][_A-Za-z0-9]*\)\{0,1\}$/\1 _\2 \2/p'\'' | sed '\''/ __gnu_lto/d'\'''
+lt_cv_sys_global_symbol_to_c_name_address='sed -n -e '\''s/^: \([^ ]*\)[ ]*$/  {\"\1\", (void *) 0},/p'\'' -e '\''s/^[ABCDGIRSTW]* \([^ ]*\) \([^ ]*\)$/  {"\2", (void *) \&\2},/p'\'''
+lt_cv_sys_global_symbol_to_c_name_address_lib_prefix='sed -n -e '\''s/^: \([^ ]*\)[ ]*$/  {\"\1\", (void *) 0},/p'\'' -e '\''s/^[ABCDGIRSTW]* \([^ ]*\) \(lib[^ ]*\)$/  {"\2", (void *) \&\2},/p'\'' -e '\''s/^[ABCDGIRSTW]* \([^ ]*\) \([^ ]*\)$/  {"lib\2", (void *) \&\2},/p'\'''
+lt_cv_sys_global_symbol_to_cdecl='sed -n -e '\''s/^T .* \(.*\)$/extern int \1();/p'\'' -e '\''s/^[ABCDGIRSTW]* .* \(.*\)$/extern char \1;/p'\'''
+lt_cv_sys_max_cmd_len=8192
+lt_cv_to_host_file_cmd=func_convert_file_msys_to_w32
+lt_cv_to_tool_file_cmd=func_convert_file_msys_to_w32
+pkg_cv_LIBCURL_CFLAGS='@CPPFLAG_CURL_STATICLIB@ -ID:/MinGW/include '
+pkg_cv_LIBCURL_LIBS='-LD:/MinGW/lib -lcurl -lcurldll '
+
+## ----------------- ##
+## Output variables. ##
+## ----------------- ##
+
+ACLOCAL='${SHELL} /home/CY/altcoin-gpu-miner/missing --run aclocal-1.11'
+ADL_CPPFLAGS='-I.'
+ALLOCA=''
+AMDEPBACKSLASH='\'
+AMDEP_FALSE='#'
+AMDEP_TRUE=''
+AMTAR='${SHELL} /home/CY/altcoin-gpu-miner/missing --run tar'
+AM_BACKSLASH='\'
+AM_DEFAULT_VERBOSITY='0'
+APPLE_UNIVERSAL_BUILD='0'
+AR='ar'
+AUTOCONF='${SHELL} /home/CY/altcoin-gpu-miner/missing --run autoconf'
+AUTOHEADER='${SHELL} /home/CY/altcoin-gpu-miner/missing --run autoheader'
+AUTOMAKE='${SHELL} /home/CY/altcoin-gpu-miner/missing --run automake-1.11'
+AWK='gawk'
+BITSIZEOF_PTRDIFF_T=''
+BITSIZEOF_SIG_ATOMIC_T=''
+BITSIZEOF_SIZE_T=''
+BITSIZEOF_WCHAR_T=''
+BITSIZEOF_WINT_T=''
+CC='gcc'
+CCDEPMODE='depmode=gcc3'
+CFLAGS='-O2 -msse2'
+CPP='gcc -E'
+CPPFLAGS=''
+CYGPATH_W='echo'
+DEFS='-DHAVE_CONFIG_H'
+DEPDIR='.deps'
+DLLTOOL='dlltool'
+DLOPEN_FLAGS=''
+DSYMUTIL=''
+DUMPBIN=''
+ECHO_C=''
+ECHO_N='-n'
+ECHO_T=''
+EGREP='/bin/grep -E'
+EXEEXT='.exe'
+FGREP='/bin/grep -F'
+GL_COND_LIBTOOL_FALSE=''
+GL_COND_LIBTOOL_TRUE='#'
+GL_GENERATE_STDDEF_H_FALSE=''
+GL_GENERATE_STDDEF_H_TRUE='#'
+GL_GENERATE_STDINT_H_FALSE=''
+GL_GENERATE_STDINT_H_TRUE='#'
+GNULIB_MBSCASECMP='0'
+GNULIB_MBSCASESTR='0'
+GNULIB_MBSCHR='0'
+GNULIB_MBSCSPN='0'
+GNULIB_MBSLEN='0'
+GNULIB_MBSNCASECMP='0'
+GNULIB_MBSNLEN='0'
+GNULIB_MBSPBRK='0'
+GNULIB_MBSPCASECMP='0'
+GNULIB_MBSRCHR='0'
+GNULIB_MBSSEP='0'
+GNULIB_MBSSPN='0'
+GNULIB_MBSSTR='0'
+GNULIB_MBSTOK_R='0'
+GNULIB_MEMCHR='1'
+GNULIB_MEMMEM='1'
+GNULIB_MEMPCPY='0'
+GNULIB_MEMRCHR='0'
+GNULIB_RAWMEMCHR='0'
+GNULIB_SIGACTION='1'
+GNULIB_SIGNAL_H_SIGPIPE='0'
+GNULIB_SIGPROCMASK='1'
+GNULIB_STPCPY='0'
+GNULIB_STPNCPY='0'
+GNULIB_STRCASESTR='0'
+GNULIB_STRCHRNUL='0'
+GNULIB_STRDUP='0'
+GNULIB_STRERROR='0'
+GNULIB_STRERROR_R='0'
+GNULIB_STRNCAT='0'
+GNULIB_STRNDUP='0'
+GNULIB_STRNLEN='0'
+GNULIB_STRPBRK='0'
+GNULIB_STRSEP='0'
+GNULIB_STRSIGNAL='0'
+GNULIB_STRSTR='0'
+GNULIB_STRTOK_R='0'
+GNULIB_STRVERSCMP='0'
+GREP='/bin/grep'
+HAS_AVALON_FALSE=''
+HAS_AVALON_TRUE='#'
+HAS_BFLSC_FALSE=''
+HAS_BFLSC_TRUE='#'
+HAS_BITFORCE_FALSE=''
+HAS_BITFORCE_TRUE='#'
+HAS_BITFURY_FALSE=''
+HAS_BITFURY_TRUE='#'
+HAS_HASHFAST_FALSE=''
+HAS_HASHFAST_TRUE='#'
+HAS_ICARUS_FALSE=''
+HAS_ICARUS_TRUE='#'
+HAS_KLONDIKE_FALSE=''
+HAS_KLONDIKE_TRUE='#'
+HAS_KNC_FALSE=''
+HAS_KNC_TRUE='#'
+HAS_MODMINER_FALSE=''
+HAS_MODMINER_TRUE='#'
+HAS_OPENCL_FALSE='#'
+HAS_OPENCL_TRUE=''
+HAS_SCRYPT_FALSE='#'
+HAS_SCRYPT_TRUE=''
+HAVE_CURSES_FALSE='#'
+HAVE_CURSES_TRUE=''
+HAVE_DECL_MEMMEM='0'
+HAVE_DECL_MEMRCHR='1'
+HAVE_DECL_STRDUP='1'
+HAVE_DECL_STRERROR_R='1'
+HAVE_DECL_STRNDUP='1'
+HAVE_DECL_STRNLEN='1'
+HAVE_DECL_STRSIGNAL='1'
+HAVE_DECL_STRTOK_R='1'
+HAVE_INTTYPES_H='1'
+HAVE_LONG_LONG_INT='1'
+HAVE_MBSLEN='0'
+HAVE_MEMCHR='1'
+HAVE_MEMPCPY='1'
+HAVE_POSIX_SIGNALBLOCKING='0'
+HAVE_RAWMEMCHR='1'
+HAVE_SIGACTION='0'
+HAVE_SIGHANDLER_T='0'
+HAVE_SIGINFO_T='0'
+HAVE_SIGNED_SIG_ATOMIC_T=''
+HAVE_SIGNED_WCHAR_T=''
+HAVE_SIGNED_WINT_T=''
+HAVE_SIGSET_T='1'
+HAVE_STDINT_H='1'
+HAVE_STPCPY='1'
+HAVE_STPNCPY='1'
+HAVE_STRCASESTR='1'
+HAVE_STRCHRNUL='1'
+HAVE_STRPBRK='1'
+HAVE_STRSEP='1'
+HAVE_STRUCT_SIGACTION_SA_SIGACTION='1'
+HAVE_STRVERSCMP='1'
+HAVE_SYS_BITYPES_H=''
+HAVE_SYS_INTTYPES_H=''
+HAVE_SYS_TYPES_H='1'
+HAVE_TYPE_VOLATILE_SIG_ATOMIC_T='1'
+HAVE_UNSIGNED_LONG_LONG_INT='1'
+HAVE_WCHAR_H='1'
+HAVE_WCHAR_T='1'
+HAVE_WINDOWS_FALSE='#'
+HAVE_WINDOWS_TRUE=''
+HAVE_x86_64_FALSE=''
+HAVE_x86_64_TRUE='#'
+INCLUDE_NEXT='include_next'
+INCLUDE_NEXT_AS_FIRST_DIRECTIVE='include_next'
+INSTALL_DATA='${INSTALL} -m 644'
+INSTALL_PROGRAM='${INSTALL}'
+INSTALL_SCRIPT='${INSTALL}'
+INSTALL_STRIP_PROGRAM='$(install_sh) -c -s'
+JANSSON_LIBS='compat/jansson-2.5/src/.libs/libjansson.a'
+LD='d:/mingw/mingw32/bin/ld.exe'
+LDFLAGS=''
+LIBCURL_CFLAGS='@CPPFLAG_CURL_STATICLIB@ -ID:/MinGW/include '
+LIBCURL_LIBS='-LD:/MinGW/lib -lcurl -lcurldll '
+LIBGNU_LIBDEPS=''
+LIBGNU_LTLIBDEPS=''
+LIBOBJS=''
+LIBS='-lpdcurses -lpthread '
+LIBTOOL='$(SHELL) $(top_builddir)/libtool'
+LIBUSB_CFLAGS=''
+LIBUSB_LIBS=''
+LIPO=''
+LN_S='cp -p'
+LTLIBOBJS=''
+MAINT='#'
+MAINTAINER_MODE_FALSE=''
+MAINTAINER_MODE_TRUE='#'
+MAKEINFO='${SHELL} /home/CY/altcoin-gpu-miner/missing --run makeinfo'
+MANIFEST_TOOL=':'
+MATH_LIBS='-lm'
+MKDIR_P='/bin/mkdir -p'
+MM_LIBS='-lwinmm'
+NCURSES_LIBS=''
+NEED_FPGAUTILS_FALSE=''
+NEED_FPGAUTILS_TRUE='#'
+NEXT_AS_FIRST_DIRECTIVE_SIGNAL_H='<signal.h>'
+NEXT_AS_FIRST_DIRECTIVE_STDDEF_H=''
+NEXT_AS_FIRST_DIRECTIVE_STDINT_H='<stdint.h>'
+NEXT_AS_FIRST_DIRECTIVE_STRING_H='<string.h>'
+NEXT_SIGNAL_H='<signal.h>'
+NEXT_STDDEF_H=''
+NEXT_STDINT_H='<stdint.h>'
+NEXT_STRING_H='<string.h>'
+NM='/mingw/bin/nm'
+NMEDIT=''
+OBJDUMP='objdump'
+OBJEXT='o'
+OPENCL_FLAGS=''
+OPENCL_LIBS='-lOpenCL'
+OTOOL64=''
+OTOOL=''
+PACKAGE='altminer'
+PACKAGE_BUGREPORT=''
+PACKAGE_NAME='ALTMiner'
+PACKAGE_STRING='ALTMiner 0.5.4pre1'
+PACKAGE_TARNAME='altminer'
+PACKAGE_URL=''
+PACKAGE_VERSION='0.5.4pre1'
+PATH_SEPARATOR=':'
+PDCURSES_LIBS=''
+PKG_CONFIG='/mingw/bin/pkg-config'
+PKG_CONFIG_LIBDIR=''
+PKG_CONFIG_PATH=''
+PRAGMA_COLUMNS=''
+PRAGMA_SYSTEM_HEADER='#pragma GCC system_header'
+PTHREAD_FLAGS=''
+PTHREAD_LIBS='-lpthread'
+PTRDIFF_T_SUFFIX=''
+RANLIB='ranlib'
+REPLACE_MEMCHR='0'
+REPLACE_MEMMEM='0'
+REPLACE_NULL='0'
+REPLACE_STPNCPY='0'
+REPLACE_STRCASESTR='0'
+REPLACE_STRCHRNUL='0'
+REPLACE_STRDUP='0'
+REPLACE_STRERROR='0'
+REPLACE_STRERROR_R='0'
+REPLACE_STRNCAT='0'
+REPLACE_STRNDUP='0'
+REPLACE_STRNLEN='0'
+REPLACE_STRSIGNAL='0'
+REPLACE_STRSTR='0'
+REPLACE_STRTOK_R='0'
+RT_LIBS=''
+SED='/bin/sed'
+SET_MAKE=''
+SHELL='/bin/sh'
+SIG_ATOMIC_T_SUFFIX=''
+SIZE_T_SUFFIX=''
+STDDEF_H=''
+STDINT_H=''
+STRIP='strip'
+UNDEFINE_STRTOK_R='0'
+VERSION='0.5.4pre1'
+VMAJ='0'
+WANT_STATIC_LIBUSB_FALSE=''
+WANT_STATIC_LIBUSB_TRUE='#'
+WANT_USBUTILS_FALSE=''
+WANT_USBUTILS_TRUE='#'
+WCHAR_T_SUFFIX=''
+WINT_T_SUFFIX=''
+WS2_LIBS='-lws2_32'
+ac_ct_AR='ar'
+ac_ct_CC='gcc'
+ac_ct_DUMPBIN=''
+am__EXEEXT_FALSE='#'
+am__EXEEXT_TRUE=''
+am__fastdepCC_FALSE='#'
+am__fastdepCC_TRUE=''
+am__include='include'
+am__isrc=''
+am__leading_dot='.'
+am__quote=''
+am__tar='${AMTAR} chof - "$$tardir"'
+am__untar='${AMTAR} xf -'
+bindir='${exec_prefix}/bin'
+build='i686-pc-mingw32'
+build_alias=''
+build_cpu='i686'
+build_os='mingw32'
+build_vendor='pc'
+datadir='${datarootdir}'
+datarootdir='${prefix}/share'
+docdir='${datarootdir}/doc/${PACKAGE_TARNAME}'
+dvidir='${docdir}'
+exec_prefix='${prefix}'
+gl_LIBOBJS=' memmem.o sigaction.o sigprocmask.o'
+gl_LTLIBOBJS=' memmem.lo sigaction.lo sigprocmask.lo'
+gltests_LIBOBJS=''
+gltests_LTLIBOBJS=''
+gltests_WITNESS='IN_ALTMINER_GNULIB_TESTS'
+host='i686-pc-mingw32'
+host_alias=''
+host_cpu='i686'
+host_os='mingw32'
+host_vendor='pc'
+htmldir='${docdir}'
+includedir='${prefix}/include'
+infodir='${datarootdir}/info'
+install_sh='${SHELL} /home/CY/altcoin-gpu-miner/install-sh'
+libdir='${exec_prefix}/lib'
+libexecdir='${exec_prefix}/libexec'
+localedir='${datarootdir}/locale'
+localstatedir='${prefix}/var'
+mandir='${datarootdir}/man'
+mkdir_p='/bin/mkdir -p'
+oldincludedir='/usr/include'
+pdfdir='${docdir}'
+prefix='/usr/local'
+program_transform_name='s,x,x,'
+psdir='${docdir}'
+release_info=''
+sbindir='${exec_prefix}/sbin'
+sharedstatedir='${prefix}/com'
+subdirs=' compat/jansson-2.5'
+sysconfdir='${prefix}/etc'
+target='i686-pc-mingw32'
+target_alias=''
+target_cpu='i686'
+target_os='mingw32'
+target_vendor='pc'
+version_info='5:4pre1:5'
+
+## ----------- ##
+## confdefs.h. ##
+## ----------- ##
+
+/* confdefs.h */
+#define PACKAGE_NAME "ALTMiner"
+#define PACKAGE_TARNAME "altminer"
+#define PACKAGE_VERSION "0.5.4pre1"
+#define PACKAGE_STRING "ALTMiner 0.5.4pre1"
+#define PACKAGE_BUGREPORT ""
+#define PACKAGE_URL ""
+#define PACKAGE "altminer"
+#define VERSION "0.5.4pre1"
+#define STDC_HEADERS 1
+#define HAVE_SYS_TYPES_H 1
+#define HAVE_SYS_STAT_H 1
+#define HAVE_STDLIB_H 1
+#define HAVE_STRING_H 1
+#define HAVE_MEMORY_H 1
+#define HAVE_STRINGS_H 1
+#define HAVE_INTTYPES_H 1
+#define HAVE_STDINT_H 1
+#define HAVE_UNISTD_H 1
+#define __EXTENSIONS__ 1
+#define _ALL_SOURCE 1
+#define _GNU_SOURCE 1
+#define _POSIX_PTHREAD_SEMANTICS 1
+#define _TANDEM_SOURCE 1
+#define CGMINER_MAJOR_VERSION 0
+#define CGMINER_MINOR_VERSION 5
+#define CGMINER_MINOR_SUBVERSION 4pre1
+#define LT_OBJDIR ".libs/"
+#define HAVE_WCHAR_H 1
+#define HAVE_STDINT_H 1
+#define HAVE_MPROTECT 1
+#define HAVE_DECL_MEMMEM 0
+#define restrict __restrict
+#define uid_t int
+#define gid_t int
+#define HAVE_WCHAR_T 1
+#define HAVE_UNSIGNED_LONG_LONG_INT 1
+#define HAVE_LONG_LONG_INT 1
+#define HAVE_RAW_DECL_STRDUP 1
+#define HAVE_RAW_DECL_STRNCAT 1
+#define HAVE_RAW_DECL_STRPBRK 1
+#define GNULIB_TEST_MEMCHR 1
+#define GNULIB_TEST_MEMMEM 1
+#define GNULIB_TEST_SIGACTION 1
+#define HAVE_SIGSET_T 1
+#define GNULIB_TEST_SIGPROCMASK 1
+#define STDC_HEADERS 1
+#define HAVE_ALLOCA 1
+#define _WIN32_WINNT 0x0501
+#define HAVE_OPENCL 1
+#define HAVE_LIBPTHREAD 1
+#define HAVE_ADL 1
+#define USE_SCRYPT 1
+#define HAVE_CURSES 1
+#define CURL_HAS_KEEPALIVE 1
+#define HAVE_LIBCURL 1
+#define EXECV_2ND_ARG_TYPE const char* const*
+#define HAVE_ATTRIBUTE_COLD 1
+#define HAVE_ATTRIBUTE_CONST 1
+#define HAVE_ATTRIBUTE_NORETURN 1
+#define HAVE_ATTRIBUTE_PRINTF 1
+#define HAVE_ATTRIBUTE_UNUSED 1
+#define HAVE_ATTRIBUTE_USED 1
+#define HAVE_BUILTIN_CONSTANT_P 1
+#define HAVE_BUILTIN_TYPES_COMPATIBLE_P 1
+#define HAVE_WARN_UNUSED_RESULT 1
+#define CGMINER_PREFIX "/usr/local/bin"
+#define PHATK_KERNNAME "phatk121016"
+#define POCLBM_KERNNAME "poclbm130302"
+#define DIAKGCN_KERNNAME "diakgcn121016"
+#define DIABLO_KERNNAME "diablo130302"
+#define SCRYPT_KERNNAME "scrypt140202"
+
+configure: exit 0
