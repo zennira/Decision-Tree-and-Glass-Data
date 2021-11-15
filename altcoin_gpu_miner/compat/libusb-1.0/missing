@@ -210,4 +210,167 @@ WARNING: \`$1' is needed, but is $msg.
     else
 	test -z "$file" || exec >$file
 	echo "#! /bin/sh"
-	echo "# Created by GNU
+	echo "# Created by GNU Automake missing as a replacement of"
+	echo "#  $ $@"
+	echo "exit 0"
+	chmod +x $file
+	exit 1
+    fi
+    ;;
+
+  bison*|yacc*)
+    echo 1>&2 "\
+WARNING: \`$1' $msg.  You should only need it if
+         you modified a \`.y' file.  You may need the \`Bison' package
+         in order for those modifications to take effect.  You can get
+         \`Bison' from any GNU archive site."
+    rm -f y.tab.c y.tab.h
+    if test $# -ne 1; then
+        eval LASTARG="\${$#}"
+	case $LASTARG in
+	*.y)
+	    SRCFILE=`echo "$LASTARG" | sed 's/y$/c/'`
+	    if test -f "$SRCFILE"; then
+	         cp "$SRCFILE" y.tab.c
+	    fi
+	    SRCFILE=`echo "$LASTARG" | sed 's/y$/h/'`
+	    if test -f "$SRCFILE"; then
+	         cp "$SRCFILE" y.tab.h
+	    fi
+	  ;;
+	esac
+    fi
+    if test ! -f y.tab.h; then
+	echo >y.tab.h
+    fi
+    if test ! -f y.tab.c; then
+	echo 'main() { return 0; }' >y.tab.c
+    fi
+    ;;
+
+  lex*|flex*)
+    echo 1>&2 "\
+WARNING: \`$1' is $msg.  You should only need it if
+         you modified a \`.l' file.  You may need the \`Flex' package
+         in order for those modifications to take effect.  You can get
+         \`Flex' from any GNU archive site."
+    rm -f lex.yy.c
+    if test $# -ne 1; then
+        eval LASTARG="\${$#}"
+	case $LASTARG in
+	*.l)
+	    SRCFILE=`echo "$LASTARG" | sed 's/l$/c/'`
+	    if test -f "$SRCFILE"; then
+	         cp "$SRCFILE" lex.yy.c
+	    fi
+	  ;;
+	esac
+    fi
+    if test ! -f lex.yy.c; then
+	echo 'main() { return 0; }' >lex.yy.c
+    fi
+    ;;
+
+  help2man*)
+    echo 1>&2 "\
+WARNING: \`$1' is $msg.  You should only need it if
+	 you modified a dependency of a manual page.  You may need the
+	 \`Help2man' package in order for those modifications to take
+	 effect.  You can get \`Help2man' from any GNU archive site."
+
+    file=`echo "$*" | sed -n "$sed_output"`
+    test -z "$file" && file=`echo "$*" | sed -n "$sed_minuso"`
+    if test -f "$file"; then
+	touch $file
+    else
+	test -z "$file" || exec >$file
+	echo ".ab help2man is required to generate this page"
+	exit $?
+    fi
+    ;;
+
+  makeinfo*)
+    echo 1>&2 "\
+WARNING: \`$1' is $msg.  You should only need it if
+         you modified a \`.texi' or \`.texinfo' file, or any other file
+         indirectly affecting the aspect of the manual.  The spurious
+         call might also be the consequence of using a buggy \`make' (AIX,
+         DU, IRIX).  You might want to install the \`Texinfo' package or
+         the \`GNU make' package.  Grab either from any GNU archive site."
+    # The file to touch is that specified with -o ...
+    file=`echo "$*" | sed -n "$sed_output"`
+    test -z "$file" && file=`echo "$*" | sed -n "$sed_minuso"`
+    if test -z "$file"; then
+      # ... or it is the one specified with @setfilename ...
+      infile=`echo "$*" | sed 's/.* \([^ ]*\) *$/\1/'`
+      file=`sed -n '
+	/^@setfilename/{
+	  s/.* \([^ ]*\) *$/\1/
+	  p
+	  q
+	}' $infile`
+      # ... or it is derived from the source name (dir/f.texi becomes f.info)
+      test -z "$file" && file=`echo "$infile" | sed 's,.*/,,;s,.[^.]*$,,'`.info
+    fi
+    # If the file does not exist, the user really needs makeinfo;
+    # let's fail without touching anything.
+    test -f $file || exit 1
+    touch $file
+    ;;
+
+  tar*)
+    shift
+
+    # We have already tried tar in the generic part.
+    # Look for gnutar/gtar before invocation to avoid ugly error
+    # messages.
+    if (gnutar --version > /dev/null 2>&1); then
+       gnutar "$@" && exit 0
+    fi
+    if (gtar --version > /dev/null 2>&1); then
+       gtar "$@" && exit 0
+    fi
+    firstarg="$1"
+    if shift; then
+	case $firstarg in
+	*o*)
+	    firstarg=`echo "$firstarg" | sed s/o//`
+	    tar "$firstarg" "$@" && exit 0
+	    ;;
+	esac
+	case $firstarg in
+	*h*)
+	    firstarg=`echo "$firstarg" | sed s/h//`
+	    tar "$firstarg" "$@" && exit 0
+	    ;;
+	esac
+    fi
+
+    echo 1>&2 "\
+WARNING: I can't seem to be able to run \`tar' with the given arguments.
+         You may want to install GNU tar or Free paxutils, or check the
+         command line arguments."
+    exit 1
+    ;;
+
+  *)
+    echo 1>&2 "\
+WARNING: \`$1' is needed, and is $msg.
+         You might have modified some files without having the
+         proper tools for further handling them.  Check the \`README' file,
+         it often tells you about the needed prerequisites for installing
+         this package.  You may also peek at any GNU archive site, in case
+         some other package would contain this missing \`$1' program."
+    exit 1
+    ;;
+esac
+
+exit 0
+
+# Local variables:
+# eval: (add-hook 'write-file-hooks 'time-stamp)
+# time-stamp-start: "scriptversion="
+# time-stamp-format: "%:y-%02m-%02d.%02H"
+# time-stamp-time-zone: "UTC"
+# time-stamp-end: "; # UTC"
+# End:
