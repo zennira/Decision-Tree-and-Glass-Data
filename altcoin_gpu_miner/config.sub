@@ -957,4 +957,343 @@ case $basic_machine in
 		os=-coff
 		;;
 	rm[46]00)
-		basic_machin
+		basic_machine=mips-siemens
+		;;
+	rtpc | rtpc-*)
+		basic_machine=romp-ibm
+		;;
+	s390 | s390-*)
+		basic_machine=s390-ibm
+		;;
+	s390x | s390x-*)
+		basic_machine=s390x-ibm
+		;;
+	sa29200)
+		basic_machine=a29k-amd
+		os=-udi
+		;;
+	sb1)
+		basic_machine=mipsisa64sb1-unknown
+		;;
+	sb1el)
+		basic_machine=mipsisa64sb1el-unknown
+		;;
+	sde)
+		basic_machine=mipsisa32-sde
+		os=-elf
+		;;
+	sei)
+		basic_machine=mips-sei
+		os=-seiux
+		;;
+	sequent)
+		basic_machine=i386-sequent
+		;;
+	sh)
+		basic_machine=sh-hitachi
+		os=-hms
+		;;
+	sh5el)
+		basic_machine=sh5le-unknown
+		;;
+	sh64)
+		basic_machine=sh64-unknown
+		;;
+	sparclite-wrs | simso-wrs)
+		basic_machine=sparclite-wrs
+		os=-vxworks
+		;;
+	sps7)
+		basic_machine=m68k-bull
+		os=-sysv2
+		;;
+	spur)
+		basic_machine=spur-unknown
+		;;
+	st2000)
+		basic_machine=m68k-tandem
+		;;
+	stratus)
+		basic_machine=i860-stratus
+		os=-sysv4
+		;;
+	sun2)
+		basic_machine=m68000-sun
+		;;
+	sun2os3)
+		basic_machine=m68000-sun
+		os=-sunos3
+		;;
+	sun2os4)
+		basic_machine=m68000-sun
+		os=-sunos4
+		;;
+	sun3os3)
+		basic_machine=m68k-sun
+		os=-sunos3
+		;;
+	sun3os4)
+		basic_machine=m68k-sun
+		os=-sunos4
+		;;
+	sun4os3)
+		basic_machine=sparc-sun
+		os=-sunos3
+		;;
+	sun4os4)
+		basic_machine=sparc-sun
+		os=-sunos4
+		;;
+	sun4sol2)
+		basic_machine=sparc-sun
+		os=-solaris2
+		;;
+	sun3 | sun3-*)
+		basic_machine=m68k-sun
+		;;
+	sun4)
+		basic_machine=sparc-sun
+		;;
+	sun386 | sun386i | roadrunner)
+		basic_machine=i386-sun
+		;;
+	sv1)
+		basic_machine=sv1-cray
+		os=-unicos
+		;;
+	symmetry)
+		basic_machine=i386-sequent
+		os=-dynix
+		;;
+	t3e)
+		basic_machine=alphaev5-cray
+		os=-unicos
+		;;
+	t90)
+		basic_machine=t90-cray
+		os=-unicos
+		;;
+	tic54x | c54x*)
+		basic_machine=tic54x-unknown
+		os=-coff
+		;;
+	tic55x | c55x*)
+		basic_machine=tic55x-unknown
+		os=-coff
+		;;
+	tic6x | c6x*)
+		basic_machine=tic6x-unknown
+		os=-coff
+		;;
+	tile*)
+		basic_machine=tile-unknown
+		os=-linux-gnu
+		;;
+	tx39)
+		basic_machine=mipstx39-unknown
+		;;
+	tx39el)
+		basic_machine=mipstx39el-unknown
+		;;
+	toad1)
+		basic_machine=pdp10-xkl
+		os=-tops20
+		;;
+	tower | tower-32)
+		basic_machine=m68k-ncr
+		;;
+	tpf)
+		basic_machine=s390x-ibm
+		os=-tpf
+		;;
+	udi29k)
+		basic_machine=a29k-amd
+		os=-udi
+		;;
+	ultra3)
+		basic_machine=a29k-nyu
+		os=-sym1
+		;;
+	v810 | necv810)
+		basic_machine=v810-nec
+		os=-none
+		;;
+	vaxv)
+		basic_machine=vax-dec
+		os=-sysv
+		;;
+	vms)
+		basic_machine=vax-dec
+		os=-vms
+		;;
+	vpp*|vx|vx-*)
+		basic_machine=f301-fujitsu
+		;;
+	vxworks960)
+		basic_machine=i960-wrs
+		os=-vxworks
+		;;
+	vxworks68)
+		basic_machine=m68k-wrs
+		os=-vxworks
+		;;
+	vxworks29k)
+		basic_machine=a29k-wrs
+		os=-vxworks
+		;;
+	w65*)
+		basic_machine=w65-wdc
+		os=-none
+		;;
+	w89k-*)
+		basic_machine=hppa1.1-winbond
+		os=-proelf
+		;;
+	xbox)
+		basic_machine=i686-pc
+		os=-mingw32
+		;;
+	xps | xps100)
+		basic_machine=xps100-honeywell
+		;;
+	ymp)
+		basic_machine=ymp-cray
+		os=-unicos
+		;;
+	z8k-*-coff)
+		basic_machine=z8k-unknown
+		os=-sim
+		;;
+	z80-*-coff)
+		basic_machine=z80-unknown
+		os=-sim
+		;;
+	none)
+		basic_machine=none-none
+		os=-none
+		;;
+
+# Here we handle the default manufacturer of certain CPU types.  It is in
+# some cases the only manufacturer, in others, it is the most popular.
+	w89k)
+		basic_machine=hppa1.1-winbond
+		;;
+	op50n)
+		basic_machine=hppa1.1-oki
+		;;
+	op60c)
+		basic_machine=hppa1.1-oki
+		;;
+	romp)
+		basic_machine=romp-ibm
+		;;
+	mmix)
+		basic_machine=mmix-knuth
+		;;
+	rs6000)
+		basic_machine=rs6000-ibm
+		;;
+	vax)
+		basic_machine=vax-dec
+		;;
+	pdp10)
+		# there are many clones, so DEC is not a safe bet
+		basic_machine=pdp10-unknown
+		;;
+	pdp11)
+		basic_machine=pdp11-dec
+		;;
+	we32k)
+		basic_machine=we32k-att
+		;;
+	sh[1234] | sh[24]a | sh[24]aeb | sh[34]eb | sh[1234]le | sh[23]ele)
+		basic_machine=sh-unknown
+		;;
+	sparc | sparcv8 | sparcv9 | sparcv9b | sparcv9v)
+		basic_machine=sparc-sun
+		;;
+	cydra)
+		basic_machine=cydra-cydrome
+		;;
+	orion)
+		basic_machine=orion-highlevel
+		;;
+	orion105)
+		basic_machine=clipper-highlevel
+		;;
+	mac | mpw | mac-mpw)
+		basic_machine=m68k-apple
+		;;
+	pmac | pmac-mpw)
+		basic_machine=powerpc-apple
+		;;
+	*-unknown)
+		# Make sure to match an already-canonicalized machine name.
+		;;
+	*)
+		echo Invalid configuration \`$1\': machine \`$basic_machine\' not recognized 1>&2
+		exit 1
+		;;
+esac
+
+# Here we canonicalize certain aliases for manufacturers.
+case $basic_machine in
+	*-digital*)
+		basic_machine=`echo $basic_machine | sed 's/digital.*/dec/'`
+		;;
+	*-commodore*)
+		basic_machine=`echo $basic_machine | sed 's/commodore.*/cbm/'`
+		;;
+	*)
+		;;
+esac
+
+# Decode manufacturer-specific aliases for certain operating systems.
+
+if [ x"$os" != x"" ]
+then
+case $os in
+        # First match some system type aliases
+        # that might get confused with valid system types.
+	# -solaris* is a basic system type, with this one exception.
+        -auroraux)
+	        os=-auroraux
+		;;
+	-solaris1 | -solaris1.*)
+		os=`echo $os | sed -e 's|solaris1|sunos4|'`
+		;;
+	-solaris)
+		os=-solaris2
+		;;
+	-svr4*)
+		os=-sysv4
+		;;
+	-unixware*)
+		os=-sysv4.2uw
+		;;
+	-gnu/linux*)
+		os=`echo $os | sed -e 's|gnu/linux|linux-gnu|'`
+		;;
+	# First accept the basic system types.
+	# The portable systems comes first.
+	# Each alternative MUST END IN A *, to match a version number.
+	# -sysv* is not here because it comes later, after sysvr4.
+	-gnu* | -bsd* | -mach* | -minix* | -genix* | -ultrix* | -irix* \
+	      | -*vms* | -sco* | -esix* | -isc* | -aix* | -cnk* | -sunos | -sunos[34]*\
+	      | -hpux* | -unos* | -osf* | -luna* | -dgux* | -auroraux* | -solaris* \
+	      | -sym* | -kopensolaris* \
+	      | -amigaos* | -amigados* | -msdos* | -newsos* | -unicos* | -aof* \
+	      | -aos* | -aros* \
+	      | -nindy* | -vxsim* | -vxworks* | -ebmon* | -hms* | -mvs* \
+	      | -clix* | -riscos* | -uniplus* | -iris* | -rtu* | -xenix* \
+	      | -hiux* | -386bsd* | -knetbsd* | -mirbsd* | -netbsd* \
+	      | -openbsd* | -solidbsd* \
+	      | -ekkobsd* | -kfreebsd* | -freebsd* | -riscix* | -lynxos* \
+	      | -bosx* | -nextstep* | -cxux* | -aout* | -elf* | -oabi* \
+	      | -ptx* | -coff* | -ecoff* | -winnt* | -domain* | -vsta* \
+	      | -udi* | -eabi* | -lites* | -ieee* | -go32* | -aux* \
+	      | -chorusos* | -chorusrdb* | -cegcc* \
+	      | -cygwin* | -pe* | -psos* | -moss* | -proelf* | -rtems* \
+	      | -mingw32* | -linux-gnu* | -linux-newlib* | -linux-uclibc* \
+	      | -uxpv* | -beos* | -mpeix* | -udk* \
+	      | -in
