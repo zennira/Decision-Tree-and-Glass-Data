@@ -601,3 +601,360 @@ case $basic_machine in
 		os=-go32
 		;;
 	h3050r* | hiux*)
+		basic_machine=hppa1.1-hitachi
+		os=-hiuxwe2
+		;;
+	h8300hms)
+		basic_machine=h8300-hitachi
+		os=-hms
+		;;
+	h8300xray)
+		basic_machine=h8300-hitachi
+		os=-xray
+		;;
+	h8500hms)
+		basic_machine=h8500-hitachi
+		os=-hms
+		;;
+	harris)
+		basic_machine=m88k-harris
+		os=-sysv3
+		;;
+	hp300-*)
+		basic_machine=m68k-hp
+		;;
+	hp300bsd)
+		basic_machine=m68k-hp
+		os=-bsd
+		;;
+	hp300hpux)
+		basic_machine=m68k-hp
+		os=-hpux
+		;;
+	hp3k9[0-9][0-9] | hp9[0-9][0-9])
+		basic_machine=hppa1.0-hp
+		;;
+	hp9k2[0-9][0-9] | hp9k31[0-9])
+		basic_machine=m68000-hp
+		;;
+	hp9k3[2-9][0-9])
+		basic_machine=m68k-hp
+		;;
+	hp9k6[0-9][0-9] | hp6[0-9][0-9])
+		basic_machine=hppa1.0-hp
+		;;
+	hp9k7[0-79][0-9] | hp7[0-79][0-9])
+		basic_machine=hppa1.1-hp
+		;;
+	hp9k78[0-9] | hp78[0-9])
+		# FIXME: really hppa2.0-hp
+		basic_machine=hppa1.1-hp
+		;;
+	hp9k8[67]1 | hp8[67]1 | hp9k80[24] | hp80[24] | hp9k8[78]9 | hp8[78]9 | hp9k893 | hp893)
+		# FIXME: really hppa2.0-hp
+		basic_machine=hppa1.1-hp
+		;;
+	hp9k8[0-9][13679] | hp8[0-9][13679])
+		basic_machine=hppa1.1-hp
+		;;
+	hp9k8[0-9][0-9] | hp8[0-9][0-9])
+		basic_machine=hppa1.0-hp
+		;;
+	hppa-next)
+		os=-nextstep3
+		;;
+	hppaosf)
+		basic_machine=hppa1.1-hp
+		os=-osf
+		;;
+	hppro)
+		basic_machine=hppa1.1-hp
+		os=-proelf
+		;;
+	i370-ibm* | ibm*)
+		basic_machine=i370-ibm
+		;;
+# I'm not sure what "Sysv32" means.  Should this be sysv3.2?
+	i*86v32)
+		basic_machine=`echo $1 | sed -e 's/86.*/86-pc/'`
+		os=-sysv32
+		;;
+	i*86v4*)
+		basic_machine=`echo $1 | sed -e 's/86.*/86-pc/'`
+		os=-sysv4
+		;;
+	i*86v)
+		basic_machine=`echo $1 | sed -e 's/86.*/86-pc/'`
+		os=-sysv
+		;;
+	i*86sol2)
+		basic_machine=`echo $1 | sed -e 's/86.*/86-pc/'`
+		os=-solaris2
+		;;
+	i386mach)
+		basic_machine=i386-mach
+		os=-mach
+		;;
+	i386-vsta | vsta)
+		basic_machine=i386-unknown
+		os=-vsta
+		;;
+	iris | iris4d)
+		basic_machine=mips-sgi
+		case $os in
+		    -irix*)
+			;;
+		    *)
+			os=-irix4
+			;;
+		esac
+		;;
+	isi68 | isi)
+		basic_machine=m68k-isi
+		os=-sysv
+		;;
+	m68knommu)
+		basic_machine=m68k-unknown
+		os=-linux
+		;;
+	m68knommu-*)
+		basic_machine=m68k-`echo $basic_machine | sed 's/^[^-]*-//'`
+		os=-linux
+		;;
+	m88k-omron*)
+		basic_machine=m88k-omron
+		;;
+	magnum | m3230)
+		basic_machine=mips-mips
+		os=-sysv
+		;;
+	merlin)
+		basic_machine=ns32k-utek
+		os=-sysv
+		;;
+        microblaze)
+		basic_machine=microblaze-xilinx
+		;;
+	mingw32)
+		basic_machine=i386-pc
+		os=-mingw32
+		;;
+	mingw32ce)
+		basic_machine=arm-unknown
+		os=-mingw32ce
+		;;
+	miniframe)
+		basic_machine=m68000-convergent
+		;;
+	*mint | -mint[0-9]* | *MiNT | *MiNT[0-9]*)
+		basic_machine=m68k-atari
+		os=-mint
+		;;
+	mips3*-*)
+		basic_machine=`echo $basic_machine | sed -e 's/mips3/mips64/'`
+		;;
+	mips3*)
+		basic_machine=`echo $basic_machine | sed -e 's/mips3/mips64/'`-unknown
+		;;
+	monitor)
+		basic_machine=m68k-rom68k
+		os=-coff
+		;;
+	morphos)
+		basic_machine=powerpc-unknown
+		os=-morphos
+		;;
+	msdos)
+		basic_machine=i386-pc
+		os=-msdos
+		;;
+	ms1-*)
+		basic_machine=`echo $basic_machine | sed -e 's/ms1-/mt-/'`
+		;;
+	mvs)
+		basic_machine=i370-ibm
+		os=-mvs
+		;;
+	ncr3000)
+		basic_machine=i486-ncr
+		os=-sysv4
+		;;
+	netbsd386)
+		basic_machine=i386-unknown
+		os=-netbsd
+		;;
+	netwinder)
+		basic_machine=armv4l-rebel
+		os=-linux
+		;;
+	news | news700 | news800 | news900)
+		basic_machine=m68k-sony
+		os=-newsos
+		;;
+	news1000)
+		basic_machine=m68030-sony
+		os=-newsos
+		;;
+	news-3600 | risc-news)
+		basic_machine=mips-sony
+		os=-newsos
+		;;
+	necv70)
+		basic_machine=v70-nec
+		os=-sysv
+		;;
+	next | m*-next )
+		basic_machine=m68k-next
+		case $os in
+		    -nextstep* )
+			;;
+		    -ns2*)
+		      os=-nextstep2
+			;;
+		    *)
+		      os=-nextstep3
+			;;
+		esac
+		;;
+	nh3000)
+		basic_machine=m68k-harris
+		os=-cxux
+		;;
+	nh[45]000)
+		basic_machine=m88k-harris
+		os=-cxux
+		;;
+	nindy960)
+		basic_machine=i960-intel
+		os=-nindy
+		;;
+	mon960)
+		basic_machine=i960-intel
+		os=-mon960
+		;;
+	nonstopux)
+		basic_machine=mips-compaq
+		os=-nonstopux
+		;;
+	np1)
+		basic_machine=np1-gould
+		;;
+	nsr-tandem)
+		basic_machine=nsr-tandem
+		;;
+	op50n-* | op60c-*)
+		basic_machine=hppa1.1-oki
+		os=-proelf
+		;;
+	openrisc | openrisc-*)
+		basic_machine=or32-unknown
+		;;
+	os400)
+		basic_machine=powerpc-ibm
+		os=-os400
+		;;
+	OSE68000 | ose68000)
+		basic_machine=m68000-ericsson
+		os=-ose
+		;;
+	os68k)
+		basic_machine=m68k-none
+		os=-os68k
+		;;
+	pa-hitachi)
+		basic_machine=hppa1.1-hitachi
+		os=-hiuxwe2
+		;;
+	paragon)
+		basic_machine=i860-intel
+		os=-osf
+		;;
+	parisc)
+		basic_machine=hppa-unknown
+		os=-linux
+		;;
+	parisc-*)
+		basic_machine=hppa-`echo $basic_machine | sed 's/^[^-]*-//'`
+		os=-linux
+		;;
+	pbd)
+		basic_machine=sparc-tti
+		;;
+	pbb)
+		basic_machine=m68k-tti
+		;;
+	pc532 | pc532-*)
+		basic_machine=ns32k-pc532
+		;;
+	pc98)
+		basic_machine=i386-pc
+		;;
+	pc98-*)
+		basic_machine=i386-`echo $basic_machine | sed 's/^[^-]*-//'`
+		;;
+	pentium | p5 | k5 | k6 | nexgen | viac3)
+		basic_machine=i586-pc
+		;;
+	pentiumpro | p6 | 6x86 | athlon | athlon_*)
+		basic_machine=i686-pc
+		;;
+	pentiumii | pentium2 | pentiumiii | pentium3)
+		basic_machine=i686-pc
+		;;
+	pentium4)
+		basic_machine=i786-pc
+		;;
+	pentium-* | p5-* | k5-* | k6-* | nexgen-* | viac3-*)
+		basic_machine=i586-`echo $basic_machine | sed 's/^[^-]*-//'`
+		;;
+	pentiumpro-* | p6-* | 6x86-* | athlon-*)
+		basic_machine=i686-`echo $basic_machine | sed 's/^[^-]*-//'`
+		;;
+	pentiumii-* | pentium2-* | pentiumiii-* | pentium3-*)
+		basic_machine=i686-`echo $basic_machine | sed 's/^[^-]*-//'`
+		;;
+	pentium4-*)
+		basic_machine=i786-`echo $basic_machine | sed 's/^[^-]*-//'`
+		;;
+	pn)
+		basic_machine=pn-gould
+		;;
+	power)	basic_machine=power-ibm
+		;;
+	ppc)	basic_machine=powerpc-unknown
+		;;
+	ppc-*)	basic_machine=powerpc-`echo $basic_machine | sed 's/^[^-]*-//'`
+		;;
+	ppcle | powerpclittle | ppc-le | powerpc-little)
+		basic_machine=powerpcle-unknown
+		;;
+	ppcle-* | powerpclittle-*)
+		basic_machine=powerpcle-`echo $basic_machine | sed 's/^[^-]*-//'`
+		;;
+	ppc64)	basic_machine=powerpc64-unknown
+		;;
+	ppc64-*) basic_machine=powerpc64-`echo $basic_machine | sed 's/^[^-]*-//'`
+		;;
+	ppc64le | powerpc64little | ppc64-le | powerpc64-little)
+		basic_machine=powerpc64le-unknown
+		;;
+	ppc64le-* | powerpc64little-*)
+		basic_machine=powerpc64le-`echo $basic_machine | sed 's/^[^-]*-//'`
+		;;
+	ps2)
+		basic_machine=i386-ibm
+		;;
+	pw32)
+		basic_machine=i586-unknown
+		os=-pw32
+		;;
+	rdos)
+		basic_machine=i386-pc
+		os=-rdos
+		;;
+	rom68k)
+		basic_machine=m68k-rom68k
+		os=-coff
+		;;
+	rm[46]00)
+		basic_machin
