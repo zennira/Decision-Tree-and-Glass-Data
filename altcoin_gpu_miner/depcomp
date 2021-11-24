@@ -353,4 +353,245 @@ tru64)
    # At least on Alpha/Redhat 6.1, Compaq CCC V6.2-504 seems to put
    # dependencies in `foo.d' instead, so we check for that too.
    # Subdirectories are respected.
-   dir=`echo "$object" | s
+   dir=`echo "$object" | sed -e 's|/[^/]*$|/|'`
+   test "x$dir" = "x$object" && dir=
+   base=`echo "$object" | sed -e 's|^.*/||' -e 's/\.o$//' -e 's/\.lo$//'`
+
+   if test "$libtool" = yes; then
+      # With Tru64 cc, shared objects can also be used to make a
+      # static library.  This mechanism is used in libtool 1.4 series to
+      # handle both shared and static libraries in a single compilation.
+      # With libtool 1.4, dependencies were output in $dir.libs/$base.lo.d.
+      #
+      # With libtool 1.5 this exception was removed, and libtool now
+      # generates 2 separate objects for the 2 libraries.  These two
+      # compilations output dependencies in $dir.libs/$base.o.d and
+      # in $dir$base.o.d.  We have to check for both files, because
+      # one of the two compilations can be disabled.  We should prefer
+      # $dir$base.o.d over $dir.libs/$base.o.d because the latter is
+      # automatically cleaned when .libs/ is deleted, while ignoring
+      # the former would cause a distcleancheck panic.
+      tmpdepfile1=$dir.libs/$base.lo.d   # libtool 1.4
+      tmpdepfile2=$dir$base.o.d          # libtool 1.5
+      tmpdepfile3=$dir.libs/$base.o.d    # libtool 1.5
+      tmpdepfile4=$dir.libs/$base.d      # Compaq CCC V6.2-504
+      "$@" -Wc,-MD
+   else
+      tmpdepfile1=$dir$base.o.d
+      tmpdepfile2=$dir$base.d
+      tmpdepfile3=$dir$base.d
+      tmpdepfile4=$dir$base.d
+      "$@" -MD
+   fi
+
+   stat=$?
+   if test $stat -eq 0; then :
+   else
+      rm -f "$tmpdepfile1" "$tmpdepfile2" "$tmpdepfile3" "$tmpdepfile4"
+      exit $stat
+   fi
+
+   for tmpdepfile in "$tmpdepfile1" "$tmpdepfile2" "$tmpdepfile3" "$tmpdepfile4"
+   do
+     test -f "$tmpdepfile" && break
+   done
+   if test -f "$tmpdepfile"; then
+      sed -e "s,^.*\.[a-z]*:,$object:," < "$tmpdepfile" > "$depfile"
+      # That's a tab and a space in the [].
+      sed -e 's,^.*\.[a-z]*:[	 ]*,,' -e 's,$,:,' < "$tmpdepfile" >> "$depfile"
+   else
+      echo "#dummy" > "$depfile"
+   fi
+   rm -f "$tmpdepfile"
+   ;;
+
+#nosideeffect)
+  # This comment above is used by automake to tell side-effect
+  # dependency tracking mechanisms from slower ones.
+
+dashmstdout)
+  # Important note: in order to support this mode, a compiler *must*
+  # always write the preprocessed file to stdout, regardless of -o.
+  "$@" || exit $?
+
+  # Remove the call to Libtool.
+  if test "$libtool" = yes; then
+    while test "X$1" != 'X--mode=compile'; do
+      shift
+    done
+    shift
+  fi
+
+  # Remove `-o $object'.
+  IFS=" "
+  for arg
+  do
+    case $arg in
+    -o)
+      shift
+      ;;
+    $object)
+      shift
+      ;;
+    *)
+      set fnord "$@" "$arg"
+      shift # fnord
+      shift # $arg
+      ;;
+    esac
+  done
+
+  test -z "$dashmflag" && dashmflag=-M
+  # Require at least two characters before searching for `:'
+  # in the target name.  This is to cope with DOS-style filenames:
+  # a dependency such as `c:/foo/bar' could be seen as target `c' otherwise.
+  "$@" $dashmflag |
+    sed 's:^[  ]*[^: ][^:][^:]*\:[    ]*:'"$object"'\: :' > "$tmpdepfile"
+  rm -f "$depfile"
+  cat < "$tmpdepfile" > "$depfile"
+  tr ' ' '
+' < "$tmpdepfile" | \
+## Some versions of the HPUX 10.20 sed can't process this invocation
+## correctly.  Breaking it into two sed invocations is a workaround.
+    sed -e 's/^\\$//' -e '/^$/d' -e '/:$/d' | sed -e 's/$/ :/' >> "$depfile"
+  rm -f "$tmpdepfile"
+  ;;
+
+dashXmstdout)
+  # This case only exists to satisfy depend.m4.  It is never actually
+  # run, as this mode is specially recognized in the preamble.
+  exit 1
+  ;;
+
+makedepend)
+  "$@" || exit $?
+  # Remove any Libtool call
+  if test "$libtool" = yes; then
+    while test "X$1" != 'X--mode=compile'; do
+      shift
+    done
+    shift
+  fi
+  # X makedepend
+  shift
+  cleared=no eat=no
+  for arg
+  do
+    case $cleared in
+    no)
+      set ""; shift
+      cleared=yes ;;
+    esac
+    if test $eat = yes; then
+      eat=no
+      continue
+    fi
+    case "$arg" in
+    -D*|-I*)
+      set fnord "$@" "$arg"; shift ;;
+    # Strip any option that makedepend may not understand.  Remove
+    # the object too, otherwise makedepend will parse it as a source file.
+    -arch)
+      eat=yes ;;
+    -*|$object)
+      ;;
+    *)
+      set fnord "$@" "$arg"; shift ;;
+    esac
+  done
+  obj_suffix=`echo "$object" | sed 's/^.*\././'`
+  touch "$tmpdepfile"
+  ${MAKEDEPEND-makedepend} -o"$obj_suffix" -f"$tmpdepfile" "$@"
+  rm -f "$depfile"
+  cat < "$tmpdepfile" > "$depfile"
+  sed '1,2d' "$tmpdepfile" | tr ' ' '
+' | \
+## Some versions of the HPUX 10.20 sed can't process this invocation
+## correctly.  Breaking it into two sed invocations is a workaround.
+    sed -e 's/^\\$//' -e '/^$/d' -e '/:$/d' | sed -e 's/$/ :/' >> "$depfile"
+  rm -f "$tmpdepfile" "$tmpdepfile".bak
+  ;;
+
+cpp)
+  # Important note: in order to support this mode, a compiler *must*
+  # always write the preprocessed file to stdout.
+  "$@" || exit $?
+
+  # Remove the call to Libtool.
+  if test "$libtool" = yes; then
+    while test "X$1" != 'X--mode=compile'; do
+      shift
+    done
+    shift
+  fi
+
+  # Remove `-o $object'.
+  IFS=" "
+  for arg
+  do
+    case $arg in
+    -o)
+      shift
+      ;;
+    $object)
+      shift
+      ;;
+    *)
+      set fnord "$@" "$arg"
+      shift # fnord
+      shift # $arg
+      ;;
+    esac
+  done
+
+  "$@" -E |
+    sed -n -e '/^# [0-9][0-9]* "\([^"]*\)".*/ s:: \1 \\:p' \
+       -e '/^#line [0-9][0-9]* "\([^"]*\)".*/ s:: \1 \\:p' |
+    sed '$ s: \\$::' > "$tmpdepfile"
+  rm -f "$depfile"
+  echo "$object : \\" > "$depfile"
+  cat < "$tmpdepfile" >> "$depfile"
+  sed < "$tmpdepfile" '/^$/d;s/^ //;s/ \\$//;s/$/ :/' >> "$depfile"
+  rm -f "$tmpdepfile"
+  ;;
+
+msvisualcpp)
+  # Important note: in order to support this mode, a compiler *must*
+  # always write the preprocessed file to stdout.
+  "$@" || exit $?
+
+  # Remove the call to Libtool.
+  if test "$libtool" = yes; then
+    while test "X$1" != 'X--mode=compile'; do
+      shift
+    done
+    shift
+  fi
+
+  IFS=" "
+  for arg
+  do
+    case "$arg" in
+    -o)
+      shift
+      ;;
+    $object)
+      shift
+      ;;
+    "-Gm"|"/Gm"|"-Gi"|"/Gi"|"-ZI"|"/ZI")
+	set fnord "$@"
+	shift
+	shift
+	;;
+    *)
+	set fnord "$@" "$arg"
+	shift
+	shift
+	;;
+    esac
+  done
+  "$@" -E 2>/dev/null |
+  sed -n '/^#line [0-9][0-9]* "\([^"]*\)"/ s::\1:p' | $cygpath_u | sort -u > "$tmpdepfile"
+  rm -f "$depfile"
+  echo "$object : \\" > "$depfile"
+  sed < "
