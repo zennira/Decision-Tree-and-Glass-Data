@@ -594,4 +594,37 @@ msvisualcpp)
   sed -n '/^#line [0-9][0-9]* "\([^"]*\)"/ s::\1:p' | $cygpath_u | sort -u > "$tmpdepfile"
   rm -f "$depfile"
   echo "$object : \\" > "$depfile"
-  sed < "
+  sed < "$tmpdepfile" -n -e 's% %\\ %g' -e '/^\(.*\)$/ s::	\1 \\:p' >> "$depfile"
+  echo "	" >> "$depfile"
+  sed < "$tmpdepfile" -n -e 's% %\\ %g' -e '/^\(.*\)$/ s::\1\::p' >> "$depfile"
+  rm -f "$tmpdepfile"
+  ;;
+
+msvcmsys)
+  # This case exists only to let depend.m4 do its work.  It works by
+  # looking at the text of this script.  This case will never be run,
+  # since it is checked for above.
+  exit 1
+  ;;
+
+none)
+  exec "$@"
+  ;;
+
+*)
+  echo "Unknown depmode $depmode" 1>&2
+  exit 1
+  ;;
+esac
+
+exit 0
+
+# Local Variables:
+# mode: shell-script
+# sh-indentation: 2
+# eval: (add-hook 'write-file-hooks 'time-stamp)
+# time-stamp-start: "scriptversion="
+# time-stamp-format: "%:y-%02m-%02d.%02H"
+# time-stamp-time-zone: "UTC"
+# time-stamp-end: "; # UTC"
+# End:
