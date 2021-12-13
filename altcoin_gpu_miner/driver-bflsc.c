@@ -345,4 +345,241 @@ static int send_recv_ss(struct cgpu_info *bflsc, int dev, bool *sent, int *amoun
 		*sent = false;
 		err = usb_write(bflsc, (char *)&data, len, amount, recv_cmd);
 		if (err < 0 || *amount < send_len)
-			return 
+			return err;
+
+		*sent = true;
+		if (read_ok == READ_OK)
+			err = usb_read_ok(bflsc, recv, recv_siz, amount, recv_cmd);
+		else
+			err = usb_read_nl(bflsc, recv, recv_siz, amount, recv_cmd);
+
+		if (err != LIBUSB_SUCCESS && err != LIBUSB_ERROR_TIMEOUT)
+			return err;
+
+		// read_ok can err timeout if it's looking for OK<LF>
+		// TODO: add a usb_read() option to spot the ERR: and convert end=OK<LF> to just <LF>
+		// x-link timeout? - try again?
+		if ((err == LIBUSB_SUCCESS || (read_ok == READ_OK && err == LIBUSB_ERROR_TIMEOUT)) &&
+			strstr(recv, BFLSC_XTIMEOUT))
+				continue;
+
+		// SUCCESS or TIMEOUT - return it
+		break;
+	}
+	return err;
+}
+
+static int write_to_dev(struct cgpu_info *bflsc, int dev, char *buf, int buflen, int *amount, enum usb_cmds cmd)
+{
+	struct DataForwardToChain data;
+	int len;
+
+	/*
+	 * The protocol is syncronous so any previous excess can be
+	 * discarded and assumed corrupt data or failed USB transfers
+	 */
+	usb_buffer_clear(bflsc);
+
+	if (dev == 0)
+		return usb_write(bflsc, buf, buflen, amount, cmd);
+
+	data.header = BFLSC_XLINKHDR;
+	data.deviceAddress = (uint8_t)dev;
+	data.payloadSize = buflen;
+	memcpy(data.payloadData, buf, buflen);
+	len = DATAFORWARDSIZE(data);
+
+	return usb_write(bflsc, (char *)&data, len, amount, cmd);
+}
+
+static void bflsc_send_flush_work(struct cgpu_info *bflsc, int dev)
+{
+	char buf[BFLSC_BUFSIZ+1];
+	int err, amount;
+	bool sent;
+
+	// Device is gone
+	if (bflsc->usbinfo.nodev)
+		return;
+
+	mutex_lock(&bflsc->device_mutex);
+	err = send_recv_ss(bflsc, dev, &sent, &amount,
+				BFLSC_QFLUSH, BFLSC_QFLUSH_LEN, C_QUEFLUSH,
+				buf, sizeof(buf)-1, C_QUEFLUSHREPLY, READ_NL);
+	mutex_unlock(&bflsc->device_mutex);
+
+	if (!sent)
+		bflsc_applog(bflsc, dev, C_QUEFLUSH, amount, err);
+	else {
+		// TODO: do we care if we don't get 'OK'? (always will in normal processing)
+	}
+}
+
+/* return True = attempted usb_read_ok()
+ * set ignore to true means no applog/ignore errors */
+static bool bflsc_qres(struct cgpu_info *bflsc, char *buf, size_t bufsiz, int dev, int *err, int *amount, bool ignore)
+{
+	bool readok = false;
+
+	mutex_lock(&(bflsc->device_mutex));
+	*err = send_recv_ss(bflsc, dev, &readok, amount,
+				BFLSC_QRES, BFLSC_QRES_LEN, C_REQUESTRESULTS,
+				buf, bufsiz-1, C_GETRESULTS, READ_OK);
+	mutex_unlock(&(bflsc->device_mutex));
+
+	if (!readok) {
+		if (!ignore)
+			bflsc_applog(bflsc, dev, C_REQUESTRESULTS, *amount, *err);
+
+		// TODO: do what? flag as dead device?
+		// count how many times it has happened and reset/fail it
+		// or even make sure it is all x-link and that means device
+		// has failed after some limit of this?
+		// of course all other I/O must also be failing ...
+	} else {
+		if (*err < 0 || *amount < 1) {
+			if (!ignore)
+				bflsc_applog(bflsc, dev, C_GETRESULTS, *amount, *err);
+
+			// TODO: do what? ... see above
+		}
+	}
+
+	return readok;
+}
+
+static void __bflsc_initialise(struct cgpu_info *bflsc)
+{
+	int err, interface;
+
+// TODO: does x-link bypass the other device FTDI? (I think it does)
+//	So no initialisation required except for the master device?
+
+	if (bflsc->usbinfo.nodev)
+		return;
+
+	interface = usb_interface(bflsc);
+	// Reset
+	err = usb_transfer(bflsc, FTDI_TYPE_OUT, FTDI_REQUEST_RESET,
+				FTDI_VALUE_RESET, interface, C_RESET);
+
+	applog(LOG_DEBUG, "%s%i: reset got err %d",
+		bflsc->drv->name, bflsc->device_id, err);
+
+	if (bflsc->usbinfo.nodev)
+		return;
+
+	usb_ftdi_set_latency(bflsc);
+
+	if (bflsc->usbinfo.nodev)
+		return;
+
+	// Set data control
+	err = usb_transfer(bflsc, FTDI_TYPE_OUT, FTDI_REQUEST_DATA,
+				FTDI_VALUE_DATA_BAS, interface, C_SETDATA);
+
+	applog(LOG_DEBUG, "%s%i: setdata got err %d",
+		bflsc->drv->name, bflsc->device_id, err);
+
+	if (bflsc->usbinfo.nodev)
+		return;
+
+	// Set the baud
+	err = usb_transfer(bflsc, FTDI_TYPE_OUT, FTDI_REQUEST_BAUD, FTDI_VALUE_BAUD_BAS,
+				(FTDI_INDEX_BAUD_BAS & 0xff00) | interface,
+				C_SETBAUD);
+
+	applog(LOG_DEBUG, "%s%i: setbaud got err %d",
+		bflsc->drv->name, bflsc->device_id, err);
+
+	if (bflsc->usbinfo.nodev)
+		return;
+
+	// Set Flow Control
+	err = usb_transfer(bflsc, FTDI_TYPE_OUT, FTDI_REQUEST_FLOW,
+				FTDI_VALUE_FLOW, interface, C_SETFLOW);
+
+	applog(LOG_DEBUG, "%s%i: setflowctrl got err %d",
+		bflsc->drv->name, bflsc->device_id, err);
+
+	if (bflsc->usbinfo.nodev)
+		return;
+
+	// Set Modem Control
+	err = usb_transfer(bflsc, FTDI_TYPE_OUT, FTDI_REQUEST_MODEM,
+				FTDI_VALUE_MODEM, interface, C_SETMODEM);
+
+	applog(LOG_DEBUG, "%s%i: setmodemctrl got err %d",
+		bflsc->drv->name, bflsc->device_id, err);
+
+	if (bflsc->usbinfo.nodev)
+		return;
+
+	// Clear any sent data
+	err = usb_transfer(bflsc, FTDI_TYPE_OUT, FTDI_REQUEST_RESET,
+				FTDI_VALUE_PURGE_TX, interface, C_PURGETX);
+
+	applog(LOG_DEBUG, "%s%i: purgetx got err %d",
+		bflsc->drv->name, bflsc->device_id, err);
+
+	if (bflsc->usbinfo.nodev)
+		return;
+
+	// Clear any received data
+	err = usb_transfer(bflsc, FTDI_TYPE_OUT, FTDI_REQUEST_RESET,
+				FTDI_VALUE_PURGE_RX, interface, C_PURGERX);
+
+	applog(LOG_DEBUG, "%s%i: purgerx got err %d",
+		bflsc->drv->name, bflsc->device_id, err);
+
+	if (!bflsc->cutofftemp)
+		bflsc->cutofftemp = opt_bflsc_overheat;
+}
+
+static void bflsc_initialise(struct cgpu_info *bflsc)
+{
+	struct bflsc_info *sc_info = (struct bflsc_info *)(bflsc->device_data);
+	char buf[BFLSC_BUFSIZ+1];
+	int err, amount;
+	int dev;
+
+	mutex_lock(&(bflsc->device_mutex));
+	__bflsc_initialise(bflsc);
+	mutex_unlock(&(bflsc->device_mutex));
+
+	for (dev = 0; dev < sc_info->sc_count; dev++) {
+		bflsc_send_flush_work(bflsc, dev);
+		bflsc_qres(bflsc, buf, sizeof(buf), dev, &err, &amount, true);
+	}
+}
+
+static bool getinfo(struct cgpu_info *bflsc, int dev)
+{
+	struct bflsc_info *sc_info = (struct bflsc_info *)(bflsc->device_data);
+	struct bflsc_dev sc_dev;
+	char buf[BFLSC_BUFSIZ+1];
+	int err, amount;
+	char **items, *firstname, **fields, *lf;
+	bool res, ok = false;
+	int i, lines, count;
+	char *tmp;
+
+	/*
+	 * Kano's first dev Jalapeno output:
+	 * DEVICE: BitFORCE SC<LF>
+	 * FIRMWARE: 1.0.0<LF>
+	 * ENGINES: 30<LF>
+	 * FREQUENCY: [UNKNOWN]<LF>
+	 * XLINK MODE: MASTER<LF>
+	 * XLINK PRESENT: YES<LF>
+	 * --DEVICES IN CHAIN: 0<LF>
+	 * --CHAIN PRESENCE MASK: 00000000<LF>
+	 * OK<LF>
+	 */
+
+	/*
+	 * Don't use send_recv_ss() since we have a different receive timeout
+	 * Also getinfo() is called multiple times if it fails anyway
+	 */
+	err = write_to_dev(bflsc, dev, BFLSC_DETAILS, BFLSC_DETAILS_LEN, &amount, C_REQUESTDETAILS);
+	if (err < 0 || amount != BFLSC
