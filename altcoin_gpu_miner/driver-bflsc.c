@@ -582,4 +582,215 @@ static bool getinfo(struct cgpu_info *bflsc, int dev)
 	 * Also getinfo() is called multiple times if it fails anyway
 	 */
 	err = write_to_dev(bflsc, dev, BFLSC_DETAILS, BFLSC_DETAILS_LEN, &amount, C_REQUESTDETAILS);
-	if (err < 0 || amount != BFLSC
+	if (err < 0 || amount != BFLSC_DETAILS_LEN) {
+		applog(LOG_ERR, "%s detect (%s) send details request failed (%d:%d)",
+			bflsc->drv->dname, bflsc->device_path, amount, err);
+		return ok;
+	}
+
+	err = usb_read_ok_timeout(bflsc, buf, sizeof(buf)-1, &amount,
+				  BFLSC_INFO_TIMEOUT, C_GETDETAILS);
+	if (err < 0 || amount < 1) {
+		if (err < 0) {
+			applog(LOG_ERR, "%s detect (%s) get details return invalid/timed out (%d:%d)",
+					bflsc->drv->dname, bflsc->device_path, amount, err);
+		} else {
+			applog(LOG_ERR, "%s detect (%s) get details returned nothing (%d:%d)",
+					bflsc->drv->dname, bflsc->device_path, amount, err);
+		}
+		return ok;
+	}
+
+	memset(&sc_dev, 0, sizeof(struct bflsc_dev));
+	sc_info->sc_count = 1;
+	res = tolines(bflsc, dev, &(buf[0]), &lines, &items, C_GETDETAILS);
+	if (!res)
+		return ok;
+
+	tmp = str_text(buf);
+	strncpy(sc_dev.getinfo, tmp, sizeof(sc_dev.getinfo));
+	sc_dev.getinfo[sizeof(sc_dev.getinfo)-1] = '\0';
+	free(tmp);
+
+	for (i = 0; i < lines-2; i++) {
+		res = breakdown(ONECOLON, items[i], &count, &firstname, &fields, &lf);
+		if (lf)
+			*lf = '\0';
+		if (!res || count != 1) {
+			tmp = str_text(items[i]);
+			applogsiz(LOG_WARNING, BFLSC_APPLOGSIZ,
+					"%s detect (%s) invalid details line: '%s' %d",
+					bflsc->drv->dname, bflsc->device_path, tmp, count);
+			free(tmp);
+			dev_error(bflsc, REASON_DEV_COMMS_ERROR);
+			goto mata;
+		}
+		if (strstr(firstname, BFLSC_DI_FIRMWARE)) {
+			sc_dev.firmware = strdup(fields[0]);
+			sc_info->driver_version = drv_ver(bflsc, sc_dev.firmware);
+		}
+		else if (strstr(firstname, BFLSC_DI_ENGINES)) {
+			sc_dev.engines = atoi(fields[0]);
+			if (sc_dev.engines < 1) {
+				tmp = str_text(items[i]);
+				applogsiz(LOG_WARNING, BFLSC_APPLOGSIZ,
+						"%s detect (%s) invalid engine count: '%s'",
+						bflsc->drv->dname, bflsc->device_path, tmp);
+				free(tmp);
+				goto mata;
+			}
+		}
+		else if (strstr(firstname, BFLSC_DI_XLINKMODE))
+			sc_dev.xlink_mode = strdup(fields[0]);
+		else if (strstr(firstname, BFLSC_DI_XLINKPRESENT))
+			sc_dev.xlink_present = strdup(fields[0]);
+		else if (strstr(firstname, BFLSC_DI_DEVICESINCHAIN)) {
+			if (fields[0][0] == '0' ||
+			    (fields[0][0] == ' ' && fields[0][1] == '0'))
+				sc_info->sc_count = 1;
+			else
+				sc_info->sc_count = atoi(fields[0]);
+			if (sc_info->sc_count < 1 || sc_info->sc_count > 30) {
+				tmp = str_text(items[i]);
+				applogsiz(LOG_WARNING, BFLSC_APPLOGSIZ,
+						"%s detect (%s) invalid x-link count: '%s'",
+						bflsc->drv->dname, bflsc->device_path, tmp);
+				free(tmp);
+				goto mata;
+			}
+		}
+		else if (strstr(firstname, BFLSC_DI_CHIPS))
+			sc_dev.chips = strdup(fields[0]);
+
+		freebreakdown(&count, &firstname, &fields);
+	}
+
+	if (sc_info->driver_version == BFLSC_DRVUNDEF) {
+		applog(LOG_WARNING, "%s detect (%s) missing %s",
+			bflsc->drv->dname, bflsc->device_path, BFLSC_DI_FIRMWARE);
+		goto ne;
+	}
+
+	sc_info->sc_devs = calloc(sc_info->sc_count, sizeof(struct bflsc_dev));
+	if (unlikely(!sc_info->sc_devs))
+		quit(1, "Failed to calloc in getinfo");
+	memcpy(&(sc_info->sc_devs[0]), &sc_dev, sizeof(sc_dev));
+	// TODO: do we care about getting this info for the rest if > 0 x-link
+
+	ok = true;
+	goto ne;
+
+mata:
+	freebreakdown(&count, &firstname, &fields);
+	ok = false;
+ne:
+	freetolines(&lines, &items);
+	return ok;
+}
+
+static bool bflsc_detect_one(struct libusb_device *dev, struct usb_find_devices *found)
+{
+	struct bflsc_info *sc_info = NULL;
+	char buf[BFLSC_BUFSIZ+1];
+	int i, err, amount;
+	struct timeval init_start, init_now;
+	int init_sleep, init_count;
+	bool ident_first, sent;
+	char *newname;
+	uint16_t latency;
+
+	struct cgpu_info *bflsc = usb_alloc_cgpu(&bflsc_drv, 1);
+
+	sc_info = calloc(1, sizeof(*sc_info));
+	if (unlikely(!sc_info))
+		quit(1, "Failed to calloc sc_info in bflsc_detect_one");
+	// TODO: fix ... everywhere ...
+	bflsc->device_data = (FILE *)sc_info;
+
+	if (!usb_init(bflsc, dev, found))
+		goto shin;
+
+	// Allow 2 complete attempts if the 1st time returns an unrecognised reply
+	ident_first = true;
+retry:
+	init_count = 0;
+	init_sleep = REINIT_TIME_FIRST_MS;
+	cgtime(&init_start);
+reinit:
+	__bflsc_initialise(bflsc);
+
+	err = send_recv_ss(bflsc, 0, &sent, &amount,
+				BFLSC_IDENTIFY, BFLSC_IDENTIFY_LEN, C_REQUESTIDENTIFY,
+				buf, sizeof(buf)-1, C_GETIDENTIFY, READ_NL);
+
+	if (!sent) {
+		applog(LOG_ERR, "%s detect (%s) send identify request failed (%d:%d)",
+			bflsc->drv->dname, bflsc->device_path, amount, err);
+		goto unshin;
+	}
+
+	if (err < 0 || amount < 1) {
+		init_count++;
+		cgtime(&init_now);
+		if (us_tdiff(&init_now, &init_start) <= REINIT_TIME_MAX) {
+			if (init_count == 2) {
+				applog(LOG_WARNING, "%s detect (%s) 2nd init failed (%d:%d) - retrying",
+					bflsc->drv->dname, bflsc->device_path, amount, err);
+			}
+			cgsleep_ms(init_sleep);
+			if ((init_sleep * 2) <= REINIT_TIME_MAX_MS)
+				init_sleep *= 2;
+			goto reinit;
+		}
+
+		if (init_count > 0)
+			applog(LOG_WARNING, "%s detect (%s) init failed %d times %.2fs",
+				bflsc->drv->dname, bflsc->device_path, init_count, tdiff(&init_now, &init_start));
+
+		if (err < 0) {
+			applog(LOG_ERR, "%s detect (%s) error identify reply (%d:%d)",
+				bflsc->drv->dname, bflsc->device_path, amount, err);
+		} else {
+			applog(LOG_ERR, "%s detect (%s) empty identify reply (%d)",
+				bflsc->drv->dname, bflsc->device_path, amount);
+		}
+
+		goto unshin;
+	}
+	buf[amount] = '\0';
+
+	if (unlikely(!strstr(buf, BFLSC_BFLSC))) {
+		applog(LOG_DEBUG, "%s detect (%s) found an FPGA '%s' ignoring",
+			bflsc->drv->dname, bflsc->device_path, buf);
+		goto unshin;
+	}
+
+	if (unlikely(strstr(buf, BFLSC_IDENTITY))) {
+		if (ident_first) {
+			applog(LOG_DEBUG, "%s detect (%s) didn't recognise '%s' trying again ...",
+				bflsc->drv->dname, bflsc->device_path, buf);
+			ident_first = false;
+			goto retry;
+		}
+		applog(LOG_DEBUG, "%s detect (%s) didn't recognise '%s' on 2nd attempt",
+			bflsc->drv->dname, bflsc->device_path, buf);
+		goto unshin;
+	}
+
+	int tries = 0;
+	while (7734) {
+		if (getinfo(bflsc, 0))
+			break;
+
+		// N.B. we will get displayed errors each time it fails
+		if (++tries > 2)
+			goto unshin;
+
+		cgsleep_ms(40);
+	}
+
+	switch (sc_info->driver_version) {
+		case BFLSC_DRV1:
+			sc_info->que_size = BFLSC_QUE_SIZE_V1;
+			sc_info->que_full_enough = BFLSC_QUE_FULL_ENOUGH_V1;
+			sc_info->que_watermark = BFLSC_QUE_WATE
