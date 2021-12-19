@@ -793,4 +793,244 @@ reinit:
 		case BFLSC_DRV1:
 			sc_info->que_size = BFLSC_QUE_SIZE_V1;
 			sc_info->que_full_enough = BFLSC_QUE_FULL_ENOUGH_V1;
-			sc_info->que_watermark = BFLSC_QUE_WATE
+			sc_info->que_watermark = BFLSC_QUE_WATERMARK_V1;
+			sc_info->que_low = BFLSC_QUE_LOW_V1;
+			sc_info->que_noncecount = QUE_NONCECOUNT_V1;
+			sc_info->que_fld_min = QUE_FLD_MIN_V1;
+			sc_info->que_fld_max = QUE_FLD_MAX_V1;
+			// Only Jalapeno uses 1.0.0
+			sc_info->flush_size = 1;
+			break;
+		case BFLSC_DRV2:
+		case BFLSC_DRVUNDEF:
+		default:
+			sc_info->driver_version = BFLSC_DRV2;
+
+			sc_info->que_size = BFLSC_QUE_SIZE_V2;
+			sc_info->que_full_enough = BFLSC_QUE_FULL_ENOUGH_V2;
+			sc_info->que_watermark = BFLSC_QUE_WATERMARK_V2;
+			sc_info->que_low = BFLSC_QUE_LOW_V2;
+			sc_info->que_noncecount = QUE_NONCECOUNT_V2;
+			sc_info->que_fld_min = QUE_FLD_MIN_V2;
+			sc_info->que_fld_max = QUE_FLD_MAX_V2;
+			// TODO: this can be reduced to total chip count
+			sc_info->flush_size = 16 * sc_info->sc_count;
+			break;
+	}
+
+	// Set parallelization based on the getinfo() response if it is present
+	if (sc_info->sc_devs[0].chips && strlen(sc_info->sc_devs[0].chips)) {
+		if (strstr(sc_info->sc_devs[0].chips, BFLSC_DI_CHIPS_PARALLEL)) {
+			sc_info->que_noncecount = QUE_NONCECOUNT_V2;
+			sc_info->que_fld_min = QUE_FLD_MIN_V2;
+			sc_info->que_fld_max = QUE_FLD_MAX_V2;
+		} else {
+			sc_info->que_noncecount = QUE_NONCECOUNT_V1;
+			sc_info->que_fld_min = QUE_FLD_MIN_V1;
+			sc_info->que_fld_max = QUE_FLD_MAX_V1;
+		}
+	}
+
+	sc_info->scan_sleep_time = BAS_SCAN_TIME;
+	sc_info->results_sleep_time = BFLSC_RES_TIME;
+	sc_info->default_ms_work = BAS_WORK_TIME;
+	latency = BAS_LATENCY;
+
+	/* When getinfo() "FREQUENCY: [UNKNOWN]" is fixed -
+	 * use 'freq * engines' to estimate.
+	 * Otherwise for now: */
+	newname = NULL;
+	if (sc_info->sc_count > 1) {
+		newname = BFLSC_MINIRIG;
+		sc_info->scan_sleep_time = BAM_SCAN_TIME;
+		sc_info->default_ms_work = BAM_WORK_TIME;
+		bflsc->usbdev->ident = IDENT_BAM;
+		latency = BAM_LATENCY;
+	} else {
+		if (sc_info->sc_devs[0].engines < 34) { // 16 * 2 + 2
+			newname = BFLSC_JALAPENO;
+			sc_info->scan_sleep_time = BAJ_SCAN_TIME;
+			sc_info->default_ms_work = BAJ_WORK_TIME;
+			bflsc->usbdev->ident = IDENT_BAJ;
+			latency = BAJ_LATENCY;
+		} else if (sc_info->sc_devs[0].engines < 130)  { // 16 * 8 + 2
+			newname = BFLSC_LITTLESINGLE;
+			sc_info->scan_sleep_time = BAL_SCAN_TIME;
+			sc_info->default_ms_work = BAL_WORK_TIME;
+			bflsc->usbdev->ident = IDENT_BAL;
+			latency = BAL_LATENCY;
+		}
+	}
+
+	if (latency != bflsc->usbdev->found->latency) {
+		bflsc->usbdev->found->latency = latency;
+		usb_ftdi_set_latency(bflsc);
+	}
+
+	for (i = 0; i < sc_info->sc_count; i++)
+		sc_info->sc_devs[i].ms_work = sc_info->default_ms_work;
+
+	if (newname) {
+		if (!bflsc->drv->copy)
+			bflsc->drv = copy_drv(bflsc->drv);
+		bflsc->drv->name = newname;
+	}
+
+	// We have a real BFLSC!
+	applog(LOG_DEBUG, "%s (%s) identified as: '%s'",
+		bflsc->drv->dname, bflsc->device_path, bflsc->drv->name);
+
+	if (!add_cgpu(bflsc))
+		goto unshin;
+
+	update_usb_stats(bflsc);
+
+	mutex_init(&bflsc->device_mutex);
+	rwlock_init(&sc_info->stat_lock);
+
+	return true;
+
+unshin:
+
+	usb_uninit(bflsc);
+
+shin:
+
+	free(bflsc->device_data);
+	bflsc->device_data = NULL;
+
+	if (bflsc->name != blank) {
+		free(bflsc->name);
+		bflsc->name = NULL;
+	}
+
+	bflsc = usb_free_cgpu(bflsc);
+
+	return false;
+}
+
+static void bflsc_detect(bool __maybe_unused hotplug)
+{
+	usb_detect(&bflsc_drv, bflsc_detect_one);
+}
+
+static void get_bflsc_statline_before(char *buf, size_t bufsiz, struct cgpu_info *bflsc)
+{
+	struct bflsc_info *sc_info = (struct bflsc_info *)(bflsc->device_data);
+	float temp = 0;
+	float vcc1 = 0;
+	int i;
+
+	rd_lock(&(sc_info->stat_lock));
+	for (i = 0; i < sc_info->sc_count; i++) {
+		if (sc_info->sc_devs[i].temp1 > temp)
+			temp = sc_info->sc_devs[i].temp1;
+		if (sc_info->sc_devs[i].temp2 > temp)
+			temp = sc_info->sc_devs[i].temp2;
+		if (sc_info->sc_devs[i].vcc1 > vcc1)
+			vcc1 = sc_info->sc_devs[i].vcc1;
+	}
+	rd_unlock(&(sc_info->stat_lock));
+
+	tailsprintf(buf, bufsiz, " max%3.0fC %4.2fV | ", temp, vcc1);
+}
+
+static void flush_one_dev(struct cgpu_info *bflsc, int dev)
+{
+	struct bflsc_info *sc_info = (struct bflsc_info *)(bflsc->device_data);
+	struct work *work, *tmp;
+	bool did = false;
+
+	bflsc_send_flush_work(bflsc, dev);
+
+	rd_lock(&bflsc->qlock);
+
+	HASH_ITER(hh, bflsc->queued_work, work, tmp) {
+		if (work->subid == dev) {
+			// devflag is used to flag stale work
+			work->devflag = true;
+			did = true;
+		}
+	}
+
+	rd_unlock(&bflsc->qlock);
+
+	if (did) {
+		wr_lock(&(sc_info->stat_lock));
+		sc_info->sc_devs[dev].flushed = true;
+		sc_info->sc_devs[dev].flush_id = sc_info->sc_devs[dev].result_id;
+		sc_info->sc_devs[dev].work_queued = 0;
+		wr_unlock(&(sc_info->stat_lock));
+	}
+}
+
+static void bflsc_flush_work(struct cgpu_info *bflsc)
+{
+	struct bflsc_info *sc_info = (struct bflsc_info *)(bflsc->device_data);
+	int dev;
+
+	for (dev = 0; dev < sc_info->sc_count; dev++)
+		flush_one_dev(bflsc, dev);
+}
+
+static void bflsc_flash_led(struct cgpu_info *bflsc, int dev)
+{
+	struct bflsc_info *sc_info = (struct bflsc_info *)(bflsc->device_data);
+	char buf[BFLSC_BUFSIZ+1];
+	int err, amount;
+	bool sent;
+
+	// Device is gone
+	if (bflsc->usbinfo.nodev)
+		return;
+
+	// It is not critical flashing the led so don't get stuck if we
+	// can't grab the mutex now
+	if (mutex_trylock(&bflsc->device_mutex))
+		return;
+
+	err = send_recv_ss(bflsc, dev, &sent, &amount,
+				BFLSC_FLASH, BFLSC_FLASH_LEN, C_REQUESTFLASH,
+				buf, sizeof(buf)-1, C_FLASHREPLY, READ_NL);
+	mutex_unlock(&(bflsc->device_mutex));
+
+	if (!sent)
+		bflsc_applog(bflsc, dev, C_REQUESTFLASH, amount, err);
+	else {
+		// Don't care
+	}
+
+	// Once we've tried - don't do it until told to again
+	// - even if it failed
+	sc_info->flash_led = false;
+
+	return;
+}
+
+static bool bflsc_get_temp(struct cgpu_info *bflsc, int dev)
+{
+	struct bflsc_info *sc_info = (struct bflsc_info *)(bflsc->device_data);
+	struct bflsc_dev *sc_dev;
+	char temp_buf[BFLSC_BUFSIZ+1];
+	char volt_buf[BFLSC_BUFSIZ+1];
+	char *tmp;
+	int err, amount;
+	char *firstname, **fields, *lf;
+	char xlink[17];
+	int count;
+	bool res, sent;
+	float temp, temp1, temp2;
+	float vcc1, vcc2, vmain;
+
+	// Device is gone
+	if (bflsc->usbinfo.nodev)
+		return false;
+
+	if (dev >= sc_info->sc_count) {
+		applog(LOG_ERR, "%s%i: temp invalid xlink device %d - limit %d",
+			bflsc->drv->name, bflsc->device_id, dev, sc_info->sc_count - 1);
+		return false;
+	}
+
+	// Flash instead of Temp
+	if (sc
