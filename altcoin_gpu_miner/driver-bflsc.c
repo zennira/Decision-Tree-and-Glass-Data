@@ -1033,4 +1033,230 @@ static bool bflsc_get_temp(struct cgpu_info *bflsc, int dev)
 	}
 
 	// Flash instead of Temp
-	if (sc
+	if (sc_info->flash_led) {
+		bflsc_flash_led(bflsc, dev);
+		return true;
+	}
+
+	xlinkstr(xlink, sizeof(xlink), dev, sc_info);
+
+	/* It is not very critical getting temp so don't get stuck if we
+	 * can't grab the mutex here */
+	if (mutex_trylock(&bflsc->device_mutex))
+		return false;
+
+	err = send_recv_ss(bflsc, dev, &sent, &amount,
+				BFLSC_TEMPERATURE, BFLSC_TEMPERATURE_LEN, C_REQUESTTEMPERATURE,
+				temp_buf, sizeof(temp_buf)-1, C_GETTEMPERATURE, READ_NL);
+	mutex_unlock(&(bflsc->device_mutex));
+
+	if (!sent) {
+		applog(LOG_ERR, "%s%i: Error: Request%s temp invalid/timed out (%d:%d)",
+				bflsc->drv->name, bflsc->device_id, xlink, amount, err);
+		return false;
+	} else {
+		if (err < 0 || amount < 1) {
+			if (err < 0) {
+				applog(LOG_ERR, "%s%i: Error: Get%s temp return invalid/timed out (%d:%d)",
+						bflsc->drv->name, bflsc->device_id, xlink, amount, err);
+			} else {
+				applog(LOG_ERR, "%s%i: Error: Get%s temp returned nothing (%d:%d)",
+						bflsc->drv->name, bflsc->device_id, xlink, amount, err);
+			}
+			return false;
+		}
+	}
+
+	// Ignore it if we can't get the V
+	if (mutex_trylock(&bflsc->device_mutex))
+		return false;
+
+	err = send_recv_ss(bflsc, dev, &sent, &amount,
+				BFLSC_VOLTAGE, BFLSC_VOLTAGE_LEN, C_REQUESTVOLTS,
+				volt_buf, sizeof(volt_buf)-1, C_GETVOLTS, READ_NL);
+	mutex_unlock(&(bflsc->device_mutex));
+
+	if (!sent) {
+		applog(LOG_ERR, "%s%i: Error: Request%s volts invalid/timed out (%d:%d)",
+				bflsc->drv->name, bflsc->device_id, xlink, amount, err);
+		return false;
+	} else {
+		if (err < 0 || amount < 1) {
+			if (err < 0) {
+				applog(LOG_ERR, "%s%i: Error: Get%s volt return invalid/timed out (%d:%d)",
+						bflsc->drv->name, bflsc->device_id, xlink, amount, err);
+			} else {
+				applog(LOG_ERR, "%s%i: Error: Get%s volt returned nothing (%d:%d)",
+						bflsc->drv->name, bflsc->device_id, xlink, amount, err);
+			}
+			return false;
+		}
+	}
+
+	res = breakdown(ALLCOLON, temp_buf, &count, &firstname, &fields, &lf);
+	if (lf)
+		*lf = '\0';
+	if (!res || count != 2 || !lf) {
+		tmp = str_text(temp_buf);
+		applog(LOG_WARNING, "%s%i: Invalid%s temp reply: '%s'",
+				bflsc->drv->name, bflsc->device_id, xlink, tmp);
+		free(tmp);
+		freebreakdown(&count, &firstname, &fields);
+		dev_error(bflsc, REASON_DEV_COMMS_ERROR);
+		return false;
+	}
+
+	temp = temp1 = (float)atoi(fields[0]);
+	temp2 = (float)atoi(fields[1]);
+
+	freebreakdown(&count, &firstname, &fields);
+
+	res = breakdown(NOCOLON, volt_buf, &count, &firstname, &fields, &lf);
+	if (lf)
+		*lf = '\0';
+	if (!res || count != 3 || !lf) {
+		tmp = str_text(volt_buf);
+		applog(LOG_WARNING, "%s%i: Invalid%s volt reply: '%s'",
+				bflsc->drv->name, bflsc->device_id, xlink, tmp);
+		free(tmp);
+		freebreakdown(&count, &firstname, &fields);
+		dev_error(bflsc, REASON_DEV_COMMS_ERROR);
+		return false;
+	}
+
+	sc_dev = &sc_info->sc_devs[dev];
+	vcc1 = (float)atoi(fields[0]) / 1000.0;
+	vcc2 = (float)atoi(fields[1]) / 1000.0;
+	vmain = (float)atoi(fields[2]) / 1000.0;
+
+	freebreakdown(&count, &firstname, &fields);
+
+	if (vcc1 > 0 || vcc2 > 0 || vmain > 0) {
+		wr_lock(&(sc_info->stat_lock));
+		if (vcc1 > 0) {
+			if (unlikely(sc_dev->vcc1 == 0))
+				sc_dev->vcc1 = vcc1;
+			else {
+				sc_dev->vcc1 += vcc1 * 0.63;
+				sc_dev->vcc1 /= 1.63;
+			}
+		}
+		if (vcc2 > 0) {
+			if (unlikely(sc_dev->vcc2 == 0))
+				sc_dev->vcc2 = vcc2;
+			else {
+				sc_dev->vcc2 += vcc2 * 0.63;
+				sc_dev->vcc2 /= 1.63;
+			}
+		}
+		if (vmain > 0) {
+			if (unlikely(sc_dev->vmain == 0))
+				sc_dev->vmain = vmain;
+			else {
+				sc_dev->vmain += vmain * 0.63;
+				sc_dev->vmain /= 1.63;
+			}
+		}
+		wr_unlock(&(sc_info->stat_lock));
+	}
+
+	if (temp1 > 0 || temp2 > 0) {
+		wr_lock(&(sc_info->stat_lock));
+		if (unlikely(!sc_dev->temp1))
+			sc_dev->temp1 = temp1;
+		else {
+			sc_dev->temp1 += temp1 * 0.63;
+			sc_dev->temp1 /= 1.63;
+		}
+		if (unlikely(!sc_dev->temp2))
+			sc_dev->temp2 = temp2;
+		else {
+			sc_dev->temp2 += temp2 * 0.63;
+			sc_dev->temp2 /= 1.63;
+		}
+		if (temp1 > sc_dev->temp1_max) {
+			sc_dev->temp1_max = temp1;
+			sc_dev->temp1_max_time = time(NULL);
+		}
+		if (temp2 > sc_dev->temp2_max) {
+			sc_dev->temp2_max = temp2;
+			sc_dev->temp2_max_time = time(NULL);
+		}
+
+		if (unlikely(sc_dev->temp1_5min_av == 0))
+			sc_dev->temp1_5min_av = temp1;
+		else {
+			sc_dev->temp1_5min_av += temp1 * .0042;
+			sc_dev->temp1_5min_av /= 1.0042;
+		}
+		if (unlikely(sc_dev->temp2_5min_av == 0))
+			sc_dev->temp2_5min_av = temp2;
+		else {
+			sc_dev->temp2_5min_av += temp2 * .0042;
+			sc_dev->temp2_5min_av /= 1.0042;
+		}
+		wr_unlock(&(sc_info->stat_lock));
+
+		if (temp < temp2)
+			temp = temp2;
+
+		bflsc->temp = temp;
+
+		if (bflsc->cutofftemp > 0 && temp >= bflsc->cutofftemp) {
+			applog(LOG_WARNING, "%s%i:%s temp (%.1f) hit thermal cutoff limit %d, stopping work!",
+						bflsc->drv->name, bflsc->device_id, xlink,
+						temp, bflsc->cutofftemp);
+			dev_error(bflsc, REASON_DEV_THERMAL_CUTOFF);
+			sc_dev->overheat = true;
+			flush_one_dev(bflsc, dev);
+			return false;
+		}
+
+		if (bflsc->cutofftemp > 0 && temp < (bflsc->cutofftemp - BFLSC_TEMP_RECOVER))
+			sc_dev->overheat = false;
+	}
+
+	return true;
+}
+
+static void process_nonces(struct cgpu_info *bflsc, int dev, char *xlink, char *data, int count, char **fields, int *nonces)
+{
+	struct bflsc_info *sc_info = (struct bflsc_info *)(bflsc->device_data);
+	char midstate[MIDSTATE_BYTES], blockdata[MERKLE_BYTES];
+	struct work *work;
+	uint32_t nonce;
+	int i, num, x;
+	bool res;
+	char *tmp;
+
+	if (count < sc_info->que_fld_min) {
+		tmp = str_text(data);
+		applogsiz(LOG_INFO, BFLSC_APPLOGSIZ,
+				"%s%i:%s work returned too small (%d,%s)",
+				bflsc->drv->name, bflsc->device_id, xlink, count, tmp);
+		free(tmp);
+		inc_hw_errors(bflsc->thr[0]);
+		return;
+	}
+
+	if (count > sc_info->que_fld_max) {
+		applog(LOG_INFO, "%s%i:%s work returned too large (%d) processing %d anyway",
+		       bflsc->drv->name, bflsc->device_id, xlink, count, sc_info->que_fld_max);
+		count = sc_info->que_fld_max;
+		inc_hw_errors(bflsc->thr[0]);
+	}
+
+	num = atoi(fields[sc_info->que_noncecount]);
+	if (num != count - sc_info->que_fld_min) {
+		tmp = str_text(data);
+		applogsiz(LOG_INFO, BFLSC_APPLOGSIZ,
+				"%s%i:%s incorrect data count (%d) will use %d instead from (%s)",
+				bflsc->drv->name, bflsc->device_id, xlink, num,
+				count - sc_info->que_fld_max, tmp);
+		free(tmp);
+		inc_hw_errors(bflsc->thr[0]);
+	}
+
+	memset(midstate, 0, MIDSTATE_BYTES);
+	memset(blockdata, 0, MERKLE_BYTES);
+	if (!hex2bin((u
