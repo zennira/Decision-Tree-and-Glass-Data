@@ -1259,4 +1259,231 @@ static void process_nonces(struct cgpu_info *bflsc, int dev, char *xlink, char *
 
 	memset(midstate, 0, MIDSTATE_BYTES);
 	memset(blockdata, 0, MERKLE_BYTES);
-	if (!hex2bin((u
+	if (!hex2bin((unsigned char *)midstate, fields[QUE_MIDSTATE], MIDSTATE_BYTES) ||
+	    !hex2bin((unsigned char *)blockdata, fields[QUE_BLOCKDATA], MERKLE_BYTES)) {
+		applog(LOG_INFO, "%s%i:%s Failed to convert binary data to hex result - ignored",
+		       bflsc->drv->name, bflsc->device_id, xlink);
+		inc_hw_errors(bflsc->thr[0]);
+		return;
+	}
+
+	work = take_queued_work_bymidstate(bflsc, midstate, MIDSTATE_BYTES,
+					   blockdata, MERKLE_OFFSET, MERKLE_BYTES);
+	if (!work) {
+		if (sc_info->not_first_work) {
+			applog(LOG_INFO, "%s%i:%s failed to find nonce work - can't be processed - ignored",
+			       bflsc->drv->name, bflsc->device_id, xlink);
+			inc_hw_errors(bflsc->thr[0]);
+		}
+		return;
+	}
+
+	res = false;
+	x = 0;
+	for (i = sc_info->que_fld_min; i < count; i++) {
+		if (strlen(fields[i]) != 8) {
+			tmp = str_text(data);
+			applogsiz(LOG_INFO, BFLSC_APPLOGSIZ,
+					"%s%i:%s invalid nonce (%s) will try to process anyway",
+					bflsc->drv->name, bflsc->device_id, xlink, tmp);
+			free(tmp);
+		}
+
+		hex2bin((void*)&nonce, fields[i], 4);
+		nonce = htobe32(nonce);
+		res = submit_nonce(bflsc->thr[0], work, nonce);
+		if (res) {
+			wr_lock(&(sc_info->stat_lock));
+			sc_info->sc_devs[dev].nonces_found++;
+			wr_unlock(&(sc_info->stat_lock));
+
+			(*nonces)++;
+			x++;
+		}
+	}
+
+	wr_lock(&(sc_info->stat_lock));
+	if (res)
+		sc_info->sc_devs[dev].result_id++;
+	if (x > QUE_MAX_RESULTS)
+		x = QUE_MAX_RESULTS + 1;
+	(sc_info->result_size[x])++;
+	sc_info->sc_devs[dev].work_complete++;
+	sc_info->sc_devs[dev].hashes_unsent += FULLNONCE;
+	// If not flushed (stale)
+	if (!(work->devflag))
+		sc_info->sc_devs[dev].work_queued -= 1;
+	wr_unlock(&(sc_info->stat_lock));
+
+	free_work(work);
+}
+
+static int process_results(struct cgpu_info *bflsc, int dev, char *pbuf, int *nonces)
+{
+	struct bflsc_info *sc_info = (struct bflsc_info *)(bflsc->device_data);
+	char **items, *firstname, **fields, *lf;
+	int que = 0, i, lines, count;
+	char *tmp, *tmp2, *buf;
+	char xlink[17];
+	bool res;
+
+	*nonces = 0;
+
+	xlinkstr(xlink, sizeof(xlink), dev, sc_info);
+
+	buf = strdup(pbuf);
+	res = tolines(bflsc, dev, buf, &lines, &items, C_GETRESULTS);
+	free(buf);
+	if (!res || lines < 1) {
+		tmp = str_text(pbuf);
+		applogsiz(LOG_ERR, BFLSC_APPLOGSIZ,
+				"%s%i:%s empty result (%s) ignored",
+				bflsc->drv->name, bflsc->device_id, xlink, tmp);
+		free(tmp);
+		goto arigatou;
+	}
+
+	if (lines < QUE_RES_LINES_MIN) {
+		tmp = str_text(pbuf);
+		applogsiz(LOG_ERR, BFLSC_APPLOGSIZ,
+				"%s%i:%s result of %d too small (%s) ignored",
+				bflsc->drv->name, bflsc->device_id, xlink, lines, tmp);
+		free(tmp);
+		goto arigatou;
+	}
+
+	breakdown(ONECOLON, items[1], &count, &firstname, &fields, &lf);
+	if (count < 1) {
+		tmp = str_text(pbuf);
+		tmp2 = str_text(items[1]);
+		applogsiz(LOG_ERR, BFLSC_APPLOGSIZ,
+				"%s%i:%s empty result count (%s) in (%s) ignoring",
+				bflsc->drv->name, bflsc->device_id, xlink, tmp2, tmp);
+		free(tmp2);
+		free(tmp);
+		goto arigatou;
+	} else if (count != 1) {
+		tmp = str_text(pbuf);
+		tmp2 = str_text(items[1]);
+		applogsiz(LOG_ERR, BFLSC_APPLOGSIZ,
+				"%s%i:%s incorrect result count %d (%s) in (%s) will try anyway",
+				bflsc->drv->name, bflsc->device_id, xlink, count, tmp2, tmp);
+		free(tmp2);
+		free(tmp);
+	}
+
+	que = atoi(fields[0]);
+	if (que != (lines - QUE_RES_LINES_MIN)) {
+		i = que;
+		// 1+ In case the last line isn't 'OK' - try to process it
+		que = 1 + lines - QUE_RES_LINES_MIN;
+
+		tmp = str_text(pbuf);
+		tmp2 = str_text(items[0]);
+		applogsiz(LOG_ERR, BFLSC_APPLOGSIZ,
+				"%s%i:%s incorrect result count %d (%s) will try %d (%s)",
+				bflsc->drv->name, bflsc->device_id, xlink, i, tmp2, que, tmp);
+		free(tmp2);
+		free(tmp);
+
+	}
+
+	freebreakdown(&count, &firstname, &fields);
+
+	for (i = 0; i < que; i++) {
+		res = breakdown(NOCOLON, items[i + QUE_RES_LINES_MIN - 1], &count, &firstname, &fields, &lf);
+		if (likely(res))
+			process_nonces(bflsc, dev, &(xlink[0]), items[i], count, fields, nonces);
+		else
+			applogsiz(LOG_ERR, BFLSC_APPLOGSIZ,
+					"%s%i:%s failed to process nonce %s",
+					bflsc->drv->name, bflsc->device_id, xlink, items[i]);
+		freebreakdown(&count, &firstname, &fields);
+		sc_info->not_first_work = true;
+	}
+
+arigatou:
+	freetolines(&lines, &items);
+
+	return que;
+}
+
+#define TVF(tv) ((float)((tv)->tv_sec) + ((float)((tv)->tv_usec) / 1000000.0))
+#define TVFMS(tv) (TVF(tv) * 1000.0)
+
+// Thread to simply keep looking for results
+static void *bflsc_get_results(void *userdata)
+{
+	struct cgpu_info *bflsc = (struct cgpu_info *)userdata;
+	struct bflsc_info *sc_info = (struct bflsc_info *)(bflsc->device_data);
+	struct timeval elapsed, now;
+	float oldest, f;
+	char buf[BFLSC_BUFSIZ+1];
+	int err, amount;
+	int i, que, dev, nonces;
+	bool readok;
+
+	cgtime(&now);
+	for (i = 0; i < sc_info->sc_count; i++) {
+		copy_time(&(sc_info->sc_devs[i].last_check_result), &now);
+		copy_time(&(sc_info->sc_devs[i].last_dev_result), &now);
+		copy_time(&(sc_info->sc_devs[i].last_nonce_result), &now);
+	}
+
+	while (sc_info->shutdown == false) {
+		cgtimer_t ts_start;
+
+		if (bflsc->usbinfo.nodev)
+			return NULL;
+
+		dev = -1;
+		oldest = FLT_MAX;
+		cgtime(&now);
+
+		// Find the first oldest ... that also needs checking
+		for (i = 0; i < sc_info->sc_count; i++) {
+			timersub(&now, &(sc_info->sc_devs[i].last_check_result), &elapsed);
+			f = TVFMS(&elapsed);
+			if (f < oldest && f >= sc_info->sc_devs[i].ms_work) {
+				f = oldest;
+				dev = i;
+			}
+		}
+
+		if (bflsc->usbinfo.nodev)
+			return NULL;
+
+		cgsleep_prepare_r(&ts_start);
+		if (dev == -1)
+			goto utsura;
+
+		cgtime(&(sc_info->sc_devs[dev].last_check_result));
+
+		readok = bflsc_qres(bflsc, buf, sizeof(buf), dev, &err, &amount, false);
+		if (err < 0 || (!readok && amount != BFLSC_QRES_LEN) || (readok && amount < 1)) {
+			// TODO: do what else?
+		} else {
+			que = process_results(bflsc, dev, buf, &nonces);
+			sc_info->not_first_work = true; // in case it failed processing it
+			if (que > 0)
+				cgtime(&(sc_info->sc_devs[dev].last_dev_result));
+			if (nonces > 0)
+				cgtime(&(sc_info->sc_devs[dev].last_nonce_result));
+
+			// TODO: if not getting results ... reinit?
+		}
+
+utsura:
+		cgsleep_ms_r(&ts_start, sc_info->results_sleep_time);
+	}
+
+	return NULL;
+}
+
+static bool bflsc_thread_prepare(struct thr_info *thr)
+{
+	struct cgpu_info *bflsc = thr->cgpu;
+	struct bflsc_info *sc_info = (struct bflsc_info *)(bflsc->device_data);
+
+	if (thr_info_create(&(sc_info->results_thr), NULL, bflsc_get_results, (void *)bflsc)) {
+		applog(L
