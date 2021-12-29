@@ -1486,4 +1486,253 @@ static bool bflsc_thread_prepare(struct thr_info *thr)
 	struct bflsc_info *sc_info = (struct bflsc_info *)(bflsc->device_data);
 
 	if (thr_info_create(&(sc_info->results_thr), NULL, bflsc_get_results, (void *)bflsc)) {
-		applog(L
+		applog(LOG_ERR, "%s%i: thread create failed", bflsc->drv->name, bflsc->device_id);
+		return false;
+	}
+	pthread_detach(sc_info->results_thr.pth);
+
+	return true;
+}
+
+static void bflsc_shutdown(struct thr_info *thr)
+{
+	struct cgpu_info *bflsc = thr->cgpu;
+	struct bflsc_info *sc_info = (struct bflsc_info *)(bflsc->device_data);
+
+	bflsc_flush_work(bflsc);
+	sc_info->shutdown = true;
+}
+
+static void bflsc_thread_enable(struct thr_info *thr)
+{
+	struct cgpu_info *bflsc = thr->cgpu;
+
+	if (bflsc->usbinfo.nodev)
+		return;
+
+	bflsc_initialise(bflsc);
+}
+
+static bool bflsc_send_work(struct cgpu_info *bflsc, int dev, bool mandatory)
+{
+	struct bflsc_info *sc_info = (struct bflsc_info *)(bflsc->device_data);
+	struct FullNonceRangeJob data;
+	char buf[BFLSC_BUFSIZ+1];
+	bool sent, ret = false;
+	struct work *work;
+	int err, amount;
+	int len, try;
+	int stage;
+
+	// Device is gone
+	if (bflsc->usbinfo.nodev)
+		return false;
+
+	// TODO: handle this everywhere
+	if (sc_info->sc_devs[dev].overheat == true)
+		return false;
+
+	// Initially code only deals with sending one work item
+	data.payloadSize = BFLSC_JOBSIZ;
+	data.endOfBlock = BFLSC_EOB;
+
+	len = sizeof(struct FullNonceRangeJob);
+
+	/* On faster devices we have a lot of lock contention so only
+	 * mandatorily grab the lock and send work if the queue is empty since
+	 * we have a submit queue. */
+	if (mandatory)
+		mutex_lock(&(bflsc->device_mutex));
+	else {
+		if (mutex_trylock(&bflsc->device_mutex))
+			return ret;
+	}
+
+	work = get_queued(bflsc);
+	if (unlikely(!work)) {
+		mutex_unlock(&bflsc->device_mutex);
+		return ret;
+	}
+	memcpy(data.midState, work->midstate, MIDSTATE_BYTES);
+	memcpy(data.blockData, work->data + MERKLE_OFFSET, MERKLE_BYTES);
+	try = 0;
+re_send:
+	err = send_recv_ds(bflsc, dev, &stage, &sent, &amount,
+				BFLSC_QJOB, BFLSC_QJOB_LEN, C_REQUESTQUEJOB, C_REQUESTQUEJOBSTATUS,
+				(char *)&data, len, C_QUEJOB, C_QUEJOBSTATUS,
+				buf, sizeof(buf)-1);
+	mutex_unlock(&(bflsc->device_mutex));
+
+	switch (stage) {
+		case 1:
+			if (!sent) {
+				bflsc_applog(bflsc, dev, C_REQUESTQUEJOB, amount, err);
+				goto out;
+			} else {
+				// TODO: handle other errors ...
+
+				// Try twice
+				if (try++ < 1 && amount > 1 &&
+					strstr(buf, BFLSC_TIMEOUT))
+						goto re_send;
+
+				bflsc_applog(bflsc, dev, C_REQUESTQUEJOBSTATUS, amount, err);
+				goto out;
+			}
+			break;
+		case 2:
+			if (!sent) {
+				bflsc_applog(bflsc, dev, C_QUEJOB, amount, err);
+				goto out;
+			} else {
+				if (!isokerr(err, buf, amount)) {
+					// TODO: check for QUEUE FULL and set work_queued to sc_info->que_size
+					//  and report a code bug LOG_ERR - coz it should never happen
+					// TODO: handle other errors ...
+
+					// Try twice
+					if (try++ < 1 && amount > 1 &&
+						strstr(buf, BFLSC_TIMEOUT))
+							goto re_send;
+
+					bflsc_applog(bflsc, dev, C_QUEJOBSTATUS, amount, err);
+					goto out;
+				}
+			}
+			break;
+	}
+
+	wr_lock(&(sc_info->stat_lock));
+	sc_info->sc_devs[dev].work_queued++;
+	wr_unlock(&(sc_info->stat_lock));
+
+	work->subid = dev;
+	ret = true;
+out:
+	if (unlikely(!ret))
+		work_completed(bflsc, work);
+	return ret;
+}
+
+static bool bflsc_queue_full(struct cgpu_info *bflsc)
+{
+	struct bflsc_info *sc_info = (struct bflsc_info *)(bflsc->device_data);
+	int i, dev, tried, que;
+	bool ret = false;
+	int tries = 0;
+
+	tried = -1;
+	// if something is wrong with a device try the next one available
+	// TODO: try them all? Add an unavailable flag to sc_devs[i] init to 0 here first
+	while (++tries < 3) {
+		bool mandatory = false;
+
+		// Device is gone - shouldn't normally get here
+		if (bflsc->usbinfo.nodev) {
+			ret = true;
+			break;
+		}
+
+		dev = -1;
+		rd_lock(&(sc_info->stat_lock));
+		// Anything waiting - gets the work first
+		for (i = 0; i < sc_info->sc_count; i++) {
+			// TODO: and ignore x-link dead - once I work out how to decide it is dead
+			if (i != tried && sc_info->sc_devs[i].work_queued == 0 &&
+			    !sc_info->sc_devs[i].overheat) {
+				dev = i;
+				break;
+			}
+		}
+
+		if (dev == -1) {
+			que = sc_info->que_size * 10; // 10x is certainly above the MAX it could be
+			// The first device with the smallest amount queued
+			for (i = 0; i < sc_info->sc_count; i++) {
+				if (i != tried && sc_info->sc_devs[i].work_queued < que &&
+				    !sc_info->sc_devs[i].overheat) {
+					dev = i;
+					que = sc_info->sc_devs[i].work_queued;
+				}
+			}
+			if (que > sc_info->que_full_enough)
+				dev = -1;
+			else if (que < sc_info->que_low)
+				mandatory = true;
+		}
+		rd_unlock(&(sc_info->stat_lock));
+
+		// nothing needs work yet
+		if (dev == -1) {
+			ret = true;
+			break;
+		}
+
+		if (bflsc_send_work(bflsc, dev, mandatory))
+			break;
+		else
+			tried = dev;
+	}
+
+	return ret;
+}
+
+static int64_t bflsc_scanwork(struct thr_info *thr)
+{
+	struct cgpu_info *bflsc = thr->cgpu;
+	struct bflsc_info *sc_info = (struct bflsc_info *)(bflsc->device_data);
+	int64_t ret, unsent;
+	bool flushed, cleanup;
+	struct work *work, *tmp;
+	int dev, waited, i;
+
+	// Device is gone
+	if (bflsc->usbinfo.nodev)
+		return -1;
+
+	flushed = false;
+	// Single lock check if any are flagged as flushed
+	rd_lock(&(sc_info->stat_lock));
+	for (dev = 0; dev < sc_info->sc_count; dev++)
+		flushed |= sc_info->sc_devs[dev].flushed;
+	rd_unlock(&(sc_info->stat_lock));
+
+	// > 0 flagged as flushed
+	if (flushed) {
+// TODO: something like this ......
+		for (dev = 0; dev < sc_info->sc_count; dev++) {
+			cleanup = false;
+
+			// Is there any flushed work that can be removed?
+			rd_lock(&(sc_info->stat_lock));
+			if (sc_info->sc_devs[dev].flushed) {
+				if (sc_info->sc_devs[dev].result_id > (sc_info->sc_devs[dev].flush_id + sc_info->flush_size))
+					cleanup = true;
+			}
+			rd_unlock(&(sc_info->stat_lock));
+
+			// yes remove the flushed work that can be removed
+			if (cleanup) {
+				wr_lock(&bflsc->qlock);
+				HASH_ITER(hh, bflsc->queued_work, work, tmp) {
+					if (work->devflag && work->subid == dev) {
+						bflsc->queued_count--;
+						HASH_DEL(bflsc->queued_work, work);
+						discard_work(work);
+					}
+				}
+				wr_unlock(&bflsc->qlock);
+
+				wr_lock(&(sc_info->stat_lock));
+				sc_info->sc_devs[dev].flushed = false;
+				wr_unlock(&(sc_info->stat_lock));
+			}
+		}
+	}
+
+	waited = restart_wait(thr, sc_info->scan_sleep_time);
+	if (waited == ETIMEDOUT) {
+		unsigned int old_sleep_time, new_sleep_time = 0;
+		int min_queued = sc_info->que_size;
+		/* Only adjust the scan_sleep_time if we did not receive a
+		 * res
