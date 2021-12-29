@@ -204,4 +204,160 @@ struct SaveString {
 
 // Commands (Single Stage)
 #define BFLSC_IDENTIFY "ZGX"
-#define BFLSC_IDENTIFY_LEN (sizeof(BFLSC_IDENTIFY)-
+#define BFLSC_IDENTIFY_LEN (sizeof(BFLSC_IDENTIFY)-1)
+#define BFLSC_DETAILS "ZCX"
+#define BFLSC_DETAILS_LEN (sizeof(BFLSC_DETAILS)-1)
+#define BFLSC_FIRMWARE "ZJX"
+#define BFLSC_FIRMWARE_LEN (sizeof(BFLSC_FIRMWARE)-1)
+#define BFLSC_FLASH "ZMX"
+#define BFLSC_FLASH_LEN (sizeof(BFLSC_FLASH)-1)
+#define BFLSC_VOLTAGE "ZTX"
+#define BFLSC_VOLTAGE_LEN (sizeof(BFLSC_VOLTAGE)-1)
+#define BFLSC_TEMPERATURE "ZLX"
+#define BFLSC_TEMPERATURE_LEN (sizeof(BFLSC_TEMPERATURE)-1)
+#define BFLSC_QRES "ZOX"
+#define BFLSC_QRES_LEN (sizeof(BFLSC_QRES)-1)
+#define BFLSC_QFLUSH "ZQX"
+#define BFLSC_QFLUSH_LEN (sizeof(BFLSC_QFLUSH)-1)
+#define BFLSC_FANAUTO "Z9X"
+#define BFLSC_FANOUT_LEN (sizeof(BFLSC_FANAUTO)-1)
+#define BFLSC_FAN0 "Z0X"
+#define BFLSC_FAN0_LEN (sizeof(BFLSC_FAN0)-1)
+#define BFLSC_FAN1 "Z1X"
+#define BFLSC_FAN1_LEN (sizeof(BFLSC_FAN1)-1)
+#define BFLSC_FAN2 "Z2X"
+#define BFLSC_FAN2_LEN (sizeof(BFLSC_FAN2)-1)
+#define BFLSC_FAN3 "Z3X"
+#define BFLSC_FAN3_LEN (sizeof(BFLSC_FAN3)-1)
+#define BFLSC_FAN4 "Z4X"
+#define BFLSC_FAN4_LEN (sizeof(BFLSC_FAN4)-1)
+#define BFLSC_LOADSTR "ZUX"
+#define BFLSC_LOADSTR_LEN (sizeof(BFLSC_LOADSTR)-1)
+
+// Commands (Dual Stage)
+#define BFLSC_QJOB "ZNX"
+#define BFLSC_QJOB_LEN (sizeof(BFLSC_QJOB)-1)
+#define BFLSC_QJOBS "ZWX"
+#define BFLSC_QJOBS_LEN (sizeof(BFLSC_QJOBS)-1)
+#define BFLSC_SAVESTR "ZSX"
+#define BFLSC_SAVESTR_LEN (sizeof(BFLSC_SAVESTR)-1)
+
+// Replies
+#define BFLSC_IDENTITY "BitFORCE SC"
+#define BFLSC_BFLSC "SHA256 SC"
+
+#define BFLSC_OK "OK\n"
+#define BFLSC_OK_LEN (sizeof(BFLSC_OK)-1)
+#define BFLSC_SUCCESS "SUCCESS\n"
+#define BFLSC_SUCCESS_LEN (sizeof(BFLSC_SUCCESS)-1)
+
+#define BFLSC_RESULT "COUNT:"
+#define BFLSC_RESULT_LEN (sizeof(BFLSC_RESULT)-1)
+
+#define BFLSC_ANERR "ERR:"
+#define BFLSC_ANERR_LEN (sizeof(BFLSC_ANERR)-1)
+#define BFLSC_TIMEOUT BFLSC_ANERR "TIMEOUT"
+#define BFLSC_TIMEOUT_LEN (sizeof(BFLSC_TIMEOUT)-1)
+// x-link timeout has a space (a number follows)
+#define BFLSC_XTIMEOUT BFLSC_ANERR "TIMEOUT "
+#define BFLSC_XTIMEOUT_LEN (sizeof(BFLSC_XTIMEOUT)-1)
+#define BFLSC_INVALID BFLSC_ANERR "INVALID DATA"
+#define BFLSC_INVALID_LEN (sizeof(BFLSC_INVALID)-1)
+#define BFLSC_ERRSIG BFLSC_ANERR "SIGNATURE"
+#define BFLSC_ERRSIG_LEN (sizeof(BFLSC_ERRSIG)-1)
+#define BFLSC_OKQ "OK:QUEUED"
+#define BFLSC_OKQ_LEN (sizeof(BFLSC_OKQ)-1)
+#define BFLSC_INPROCESS "INPROCESS"
+#define BFLSC_INPROCESS_LEN (sizeof(BFLSC_INPROCESS)-1)
+// Followed by N=1..5
+#define BFLSC_OKQN "OK:QUEUED "
+#define BFLSC_OKQN_LEN (sizeof(BFLSC_OKQN)-1)
+#define BFLSC_QFULL "QUEUE FULL"
+#define BFLSC_QFULL_LEN (sizeof(BFLSC_QFULL)-1)
+#define BFLSC_HITEMP "HIGH TEMPERATURE RECOVERY"
+#define BFLSC_HITEMP_LEN (sizeof(BFLSC_HITEMP)-1)
+#define BFLSC_EMPTYSTR "MEMORY EMPTY"
+#define BFLSC_EMPTYSTR_LEN (sizeof(BFLSC_EMPTYSTR)-1)
+
+// Queued and non-queued are the same
+#define FullNonceRangeJob QueueJobStructure
+#define BFLSC_JOBSIZ BFLSC_QJOBSIZ
+
+// Non queued commands (not used)
+#define BFLSC_SENDWORK "ZDX"
+#define BFLSC_SENDWORK_LEN (sizeof(BFLSC_SENDWORK)-1)
+#define BFLSC_WORKSTATUS "ZFX"
+#define BFLSC_WORKSTATUS_LEN (sizeof(BFLSC_WORKSTATUS)-1)
+#define BFLSC_SENDRANGE "ZPX"
+#define BFLSC_SENDRANGE_LEN (sizeof(BFLSC_SENDRANGE)-1)
+
+// Non queued work replies (not used)
+#define BFLSC_NONCE "NONCE-FOUND:"
+#define BFLSC_NONCE_LEN (sizeof(BFLSC_NONCE)-1)
+#define BFLSC_NO_NONCE "NO-NONCE"
+#define BFLSC_NO_NONCE_LEN (sizeof(BFLSC_NO_NONCE)-1)
+#define BFLSC_IDLE "IDLE"
+#define BFLSC_IDLE_LEN (sizeof(BFLSC_IDLE)-1)
+#define BFLSC_BUSY "BUSY"
+#define BFLSC_BUSY_LEN (sizeof(BFLSC_BUSY)-1)
+
+#define BFLSC_MINIRIG "BAM"
+#define BFLSC_SINGLE "BAS"
+#define BFLSC_LITTLESINGLE "BAL"
+#define BFLSC_JALAPENO "BAJ"
+
+// Default expected time for a nonce range
+// - thus no need to check until this + last time work was found
+// 60GH/s MiniRig (1 board) or Single
+#define BAM_WORK_TIME 71.58
+#define BAS_WORK_TIME 71.58
+// 30GH/s Little Single
+#define BAL_WORK_TIME 143.17
+// 4.5GH/s Jalapeno
+#define BAJ_WORK_TIME 954.44
+
+// Defaults (slightly over half the work time) but ensure none are above 100
+// SCAN_TIME - delay after sending work
+// RES_TIME - delay between checking for results
+#define BAM_SCAN_TIME 20
+#define BAS_SCAN_TIME 360
+#define BAL_SCAN_TIME 720
+#define BAJ_SCAN_TIME 1000
+#define BFLSC_RES_TIME 100
+#define BFLSC_MAX_SLEEP 2000
+
+#define BAJ_LATENCY LATENCY_STD
+#define BAL_LATENCY 12
+#define BAS_LATENCY 12
+// For now a BAM doesn't really exist - it's currently 8 independent BASs
+#define BAM_LATENCY 2
+
+#define BFLSC_TEMP_SLEEPMS 5
+
+#define BFLSC_QUE_SIZE_V1 20
+#define BFLSC_QUE_FULL_ENOUGH_V1 13
+#define BFLSC_QUE_WATERMARK_V1 6
+#define BFLSC_QUE_LOW_V1 3
+
+// TODO: use 5 batch jobs
+// TODO: base these numbers on the chip count?
+#define BFLSC_QUE_SIZE_V2 40
+#define BFLSC_QUE_FULL_ENOUGH_V2 36
+#define BFLSC_QUE_WATERMARK_V2 32
+#define BFLSC_QUE_LOW_V2 16
+
+#define BFLSC_TEMP_OVERHEAT 90
+// Must drop this far below cutoff before resuming work
+#define BFLSC_TEMP_RECOVER 5
+
+// If initialisation fails the first time,
+// sleep this amount (ms) and try again
+#define REINIT_TIME_FIRST_MS 100
+// Max ms per sleep
+#define REINIT_TIME_MAX_MS 800
+// Keep trying up to this many us
+#define REINIT_TIME_MAX 3000000
+
+int opt_bflsc_overheat;
+
+#endif /* BFLSC_H */
