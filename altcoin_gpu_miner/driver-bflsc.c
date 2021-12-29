@@ -1735,4 +1735,186 @@ static int64_t bflsc_scanwork(struct thr_info *thr)
 		unsigned int old_sleep_time, new_sleep_time = 0;
 		int min_queued = sc_info->que_size;
 		/* Only adjust the scan_sleep_time if we did not receive a
-		 * res
+		 * restart message while waiting. Try to adjust sleep time
+		 * so we drop to sc_info->que_watermark before getting more work.
+		 */
+
+		rd_lock(&sc_info->stat_lock);
+		old_sleep_time = sc_info->scan_sleep_time;
+		for (i = 0; i < sc_info->sc_count; i++) {
+			if (sc_info->sc_devs[i].work_queued < min_queued)
+				min_queued = sc_info->sc_devs[i].work_queued;
+		}
+		rd_unlock(&sc_info->stat_lock);
+		new_sleep_time = old_sleep_time;
+
+		/* Increase slowly but decrease quickly */
+		if (min_queued > sc_info->que_full_enough && old_sleep_time < BFLSC_MAX_SLEEP)
+			new_sleep_time = old_sleep_time * 21 / 20;
+		else if (min_queued < sc_info->que_low)
+			new_sleep_time = old_sleep_time * 2 / 3;
+
+		/* Do not sleep more than BFLSC_MAX_SLEEP so we can always
+		 * report in at least 2 results per 5s log interval. */
+		if (new_sleep_time != old_sleep_time) {
+			if (new_sleep_time > BFLSC_MAX_SLEEP)
+				new_sleep_time = BFLSC_MAX_SLEEP;
+			else if (new_sleep_time == 0)
+				new_sleep_time = 1;
+			applog(LOG_DEBUG, "%s%i: Changed scan sleep time to %d",
+			       bflsc->drv->name, bflsc->device_id, new_sleep_time);
+
+			wr_lock(&sc_info->stat_lock);
+			sc_info->scan_sleep_time = new_sleep_time;
+			wr_unlock(&sc_info->stat_lock);
+		}
+	}
+
+	// Count up the work done since we last were here
+	ret = 0;
+	wr_lock(&(sc_info->stat_lock));
+	for (dev = 0; dev < sc_info->sc_count; dev++) {
+		unsent = sc_info->sc_devs[dev].hashes_unsent;
+		sc_info->sc_devs[dev].hashes_unsent = 0;
+		sc_info->sc_devs[dev].hashes_sent += unsent;
+		sc_info->hashes_sent += unsent;
+		ret += unsent;
+	}
+	wr_unlock(&(sc_info->stat_lock));
+
+	return ret;
+}
+
+#define BFLSC_OVER_TEMP 60
+
+/* Set the fanspeed to auto for any valid value <= BFLSC_OVER_TEMP,
+ * or max for any value > BFLSC_OVER_TEMP or if we don't know the temperature. */
+static void bflsc_set_fanspeed(struct cgpu_info *bflsc)
+{
+	struct bflsc_info *sc_info = (struct bflsc_info *)bflsc->device_data;
+	char buf[BFLSC_BUFSIZ+1];
+	char data[16+1];
+	int amount;
+	bool sent;
+
+	if ((bflsc->temp <= BFLSC_OVER_TEMP && bflsc->temp > 0 && sc_info->fanauto) ||
+	    ((bflsc->temp > BFLSC_OVER_TEMP || !bflsc->temp) && !sc_info->fanauto))
+		return;
+
+	if (bflsc->temp > BFLSC_OVER_TEMP || !bflsc->temp) {
+		strcpy(data, BFLSC_FAN4);
+		sc_info->fanauto = false;
+	} else {
+		strcpy(data, BFLSC_FANAUTO);
+		sc_info->fanauto = true;
+	}
+
+	applog(LOG_DEBUG, "%s%i: temp=%.0f over=%d set fan to %s",
+				bflsc->drv->name, bflsc->device_id, bflsc->temp,
+				BFLSC_OVER_TEMP, data);
+
+	mutex_lock(&bflsc->device_mutex);
+	send_recv_ss(bflsc, 0, &sent, &amount,
+				data, strlen(data), C_SETFAN,
+				buf, sizeof(buf)-1, C_FANREPLY, READ_NL);
+	mutex_unlock(&bflsc->device_mutex);
+}
+
+static bool bflsc_get_stats(struct cgpu_info *bflsc)
+{
+	struct bflsc_info *sc_info = (struct bflsc_info *)(bflsc->device_data);
+	bool allok = true;
+	int i;
+
+	// Device is gone
+	if (bflsc->usbinfo.nodev)
+		return false;
+
+	for (i = 0; i < sc_info->sc_count; i++) {
+		if (!bflsc_get_temp(bflsc, i))
+			allok = false;
+
+		// Device is gone
+		if (bflsc->usbinfo.nodev)
+			return false;
+
+		if (i < (sc_info->sc_count - 1))
+			cgsleep_ms(BFLSC_TEMP_SLEEPMS);
+	}
+
+	bflsc_set_fanspeed(bflsc);
+
+	return allok;
+}
+
+static void bflsc_identify(struct cgpu_info *bflsc)
+{
+	struct bflsc_info *sc_info = (struct bflsc_info *)(bflsc->device_data);
+
+	// TODO: handle x-link
+	sc_info->flash_led = true;
+}
+
+static bool bflsc_thread_init(struct thr_info *thr)
+{
+	struct cgpu_info *bflsc = thr->cgpu;
+
+	if (bflsc->usbinfo.nodev)
+		return false;
+
+	bflsc_initialise(bflsc);
+
+	return true;
+}
+
+// there should be a new API function to return device info that isn't the standard stuff
+// instead of bflsc_api_stats - since the stats should really just be internal code info
+// and the new one should be UNusual device stats/extra details - like the stuff below
+
+static struct api_data *bflsc_api_stats(struct cgpu_info *bflsc)
+{
+	struct bflsc_info *sc_info = (struct bflsc_info *)(bflsc->device_data);
+	struct api_data *root = NULL;
+	char buf[256];
+	int i;
+
+//if no x-link ... etc
+	rd_lock(&(sc_info->stat_lock));
+	root = api_add_temp(root, "Temp1", &(sc_info->sc_devs[0].temp1), true);
+	root = api_add_temp(root, "Temp2", &(sc_info->sc_devs[0].temp2), true);
+	root = api_add_volts(root, "Vcc1", &(sc_info->sc_devs[0].vcc1), true);
+	root = api_add_volts(root, "Vcc2", &(sc_info->sc_devs[0].vcc2), true);
+	root = api_add_volts(root, "Vmain", &(sc_info->sc_devs[0].vmain), true);
+	root = api_add_temp(root, "Temp1 Max", &(sc_info->sc_devs[0].temp1_max), true);
+	root = api_add_temp(root, "Temp2 Max", &(sc_info->sc_devs[0].temp2_max), true);
+	root = api_add_time(root, "Temp1 Max Time", &(sc_info->sc_devs[0].temp1_max_time), true);
+	root = api_add_time(root, "Temp2 Max Time", &(sc_info->sc_devs[0].temp2_max_time), true);
+	root = api_add_int(root, "Work Queued", &(sc_info->sc_devs[0].work_queued), true);
+	root = api_add_int(root, "Work Complete", &(sc_info->sc_devs[0].work_complete), true);
+	root = api_add_bool(root, "Overheat", &(sc_info->sc_devs[0].overheat), true);
+	root = api_add_uint64(root, "Flush ID", &(sc_info->sc_devs[0].flush_id), true);
+	root = api_add_uint64(root, "Result ID", &(sc_info->sc_devs[0].result_id), true);
+	root = api_add_bool(root, "Flushed", &(sc_info->sc_devs[0].flushed), true);
+	root = api_add_uint(root, "Scan Sleep", &(sc_info->scan_sleep_time), true);
+	root = api_add_uint(root, "Results Sleep", &(sc_info->results_sleep_time), true);
+	root = api_add_uint(root, "Work ms", &(sc_info->default_ms_work), true);
+
+	buf[0] = '\0';
+	for (i = 0; i <= QUE_MAX_RESULTS + 1; i++)
+		tailsprintf(buf, sizeof(buf), "%s%"PRIu64, (i > 0) ? "/" : "", sc_info->result_size[i]);
+	root = api_add_string(root, "Result Size", buf, true);
+
+	rd_unlock(&(sc_info->stat_lock));
+
+	i = (int)(sc_info->driver_version);
+	root = api_add_int(root, "Driver", &i, true);
+	root = api_add_string(root, "Firmware", sc_info->sc_devs[0].firmware, false);
+	root = api_add_string(root, "Chips", sc_info->sc_devs[0].chips, false);
+	root = api_add_int(root, "Que Size", &(sc_info->que_size), false);
+	root = api_add_int(root, "Que Full", &(sc_info->que_full_enough), false);
+	root = api_add_int(root, "Que Watermark", &(sc_info->que_watermark), false);
+	root = api_add_int(root, "Que Low", &(sc_info->que_low), false);
+	root = api_add_escape(root, "GetInfo", sc_info->sc_devs[0].getinfo, false);
+
+/*
+else a whole lot of 
