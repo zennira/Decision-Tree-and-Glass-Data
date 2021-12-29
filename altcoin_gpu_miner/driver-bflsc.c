@@ -1917,4 +1917,32 @@ static struct api_data *bflsc_api_stats(struct cgpu_info *bflsc)
 	root = api_add_escape(root, "GetInfo", sc_info->sc_devs[0].getinfo, false);
 
 /*
-else a whole lot of 
+else a whole lot of something like these ... etc
+	root = api_add_temp(root, "X-%d-Temp1", &(sc_info->temp1), false);
+	root = api_add_temp(root, "X-%d-Temp2", &(sc_info->temp2), false);
+	root = api_add_volts(root, "X-%d-Vcc1", &(sc_info->vcc1), false);
+	root = api_add_volts(root, "X-%d-Vcc2", &(sc_info->vcc2), false);
+	root = api_add_volts(root, "X-%d-Vmain", &(sc_info->vmain), false);
+*/
+
+	return root;
+}
+
+struct device_drv bflsc_drv = {
+	.drv_id = DRIVER_bflsc,
+	.dname = "BitForceSC",
+	.name = BFLSC_SINGLE,
+	.drv_detect = bflsc_detect,
+	.get_api_stats = bflsc_api_stats,
+	.get_statline_before = get_bflsc_statline_before,
+	.get_stats = bflsc_get_stats,
+	.identify_device = bflsc_identify,
+	.thread_prepare = bflsc_thread_prepare,
+	.thread_init = bflsc_thread_init,
+	.hash_work = hash_queued_work,
+	.scanwork = bflsc_scanwork,
+	.queue_full = bflsc_queue_full,
+	.flush_work = bflsc_flush_work,
+	.thread_shutdown = bflsc_shutdown,
+	.thread_enable = bflsc_thread_enable
+};
