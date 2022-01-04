@@ -257,4 +257,229 @@ reinit:
 	if (opt_bfl_noncerange) {
 		bitforce->nonce_range = true;
 		bitforce->sleep_ms = BITFORCE_SLEEP_MS;
-		bitforce->
+		bitforce->kname = KNAME_RANGE;
+	} else {
+		bitforce->sleep_ms = BITFORCE_SLEEP_MS * 5;
+		bitforce->kname = KNAME_WORK;
+	}
+
+	if (!add_cgpu(bitforce))
+		goto unshin;
+
+	update_usb_stats(bitforce);
+
+	mutex_init(&bitforce->device_mutex);
+
+	return true;
+
+unshin:
+
+	usb_uninit(bitforce);
+
+shin:
+
+	if (bitforce->name != blank) {
+		free(bitforce->name);
+		bitforce->name = NULL;
+	}
+
+	bitforce = usb_free_cgpu(bitforce);
+
+	return false;
+}
+
+static void bitforce_detect(bool __maybe_unused hotplug)
+{
+	usb_detect(&bitforce_drv, bitforce_detect_one);
+}
+
+static void get_bitforce_statline_before(char *buf, size_t bufsiz, struct cgpu_info *bitforce)
+{
+	float gt = bitforce->temp;
+
+	if (gt > 0)
+		tailsprintf(buf, bufsiz, "%5.1fC ", gt);
+	else
+		tailsprintf(buf, bufsiz, "       ");
+
+	tailsprintf(buf, bufsiz, "        | ");
+}
+
+static bool bitforce_thread_prepare(__maybe_unused struct thr_info *thr)
+{
+//	struct cgpu_info *bitforce = thr->cgpu;
+
+	return true;
+}
+
+static void bitforce_flash_led(struct cgpu_info *bitforce)
+{
+	int err, amount;
+
+	/* Do not try to flash the led if we're polling for a result to
+	 * minimise the chance of interleaved results */
+	if (bitforce->polling)
+		return;
+
+	/* It is not critical flashing the led so don't get stuck if we
+	 * can't grab the mutex now */
+	if (mutex_trylock(&bitforce->device_mutex))
+		return;
+
+	if ((err = usb_write(bitforce, BITFORCE_FLASH, BITFORCE_FLASH_LEN, &amount, C_REQUESTFLASH)) < 0 || amount != BITFORCE_FLASH_LEN) {
+		applog(LOG_ERR, "%s%i: flash request failed (%d:%d)",
+			bitforce->drv->name, bitforce->device_id, amount, err);
+	} else {
+		/* However, this stops anything else getting a reply
+		 * So best to delay any other access to the BFL */
+		cgsleep_ms(4000);
+	}
+
+	/* Once we've tried - don't do it until told to again */
+	bitforce->flash_led = false;
+
+	mutex_unlock(&bitforce->device_mutex);
+
+	return; // nothing is returned by the BFL
+}
+
+static bool bitforce_get_temp(struct cgpu_info *bitforce)
+{
+	char buf[BITFORCE_BUFSIZ+1];
+	int err, amount;
+	char *s;
+
+	// Device is gone
+	if (bitforce->usbinfo.nodev)
+		return false;
+
+	/* Do not try to get the temperature if we're polling for a result to
+	 * minimise the chance of interleaved results */
+	if (bitforce->polling)
+		return true;
+
+	// Flash instead of Temp - doing both can be too slow
+	if (bitforce->flash_led) {
+		bitforce_flash_led(bitforce);
+ 		return true;
+	}
+
+	/* It is not critical getting temperature so don't get stuck if we
+	 * can't grab the mutex here */
+	if (mutex_trylock(&bitforce->device_mutex))
+		return false;
+
+	if ((err = usb_write(bitforce, BITFORCE_TEMPERATURE, BITFORCE_TEMPERATURE_LEN, &amount, C_REQUESTTEMPERATURE)) < 0 || amount != BITFORCE_TEMPERATURE_LEN) {
+		mutex_unlock(&bitforce->device_mutex);
+		applog(LOG_ERR, "%s%i: Error: Request temp invalid/timed out (%d:%d)",
+				bitforce->drv->name, bitforce->device_id, amount, err);
+		bitforce->hw_errors++;
+		return false;
+	}
+
+	if ((err = usb_read_nl(bitforce, buf, sizeof(buf)-1, &amount, C_GETTEMPERATURE)) < 0 || amount < 1) {
+		mutex_unlock(&bitforce->device_mutex);
+		if (err < 0) {
+			applog(LOG_ERR, "%s%i: Error: Get temp return invalid/timed out (%d:%d)",
+					bitforce->drv->name, bitforce->device_id, amount, err);
+		} else {
+			applog(LOG_ERR, "%s%i: Error: Get temp returned nothing (%d:%d)",
+					bitforce->drv->name, bitforce->device_id, amount, err);
+		}
+		bitforce->hw_errors++;
+		return false;
+	}
+
+	mutex_unlock(&bitforce->device_mutex);
+	
+	if ((!strncasecmp(buf, "TEMP", 4)) && (s = strchr(buf + 4, ':'))) {
+		float temp = strtof(s + 1, NULL);
+
+		/* Cope with older software  that breaks and reads nonsense
+		 * values */
+		if (temp > 100)
+			temp = strtod(s + 1, NULL);
+
+		if (temp > 0) {
+			bitforce->temp = temp;
+			if (unlikely(bitforce->cutofftemp > 0 && temp > bitforce->cutofftemp)) {
+				applog(LOG_WARNING, "%s%i: Hit thermal cutoff limit, disabling!",
+							bitforce->drv->name, bitforce->device_id);
+				bitforce->deven = DEV_RECOVER;
+				dev_error(bitforce, REASON_DEV_THERMAL_CUTOFF);
+			}
+		}
+	} else {
+		/* Use the temperature monitor as a kind of watchdog for when
+		 * our responses are out of sync and flush the buffer to
+		 * hopefully recover */
+		applog(LOG_WARNING, "%s%i: Garbled response probably throttling, clearing buffer",
+					bitforce->drv->name, bitforce->device_id);
+		dev_error(bitforce, REASON_DEV_THROTTLE);
+		/* Count throttling episodes as hardware errors */
+		bitforce->hw_errors++;
+		bitforce_initialise(bitforce, true);
+		return false;
+	}
+
+	return true;
+}
+
+static bool bitforce_send_work(struct thr_info *thr, struct work *work)
+{
+	struct cgpu_info *bitforce = thr->cgpu;
+	unsigned char ob[70];
+	char buf[BITFORCE_BUFSIZ+1];
+	int err, amount;
+	char *s;
+	char *cmd;
+	int len;
+
+re_send:
+	if (bitforce->nonce_range) {
+		cmd = BITFORCE_SENDRANGE;
+		len = BITFORCE_SENDRANGE_LEN;
+	} else {
+		cmd = BITFORCE_SENDWORK;
+		len = BITFORCE_SENDWORK_LEN;
+	}
+
+	mutex_lock(&bitforce->device_mutex);
+	if ((err = usb_write(bitforce, cmd, len, &amount, C_REQUESTSENDWORK)) < 0 || amount != len) {
+		mutex_unlock(&bitforce->device_mutex);
+		applog(LOG_ERR, "%s%i: request send work failed (%d:%d)",
+				bitforce->drv->name, bitforce->device_id, amount, err);
+		return false;
+	}
+
+	if ((err = usb_read_nl(bitforce, buf, sizeof(buf)-1, &amount, C_REQUESTSENDWORKSTATUS)) < 0) {
+		mutex_unlock(&bitforce->device_mutex);
+		applog(LOG_ERR, "%s%d: read request send work status failed (%d:%d)",
+				bitforce->drv->name, bitforce->device_id, amount, err);
+		return false;
+	}
+
+	if (amount == 0 || !buf[0] || !strncasecmp(buf, "B", 1)) {
+		mutex_unlock(&bitforce->device_mutex);
+		cgsleep_ms(WORK_CHECK_INTERVAL_MS);
+		goto re_send;
+	} else if (unlikely(strncasecmp(buf, "OK", 2))) {
+		mutex_unlock(&bitforce->device_mutex);
+		if (bitforce->nonce_range) {
+			applog(LOG_WARNING, "%s%i: Does not support nonce range, disabling",
+						bitforce->drv->name, bitforce->device_id);
+			bitforce->nonce_range = false;
+			bitforce->sleep_ms *= 5;
+			bitforce->kname = KNAME_WORK;
+			goto re_send;
+		}
+		applog(LOG_ERR, "%s%i: Error: Send work reports: %s",
+				bitforce->drv->name, bitforce->device_id, buf);
+		return false;
+	}
+
+	sprintf((char *)ob, ">>>>>>>>");
+	memcpy(ob + 8, work->midstate, 32);
+	memcpy(ob + 8 + 32, work->data + 64, 12);
+	if (!bitforce->nonce_range) {
+		sprintf((char *)ob + 8 + 32 + 12, ">>>>>>>>
