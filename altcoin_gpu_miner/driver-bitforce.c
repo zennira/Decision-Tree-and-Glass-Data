@@ -482,4 +482,202 @@ re_send:
 	memcpy(ob + 8, work->midstate, 32);
 	memcpy(ob + 8 + 32, work->data + 64, 12);
 	if (!bitforce->nonce_range) {
-		sprintf((char *)ob + 8 + 32 + 12, ">>>>>>>>
+		sprintf((char *)ob + 8 + 32 + 12, ">>>>>>>>");
+		work->blk.nonce = bitforce->nonces = 0xffffffff;
+		len = 60;
+	} else {
+		uint32_t *nonce;
+
+		nonce = (uint32_t *)(ob + 8 + 32 + 12);
+		*nonce = htobe32(work->blk.nonce);
+		nonce = (uint32_t *)(ob + 8 + 32 + 12 + 4);
+		/* Split work up into 1/5th nonce ranges */
+		bitforce->nonces = 0x33333332;
+		*nonce = htobe32(work->blk.nonce + bitforce->nonces);
+		work->blk.nonce += bitforce->nonces + 1;
+		sprintf((char *)ob + 8 + 32 + 12 + 8, ">>>>>>>>");
+		len = 68;
+	}
+
+	if ((err = usb_write(bitforce, (char *)ob, len, &amount, C_SENDWORK)) < 0 || amount != len) {
+		mutex_unlock(&bitforce->device_mutex);
+		applog(LOG_ERR, "%s%i: send work failed (%d:%d)",
+				bitforce->drv->name, bitforce->device_id, amount, err);
+		return false;
+	}
+
+	if ((err = usb_read_nl(bitforce, buf, sizeof(buf)-1, &amount, C_SENDWORKSTATUS)) < 0) {
+		mutex_unlock(&bitforce->device_mutex);
+		applog(LOG_ERR, "%s%d: read send work status failed (%d:%d)",
+				bitforce->drv->name, bitforce->device_id, amount, err);
+		return false;
+	}
+
+	mutex_unlock(&bitforce->device_mutex);
+
+	if (opt_debug) {
+		s = bin2hex(ob + 8, 44);
+		applog(LOG_DEBUG, "%s%i: block data: %s",
+				bitforce->drv->name, bitforce->device_id, s);
+		free(s);
+	}
+
+	if (amount == 0 || !buf[0]) {
+		applog(LOG_ERR, "%s%i: Error: Send block data returned empty string/timed out",
+				bitforce->drv->name, bitforce->device_id);
+		return false;
+	}
+
+	if (unlikely(strncasecmp(buf, "OK", 2))) {
+		applog(LOG_ERR, "%s%i: Error: Send block data reports: %s",
+				bitforce->drv->name, bitforce->device_id, buf);
+		return false;
+	}
+
+	cgtime(&bitforce->work_start_tv);
+	return true;
+}
+
+static int64_t bitforce_get_result(struct thr_info *thr, struct work *work)
+{
+	struct cgpu_info *bitforce = thr->cgpu;
+	unsigned int delay_time_ms;
+	struct timeval elapsed;
+	struct timeval now;
+	char buf[BITFORCE_BUFSIZ+1];
+	int amount;
+	char *pnoncebuf;
+	uint32_t nonce;
+
+	while (1) {
+		if (unlikely(thr->work_restart))
+			return 0;
+
+		mutex_lock(&bitforce->device_mutex);
+		usb_write(bitforce, BITFORCE_WORKSTATUS, BITFORCE_WORKSTATUS_LEN, &amount, C_REQUESTWORKSTATUS);
+		usb_read_nl(bitforce, buf, sizeof(buf)-1, &amount, C_GETWORKSTATUS);
+		mutex_unlock(&bitforce->device_mutex);
+
+		cgtime(&now);
+		timersub(&now, &bitforce->work_start_tv, &elapsed);
+
+		if (elapsed.tv_sec >= BITFORCE_LONG_TIMEOUT_S) {
+			applog(LOG_ERR, "%s%i: took %ldms - longer than %dms",
+				bitforce->drv->name, bitforce->device_id,
+				tv_to_ms(elapsed), BITFORCE_LONG_TIMEOUT_MS);
+			return 0;
+		}
+
+		if (amount > 0 && buf[0] && strncasecmp(buf, "B", 1)) /* BFL does not respond during throttling */
+			break;
+
+		/* if BFL is throttling, no point checking so quickly */
+		delay_time_ms = (buf[0] ? BITFORCE_CHECK_INTERVAL_MS : 2 * WORK_CHECK_INTERVAL_MS);
+		cgsleep_ms(delay_time_ms);
+		bitforce->wait_ms += delay_time_ms;
+	}
+
+	if (elapsed.tv_sec > BITFORCE_TIMEOUT_S) {
+		applog(LOG_ERR, "%s%i: took %ldms - longer than %dms",
+			bitforce->drv->name, bitforce->device_id,
+			tv_to_ms(elapsed), BITFORCE_TIMEOUT_MS);
+		dev_error(bitforce, REASON_DEV_OVER_HEAT);
+
+		/* Only return if we got nothing after timeout - there still may be results */
+		if (amount == 0)
+			return 0;
+	} else if (!strncasecmp(buf, BITFORCE_EITHER, BITFORCE_EITHER_LEN)) {
+		/* Simple timing adjustment. Allow a few polls to cope with
+		 * OS timer delays being variably reliable. wait_ms will
+		 * always equal sleep_ms when we've waited greater than or
+		 * equal to the result return time.*/
+		delay_time_ms = bitforce->sleep_ms;
+
+		if (bitforce->wait_ms > bitforce->sleep_ms + (WORK_CHECK_INTERVAL_MS * 2))
+			bitforce->sleep_ms += (bitforce->wait_ms - bitforce->sleep_ms) / 2;
+		else if (bitforce->wait_ms == bitforce->sleep_ms) {
+			if (bitforce->sleep_ms > WORK_CHECK_INTERVAL_MS)
+				bitforce->sleep_ms -= WORK_CHECK_INTERVAL_MS;
+			else if (bitforce->sleep_ms > BITFORCE_CHECK_INTERVAL_MS)
+				bitforce->sleep_ms -= BITFORCE_CHECK_INTERVAL_MS;
+		}
+
+		if (delay_time_ms != bitforce->sleep_ms)
+			  applog(LOG_DEBUG, "%s%i: Wait time changed to: %d, waited %u",
+					bitforce->drv->name, bitforce->device_id,
+					bitforce->sleep_ms, bitforce->wait_ms);
+
+		/* Work out the average time taken. Float for calculation, uint for display */
+		bitforce->avg_wait_f += (tv_to_ms(elapsed) - bitforce->avg_wait_f) / TIME_AVG_CONSTANT;
+		bitforce->avg_wait_d = (unsigned int) (bitforce->avg_wait_f + 0.5);
+	}
+
+	applog(LOG_DEBUG, "%s%i: waited %dms until %s",
+			bitforce->drv->name, bitforce->device_id,
+			bitforce->wait_ms, buf);
+	if (!strncasecmp(buf, BITFORCE_NO_NONCE, BITFORCE_NO_NONCE_MATCH))
+		return bitforce->nonces;   /* No valid nonce found */
+	else if (!strncasecmp(buf, BITFORCE_IDLE, BITFORCE_IDLE_MATCH))
+		return 0;	/* Device idle */
+	else if (strncasecmp(buf, BITFORCE_NONCE, BITFORCE_NONCE_LEN)) {
+		bitforce->hw_errors++;
+		applog(LOG_WARNING, "%s%i: Error: Get result reports: %s",
+			bitforce->drv->name, bitforce->device_id, buf);
+		bitforce_initialise(bitforce, true);
+		return 0;
+	}
+
+	pnoncebuf = &buf[12];
+
+	while (1) {
+		hex2bin((void*)&nonce, pnoncebuf, 4);
+#ifndef __BIG_ENDIAN__
+		nonce = swab32(nonce);
+#endif
+		if (unlikely(bitforce->nonce_range && (nonce >= work->blk.nonce ||
+			(work->blk.nonce > 0 && nonce < work->blk.nonce - bitforce->nonces - 1)))) {
+				applog(LOG_WARNING, "%s%i: Disabling broken nonce range support",
+					bitforce->drv->name, bitforce->device_id);
+				bitforce->nonce_range = false;
+				work->blk.nonce = 0xffffffff;
+				bitforce->sleep_ms *= 5;
+				bitforce->kname = KNAME_WORK;
+		}
+			
+		submit_nonce(thr, work, nonce);
+		if (strncmp(&pnoncebuf[8], ",", 1))
+			break;
+		pnoncebuf += 9;
+	}
+
+	return bitforce->nonces;
+}
+
+static void bitforce_shutdown(__maybe_unused struct thr_info *thr)
+{
+//	struct cgpu_info *bitforce = thr->cgpu;
+}
+
+static void biforce_thread_enable(struct thr_info *thr)
+{
+	struct cgpu_info *bitforce = thr->cgpu;
+
+	bitforce_initialise(bitforce, true);
+}
+
+static int64_t bitforce_scanhash(struct thr_info *thr, struct work *work, int64_t __maybe_unused max_nonce)
+{
+	struct cgpu_info *bitforce = thr->cgpu;
+	bool send_ret;
+	int64_t ret;
+
+	// Device is gone
+	if (bitforce->usbinfo.nodev)
+		return -1;
+
+	send_ret = bitforce_send_work(thr, work);
+
+	if (!restart_wait(thr, bitforce->sleep_ms))
+		return 0;
+
+	bitforce->
