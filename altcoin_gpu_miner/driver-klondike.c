@@ -136,4 +136,313 @@ typedef struct klondike_status {
 	uint8_t dev;
 	uint8_t state;
 	uint8_t chipcount;
-	ui
+	uint8_t slavecount;
+	uint8_t workqc;
+	uint8_t workid;
+	uint8_t temp;
+	uint8_t fanspeed;
+	uint8_t errorcount;
+	uint8_t hashcount[2];
+	uint8_t maxcount[2];
+	uint8_t noise;
+} WORKSTATUS;
+
+typedef struct _worktask {
+	uint8_t cmd;
+	uint8_t dev;
+	uint8_t workid;
+	uint8_t midstate[32];
+	uint8_t merkle[12];
+} WORKTASK;
+
+typedef struct _workresult {
+	uint8_t cmd;
+	uint8_t dev;
+	uint8_t workid;
+	uint8_t nonce[4];
+} WORKRESULT;
+
+typedef struct klondike_cfg {
+	uint8_t cmd;
+	uint8_t dev;
+	uint8_t hashclock[2];
+	uint8_t temptarget;
+	uint8_t tempcritical;
+	uint8_t fantarget;
+	uint8_t pad2;
+} WORKCFG;
+
+typedef struct kline {
+	union {
+		HEADER hd;
+		IDENTITY id;
+		WORKSTATUS ws;
+		WORKTASK wt;
+		WORKRESULT wr;
+		WORKCFG cfg;
+	};
+} KLINE;
+
+#define zero_kline(_kline) memset((void *)(_kline), 0, sizeof(KLINE));
+
+typedef struct device_info {
+	uint32_t noncecount;
+	uint32_t nextworkid;
+	uint16_t lasthashcount;
+	uint64_t totalhashcount;
+	uint32_t rangesize;
+	uint32_t *chipstats;
+} DEVINFO;
+
+typedef struct klist {
+	struct klist *prev;
+	struct klist *next;
+	KLINE kline;
+	struct timeval tv_when;
+	int block_seq;
+	bool ready;
+	bool working;
+} KLIST;
+
+typedef struct jobque {
+	int workqc;
+	struct timeval last_update;
+	bool overheat;
+	bool flushed;
+	int late_update_count;
+	int late_update_sequential;
+} JOBQUE;
+
+struct klondike_info {
+	pthread_rwlock_t stat_lock;
+	struct thr_info replies_thr;
+	cglock_t klist_lock;
+	KLIST *used;
+	KLIST *free;
+	int kline_count;
+	int used_count;
+	int block_seq;
+	KLIST *status;
+	DEVINFO *devinfo;
+	KLIST *cfg;
+	JOBQUE *jobque;
+	int noncecount;
+	uint64_t hashcount;
+	uint64_t errorcount;
+	uint64_t noisecount;
+	int incorrect_slave_sequential;
+
+	// us Delay from USB reply to being processed
+	double delay_count;
+	double delay_total;
+	double delay_min;
+	double delay_max;
+
+	struct timeval tv_last_nonce_received;
+
+	// Time from recieving one nonce to the next
+	double nonce_count;
+	double nonce_total;
+	double nonce_min;
+	double nonce_max;
+
+	int wque_size;
+	int wque_cleared;
+
+	bool initialised;
+};
+
+static KLIST *new_klist_set(struct cgpu_info *klncgpu)
+{
+	struct klondike_info *klninfo = (struct klondike_info *)(klncgpu->device_data);
+	KLIST *klist = NULL;
+	int i;
+
+	klist = calloc(MAX_KLINES, sizeof(*klist));
+	if (!klist)
+		quit(1, "Failed to calloc klist - when old count=%d", klninfo->kline_count);
+
+	klninfo->kline_count += MAX_KLINES;
+
+	klist[0].prev = NULL;
+	klist[0].next = &(klist[1]);
+	for (i = 1; i < MAX_KLINES-1; i++) {
+		klist[i].prev = &klist[i-1];
+		klist[i].next = &klist[i+1];
+	}
+	klist[MAX_KLINES-1].prev = &(klist[MAX_KLINES-2]);
+	klist[MAX_KLINES-1].next = NULL;
+
+	return klist;
+}
+
+static KLIST *allocate_kitem(struct cgpu_info *klncgpu)
+{
+	struct klondike_info *klninfo = (struct klondike_info *)(klncgpu->device_data);
+	KLIST *kitem = NULL;
+	int ran_out = 0;
+	char errbuf[1024];
+
+	cg_wlock(&klninfo->klist_lock);
+
+	if (klninfo->free == NULL) {
+		ran_out = klninfo->kline_count;
+		klninfo->free = new_klist_set(klncgpu);
+		snprintf(errbuf, sizeof(errbuf),
+				 "%s%i: KLINE count exceeded %d, now %d",
+				 klncgpu->drv->name, klncgpu->device_id,
+				 ran_out, klninfo->kline_count);
+	}
+
+	kitem = klninfo->free;
+
+	klninfo->free = klninfo->free->next;
+	if (klninfo->free)
+		klninfo->free->prev = NULL;
+
+	kitem->next = klninfo->used;
+	kitem->prev = NULL;
+	if (kitem->next)
+		kitem->next->prev = kitem;
+	klninfo->used = kitem;
+
+	kitem->ready = false;
+	kitem->working = false;
+
+	memset((void *)&(kitem->kline), 0, sizeof(kitem->kline));
+
+	klninfo->used_count++;
+
+	cg_wunlock(&klninfo->klist_lock);
+
+	if (ran_out > 0)
+		applog(LOG_WARNING, "%s", errbuf);
+
+	return kitem;
+}
+
+static KLIST *release_kitem(struct cgpu_info *klncgpu, KLIST *kitem)
+{
+	struct klondike_info *klninfo = (struct klondike_info *)(klncgpu->device_data);
+
+	cg_wlock(&klninfo->klist_lock);
+
+	if (kitem == klninfo->used)
+		klninfo->used = kitem->next;
+
+	if (kitem->next)
+		kitem->next->prev = kitem->prev;
+	if (kitem->prev)
+		kitem->prev->next = kitem->next;
+
+	kitem->next = klninfo->free;
+	if (klninfo->free)
+		klninfo->free->prev = kitem;
+
+	kitem->prev = NULL;
+
+	klninfo->free = kitem;
+
+	klninfo->used_count--;
+
+	cg_wunlock(&klninfo->klist_lock);
+
+	return NULL;
+}
+
+static double cvtKlnToC(uint8_t temp)
+{
+	double Rt, stein, celsius;
+
+	if (temp == 0)
+		return 0.0;
+
+	Rt = 1000.0 * 255.0 / (double)temp - 1000.0;
+
+	stein = log(Rt / 2200.0) / 3987.0;
+
+	stein += 1.0 / (double)(25.0 + 273.15);
+
+	celsius = (1.0 / stein) - 273.15;
+
+	// For display of bad data
+	if (celsius < 0.0)
+		celsius = 0.0;
+	if (celsius > 200.0)
+		celsius = 200.0;
+
+	return celsius;
+}
+
+static int cvtCToKln(double deg)
+{
+	double Rt, stein, temp;
+
+	if (deg < 0.0)
+		deg = 0.0;
+
+	stein = 1.0 / (deg + 273.15);
+
+	stein -= 1.0 / (double)(25.0 + 273.15);
+
+	Rt = exp(stein * 3987.0) * 2200.0;
+
+	if (Rt == -1000.0)
+		Rt++;
+
+	temp = 1000.0 * 256.0 / (Rt + 1000.0);
+
+	if (temp > 255)
+		temp = 255;
+	if (temp < 0)
+		temp = 0;
+
+	return (int)temp;
+}
+
+// Change this to LOG_WARNING if you wish to always see the replies
+#define READ_DEBUG LOG_DEBUG
+
+static void display_kline(struct cgpu_info *klncgpu, KLINE *kline, const char *msg)
+{
+	char *hexdata;
+
+	switch (kline->hd.cmd) {
+		case KLN_CMD_NONCE:
+			applog(READ_DEBUG,
+				"%s%i:%d %s work [%c] dev=%d workid=%d"
+				" nonce=0x%08x",
+				klncgpu->drv->name, klncgpu->device_id,
+				(int)(kline->wr.dev), msg, kline->wr.cmd,
+				(int)(kline->wr.dev),
+				(int)(kline->wr.workid),
+				(unsigned int)K_NONCE(kline->wr.nonce) - 0xC0);
+			break;
+		case KLN_CMD_STATUS:
+		case KLN_CMD_WORK:
+		case KLN_CMD_ENABLE:
+		case KLN_CMD_ABORT:
+			applog(READ_DEBUG,
+				"%s%i:%d %s status [%c] dev=%d chips=%d"
+				" slaves=%d workcq=%d workid=%d temp=%d fan=%d"
+				" errors=%d hashes=%d max=%d noise=%d",
+				klncgpu->drv->name, klncgpu->device_id,
+				(int)(kline->ws.dev), msg, kline->ws.cmd,
+				(int)(kline->ws.dev),
+				(int)(kline->ws.chipcount),
+				(int)(kline->ws.slavecount),
+				(int)(kline->ws.workqc),
+				(int)(kline->ws.workid),
+				(int)(kline->ws.temp),
+				(int)(kline->ws.fanspeed),
+				(int)(kline->ws.errorcount),
+				K_HASHCOUNT(kline->ws.hashcount),
+				K_MAXCOUNT(kline->ws.maxcount),
+				(int)(kline->ws.noise));
+			break;
+		case KLN_CMD_CONFIG:
+			applog(READ_DEBUG,
+				"%s%i:%d %s config [%c] dev=%d clock=%d"
+				" temptarget=%d tempcrit=%d fan=%d",
+				klncgpu->drv->name, klncgpu->device_id,
+		
