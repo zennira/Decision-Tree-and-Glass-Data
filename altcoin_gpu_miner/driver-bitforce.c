@@ -680,4 +680,77 @@ static int64_t bitforce_scanhash(struct thr_info *thr, struct work *work, int64_
 	if (!restart_wait(thr, bitforce->sleep_ms))
 		return 0;
 
-	bitforce->
+	bitforce->wait_ms = bitforce->sleep_ms;
+
+	if (send_ret) {
+		bitforce->polling = true;
+		ret = bitforce_get_result(thr, work);
+		bitforce->polling = false;
+	} else
+		ret = -1;
+
+	if (ret == -1) {
+		ret = 0;
+		applog(LOG_ERR, "%s%i: Comms error", bitforce->drv->name, bitforce->device_id);
+		dev_error(bitforce, REASON_DEV_COMMS_ERROR);
+		bitforce->hw_errors++;
+		/* empty read buffer */
+		bitforce_initialise(bitforce, true);
+	}
+	return ret;
+}
+
+static bool bitforce_get_stats(struct cgpu_info *bitforce)
+{
+	return bitforce_get_temp(bitforce);
+}
+
+static void bitforce_identify(struct cgpu_info *bitforce)
+{
+	bitforce->flash_led = true;
+}
+
+static bool bitforce_thread_init(struct thr_info *thr)
+{
+	struct cgpu_info *bitforce = thr->cgpu;
+	unsigned int wait;
+
+	/* Pause each new thread at least 100ms between initialising
+	 * so the devices aren't making calls all at the same time. */
+	wait = thr->id * MAX_START_DELAY_MS;
+	applog(LOG_DEBUG, "%s%d: Delaying start by %dms",
+			bitforce->drv->name, bitforce->device_id, wait / 1000);
+	cgsleep_ms(wait);
+
+	return true;
+}
+
+static struct api_data *bitforce_api_stats(struct cgpu_info *cgpu)
+{
+	struct api_data *root = NULL;
+
+	// Warning, access to these is not locked - but we don't really
+	// care since hashing performance is way more important than
+	// locking access to displaying API debug 'stats'
+	// If locking becomes an issue for any of them, use copy_data=true also
+	root = api_add_uint(root, "Sleep Time", &(cgpu->sleep_ms), false);
+	root = api_add_uint(root, "Avg Wait", &(cgpu->avg_wait_d), false);
+
+	return root;
+}
+
+struct device_drv bitforce_drv = {
+	.drv_id = DRIVER_bitforce,
+	.dname = "BitForce",
+	.name = "BFL",
+	.drv_detect = bitforce_detect,
+	.get_api_stats = bitforce_api_stats,
+	.get_statline_before = get_bitforce_statline_before,
+	.get_stats = bitforce_get_stats,
+	.identify_device = bitforce_identify,
+	.thread_prepare = bitforce_thread_prepare,
+	.thread_init = bitforce_thread_init,
+	.scanhash = bitforce_scanhash,
+	.thread_shutdown = bitforce_shutdown,
+	.thread_enable = biforce_thread_enable
+};
