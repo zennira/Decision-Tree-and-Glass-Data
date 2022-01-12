@@ -445,4 +445,247 @@ static void display_kline(struct cgpu_info *klncgpu, KLINE *kline, const char *m
 				"%s%i:%d %s config [%c] dev=%d clock=%d"
 				" temptarget=%d tempcrit=%d fan=%d",
 				klncgpu->drv->name, klncgpu->device_id,
-		
+				(int)(kline->cfg.dev), msg, kline->cfg.cmd,
+				(int)(kline->cfg.dev),
+				K_HASHCLOCK(kline->cfg.hashclock),
+				(int)(kline->cfg.temptarget),
+				(int)(kline->cfg.tempcritical),
+				(int)(kline->cfg.fantarget));
+			break;
+		case KLN_CMD_IDENT:
+			applog(READ_DEBUG,
+				"%s%i:%d %s info [%c] version=0x%02x prod=%.7s"
+				" serial=0x%08x",
+				klncgpu->drv->name, klncgpu->device_id,
+				(int)(kline->hd.dev), msg, kline->hd.cmd,
+				(int)(kline->id.version),
+				kline->id.product,
+				(unsigned int)K_SERIAL(kline->id.serial));
+			break;
+		default:
+			hexdata = bin2hex((unsigned char *)&(kline->hd.dev), REPLY_SIZE - 1);
+			applog(LOG_ERR,
+				"%s%i:%d %s [%c:%s] unknown and ignored",
+				klncgpu->drv->name, klncgpu->device_id,
+				(int)(kline->hd.dev), msg, kline->hd.cmd,
+				hexdata);
+			free(hexdata);
+			break;
+	}
+}
+
+static void display_send_kline(struct cgpu_info *klncgpu, KLINE *kline, const char *msg)
+{
+	char *hexdata;
+
+	switch (kline->hd.cmd) {
+		case KLN_CMD_WORK:
+			applog(READ_DEBUG,
+				"%s%i:%d %s work [%c] dev=%d workid=0x%02x ...",
+				klncgpu->drv->name, klncgpu->device_id,
+				(int)(kline->wt.dev), msg, kline->ws.cmd,
+				(int)(kline->wt.dev),
+				(int)(kline->wt.workid));
+			break;
+		case KLN_CMD_CONFIG:
+			applog(READ_DEBUG,
+				"%s%i:%d %s config [%c] dev=%d clock=%d"
+				" temptarget=%d tempcrit=%d fan=%d",
+				klncgpu->drv->name, klncgpu->device_id,
+				(int)(kline->cfg.dev), msg, kline->cfg.cmd,
+				(int)(kline->cfg.dev),
+				K_HASHCLOCK(kline->cfg.hashclock),
+				(int)(kline->cfg.temptarget),
+				(int)(kline->cfg.tempcritical),
+				(int)(kline->cfg.fantarget));
+			break;
+		case KLN_CMD_IDENT:
+		case KLN_CMD_STATUS:
+		case KLN_CMD_ABORT:
+			applog(READ_DEBUG,
+				"%s%i:%d %s cmd [%c]",
+				klncgpu->drv->name, klncgpu->device_id,
+				(int)(kline->hd.dev), msg, kline->hd.cmd);
+			break;
+		case KLN_CMD_ENABLE:
+			applog(READ_DEBUG,
+				"%s%i:%d %s enable [%c] enable=%c",
+				klncgpu->drv->name, klncgpu->device_id,
+				(int)(kline->hd.dev), msg, kline->hd.cmd,
+				(char)(kline->hd.buf[0]));
+			break;
+		case KLN_CMD_NONCE:
+		default:
+			hexdata = bin2hex((unsigned char *)&(kline->hd.dev), REPLY_SIZE - 1);
+			applog(LOG_ERR,
+				"%s%i:%d %s [%c:%s] unknown/unexpected and ignored",
+				klncgpu->drv->name, klncgpu->device_id,
+				(int)(kline->hd.dev), msg, kline->hd.cmd,
+				hexdata);
+			free(hexdata);
+			break;
+	}
+}
+
+static bool SendCmd(struct cgpu_info *klncgpu, KLINE *kline, int datalen)
+{
+	int err, amt, writ;
+
+	if (klncgpu->usbinfo.nodev)
+		return false;
+
+	display_send_kline(klncgpu, kline, msg_send);
+	writ = KSENDHD(datalen);
+	err = usb_write(klncgpu, (char *)kline, writ, &amt, C_REQUESTRESULTS);
+	if (err < 0 || amt != writ) {
+		applog(LOG_ERR, "%s%i:%d Cmd:%c Dev:%d, write failed (%d:%d:%d)",
+				klncgpu->drv->name, klncgpu->device_id,
+				(int)(kline->hd.dev),
+				kline->hd.cmd, (int)(kline->hd.dev),
+				writ, amt, err);
+		return false;
+	}
+
+	return true;
+}
+
+static KLIST *GetReply(struct cgpu_info *klncgpu, uint8_t cmd, uint8_t dev)
+{
+	struct klondike_info *klninfo = (struct klondike_info *)(klncgpu->device_data);
+	KLIST *kitem;
+	int retries = CMD_REPLY_RETRIES;
+
+	while (retries-- > 0 && klncgpu->shutdown == false) {
+		cgsleep_ms(REPLY_WAIT_TIME);
+		cg_rlock(&klninfo->klist_lock);
+		kitem = klninfo->used;
+		while (kitem) {
+			if (kitem->kline.hd.cmd == cmd &&
+			    kitem->kline.hd.dev == dev &&
+			    kitem->ready == true && kitem->working == false) {
+				kitem->working = true;
+				cg_runlock(&klninfo->klist_lock);
+				return kitem;
+			}
+			kitem = kitem->next;
+		}
+		cg_runlock(&klninfo->klist_lock);
+	}
+	return NULL;
+}
+
+static KLIST *SendCmdGetReply(struct cgpu_info *klncgpu, KLINE *kline, int datalen)
+{
+	if (!SendCmd(klncgpu, kline, datalen))
+		return NULL;
+
+	return GetReply(klncgpu, kline->hd.cmd, kline->hd.dev);
+}
+
+static bool klondike_get_stats(struct cgpu_info *klncgpu)
+{
+	struct klondike_info *klninfo = (struct klondike_info *)(klncgpu->device_data);
+	KLIST *kitem;
+	KLINE kline;
+	int slaves, dev;
+
+	if (klncgpu->usbinfo.nodev || klninfo->status == NULL)
+		return false;
+
+	applog(LOG_DEBUG, "%s%i: getting status",
+			klncgpu->drv->name, klncgpu->device_id);
+
+	rd_lock(&(klninfo->stat_lock));
+	slaves = klninfo->status[0].kline.ws.slavecount;
+	rd_unlock(&(klninfo->stat_lock));
+
+	// loop thru devices and get status for each
+	for (dev = 0; dev <= slaves; dev++) {
+		zero_kline(&kline);
+		kline.hd.cmd = KLN_CMD_STATUS;
+		kline.hd.dev = dev;
+		kitem = SendCmdGetReply(klncgpu, &kline, 0);
+		if (kitem != NULL) {
+			wr_lock(&(klninfo->stat_lock));
+			memcpy((void *)(&(klninfo->status[dev])),
+				(void *)kitem,
+				sizeof(klninfo->status[dev]));
+			wr_unlock(&(klninfo->stat_lock));
+			kitem = release_kitem(klncgpu, kitem);
+		} else {
+			applog(LOG_ERR, "%s%i:%d failed to update stats",
+					klncgpu->drv->name, klncgpu->device_id, dev);
+		}
+	}
+	return true;
+}
+
+// TODO: this only enables the master (no slaves)
+static bool kln_enable(struct cgpu_info *klncgpu)
+{
+	KLIST *kitem;
+	KLINE kline;
+	int tries = 2;
+	bool ok = false;
+
+	zero_kline(&kline);
+	kline.hd.cmd = KLN_CMD_ENABLE;
+	kline.hd.dev = 0;
+	kline.hd.buf[0] = KLN_CMD_ENABLE_ON;
+	
+	while (tries-- > 0) {
+		kitem = SendCmdGetReply(klncgpu, &kline, 1);
+		if (kitem) {
+			kitem = release_kitem(klncgpu, kitem);
+			ok = true;
+			break;
+		}
+		cgsleep_ms(50);
+	}
+
+	if (ok)
+		cgsleep_ms(50);
+
+	return ok;
+}
+
+static void kln_disable(struct cgpu_info *klncgpu, int dev, bool all)
+{
+	KLINE kline;
+	int i;
+
+	zero_kline(&kline);
+	kline.hd.cmd = KLN_CMD_ENABLE;
+	kline.hd.buf[0] = KLN_CMD_ENABLE_OFF;
+	for (i = (all ? 0 : dev); i <= dev; i++) {
+		kline.hd.dev = i;
+		SendCmd(klncgpu, &kline, KSENDHD(1));
+	}
+}
+
+static bool klondike_init(struct cgpu_info *klncgpu)
+{
+	struct klondike_info *klninfo = (struct klondike_info *)(klncgpu->device_data);
+	KLIST *kitem;
+	KLINE kline;
+	int slaves, dev;
+
+	klninfo->initialised = false;
+
+	zero_kline(&kline);
+	kline.hd.cmd = KLN_CMD_STATUS;
+	kline.hd.dev = 0;
+	kitem = SendCmdGetReply(klncgpu, &kline, 0);
+	if (kitem == NULL)
+		return false;
+
+	slaves = kitem->kline.ws.slavecount;
+	if (klninfo->status == NULL) {
+		applog(LOG_DEBUG, "%s%i: initializing data",
+				klncgpu->drv->name, klncgpu->device_id);
+
+		// alloc space for status, devinfo, cfg and jobque for master and slaves
+		klninfo->status = calloc(slaves+1, sizeof(*(klninfo->status)));
+		if (unlikely(!klninfo->status))
+			quit(1, "Failed to calloc status array in klondke_get_stats");
+		klnin
