@@ -1091,3 +1091,234 @@ static void *klondike_get_replies(void *userdata)
 											dev);
 									usb_nodev(klncgpu);
 								}
+							}
+						}
+					}
+				case KLN_CMD_ENABLE:
+					wr_lock(&(klninfo->stat_lock));
+					klninfo->errorcount += kitem->kline.ws.errorcount;
+					klninfo->noisecount += kitem->kline.ws.noise;
+					wr_unlock(&(klninfo->stat_lock));
+					display_kline(klncgpu, &kitem->kline, msg_reply);
+					kitem->ready = true;
+					kitem = NULL;
+					break;
+				case KLN_CMD_CONFIG:
+					display_kline(klncgpu, &kitem->kline, msg_reply);
+					kitem->ready = true;
+					kitem = NULL;
+					break;
+				case KLN_CMD_IDENT:
+					display_kline(klncgpu, &kitem->kline, msg_reply);
+					kitem->ready = true;
+					kitem = NULL;
+					break;
+				default:
+					display_kline(klncgpu, &kitem->kline, msg_reply);
+					break;
+			}
+		}
+	}
+	return NULL;
+}
+
+static void klondike_flush_work(struct cgpu_info *klncgpu)
+{
+	struct klondike_info *klninfo = (struct klondike_info *)(klncgpu->device_data);
+	KLIST *kitem;
+	KLINE kline;
+	int slaves, dev;
+
+	wr_lock(&(klninfo->stat_lock));
+	klninfo->block_seq++;
+	slaves = klninfo->status[0].kline.ws.slavecount;
+	wr_unlock(&(klninfo->stat_lock));
+
+	applog(LOG_DEBUG, "%s%i: flushing work",
+			  klncgpu->drv->name, klncgpu->device_id);
+	zero_kline(&kline);
+	kline.hd.cmd = KLN_CMD_ABORT;
+	for (dev = 0; dev <= slaves; dev++) {
+		kline.hd.dev = dev;
+		kitem = SendCmdGetReply(klncgpu, &kline, KSENDHD(0));
+		if (kitem != NULL) {
+			wr_lock(&(klninfo->stat_lock));
+			memcpy((void *)&(klninfo->status[dev]),
+				kitem,
+				sizeof(klninfo->status[dev]));
+			klninfo->jobque[dev].flushed = true;
+			wr_unlock(&(klninfo->stat_lock));
+			kitem = release_kitem(klncgpu, kitem);
+		}
+	}
+}
+
+static bool klondike_thread_prepare(struct thr_info *thr)
+{
+	struct cgpu_info *klncgpu = thr->cgpu;
+	struct klondike_info *klninfo = (struct klondike_info *)(klncgpu->device_data);
+
+	if (thr_info_create(&(klninfo->replies_thr), NULL, klondike_get_replies, (void *)klncgpu)) {
+		applog(LOG_ERR, "%s%i: thread create failed", klncgpu->drv->name, klncgpu->device_id);
+		return false;
+	}
+	pthread_detach(klninfo->replies_thr.pth);
+
+	// let the listening get started
+	cgsleep_ms(100);
+
+	return klondike_init(klncgpu);
+}
+
+static bool klondike_thread_init(struct thr_info *thr)
+{
+	struct cgpu_info *klncgpu = thr->cgpu;
+
+	if (klncgpu->usbinfo.nodev)
+		return false;
+
+	klondike_flush_work(klncgpu);
+
+	return true;
+}
+
+static void klondike_shutdown(struct thr_info *thr)
+{
+	struct cgpu_info *klncgpu = thr->cgpu;
+	struct klondike_info *klninfo = (struct klondike_info *)(klncgpu->device_data);
+
+	applog(LOG_DEBUG, "%s%i: shutting down work",
+			  klncgpu->drv->name, klncgpu->device_id);
+
+	kln_disable(klncgpu, klninfo->status[0].kline.ws.slavecount, true);
+
+	klncgpu->shutdown = true;
+}
+
+static void klondike_thread_enable(struct thr_info *thr)
+{
+	struct cgpu_info *klncgpu = thr->cgpu;
+
+	if (klncgpu->usbinfo.nodev)
+		return;
+
+/*
+	KLINE kline;
+
+	zero_kline(&kline);
+	kline.hd.cmd = KLN_CMD_ENABLE;
+	kline.hd.dev = dev;
+	kline.hd.buf[0] = KLN_CMD_ENABLE_OFF;
+	kitem = SendCmdGetReply(klncgpu, &kline, KSENDHD(1));
+*/
+
+}
+
+static bool klondike_send_work(struct cgpu_info *klncgpu, int dev, struct work *work)
+{
+	struct klondike_info *klninfo = (struct klondike_info *)(klncgpu->device_data);
+	struct work *look, *tmp;
+	KLINE kline;
+	struct timeval tv_old;
+	int wque_size, wque_cleared;
+
+	if (klncgpu->usbinfo.nodev)
+		return false;
+
+	zero_kline(&kline);
+	kline.wt.cmd = KLN_CMD_WORK;
+	kline.wt.dev = dev;
+	memcpy(kline.wt.midstate, work->midstate, MIDSTATE_BYTES);
+	memcpy(kline.wt.merkle, work->data + MERKLE_OFFSET, MERKLE_BYTES);
+	kline.wt.workid = (uint8_t)(klninfo->devinfo[dev].nextworkid++ & 0xFF);
+	work->subid = dev*256 + kline.wt.workid;
+	cgtime(&work->tv_stamp);
+
+	if (opt_log_level <= LOG_DEBUG) {
+		char *hexdata = bin2hex((void *)&kline.wt, sizeof(kline.wt));
+		applog(LOG_DEBUG, "WORKDATA: %s", hexdata);
+		free(hexdata);
+	}
+
+	applog(LOG_DEBUG, "%s%i:%d sending work (%d:%02x)",
+			  klncgpu->drv->name, klncgpu->device_id, dev,
+			  dev, kline.wt.workid);
+	KLIST *kitem = SendCmdGetReply(klncgpu, &kline, sizeof(kline.wt));
+	if (kitem != NULL) {
+		wr_lock(&(klninfo->stat_lock));
+		memcpy((void *)&(klninfo->status[dev]), kitem, sizeof(klninfo->status[dev]));
+		wr_unlock(&(klninfo->stat_lock));
+		kitem = release_kitem(klncgpu, kitem);
+
+		// remove old work
+		wque_size = 0;
+		wque_cleared = 0;
+		cgtime(&tv_old);
+		wr_lock(&klncgpu->qlock);
+		HASH_ITER(hh, klncgpu->queued_work, look, tmp) {
+			if (ms_tdiff(&tv_old, &(look->tv_stamp)) > OLD_WORK_MS) {
+				__work_completed(klncgpu, look);
+				free_work(look);
+				wque_cleared++;
+			} else
+				wque_size++;
+		}
+		wr_unlock(&klncgpu->qlock);
+
+		wr_lock(&(klninfo->stat_lock));
+		klninfo->wque_size = wque_size;
+		klninfo->wque_cleared = wque_cleared;
+		wr_unlock(&(klninfo->stat_lock));
+		return true;
+	}
+	return false;
+}
+
+static bool klondike_queue_full(struct cgpu_info *klncgpu)
+{
+	struct klondike_info *klninfo = (struct klondike_info *)(klncgpu->device_data);
+	struct work *work = NULL;
+	int dev, queued, slaves, seq, howlong;
+	struct timeval now;
+	bool nowork;
+
+	if (klncgpu->shutdown == true)
+		return true;
+
+	cgtime(&now);
+	rd_lock(&(klninfo->stat_lock));
+	slaves = klninfo->status[0].kline.ws.slavecount;
+	for (dev = 0; dev <= slaves; dev++)
+		if (ms_tdiff(&now, &(klninfo->jobque[dev].last_update)) > LATE_UPDATE_MS) {
+			klninfo->jobque[dev].late_update_count++;
+			seq = ++klninfo->jobque[dev].late_update_sequential;
+			rd_unlock(&(klninfo->stat_lock));
+			if (seq < LATE_UPDATE_LIMIT) {
+				applog(LOG_DEBUG, "%s%i:%d late update",
+						klncgpu->drv->name, klncgpu->device_id, dev);
+				klondike_get_stats(klncgpu);
+				goto que;
+			} else {
+				applog(LOG_WARNING, "%s%i:%d late update (%d) reached - attempting reset",
+						    klncgpu->drv->name, klncgpu->device_id,
+						    dev, LATE_UPDATE_LIMIT);
+				control_init(klncgpu);
+				kln_enable(klncgpu);
+				klondike_get_stats(klncgpu);
+				rd_lock(&(klninfo->stat_lock));
+				howlong = ms_tdiff(&now, &(klninfo->jobque[dev].last_update));
+				if (howlong > LATE_UPDATE_MS) {
+					rd_unlock(&(klninfo->stat_lock));
+					if (howlong > LATE_UPDATE_NODEV_MS) {
+						applog(LOG_ERR, "%s%i:%d reset failed - dropping device",
+								klncgpu->drv->name, klncgpu->device_id, dev);
+						usb_nodev(klncgpu);
+					} else
+						cgsleep_ms(LATE_UPDATE_SLEEP_MS);
+
+					return true;
+				}
+				break;
+			}
+		}
+	rd_unlock(&(klninfo->s
