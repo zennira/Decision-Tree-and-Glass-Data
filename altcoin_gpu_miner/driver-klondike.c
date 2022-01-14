@@ -891,4 +891,203 @@ static void klondike_check_nonce(struct cgpu_info *klncgpu, KLIST *kitem)
 
 		applog(LOG_DEBUG, "%s%i:%d chip stats %d, %08x, %d, %d",
 				  klncgpu->drv->name, klncgpu->device_id, (int)(kline->wr.dev),
-				  kline->wr.dev,
+				  kline->wr.dev, (unsigned int)nonce,
+				  klninfo->devinfo[kline->wr.dev].rangesize,
+				  klninfo->status[kline->wr.dev].kline.ws.chipcount);
+
+		klninfo->devinfo[kline->wr.dev].chipstats[(nonce / klninfo->devinfo[kline->wr.dev].rangesize) + (ok ? 0 : klninfo->status[kline->wr.dev].kline.ws.chipcount)]++;
+
+		us_diff = us_tdiff(&tv_now, &(kitem->tv_when));
+		if (klninfo->delay_count == 0) {
+			klninfo->delay_min = us_diff;
+			klninfo->delay_max = us_diff;
+		} else {
+			if (klninfo->delay_min > us_diff)
+				klninfo->delay_min = us_diff;
+			if (klninfo->delay_max < us_diff)
+				klninfo->delay_max = us_diff;
+		}
+		klninfo->delay_count++;
+		klninfo->delay_total += us_diff;
+
+		if (klninfo->nonce_count > 0) {
+			us_diff = us_tdiff(&(kitem->tv_when), &(klninfo->tv_last_nonce_received));
+			if (klninfo->nonce_count == 1) {
+				klninfo->nonce_min = us_diff;
+				klninfo->nonce_max = us_diff;
+			} else {
+				if (klninfo->nonce_min > us_diff)
+					klninfo->nonce_min = us_diff;
+				if (klninfo->nonce_max < us_diff)
+					klninfo->nonce_max = us_diff;
+			}
+			klninfo->nonce_total += us_diff;
+		}
+		klninfo->nonce_count++;
+
+		memcpy(&(klninfo->tv_last_nonce_received), &(kitem->tv_when),
+			sizeof(klninfo->tv_last_nonce_received));
+
+		return;
+	}
+
+	applog(LOG_ERR, "%s%i:%d unknown work (%02x:%08x) - ignored",
+			klncgpu->drv->name, klncgpu->device_id, (int)(kline->wr.dev),
+			kline->wr.workid, (unsigned int)nonce);
+
+	//inc_hw_errors(klncgpu->thr[0]);
+}
+
+// thread to keep looking for replies
+static void *klondike_get_replies(void *userdata)
+{
+	struct cgpu_info *klncgpu = (struct cgpu_info *)userdata;
+	struct klondike_info *klninfo = (struct klondike_info *)(klncgpu->device_data);
+	KLIST *kitem = NULL;
+	char *hexdata;
+	int err, recd, slaves, dev, isc;
+	bool overheat, sent;
+
+	applog(LOG_DEBUG, "%s%i: listening for replies",
+			  klncgpu->drv->name, klncgpu->device_id);
+
+	while (klncgpu->shutdown == false) {
+		if (klncgpu->usbinfo.nodev)
+			return NULL;
+
+		if (kitem == NULL)
+			kitem = allocate_kitem(klncgpu);
+		else
+			memset((void *)&(kitem->kline), 0, sizeof(kitem->kline));
+
+		err = usb_read(klncgpu, (char *)&(kitem->kline), REPLY_SIZE, &recd, C_GETRESULTS);
+		if (err || recd != REPLY_SIZE) {
+			if (err != -7)
+				applog(LOG_ERR, "%s%i: reply err=%d amt=%d",
+						klncgpu->drv->name, klncgpu->device_id,
+						err, recd);
+		}
+		if (!err && recd == REPLY_SIZE) {
+			cgtime(&(kitem->tv_when));
+			rd_lock(&(klninfo->stat_lock));
+			kitem->block_seq = klninfo->block_seq;
+			rd_unlock(&(klninfo->stat_lock));
+			if (opt_log_level <= READ_DEBUG) {
+				hexdata = bin2hex((unsigned char *)&(kitem->kline.hd.dev), recd-1);
+				applog(READ_DEBUG, "%s%i:%d reply [%c:%s]",
+						klncgpu->drv->name, klncgpu->device_id,
+						(int)(kitem->kline.hd.dev),
+						kitem->kline.hd.cmd, hexdata);
+				free(hexdata);
+			}
+
+			// We can't check this until it's initialised
+			if (klninfo->initialised) {
+				rd_lock(&(klninfo->stat_lock));
+				slaves = klninfo->status[0].kline.ws.slavecount;
+				rd_unlock(&(klninfo->stat_lock));
+
+				if (kitem->kline.hd.dev > slaves) {
+					applog(LOG_ERR, "%s%i: reply [%c] has invalid dev=%d (max=%d) using 0",
+							klncgpu->drv->name, klncgpu->device_id,
+							(char)(kitem->kline.hd.cmd),
+							(int)(kitem->kline.hd.dev),
+							slaves);
+					/* TODO: this is rather problematic if there are slaves
+					 * however without slaves - it should always be zero */
+					kitem->kline.hd.dev = 0;
+				} else {
+					wr_lock(&(klninfo->stat_lock));
+					klninfo->jobque[kitem->kline.hd.dev].late_update_sequential = 0;
+					wr_unlock(&(klninfo->stat_lock));
+				}
+			}
+
+			switch (kitem->kline.hd.cmd) {
+				case KLN_CMD_NONCE:
+					klondike_check_nonce(klncgpu, kitem);
+					display_kline(klncgpu, &kitem->kline, msg_reply);
+					break;
+				case KLN_CMD_WORK:
+					// We can't do/check this until it's initialised
+					if (klninfo->initialised) {
+						dev = kitem->kline.ws.dev;
+						if (kitem->kline.ws.workqc == 0) {
+							bool idle = false;
+							rd_lock(&(klninfo->stat_lock));
+							if (klninfo->jobque[dev].flushed == false)
+								idle = true;
+							slaves = klninfo->status[0].kline.ws.slavecount;
+							rd_unlock(&(klninfo->stat_lock));
+							if (idle)
+								applog(LOG_WARNING, "%s%i:%d went idle before work was sent",
+										    klncgpu->drv->name,
+										    klncgpu->device_id,
+										    dev);
+						}
+						wr_lock(&(klninfo->stat_lock));
+						klninfo->jobque[dev].flushed = false;
+						wr_unlock(&(klninfo->stat_lock));
+					}
+				case KLN_CMD_STATUS:
+				case KLN_CMD_ABORT:
+					// We can't do/check this until it's initialised
+					if (klninfo->initialised) {
+						isc = 0;
+						dev = kitem->kline.ws.dev;
+						wr_lock(&(klninfo->stat_lock));
+						klninfo->jobque[dev].workqc = (int)(kitem->kline.ws.workqc);
+						cgtime(&(klninfo->jobque[dev].last_update));
+						slaves = klninfo->status[0].kline.ws.slavecount;
+						overheat = klninfo->jobque[dev].overheat;
+						if (dev == 0) {
+							if (kitem->kline.ws.slavecount != slaves)
+								isc = ++klninfo->incorrect_slave_sequential;
+							else
+								isc = klninfo->incorrect_slave_sequential = 0;
+						}
+						wr_unlock(&(klninfo->stat_lock));
+
+						if (isc) {
+							applog(LOG_ERR, "%s%i:%d reply [%c] has a diff"
+									" # of slaves=%d (curr=%d)%s",
+									klncgpu->drv->name,
+									klncgpu->device_id,
+									dev,
+									(char)(kitem->kline.ws.cmd),
+									(int)(kitem->kline.ws.slavecount),
+									slaves,
+									isc <= KLN_ISS_IGNORE ? "" :
+									 " disabling device");
+							if (isc > KLN_ISS_IGNORE)
+								usb_nodev(klncgpu);
+							break;
+						}
+
+						if (!overheat) {
+							double temp = cvtKlnToC(kitem->kline.ws.temp);
+							if (temp >= KLN_KILLWORK_TEMP) {
+								KLINE kline;
+
+								wr_lock(&(klninfo->stat_lock));
+								klninfo->jobque[dev].overheat = true;
+								wr_unlock(&(klninfo->stat_lock));
+
+								applog(LOG_WARNING, "%s%i:%d Critical overheat (%.0fC)",
+										    klncgpu->drv->name,
+										    klncgpu->device_id,
+										    dev, temp);
+
+								zero_kline(&kline);
+								kline.hd.cmd = KLN_CMD_ABORT;
+								kline.hd.dev = dev;
+								sent = SendCmd(klncgpu, &kline, KSENDHD(0));
+								kln_disable(klncgpu, dev, false);
+								if (!sent) {
+									applog(LOG_ERR, "%s%i:%d overheat failed to"
+											" abort work - disabling device",
+											klncgpu->drv->name,
+											klncgpu->device_id,
+											dev);
+									usb_nodev(klncgpu);
+								}
