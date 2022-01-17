@@ -1321,4 +1321,202 @@ static bool klondike_queue_full(struct cgpu_info *klncgpu)
 				break;
 			}
 		}
-	rd_unlock(&(klninfo->s
+	rd_unlock(&(klninfo->stat_lock));
+
+que:
+
+	nowork = true;
+	for (queued = 0; queued < MAX_WORK_COUNT-1; queued++)
+		for (dev = 0; dev <= slaves; dev++) {
+tryagain:
+			rd_lock(&(klninfo->stat_lock));
+			if (klninfo->jobque[dev].overheat) {
+				double temp = cvtKlnToC(klninfo->status[0].kline.ws.temp);
+				if ((queued == MAX_WORK_COUNT-2) &&
+				    ms_tdiff(&now, &(klninfo->jobque[dev].last_update)) > (LATE_UPDATE_MS/2)) {
+					rd_unlock(&(klninfo->stat_lock));
+					klondike_get_stats(klncgpu);
+					goto tryagain;
+				}
+				if (temp <= KLN_COOLED_DOWN) {
+					klninfo->jobque[dev].overheat = false;
+					rd_unlock(&(klninfo->stat_lock));
+					applog(LOG_WARNING, "%s%i:%d Overheat recovered (%.0fC)",
+							    klncgpu->drv->name, klncgpu->device_id,
+							    dev, temp);
+					kln_enable(klncgpu);
+					goto tryagain;
+				} else {
+					rd_unlock(&(klninfo->stat_lock));
+					continue;
+				}
+			}
+
+			if (klninfo->jobque[dev].workqc <= queued) {
+				rd_unlock(&(klninfo->stat_lock));
+				if (!work)
+					work = get_queued(klncgpu);
+				if (unlikely(!work))
+					return false;
+				nowork = false;
+				if (klondike_send_work(klncgpu, dev, work))
+					return false;
+			} else
+				rd_unlock(&(klninfo->stat_lock));
+		}
+
+	if (nowork)
+		cgsleep_ms(10); // avoid a hard loop in case we have nothing to do
+
+	return true;
+}
+
+static int64_t klondike_scanwork(struct thr_info *thr)
+{
+	struct cgpu_info *klncgpu = thr->cgpu;
+	struct klondike_info *klninfo = (struct klondike_info *)(klncgpu->device_data);
+	int64_t newhashcount = 0;
+	int dev, slaves;
+
+	if (klncgpu->usbinfo.nodev)
+		return -1;
+
+	restart_wait(thr, 200);
+	if (klninfo->status != NULL) {
+		rd_lock(&(klninfo->stat_lock));
+		slaves = klninfo->status[0].kline.ws.slavecount;
+		for (dev = 0; dev <= slaves; dev++) {
+			uint64_t newhashdev = 0, hashcount;
+			int maxcount;
+
+			hashcount = K_HASHCOUNT(klninfo->status[dev].kline.ws.hashcount);
+			maxcount = K_MAXCOUNT(klninfo->status[dev].kline.ws.maxcount);
+			// todo: chg this to check workid for wrapped instead
+			if (klninfo->devinfo[dev].lasthashcount > hashcount)
+				newhashdev += maxcount; // hash counter wrapped
+			newhashdev += hashcount - klninfo->devinfo[dev].lasthashcount;
+			klninfo->devinfo[dev].lasthashcount = hashcount;
+			if (maxcount != 0)
+				klninfo->hashcount += (newhashdev << 32) / maxcount;
+		}
+		newhashcount += 0xffffffffull * (uint64_t)klninfo->noncecount;
+		klninfo->noncecount = 0;
+		rd_unlock(&(klninfo->stat_lock));
+	}
+
+	return newhashcount;
+}
+
+
+static void get_klondike_statline_before(char *buf, size_t siz, struct cgpu_info *klncgpu)
+{
+	struct klondike_info *klninfo = (struct klondike_info *)(klncgpu->device_data);
+	uint8_t temp = 0xFF;
+	uint16_t fan = 0;
+	uint16_t clock = 0;
+	int dev, slaves;
+	char tmp[16];
+
+	if (klninfo->status == NULL) {
+		blank_get_statline_before(buf, siz, klncgpu);
+		return;
+	}
+
+	rd_lock(&(klninfo->stat_lock));
+	slaves = klninfo->status[0].kline.ws.slavecount;
+	for (dev = 0; dev <= slaves; dev++) {
+		if (klninfo->status[dev].kline.ws.temp < temp)
+			temp = klninfo->status[dev].kline.ws.temp;
+		fan += klninfo->cfg[dev].kline.cfg.fantarget;
+		clock += (uint16_t)K_HASHCLOCK(klninfo->cfg[dev].kline.cfg.hashclock);
+	}
+	rd_unlock(&(klninfo->stat_lock));
+	fan /= slaves + 1;
+	fan *= 100/255;
+	if (fan > 99) // short on screen space
+		fan = 99;
+	clock /= slaves + 1;
+	if (clock > 999) // error - so truncate it
+		clock = 999;
+
+	snprintf(tmp, sizeof(tmp), "%2.0fC", cvtKlnToC(temp));
+	if (strlen(tmp) < 4)
+		strcat(tmp, " ");
+
+	tailsprintf(buf, siz, "%3dMHz %2d%% %s| ", (int)clock, fan, tmp);
+}
+
+static struct api_data *klondike_api_stats(struct cgpu_info *klncgpu)
+{
+	struct klondike_info *klninfo = (struct klondike_info *)(klncgpu->device_data);
+	struct api_data *root = NULL;
+	char buf[32];
+	int dev, slaves;
+
+	if (klninfo->status == NULL)
+		return NULL;
+
+	rd_lock(&(klninfo->stat_lock));
+	slaves = klninfo->status[0].kline.ws.slavecount;
+	for (dev = 0; dev <= slaves; dev++) {
+
+		float fTemp = cvtKlnToC(klninfo->status[dev].kline.ws.temp);
+		sprintf(buf, "Temp %d", dev);
+		root = api_add_temp(root, buf, &fTemp, true);
+
+		double dClk = (double)K_HASHCLOCK(klninfo->cfg[dev].kline.cfg.hashclock);
+		sprintf(buf, "Clock %d", dev);
+		root = api_add_freq(root, buf, &dClk, true);
+
+		unsigned int iFan = (unsigned int)100 * klninfo->cfg[dev].kline.cfg.fantarget / 255;
+		sprintf(buf, "Fan Percent %d", dev);
+		root = api_add_int(root, buf, (int *)(&iFan), true);
+
+		iFan = 0;
+		if (klninfo->status[dev].kline.ws.fanspeed > 0)
+			iFan = (unsigned int)TACH_FACTOR / klninfo->status[dev].kline.ws.fanspeed;
+		sprintf(buf, "Fan RPM %d", dev);
+		root = api_add_int(root, buf, (int *)(&iFan), true);
+
+		if (klninfo->devinfo[dev].chipstats != NULL) {
+			char data[2048];
+			char one[32];
+			int n;
+
+			sprintf(buf, "Nonces / Chip %d", dev);
+			data[0] = '\0';
+			for (n = 0; n < klninfo->status[dev].kline.ws.chipcount; n++) {
+				snprintf(one, sizeof(one), "%07d ", klninfo->devinfo[dev].chipstats[n]);
+				strcat(data, one);
+			}
+			root = api_add_string(root, buf, data, true);
+
+			sprintf(buf, "Errors / Chip %d", dev);
+			data[0] = '\0';
+			for (n = 0; n < klninfo->status[dev].kline.ws.chipcount; n++) {
+				snprintf(one, sizeof(one), "%07d ", klninfo->devinfo[dev].chipstats[n + klninfo->status[dev].kline.ws.chipcount]);
+				strcat(data, one);
+			}
+			root = api_add_string(root, buf, data, true);
+		}
+	}
+
+	root = api_add_uint64(root, "Hash Count", &(klninfo->hashcount), true);
+	root = api_add_uint64(root, "Error Count", &(klninfo->errorcount), true);
+	root = api_add_uint64(root, "Noise Count", &(klninfo->noisecount), true);
+
+	root = api_add_int(root, "KLine Limit", &(klninfo->kline_count), true);
+	root = api_add_int(root, "KLine Used", &(klninfo->used_count), true);
+
+	root = api_add_elapsed(root, "KQue Delay Count", &(klninfo->delay_count), true);
+	root = api_add_elapsed(root, "KQue Delay Total", &(klninfo->delay_total), true);
+	root = api_add_elapsed(root, "KQue Delay Min", &(klninfo->delay_min), true);
+	root = api_add_elapsed(root, "KQue Delay Max", &(klninfo->delay_max), true);
+	double avg;
+	if (klninfo->delay_count == 0)
+		avg = 0;
+	else
+		avg = klninfo->delay_total / klninfo->delay_count;
+	root = api_add_diff(root, "KQue Delay Avg", &avg, true);
+
+	root = api_add_elapsed(root, "KQue Nonce Count", 
