@@ -1519,4 +1519,39 @@ static struct api_data *klondike_api_stats(struct cgpu_info *klncgpu)
 		avg = klninfo->delay_total / klninfo->delay_count;
 	root = api_add_diff(root, "KQue Delay Avg", &avg, true);
 
-	root = api_add_elapsed(root, "KQue Nonce Count", 
+	root = api_add_elapsed(root, "KQue Nonce Count", &(klninfo->nonce_count), true);
+	root = api_add_elapsed(root, "KQue Nonce Total", &(klninfo->nonce_total), true);
+	root = api_add_elapsed(root, "KQue Nonce Min", &(klninfo->nonce_min), true);
+	root = api_add_elapsed(root, "KQue Nonce Max", &(klninfo->nonce_max), true);
+	if (klninfo->nonce_count == 0)
+		avg = 0;
+	else
+		avg = klninfo->nonce_total / klninfo->nonce_count;
+	root = api_add_diff(root, "KQue Nonce Avg", &avg, true);
+
+	root = api_add_int(root, "WQue Size", &(klninfo->wque_size), true);
+	root = api_add_int(root, "WQue Cleared", &(klninfo->wque_cleared), true);
+
+	rd_unlock(&(klninfo->stat_lock));
+
+	return root;
+}
+
+struct device_drv klondike_drv = {
+	.drv_id = DRIVER_klondike,
+	.dname = "Klondike",
+	.name = "KLN",
+	.drv_detect = klondike_detect,
+	.get_api_stats = klondike_api_stats,
+	.get_statline_before = get_klondike_statline_before,
+	.get_stats = klondike_get_stats,
+	.identify_device = klondike_identify,
+	.thread_prepare = klondike_thread_prepare,
+	.thread_init = klondike_thread_init,
+	.hash_work = hash_queued_work,
+	.scanwork = klondike_scanwork,
+	.queue_full = klondike_queue_full,
+	.flush_work = klondike_flush_work,
+	.thread_shutdown = klondike_shutdown,
+	.thread_enable = klondike_thread_enable
+};
