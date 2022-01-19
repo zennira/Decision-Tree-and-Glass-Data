@@ -139,4 +139,257 @@ static bool modminer_detect_one(struct libusb_device *dev, struct usb_find_devic
 
 	if ((err = usb_read_once(modminer, buf, sizeof(buf)-1, &amount, C_GETVERSION)) < 0 || amount < 1) {
 		if (err < 0)
-			applog(LOG_ERR, "%s detect (%
+			applog(LOG_ERR, "%s detect (%s) no version reply (%d)",
+				modminer->drv->dname, modminer->device_path, err);
+		else
+			applog(LOG_ERR, "%s detect (%s) empty version reply (%d)",
+				modminer->drv->dname, modminer->device_path, amount);
+
+		applog(LOG_DEBUG, "%s detect (%s) check the firmware",
+				modminer->drv->dname, modminer->device_path);
+
+		goto unshin;
+	}
+	buf[amount] = '\0';
+	devname = strdup(buf);
+	applog(LOG_DEBUG, "%s (%s) identified as: %s", modminer->drv->dname, modminer->device_path, devname);
+
+	if ((err = usb_write(modminer, MODMINER_FPGA_COUNT, 1, &amount, C_REQUESTFPGACOUNT) < 0 || amount != 1)) {
+		applog(LOG_ERR, "%s detect (%s) FPGA count request failed (%d:%d)",
+			modminer->drv->dname, modminer->device_path, amount, err);
+		goto unshin;
+	}
+
+	if ((err = usb_read(modminer, buf, 1, &amount, C_GETFPGACOUNT)) < 0 || amount != 1) {
+		applog(LOG_ERR, "%s detect (%s) no FPGA count reply (%d:%d)",
+			modminer->drv->dname, modminer->device_path, amount, err);
+		goto unshin;
+	}
+
+	// TODO: flag it use 1 byte temp if it is an old firmware
+	// can detect with modminer->cgusb->serial ?
+
+	if (buf[0] == 0) {
+		applog(LOG_ERR, "%s detect (%s) zero FPGA count from %s",
+			modminer->drv->dname, modminer->device_path, devname);
+		goto unshin;
+	}
+
+	if (buf[0] < 1 || buf[0] > 4) {
+		applog(LOG_ERR, "%s detect (%s) invalid FPGA count (%u) from %s",
+			modminer->drv->dname, modminer->device_path, buf[0], devname);
+		goto unshin;
+	}
+
+	applog(LOG_DEBUG, "%s (%s) %s has %u FPGAs",
+		modminer->drv->dname, modminer->device_path, devname, buf[0]);
+
+	modminer->name = devname;
+
+	// TODO: test with 1 board missing in the middle and each end
+	// to see how that affects the sequence numbers
+	for (i = 0; i < buf[0]; i++) {
+		struct cgpu_info *tmp = usb_copy_cgpu(modminer);
+
+		sprintf(devpath, "%d:%d:%d",
+			(int)(modminer->usbinfo.bus_number),
+			(int)(modminer->usbinfo.device_address),
+			i);
+
+		tmp->device_path = strdup(devpath);
+
+		// Only the first copy gets the already used stats
+		if (added)
+			tmp->usbinfo.usbstat = USB_NOSTAT;
+
+		tmp->fpgaid = (char)i;
+		tmp->modminer_mutex = modminer->modminer_mutex;
+
+		if (!add_cgpu(tmp)) {
+			tmp = usb_free_cgpu(tmp);
+			goto unshin;
+		}
+
+		update_usb_stats(tmp);
+
+		added = true;
+	}
+
+	modminer = usb_free_cgpu(modminer);
+
+	return true;
+
+unshin:
+	if (!added)
+		usb_uninit(modminer);
+
+shin:
+	if (!added) {
+		free(modminer->modminer_mutex);
+		modminer->modminer_mutex = NULL;
+	}
+
+	modminer = usb_free_cgpu(modminer);
+
+	if (added)
+		return true;
+	else
+		return false;
+}
+
+static void modminer_detect(bool __maybe_unused hotplug)
+{
+	usb_detect(&modminer_drv, modminer_detect_one);
+}
+
+static bool get_expect(struct cgpu_info *modminer, FILE *f, char c)
+{
+	char buf;
+
+	if (fread(&buf, 1, 1, f) != 1) {
+		applog(LOG_ERR, "%s%u: Error (%d) reading bitstream (%c)",
+				modminer->drv->name, modminer->device_id, errno, c);
+		return false;
+	}
+
+	if (buf != c) {
+		applog(LOG_ERR, "%s%u: bitstream code mismatch (%c)",
+				modminer->drv->name, modminer->device_id, c);
+		return false;
+	}
+
+	return true;
+}
+
+static bool get_info(struct cgpu_info *modminer, FILE *f, char *buf, int bufsiz, const char *name)
+{
+	unsigned char siz[2];
+	int len;
+
+	if (fread(siz, 2, 1, f) != 1) {
+		applog(LOG_ERR, "%s%u: Error (%d) reading bitstream '%s' len",
+			modminer->drv->name, modminer->device_id, errno, name);
+		return false;
+	}
+
+	len = siz[0] * 256 + siz[1];
+
+	if (len >= bufsiz) {
+		applog(LOG_ERR, "%s%u: Bitstream '%s' len too large (%d)",
+			modminer->drv->name, modminer->device_id, name, len);
+		return false;
+	}
+
+	if (fread(buf, len, 1, f) != 1) {
+		applog(LOG_ERR, "%s%u: Error (%d) reading bitstream '%s'",
+			modminer->drv->name, modminer->device_id, errno, name);
+		return false;
+	}
+
+	buf[len] = '\0';
+
+	return true;
+}
+
+#define USE_DEFAULT_TIMEOUT 0
+
+// mutex must always be locked before calling
+static bool get_status_timeout(struct cgpu_info *modminer, char *msg, unsigned int timeout, enum usb_cmds cmd)
+{
+	int err, amount;
+	char buf[1];
+
+	if (timeout == USE_DEFAULT_TIMEOUT)
+		err = usb_read(modminer, buf, 1, &amount, cmd);
+	else
+		err = usb_read_timeout(modminer, buf, 1, &amount, timeout, cmd);
+
+	if (err < 0 || amount != 1) {
+		mutex_unlock(modminer->modminer_mutex);
+
+		applog(LOG_ERR, "%s%u: Error (%d:%d) getting %s reply",
+			modminer->drv->name, modminer->device_id, amount, err, msg);
+
+		return false;
+	}
+
+	if (buf[0] != 1) {
+		mutex_unlock(modminer->modminer_mutex);
+
+		applog(LOG_ERR, "%s%u: Error, invalid %s reply (was %d should be 1)",
+			modminer->drv->name, modminer->device_id, msg, buf[0]);
+
+		return false;
+	}
+
+	return true;
+}
+
+// mutex must always be locked before calling
+static bool get_status(struct cgpu_info *modminer, char *msg, enum usb_cmds cmd)
+{
+	return get_status_timeout(modminer, msg, USE_DEFAULT_TIMEOUT, cmd);
+}
+
+static bool modminer_fpga_upload_bitstream(struct cgpu_info *modminer)
+{
+	const char *bsfile = BITSTREAM_FILENAME;
+	char buf[0x100], *p;
+	char devmsg[64];
+	unsigned char *ubuf = (unsigned char *)buf;
+	unsigned long totlen, len;
+	size_t buflen, remaining;
+	float nextmsg, upto;
+	char fpgaid = FPGAID_ALL;
+	int err, amount, tries;
+	char *ptr;
+
+	FILE *f = open_bitstream("modminer", bsfile);
+	if (!f) {
+		mutex_unlock(modminer->modminer_mutex);
+
+		applog(LOG_ERR, "%s%u: Error (%d) opening bitstream file %s",
+			modminer->drv->name, modminer->device_id, errno, bsfile);
+
+		return false;
+	}
+
+	if (fread(buf, 2, 1, f) != 1) {
+		mutex_unlock(modminer->modminer_mutex);
+
+		applog(LOG_ERR, "%s%u: Error (%d) reading bitstream magic",
+			modminer->drv->name, modminer->device_id, errno);
+
+		goto dame;
+	}
+
+	if (buf[0] != BITSTREAM_MAGIC_0 || buf[1] != BITSTREAM_MAGIC_1) {
+		mutex_unlock(modminer->modminer_mutex);
+
+		applog(LOG_ERR, "%s%u: bitstream has incorrect magic (%u,%u) instead of (%u,%u)",
+			modminer->drv->name, modminer->device_id,
+			buf[0], buf[1],
+			BITSTREAM_MAGIC_0, BITSTREAM_MAGIC_1);
+
+		goto dame;
+	}
+
+	if (fseek(f, 11L, SEEK_CUR)) {
+		mutex_unlock(modminer->modminer_mutex);
+
+		applog(LOG_ERR, "%s%u: Error (%d) bitstream seek failed",
+			modminer->drv->name, modminer->device_id, errno);
+
+		goto dame;
+	}
+
+	if (!get_expect(modminer, f, 'a'))
+		goto undame;
+
+	if (!get_info(modminer, f, buf, sizeof(buf), "Design name"))
+		goto undame;
+
+	applog(LOG_DEBUG, "%s%u: bitstream file '%s' info:",
+		modminer->drv->name, modminer->device_id, bsfile);
+
+	applog(LOG_DEB
