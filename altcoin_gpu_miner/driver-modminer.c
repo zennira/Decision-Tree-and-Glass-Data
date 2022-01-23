@@ -392,4 +392,238 @@ static bool modminer_fpga_upload_bitstream(struct cgpu_info *modminer)
 	applog(LOG_DEBUG, "%s%u: bitstream file '%s' info:",
 		modminer->drv->name, modminer->device_id, bsfile);
 
-	applog(LOG_DEB
+	applog(LOG_DEBUG, " Design name: '%s'", buf);
+
+	p = strrchr(buf, ';') ? : buf;
+	p = strrchr(buf, '=') ? : p;
+	if (p[0] == '=')
+		p++;
+
+	unsigned long fwusercode = (unsigned long)strtoll(p, &p, 16);
+
+	if (p[0] != '\0') {
+		mutex_unlock(modminer->modminer_mutex);
+
+		applog(LOG_ERR, "%s%u: Bad usercode in bitstream file",
+			modminer->drv->name, modminer->device_id);
+
+		goto dame;
+	}
+
+	if (fwusercode == 0xffffffff) {
+		mutex_unlock(modminer->modminer_mutex);
+
+		applog(LOG_ERR, "%s%u: bitstream doesn't support user code",
+			modminer->drv->name, modminer->device_id);
+
+		goto dame;
+	}
+
+	applog(LOG_DEBUG, " Version: %lu, build %lu", (fwusercode >> 8) & 0xff, fwusercode & 0xff);
+
+	if (!get_expect(modminer, f, 'b'))
+		goto undame;
+
+	if (!get_info(modminer, f, buf, sizeof(buf), "Part number"))
+		goto undame;
+
+	applog(LOG_DEBUG, " Part number: '%s'", buf);
+
+	if (!get_expect(modminer, f, 'c'))
+		goto undame;
+
+	if (!get_info(modminer, f, buf, sizeof(buf), "Build date"))
+		goto undame;
+
+	applog(LOG_DEBUG, " Build date: '%s'", buf);
+
+	if (!get_expect(modminer, f, 'd'))
+		goto undame;
+
+	if (!get_info(modminer, f, buf, sizeof(buf), "Build time"))
+		goto undame;
+
+	applog(LOG_DEBUG, " Build time: '%s'", buf);
+
+	if (!get_expect(modminer, f, 'e'))
+		goto undame;
+
+	if (fread(buf, 4, 1, f) != 1) {
+		mutex_unlock(modminer->modminer_mutex);
+
+		applog(LOG_ERR, "%s%u: Error (%d) reading bitstream data len",
+			modminer->drv->name, modminer->device_id, errno);
+
+		goto dame;
+	}
+
+	len = ((unsigned long)ubuf[0] << 24) | ((unsigned long)ubuf[1] << 16) | (ubuf[2] << 8) | ubuf[3];
+	applog(LOG_DEBUG, " Bitstream size: %lu", len);
+
+	strcpy(devmsg, modminer->device_path);
+	ptr = strrchr(devmsg, ':');
+	if (ptr)
+		*ptr = '\0';
+
+	applog(LOG_WARNING, "%s%u: Programming all FPGA on %s ... Mining will not start until complete",
+		modminer->drv->name, modminer->device_id, devmsg);
+
+	buf[0] = MODMINER_PROGRAM;
+	buf[1] = fpgaid;
+	buf[2] = (len >>  0) & 0xff;
+	buf[3] = (len >>  8) & 0xff;
+	buf[4] = (len >> 16) & 0xff;
+	buf[5] = (len >> 24) & 0xff;
+
+	if ((err = usb_write(modminer, buf, 6, &amount, C_STARTPROGRAM)) < 0 || amount != 6) {
+		mutex_unlock(modminer->modminer_mutex);
+
+		applog(LOG_ERR, "%s%u: Program init failed (%d:%d)",
+			modminer->drv->name, modminer->device_id, amount, err);
+
+		goto dame;
+	}
+
+	if (!get_status(modminer, "initialise", C_STARTPROGRAMSTATUS))
+		goto undame;
+
+// It must be 32 bytes according to MCU legacy.c
+#define WRITE_SIZE 32
+
+	totlen = len;
+	nextmsg = 0.1;
+	while (len > 0) {
+		buflen = len < WRITE_SIZE ? len : WRITE_SIZE;
+		if (fread(buf, buflen, 1, f) != 1) {
+			mutex_unlock(modminer->modminer_mutex);
+
+			applog(LOG_ERR, "%s%u: bitstream file read error %d (%lu bytes left)",
+				modminer->drv->name, modminer->device_id, errno, len);
+
+			goto dame;
+		}
+
+		tries = 0;
+		ptr = buf;
+		remaining = buflen;
+		while ((err = usb_write(modminer, ptr, remaining, &amount, C_PROGRAM)) < 0 || amount != (int)remaining) {
+			if (err == LIBUSB_ERROR_TIMEOUT && amount > 0 && ++tries < 4) {
+				remaining -= amount;
+				ptr += amount;
+
+				if (opt_debug)
+					applog(LOG_DEBUG, "%s%u: Program timeout (%d:%d) sent %d tries %d",
+						modminer->drv->name, modminer->device_id,
+						amount, err, (int)remaining, tries);
+
+				if (!get_status(modminer, "write status", C_PROGRAMSTATUS2))
+					goto dame;
+
+			} else {
+				mutex_unlock(modminer->modminer_mutex);
+
+				applog(LOG_ERR, "%s%u: Program failed (%d:%d) sent %d",
+					modminer->drv->name, modminer->device_id, amount, err, (int)remaining);
+
+				goto dame;
+			}
+		}
+
+		if (!get_status(modminer, "write status", C_PROGRAMSTATUS))
+			goto dame;
+
+		len -= buflen;
+
+		upto = (float)(totlen - len) / (float)(totlen);
+		if (upto >= nextmsg) {
+			applog(LOG_WARNING,
+				"%s%u: Programming %.1f%% (%lu out of %lu)",
+				modminer->drv->name, modminer->device_id, upto*100, (totlen - len), totlen);
+
+			nextmsg += 0.1;
+		}
+	}
+
+	if (!get_status(modminer, "final status", C_FINALPROGRAMSTATUS))
+		goto undame;
+
+	applog(LOG_WARNING, "%s%u: Programming completed for all FPGA on %s",
+		modminer->drv->name, modminer->device_id, devmsg);
+
+	// Give it a 2/3s delay after programming
+	cgsleep_ms(666);
+
+	usb_set_dev_start(modminer);
+
+	return true;
+undame:
+	;
+	mutex_unlock(modminer->modminer_mutex);
+	;
+dame:
+	fclose(f);
+	return false;
+}
+
+static bool modminer_fpga_prepare(struct thr_info *thr)
+{
+//	struct cgpu_info *modminer = thr->cgpu;
+	struct modminer_fpga_state *state;
+
+	state = thr->cgpu_data = calloc(1, sizeof(struct modminer_fpga_state));
+	state->shares_to_good = MODMINER_EARLY_UP;
+	state->overheated = false;
+
+	return true;
+}
+
+/*
+ * Clocking rules:
+ *	If device exceeds cutoff or overheat temp - stop sending work until it cools
+ *		decrease the clock by MODMINER_CLOCK_CUTOFF/MODMINER_CLOCK_OVERHEAT
+ *		for when it restarts
+ *		with MODMINER_CLOCK_OVERHEAT=0 basically says that temp shouldn't
+ *		affect the clock unless we reach CUTOFF
+ *
+ *	If device overheats
+ *		set shares_to_good back to MODMINER_MIN_BACK
+ *		to speed up clock recovery if temp drop doesnt help
+ *
+ * When to clock down:
+ *	If device gets MODMINER_HW_ERROR_PERCENT errors since last clock up or down
+ *		if clock is <= default it requires 2 HW to do this test
+ *		if clock is > default it only requires 1 HW to do this test
+ *			also double shares_to_good
+ *
+ * When to clock up:
+ *	If device gets shares_to_good good shares in a row
+ *		and temp < MODMINER_TEMP_UP_LIMIT
+ *
+ * N.B. clock must always be a multiple of 2
+ */
+static const char *clocknodev = "clock failed - no device";
+static const char *clockoldwork = "clock already changed for this work";
+static const char *clocktoolow = "clock too low";
+static const char *clocktoohi = "clock too high";
+static const char *clocksetfail = "clock set command failed";
+static const char *clockreplyfail = "clock reply failed";
+
+static const char *modminer_delta_clock(struct thr_info *thr, int delta, bool temp, bool force)
+{
+	struct cgpu_info *modminer = thr->cgpu;
+	struct modminer_fpga_state *state = thr->cgpu_data;
+	unsigned char cmd[6], buf[1];
+	int err, amount;
+
+	// Device is gone
+	if (modminer->usbinfo.nodev)
+		return clocknodev;
+
+	// Only do once if multiple shares per work or multiple reasons
+	if (!state->new_work && !force)
+		return clockoldwork;
+
+	state->new_work = false;
+
+	state->shares = 0;
+	state->shares_last_
