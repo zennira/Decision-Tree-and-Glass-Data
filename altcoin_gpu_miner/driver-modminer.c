@@ -1096,4 +1096,49 @@ static char *modminer_set_device(struct cgpu_info *modminer, char *option, char 
 	const char *ret;
 	int val;
 
-	if (strcasecmp(option, "hel
+	if (strcasecmp(option, "help") == 0) {
+		sprintf(replybuf, "clock: range %d-%d and a multiple of 2",
+					MODMINER_MIN_CLOCK, MODMINER_MAX_CLOCK);
+		return replybuf;
+	}
+
+	if (strcasecmp(option, "clock") == 0) {
+		if (!setting || !*setting) {
+			sprintf(replybuf, "missing clock setting");
+			return replybuf;
+		}
+
+		val = atoi(setting);
+		if (val < MODMINER_MIN_CLOCK || val > MODMINER_MAX_CLOCK || (val & 1) != 0) {
+			sprintf(replybuf, "invalid clock: '%s' valid range %d-%d and a multiple of 2",
+						setting, MODMINER_MIN_CLOCK, MODMINER_MAX_CLOCK);
+			return replybuf;
+		}
+
+		val -= (int)(modminer->clock);
+
+		ret = modminer_delta_clock(modminer->thr[0], val, false, true);
+		if (ret) {
+			sprintf(replybuf, "Set clock failed: %s", ret);
+			return replybuf;
+		} else
+			return NULL;
+	}
+
+	sprintf(replybuf, "Unknown option: %s", option);
+	return replybuf;
+}
+
+struct device_drv modminer_drv = {
+	.drv_id = DRIVER_modminer,
+	.dname = "ModMiner",
+	.name = "MMQ",
+	.drv_detect = modminer_detect,
+	.get_statline_before = get_modminer_statline_before,
+	.set_device = modminer_set_device,
+	.thread_prepare = modminer_fpga_prepare,
+	.thread_init = modminer_fpga_init,
+	.scanhash = modminer_scanhash,
+	.hw_error = modminer_hw_error,
+	.thread_shutdown = modminer_fpga_shutdown,
+};
