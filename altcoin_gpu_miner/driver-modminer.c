@@ -853,4 +853,247 @@ static void check_temperature(struct thr_info *thr)
 	} else {
 		mutex_unlock(modminer->modminer_mutex);
 
-		if (!state->tried_tw
+		if (!state->tried_two_byte_temp) {
+			state->tried_two_byte_temp = true;
+			state->one_byte_temp = true;
+		}
+	}
+}
+
+#define work_restart(thr)  thr->work_restart
+
+// 250Mhz is 17.17s - ensure we don't go idle
+static const double processtime = 17.0;
+// 160Mhz is 26.84 - when overheated ensure we don't throw away shares
+static const double overheattime = 26.9;
+
+static uint64_t modminer_process_results(struct thr_info *thr, struct work *work)
+{
+	struct cgpu_info *modminer = thr->cgpu;
+	struct modminer_fpga_state *state = thr->cgpu_data;
+	struct timeval now;
+	char cmd[2];
+	uint32_t nonce;
+	uint32_t curr_hw_errors;
+	int err, amount, amount2;
+	int timeoutloop;
+	double timeout;
+	int temploop;
+
+	// Device is gone
+	if (modminer->usbinfo.nodev)
+		return -1;
+
+	// If we are overheated it will just keep checking for results
+	// since we can't stop the work
+	// The next work will not start until the temp drops
+	check_temperature(thr);
+
+	cmd[0] = MODMINER_CHECK_WORK;
+	cmd[1] = modminer->fpgaid;
+
+	timeoutloop = 0;
+	temploop = 0;
+	while (0x80085) {
+		mutex_lock(modminer->modminer_mutex);
+		if ((err = usb_write(modminer, cmd, 2, &amount, C_REQUESTWORKSTATUS)) < 0 || amount != 2) {
+			mutex_unlock(modminer->modminer_mutex);
+
+			// timeoutloop never resets so the timeouts can't
+			// accumulate much during a single item of work
+			if (err == LIBUSB_ERROR_TIMEOUT && ++timeoutloop < 5) {
+				state->timeout_fail++;
+				goto tryagain;
+			}
+
+			applog(LOG_ERR, "%s%u: Error sending (get nonce) (%d:%d)",
+				modminer->drv->name, modminer->device_id, amount, err);
+
+			return -1;
+		}
+
+		err = usb_read(modminer, (char *)(&nonce), 4, &amount, C_GETWORKSTATUS);
+		while (err == LIBUSB_SUCCESS && amount < 4) {
+			size_t remain = 4 - amount;
+			char *pos = ((char *)(&nonce)) + amount;
+
+			state->success_more++;
+
+			err = usb_read(modminer, pos, remain, &amount2, C_GETWORKSTATUS);
+
+			amount += amount2;
+		}
+		mutex_unlock(modminer->modminer_mutex);
+
+		if (err < 0 || amount < 4) {
+			// timeoutloop never resets so the timeouts can't
+			// accumulate much during a single item of work
+			if (err == LIBUSB_ERROR_TIMEOUT && ++timeoutloop < 10) {
+				state->timeout_fail++;
+				goto tryagain;
+			}
+
+			applog(LOG_ERR, "%s%u: Error reading (get nonce) (%d:%d)",
+				modminer->drv->name, modminer->device_id, amount+amount2, err);
+		}
+
+		if (memcmp(&nonce, "\xff\xff\xff\xff", 4)) {
+			// found 'something' ...
+			state->shares++;
+			curr_hw_errors = state->hw_errors;
+			submit_nonce(thr, work, nonce);
+			if (state->hw_errors > curr_hw_errors) {
+				cgtime(&now);
+				// Ignore initial errors that often happen
+				if (tdiff(&now, &state->first_work) < 2.0) {
+					state->shares = 0;
+					state->shares_last_hw = 0;
+					state->hw_errors = 0;
+				} else {
+					state->shares_last_hw = state->shares;
+					if (modminer->clock > MODMINER_DEF_CLOCK || state->hw_errors > 1) {
+						float pct = (state->hw_errors * 100.0 / (state->shares ? : 1.0));
+						if (pct >= MODMINER_HW_ERROR_PERCENT)
+							modminer_delta_clock(thr, MODMINER_CLOCK_DOWN, false, false);
+					}
+				}
+			} else {
+				cgtime(&state->last_nonce);
+				state->death_stage_one = false;
+				// If we've reached the required good shares in a row then clock up
+				if (((state->shares - state->shares_last_hw) >= state->shares_to_good) &&
+						modminer->temp < MODMINER_TEMP_UP_LIMIT)
+					modminer_delta_clock(thr, MODMINER_CLOCK_UP, false, false);
+			}
+		} else {
+			// on rare occasions - the MMQ can just stop returning valid nonces
+			double death = ITS_DEAD_JIM * (state->death_stage_one ? 2.0 : 1.0);
+			cgtime(&now);
+			if (tdiff(&now, &state->last_nonce) >= death) {
+				if (state->death_stage_one) {
+					modminer_delta_clock(thr, MODMINER_CLOCK_DEAD, false, true);
+					applog(LOG_ERR, "%s%u: DEATH clock down",
+						modminer->drv->name, modminer->device_id);
+
+					// reset the death info and DISABLE it
+					state->last_nonce.tv_sec = 0;
+					state->last_nonce.tv_usec = 0;
+					state->death_stage_one = false;
+					return -1;
+				} else {
+					modminer_delta_clock(thr, MODMINER_CLOCK_DEAD, false, true);
+					applog(LOG_ERR, "%s%u: death clock down",
+						modminer->drv->name, modminer->device_id);
+
+					state->death_stage_one = true;
+				}
+			}
+		}
+
+tryagain:
+
+		if (work_restart(thr))
+			break;
+
+		if (state->overheated == true) {
+			// don't check every time (every ~1/2 sec)
+			if (++temploop > 4) {
+				check_temperature(thr);
+				temploop = 0;
+			}
+
+		}
+
+		if (state->overheated == true)
+			timeout = overheattime;
+		else
+			timeout = processtime;
+
+		cgtime(&now);
+		if (tdiff(&now, &state->tv_workstart) > timeout)
+			break;
+
+		// 1/10th sec to lower CPU usage
+		cgsleep_ms(100);
+		if (work_restart(thr))
+			break;
+	}
+
+	struct timeval tv_workend, elapsed;
+	cgtime(&tv_workend);
+	timersub(&tv_workend, &state->tv_workstart, &elapsed);
+
+	// Not exact since the clock may have changed ... but close enough I guess
+	uint64_t hashes = (uint64_t)modminer->clock * (((uint64_t)elapsed.tv_sec * 1000000) + elapsed.tv_usec);
+	// Overheat will complete the nonce range
+	if (hashes > 0xffffffff)
+		hashes = 0xffffffff;
+
+	work->blk.nonce = 0xffffffff;
+
+	return hashes;
+}
+
+static int64_t modminer_scanhash(struct thr_info *thr, struct work *work, int64_t __maybe_unused max_nonce)
+{
+	struct modminer_fpga_state *state = thr->cgpu_data;
+	struct timeval tv1, tv2;
+	int64_t hashes;
+
+	// Device is gone
+	if (thr->cgpu->usbinfo.nodev)
+		return -1;
+
+	// Don't start new work if overheated
+	if (state->overheated == true) {
+		cgtime(&tv1);
+
+		while (state->overheated == true) {
+			check_temperature(thr);
+
+			// Device is gone
+			if (thr->cgpu->usbinfo.nodev)
+				return -1;
+
+			if (state->overheated == true) {
+				cgtime(&tv2);
+
+				// give up on this work item after 30s
+				if (work_restart(thr) || tdiff(&tv2, &tv1) > 30)
+					return 0;
+
+				// Give it 1s rest then check again
+				cgsleep_ms(1000);
+			}
+		}
+	}
+
+	if (!modminer_start_work(thr, work))
+		return -1;
+
+	hashes = modminer_process_results(thr, work);
+	if (hashes == -1)
+		return hashes;
+
+	return hashes;
+}
+
+static void modminer_hw_error(struct thr_info *thr)
+{
+	struct modminer_fpga_state *state = thr->cgpu_data;
+
+	state->hw_errors++;
+}
+
+static void modminer_fpga_shutdown(struct thr_info *thr)
+{
+	free(thr->cgpu_data);
+	thr->cgpu_data = NULL;
+}
+
+static char *modminer_set_device(struct cgpu_info *modminer, char *option, char *setting, char *replybuf)
+{
+	const char *ret;
+	int val;
+
+	if (strcasecmp(option, "hel
