@@ -626,4 +626,231 @@ static const char *modminer_delta_clock(struct thr_info *thr, int delta, bool te
 	state->new_work = false;
 
 	state->shares = 0;
-	state->shares_last_
+	state->shares_last_hw = 0;
+	state->hw_errors = 0;
+
+	// FYI clock drop has little effect on temp
+	if (delta < 0 && (modminer->clock + delta) < MODMINER_MIN_CLOCK)
+		return clocktoolow;
+
+	if (delta > 0 && (modminer->clock + delta) > MODMINER_MAX_CLOCK)
+		return clocktoohi;
+
+	if (delta < 0) {
+		if (temp)
+			state->shares_to_good = MODMINER_MIN_BACK;
+		else {
+			if ((state->shares_to_good * 2) < MODMINER_TRY_UP)
+				state->shares_to_good *= 2;
+			else
+				state->shares_to_good = MODMINER_TRY_UP;
+		}
+	}
+
+	modminer->clock += delta;
+
+	cmd[0] = MODMINER_SET_CLOCK;
+	cmd[1] = modminer->fpgaid;
+	cmd[2] = modminer->clock;
+	cmd[3] = cmd[4] = cmd[5] = '\0';
+
+	mutex_lock(modminer->modminer_mutex);
+
+	if ((err = usb_write(modminer, (char *)cmd, 6, &amount, C_SETCLOCK)) < 0 || amount != 6) {
+		mutex_unlock(modminer->modminer_mutex);
+
+		applog(LOG_ERR, "%s%u: Error writing set clock speed (%d:%d)",
+			modminer->drv->name, modminer->device_id, amount, err);
+
+		return clocksetfail;
+	}
+
+	if ((err = usb_read(modminer, (char *)(&buf), 1, &amount, C_REPLYSETCLOCK)) < 0 || amount != 1) {
+		mutex_unlock(modminer->modminer_mutex);
+
+		applog(LOG_ERR, "%s%u: Error reading set clock speed (%d:%d)",
+			modminer->drv->name, modminer->device_id, amount, err);
+
+		return clockreplyfail;
+	}
+
+	mutex_unlock(modminer->modminer_mutex);
+
+	applog(LOG_WARNING, "%s%u: Set clock speed %sto %u",
+			modminer->drv->name, modminer->device_id,
+			(delta < 0) ? "down " : (delta > 0 ? "up " : ""),
+			modminer->clock);
+
+	return NULL;
+}
+
+static bool modminer_fpga_init(struct thr_info *thr)
+{
+	struct cgpu_info *modminer = thr->cgpu;
+	unsigned char cmd[2], buf[4];
+	int err, amount;
+
+	mutex_lock(modminer->modminer_mutex);
+
+	cmd[0] = MODMINER_GET_USERCODE;
+	cmd[1] = modminer->fpgaid;
+	if ((err = usb_write(modminer, (char *)cmd, 2, &amount, C_REQUESTUSERCODE)) < 0 || amount != 2) {
+		mutex_unlock(modminer->modminer_mutex);
+
+		applog(LOG_ERR, "%s%u: Error requesting USER code (%d:%d)",
+			modminer->drv->name, modminer->device_id, amount, err);
+
+		return false;
+	}
+
+	if ((err = usb_read(modminer, (char *)buf, 4, &amount, C_GETUSERCODE)) < 0 || amount != 4) {
+		mutex_unlock(modminer->modminer_mutex);
+
+		applog(LOG_ERR, "%s%u: Error reading USER code (%d:%d)",
+			modminer->drv->name, modminer->device_id, amount, err);
+
+		return false;
+	}
+
+	if (memcmp(buf, BISTREAM_USER_ID, 4)) {
+		applog(LOG_ERR, "%s%u: FPGA not programmed",
+			modminer->drv->name, modminer->device_id);
+
+		if (!modminer_fpga_upload_bitstream(modminer))
+			return false;
+
+		mutex_unlock(modminer->modminer_mutex);
+	} else {
+		mutex_unlock(modminer->modminer_mutex);
+
+		applog(LOG_DEBUG, "%s%u: FPGA is already programmed :)",
+			modminer->drv->name, modminer->device_id);
+	}
+
+	modminer->clock = MODMINER_DEF_CLOCK;
+	modminer_delta_clock(thr, MODMINER_CLOCK_SET, false, false);
+
+	thr->primary_thread = true;
+
+	return true;
+}
+
+static void get_modminer_statline_before(char *buf, size_t bufsiz, struct cgpu_info *modminer)
+{
+	tailsprintf(buf, bufsiz, " %s%.1fC %3uMHz  | ",
+			(modminer->temp < 10) ? " " : "",
+			modminer->temp,
+			(unsigned int)(modminer->clock));
+}
+
+static bool modminer_start_work(struct thr_info *thr, struct work *work)
+{
+	struct cgpu_info *modminer = thr->cgpu;
+	struct modminer_fpga_state *state = thr->cgpu_data;
+	int err, amount;
+	char cmd[48];
+	bool sta;
+
+	cmd[0] = MODMINER_SEND_WORK;
+	cmd[1] = modminer->fpgaid;
+	memcpy(&cmd[2], work->midstate, 32);
+	memcpy(&cmd[34], work->data + 64, 12);
+
+	if (state->first_work.tv_sec == 0)
+		cgtime(&state->first_work);
+
+	if (state->last_nonce.tv_sec == 0)
+		cgtime(&state->last_nonce);
+
+	mutex_lock(modminer->modminer_mutex);
+
+	if ((err = usb_write(modminer, cmd, 46, &amount, C_SENDWORK)) < 0 || amount != 46) {
+		mutex_unlock(modminer->modminer_mutex);
+
+		applog(LOG_ERR, "%s%u: Start work failed (%d:%d)",
+			modminer->drv->name, modminer->device_id, amount, err);
+
+		return false;
+	}
+
+	cgtime(&state->tv_workstart);
+
+	sta = get_status(modminer, "start work", C_SENDWORKSTATUS);
+
+	if (sta) {
+		mutex_unlock(modminer->modminer_mutex);
+		state->new_work = true;
+	}
+
+	return sta;
+}
+
+static void check_temperature(struct thr_info *thr)
+{
+	struct cgpu_info *modminer = thr->cgpu;
+	struct modminer_fpga_state *state = thr->cgpu_data;
+	char cmd[2], temperature[2];
+	int tbytes, tamount;
+	int amount;
+
+	// Device is gone
+	if (modminer->usbinfo.nodev)
+		return;
+
+	if (state->one_byte_temp) {
+		cmd[0] = MODMINER_TEMP1;
+		tbytes = 1;
+	} else {
+		cmd[0] = MODMINER_TEMP2;
+		tbytes = 2;
+	}
+
+	cmd[1] = modminer->fpgaid;
+
+	mutex_lock(modminer->modminer_mutex);
+	if (usb_write(modminer, (char *)cmd, 2, &amount, C_REQUESTTEMPERATURE) == 0 && amount == 2 &&
+	    usb_read(modminer, (char *)(&temperature), tbytes, &tamount, C_GETTEMPERATURE) == 0 && tamount == tbytes) {
+		mutex_unlock(modminer->modminer_mutex);
+		if (state->one_byte_temp)
+			modminer->temp = temperature[0];
+		else {
+			// Only accurate to 2 and a bit places
+			modminer->temp = roundf((temperature[1] * 256.0 + temperature[0]) / 0.128) / 1000.0;
+
+			state->tried_two_byte_temp = true;
+		}
+
+		if (state->overheated) {
+			// Limit recovery to lower than OVERHEAT so it doesn't just go straight over again
+			if (modminer->temp < MODMINER_RECOVER_TEMP) {
+				state->overheated = false;
+				applog(LOG_WARNING, "%s%u: Recovered, temp less than (%.1f) now %.3f",
+					modminer->drv->name, modminer->device_id,
+					MODMINER_RECOVER_TEMP, modminer->temp);
+			}
+		}
+		else if (modminer->temp >= MODMINER_OVERHEAT_TEMP) {
+			if (modminer->temp >= MODMINER_CUTOFF_TEMP) {
+				applog(LOG_WARNING, "%s%u: Hit thermal cutoff limit! (%.1f) at %.3f",
+					modminer->drv->name, modminer->device_id,
+					MODMINER_CUTOFF_TEMP, modminer->temp);
+
+				modminer_delta_clock(thr, MODMINER_CLOCK_CUTOFF, true, false);
+				state->overheated = true;
+				dev_error(modminer, REASON_DEV_THERMAL_CUTOFF);
+			} else {
+				applog(LOG_WARNING, "%s%u: Overheat limit (%.1f) reached %.3f",
+					modminer->drv->name, modminer->device_id,
+					MODMINER_OVERHEAT_TEMP, modminer->temp);
+
+				// If it's defined to be 0 then don't call modminer_delta_clock()
+				if (MODMINER_CLOCK_OVERHEAT != 0)
+					modminer_delta_clock(thr, MODMINER_CLOCK_OVERHEAT, true, false);
+				state->overheated = true;
+				dev_error(modminer, REASON_DEV_OVER_HEAT);
+			}
+		}
+	} else {
+		mutex_unlock(modminer->modminer_mutex);
+
+		if (!state->tried_tw
