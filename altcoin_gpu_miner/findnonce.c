@@ -61,4 +61,174 @@ void precalc_hash(dev_blk_ctx *blk, uint32_t *state, uint32_t *data)
 
 	R(A, B, C, D, E, F, G, H, data[0], SHA256_K[0]);
 	R(H, A, B, C, D, E, F, G, data[1], SHA256_K[1]);
-	R(G, H, A, B, C, D, E, F, data[2], SHA256_K[2])
+	R(G, H, A, B, C, D, E, F, data[2], SHA256_K[2]);
+
+	blk->cty_a = A;
+	blk->cty_b = B;
+	blk->cty_c = C;
+	blk->cty_d = D;
+
+	blk->D1A = D + 0xb956c25b;
+
+	blk->cty_e = E;
+	blk->cty_f = F;
+	blk->cty_g = G;
+	blk->cty_h = H;
+
+	blk->ctx_a = state[0];
+	blk->ctx_b = state[1];
+	blk->ctx_c = state[2];
+	blk->ctx_d = state[3];
+	blk->ctx_e = state[4];
+	blk->ctx_f = state[5];
+	blk->ctx_g = state[6];
+	blk->ctx_h = state[7];
+
+	blk->merkle = data[0];
+	blk->ntime = data[1];
+	blk->nbits = data[2];
+
+	blk->W16 = blk->fW0 = data[0] + (rotr(data[1], 7) ^ rotr(data[1], 18) ^ (data[1] >> 3));
+	blk->W17 = blk->fW1 = data[1] + (rotr(data[2], 7) ^ rotr(data[2], 18) ^ (data[2] >> 3)) + 0x01100000;
+	blk->PreVal4 = blk->fcty_e = blk->ctx_e + (rotr(B, 6) ^ rotr(B, 11) ^ rotr(B, 25)) + (D ^ (B & (C ^ D))) + 0xe9b5dba5;
+	blk->T1 = blk->fcty_e2 = (rotr(F, 2) ^ rotr(F, 13) ^ rotr(F, 22)) + ((F & G) | (H & (F | G)));
+	blk->PreVal4_2 = blk->PreVal4 + blk->T1;
+	blk->PreVal0 = blk->PreVal4 + blk->ctx_a;
+	blk->PreW31 = 0x00000280 + (rotr(blk->W16,  7) ^ rotr(blk->W16, 18) ^ (blk->W16 >> 3));
+	blk->PreW32 = blk->W16 + (rotr(blk->W17, 7) ^ rotr(blk->W17, 18) ^ (blk->W17 >> 3));
+	blk->PreW18 = data[2] + (rotr(blk->W16, 17) ^ rotr(blk->W16, 19) ^ (blk->W16 >> 10));
+	blk->PreW19 = 0x11002000 + (rotr(blk->W17, 17) ^ rotr(blk->W17, 19) ^ (blk->W17 >> 10));
+
+
+	blk->W2 = data[2];
+
+	blk->W2A = blk->W2 + (rotr(blk->W16, 19) ^ rotr(blk->W16, 17) ^ (blk->W16 >> 10));
+	blk->W17_2 = 0x11002000 + (rotr(blk->W17, 19) ^ rotr(blk->W17, 17) ^ (blk->W17 >> 10));
+
+	blk->fW2 = data[2] + (rotr(blk->fW0, 17) ^ rotr(blk->fW0, 19) ^ (blk->fW0 >> 10));
+	blk->fW3 = 0x11002000 + (rotr(blk->fW1, 17) ^ rotr(blk->fW1, 19) ^ (blk->fW1 >> 10));
+	blk->fW15 = 0x00000280 + (rotr(blk->fW0, 7) ^ rotr(blk->fW0, 18) ^ (blk->fW0 >> 3));
+	blk->fW01r = blk->fW0 + (rotr(blk->fW1, 7) ^ rotr(blk->fW1, 18) ^ (blk->fW1 >> 3));
+
+
+	blk->PreVal4addT1 = blk->PreVal4 + blk->T1;
+	blk->T1substate0 = blk->ctx_a - blk->T1;
+
+	blk->C1addK5 = blk->cty_c + SHA256_K[5];
+	blk->B1addK6 = blk->cty_b + SHA256_K[6];
+	blk->PreVal0addK7 = blk->PreVal0 + SHA256_K[7];
+	blk->W16addK16 = blk->W16 + SHA256_K[16];
+	blk->W17addK17 = blk->W17 + SHA256_K[17];
+
+	blk->zeroA = blk->ctx_a + 0x98c7e2a2;
+	blk->zeroB = blk->ctx_a + 0xfc08884d;
+	blk->oneA = blk->ctx_b + 0x90bb1e3c;
+	blk->twoA = blk->ctx_c + 0x50c6645b;
+	blk->threeA = blk->ctx_d + 0x3ac42e24;
+	blk->fourA = blk->ctx_e + SHA256_K[4];
+	blk->fiveA = blk->ctx_f + SHA256_K[5];
+	blk->sixA = blk->ctx_g + SHA256_K[6];
+	blk->sevenA = blk->ctx_h + SHA256_K[7];
+}
+
+#if 0 // not used any more
+
+#define P(t) (W[(t)&0xF] = W[(t-16)&0xF] + (rotate(W[(t-15)&0xF], 25) ^ rotate(W[(t-15)&0xF], 14) ^ (W[(t-15)&0xF] >> 3)) + W[(t-7)&0xF] + (rotate(W[(t-2)&0xF], 15) ^ rotate(W[(t-2)&0xF], 13) ^ (W[(t-2)&0xF] >> 10)))
+
+#define IR(u) \
+  R(A, B, C, D, E, F, G, H, W[u+0], SHA256_K[u+0]); \
+  R(H, A, B, C, D, E, F, G, W[u+1], SHA256_K[u+1]); \
+  R(G, H, A, B, C, D, E, F, W[u+2], SHA256_K[u+2]); \
+  R(F, G, H, A, B, C, D, E, W[u+3], SHA256_K[u+3]); \
+  R(E, F, G, H, A, B, C, D, W[u+4], SHA256_K[u+4]); \
+  R(D, E, F, G, H, A, B, C, W[u+5], SHA256_K[u+5]); \
+  R(C, D, E, F, G, H, A, B, W[u+6], SHA256_K[u+6]); \
+  R(B, C, D, E, F, G, H, A, W[u+7], SHA256_K[u+7])
+#define FR(u) \
+  R(A, B, C, D, E, F, G, H, P(u+0), SHA256_K[u+0]); \
+  R(H, A, B, C, D, E, F, G, P(u+1), SHA256_K[u+1]); \
+  R(G, H, A, B, C, D, E, F, P(u+2), SHA256_K[u+2]); \
+  R(F, G, H, A, B, C, D, E, P(u+3), SHA256_K[u+3]); \
+  R(E, F, G, H, A, B, C, D, P(u+4), SHA256_K[u+4]); \
+  R(D, E, F, G, H, A, B, C, P(u+5), SHA256_K[u+5]); \
+  R(C, D, E, F, G, H, A, B, P(u+6), SHA256_K[u+6]); \
+  R(B, C, D, E, F, G, H, A, P(u+7), SHA256_K[u+7])
+
+#define PIR(u) \
+  R(F, G, H, A, B, C, D, E, W[u+3], SHA256_K[u+3]); \
+  R(E, F, G, H, A, B, C, D, W[u+4], SHA256_K[u+4]); \
+  R(D, E, F, G, H, A, B, C, W[u+5], SHA256_K[u+5]); \
+  R(C, D, E, F, G, H, A, B, W[u+6], SHA256_K[u+6]); \
+  R(B, C, D, E, F, G, H, A, W[u+7], SHA256_K[u+7])
+
+#define PFR(u) \
+  R(A, B, C, D, E, F, G, H, P(u+0), SHA256_K[u+0]); \
+  R(H, A, B, C, D, E, F, G, P(u+1), SHA256_K[u+1]); \
+  R(G, H, A, B, C, D, E, F, P(u+2), SHA256_K[u+2]); \
+  R(F, G, H, A, B, C, D, E, P(u+3), SHA256_K[u+3]); \
+  R(E, F, G, H, A, B, C, D, P(u+4), SHA256_K[u+4]); \
+  R(D, E, F, G, H, A, B, C, P(u+5), SHA256_K[u+5])
+
+#endif
+
+struct pc_data {
+	struct thr_info *thr;
+	struct work *work;
+	uint32_t res[SCRYPT_MAXBUFFERS];
+	pthread_t pth;
+	int found;
+};
+
+static void *postcalc_hash(void *userdata)
+{
+	struct pc_data *pcd = (struct pc_data *)userdata;
+	struct thr_info *thr = pcd->thr;
+	unsigned int entry = 0;
+	int found = opt_scrypt ? SCRYPT_FOUND : FOUND;
+
+	pthread_detach(pthread_self());
+
+	/* To prevent corrupt values in FOUND from trying to read beyond the
+	 * end of the res[] array */
+	if (unlikely(pcd->res[found] & ~found)) {
+		applog(LOG_WARNING, "%s%d: invalid nonce count - HW error",
+				thr->cgpu->drv->name, thr->cgpu->device_id);
+		hw_errors++;
+		thr->cgpu->hw_errors++;
+		pcd->res[found] &= found;
+	}
+
+	for (entry = 0; entry < pcd->res[found]; entry++) {
+		uint32_t nonce = pcd->res[entry];
+
+		applog(LOG_DEBUG, "OCL NONCE %u found in slot %d", nonce, entry);
+		submit_nonce(thr, pcd->work, nonce);
+	}
+
+	discard_work(pcd->work);
+	free(pcd);
+
+	return NULL;
+}
+
+void postcalc_hash_async(struct thr_info *thr, struct work *work, uint32_t *res)
+{
+	struct pc_data *pcd = malloc(sizeof(struct pc_data));
+	int buffersize;
+
+	if (unlikely(!pcd)) {
+		applog(LOG_ERR, "Failed to malloc pc_data in postcalc_hash_async");
+		return;
+	}
+
+	pcd->thr = thr;
+	pcd->work = copy_work(work);
+	buffersize = opt_scrypt ? SCRYPT_BUFFERSIZE : BUFFERSIZE;
+	memcpy(&pcd->res, res, buffersize);
+
+	if (pthread_create(&pcd->pth, NULL, postcalc_hash, (void *)pcd)) {
+		applog(LOG_ERR, "Failed to create postcalc_hash thread");
+		return;
+	}
+}
+#endif /* HAVE_OPENCL */
