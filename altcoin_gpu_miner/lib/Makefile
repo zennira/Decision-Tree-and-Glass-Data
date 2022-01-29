@@ -33,4 +33,200 @@ pkgdatadir = $(datadir)/altminer
 pkgincludedir = $(includedir)/altminer
 pkglibdir = $(libdir)/altminer
 pkglibexecdir = $(libexecdir)/altminer
-am__
+am__cd = CDPATH="$${ZSH_VERSION+.}$(PATH_SEPARATOR)" && cd
+install_sh_DATA = $(install_sh) -c -m 644
+install_sh_PROGRAM = $(install_sh) -c
+install_sh_SCRIPT = $(install_sh) -c
+INSTALL_HEADER = $(INSTALL_DATA)
+transform = $(program_transform_name)
+NORMAL_INSTALL = :
+PRE_INSTALL = :
+POST_INSTALL = :
+NORMAL_UNINSTALL = :
+PRE_UNINSTALL = :
+POST_UNINSTALL = :
+build_triplet = i686-pc-mingw32
+host_triplet = i686-pc-mingw32
+target_triplet = i686-pc-mingw32
+subdir = lib
+DIST_COMMON = $(noinst_HEADERS) $(srcdir)/Makefile.am \
+	$(srcdir)/Makefile.in
+ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
+am__aclocal_m4_deps = $(top_srcdir)/m4/00gnulib.m4 \
+	$(top_srcdir)/m4/extensions.m4 \
+	$(top_srcdir)/m4/gnulib-common.m4 \
+	$(top_srcdir)/m4/gnulib-comp.m4 \
+	$(top_srcdir)/m4/include_next.m4 $(top_srcdir)/m4/libtool.m4 \
+	$(top_srcdir)/m4/longlong.m4 $(top_srcdir)/m4/ltoptions.m4 \
+	$(top_srcdir)/m4/ltsugar.m4 $(top_srcdir)/m4/ltversion.m4 \
+	$(top_srcdir)/m4/lt~obsolete.m4 $(top_srcdir)/m4/memchr.m4 \
+	$(top_srcdir)/m4/memmem.m4 $(top_srcdir)/m4/mmap-anon.m4 \
+	$(top_srcdir)/m4/multiarch.m4 $(top_srcdir)/m4/onceonly.m4 \
+	$(top_srcdir)/m4/sigaction.m4 $(top_srcdir)/m4/signal_h.m4 \
+	$(top_srcdir)/m4/signalblocking.m4 \
+	$(top_srcdir)/m4/stddef_h.m4 $(top_srcdir)/m4/stdint.m4 \
+	$(top_srcdir)/m4/string_h.m4 $(top_srcdir)/m4/warn-on-use.m4 \
+	$(top_srcdir)/m4/wchar_t.m4 $(top_srcdir)/configure.ac
+am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
+	$(ACLOCAL_M4)
+mkinstalldirs = $(install_sh) -d
+CONFIG_HEADER = $(top_builddir)/config.h
+CONFIG_CLEAN_FILES =
+CONFIG_CLEAN_VPATH_FILES =
+LIBRARIES = $(noinst_LIBRARIES)
+ARFLAGS = cru
+AM_V_AR = $(am__v_AR_$(V))
+am__v_AR_ = $(am__v_AR_$(AM_DEFAULT_VERBOSITY))
+am__v_AR_0 = @echo "  AR    " $@;
+AM_V_at = $(am__v_at_$(V))
+am__v_at_ = $(am__v_at_$(AM_DEFAULT_VERBOSITY))
+am__v_at_0 = @
+libgnu_a_AR = $(AR) $(ARFLAGS)
+am__DEPENDENCIES_1 =
+am_libgnu_a_OBJECTS = dummy.$(OBJEXT)
+libgnu_a_OBJECTS = $(am_libgnu_a_OBJECTS)
+LTLIBRARIES = $(noinst_LTLIBRARIES)
+DEFAULT_INCLUDES = -I. -I$(top_builddir)
+depcomp = $(SHELL) $(top_srcdir)/depcomp
+am__depfiles_maybe = depfiles
+am__mv = mv -f
+COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
+	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+AM_V_lt = $(am__v_lt_$(V))
+am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
+am__v_lt_0 = --silent
+LTCOMPILE = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) \
+	$(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
+	$(AM_CFLAGS) $(CFLAGS)
+AM_V_CC = $(am__v_CC_$(V))
+am__v_CC_ = $(am__v_CC_$(AM_DEFAULT_VERBOSITY))
+am__v_CC_0 = @echo "  CC    " $@;
+CCLD = $(CC)
+LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+AM_V_CCLD = $(am__v_CCLD_$(V))
+am__v_CCLD_ = $(am__v_CCLD_$(AM_DEFAULT_VERBOSITY))
+am__v_CCLD_0 = @echo "  CCLD  " $@;
+AM_V_GEN = $(am__v_GEN_$(V))
+am__v_GEN_ = $(am__v_GEN_$(AM_DEFAULT_VERBOSITY))
+am__v_GEN_0 = @echo "  GEN   " $@;
+SOURCES = $(libgnu_a_SOURCES) $(EXTRA_libgnu_a_SOURCES)
+DIST_SOURCES = $(libgnu_a_SOURCES) $(EXTRA_libgnu_a_SOURCES)
+RECURSIVE_TARGETS = all-recursive check-recursive dvi-recursive \
+	html-recursive info-recursive install-data-recursive \
+	install-dvi-recursive install-exec-recursive \
+	install-html-recursive install-info-recursive \
+	install-pdf-recursive install-ps-recursive install-recursive \
+	installcheck-recursive installdirs-recursive pdf-recursive \
+	ps-recursive uninstall-recursive
+HEADERS = $(noinst_HEADERS)
+RECURSIVE_CLEAN_TARGETS = mostlyclean-recursive clean-recursive	\
+  distclean-recursive maintainer-clean-recursive
+AM_RECURSIVE_TARGETS = $(RECURSIVE_TARGETS:-recursive=) \
+	$(RECURSIVE_CLEAN_TARGETS:-recursive=) tags TAGS ctags CTAGS \
+	distdir
+ETAGS = etags
+CTAGS = ctags
+DIST_SUBDIRS = $(SUBDIRS)
+DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
+am__relativize = \
+  dir0=`pwd`; \
+  sed_first='s,^\([^/]*\)/.*$$,\1,'; \
+  sed_rest='s,^[^/]*/*,,'; \
+  sed_last='s,^.*/\([^/]*\)$$,\1,'; \
+  sed_butlast='s,/*[^/]*$$,,'; \
+  while test -n "$$dir1"; do \
+    first=`echo "$$dir1" | sed -e "$$sed_first"`; \
+    if test "$$first" != "."; then \
+      if test "$$first" = ".."; then \
+        dir2=`echo "$$dir0" | sed -e "$$sed_last"`/"$$dir2"; \
+        dir0=`echo "$$dir0" | sed -e "$$sed_butlast"`; \
+      else \
+        first2=`echo "$$dir2" | sed -e "$$sed_first"`; \
+        if test "$$first2" = "$$first"; then \
+          dir2=`echo "$$dir2" | sed -e "$$sed_rest"`; \
+        else \
+          dir2="../$$dir2"; \
+        fi; \
+        dir0="$$dir0"/"$$first"; \
+      fi; \
+    fi; \
+    dir1=`echo "$$dir1" | sed -e "$$sed_rest"`; \
+  done; \
+  reldir="$$dir2"
+ACLOCAL = ${SHELL} /home/CY/altcoin-gpu-miner/missing --run aclocal-1.11
+ADL_CPPFLAGS = -I.
+ALLOCA = 
+AMTAR = ${SHELL} /home/CY/altcoin-gpu-miner/missing --run tar
+AM_DEFAULT_VERBOSITY = 0
+APPLE_UNIVERSAL_BUILD = 0
+AR = ar
+AUTOCONF = ${SHELL} /home/CY/altcoin-gpu-miner/missing --run autoconf
+AUTOHEADER = ${SHELL} /home/CY/altcoin-gpu-miner/missing --run autoheader
+AUTOMAKE = ${SHELL} /home/CY/altcoin-gpu-miner/missing --run automake-1.11
+AWK = gawk
+BITSIZEOF_PTRDIFF_T = 
+BITSIZEOF_SIG_ATOMIC_T = 
+BITSIZEOF_SIZE_T = 
+BITSIZEOF_WCHAR_T = 
+BITSIZEOF_WINT_T = 
+CC = gcc
+CCDEPMODE = depmode=gcc3
+CFLAGS = -O2 -msse2
+CPP = gcc -E
+CPPFLAGS = 
+CYGPATH_W = echo
+DEFS = -DHAVE_CONFIG_H
+DEPDIR = .deps
+DLLTOOL = dlltool
+DLOPEN_FLAGS = 
+DSYMUTIL = 
+DUMPBIN = 
+ECHO_C = 
+ECHO_N = -n
+ECHO_T = 
+EGREP = /bin/grep -E
+EXEEXT = .exe
+FGREP = /bin/grep -F
+GNULIB_MBSCASECMP = 0
+GNULIB_MBSCASESTR = 0
+GNULIB_MBSCHR = 0
+GNULIB_MBSCSPN = 0
+GNULIB_MBSLEN = 0
+GNULIB_MBSNCASECMP = 0
+GNULIB_MBSNLEN = 0
+GNULIB_MBSPBRK = 0
+GNULIB_MBSPCASECMP = 0
+GNULIB_MBSRCHR = 0
+GNULIB_MBSSEP = 0
+GNULIB_MBSSPN = 0
+GNULIB_MBSSTR = 0
+GNULIB_MBSTOK_R = 0
+GNULIB_MEMCHR = 1
+GNULIB_MEMMEM = 1
+GNULIB_MEMPCPY = 0
+GNULIB_MEMRCHR = 0
+GNULIB_RAWMEMCHR = 0
+GNULIB_SIGACTION = 1
+GNULIB_SIGNAL_H_SIGPIPE = 0
+GNULIB_SIGPROCMASK = 1
+GNULIB_STPCPY = 0
+GNULIB_STPNCPY = 0
+GNULIB_STRCASESTR = 0
+GNULIB_STRCHRNUL = 0
+GNULIB_STRDUP = 0
+GNULIB_STRERROR = 0
+GNULIB_STRERROR_R = 0
+GNULIB_STRNCAT = 0
+GNULIB_STRNDUP = 0
+GNULIB_STRNLEN = 0
+GNULIB_STRPBRK = 0
+GNULIB_STRSEP = 0
+GNULIB_STRSIGNAL = 0
+GNULIB_STRSTR = 0
+GNULIB_STRTOK_R = 0
+GNULIB_STRVERSCMP = 0
+GREP = /bin/grep
+HAVE_DECL_MEM
