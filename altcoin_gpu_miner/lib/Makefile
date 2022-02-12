@@ -872,4 +872,129 @@ uninstall-am:
 	distclean-libtool distclean-tags distdir dvi dvi-am html \
 	html-am info info-am install install-am install-data \
 	install-data-am install-dvi install-dvi-am install-exec \
-	install-exec-am install-html install-html-am ins
+	install-exec-am install-html install-html-am install-info \
+	install-info-am install-man install-pdf install-pdf-am \
+	install-ps install-ps-am install-strip installcheck \
+	installcheck-am installdirs installdirs-am maintainer-clean \
+	maintainer-clean-generic mostlyclean mostlyclean-compile \
+	mostlyclean-generic mostlyclean-libtool mostlyclean-local pdf \
+	pdf-am ps ps-am tags tags-recursive uninstall uninstall-am
+
+# The arg-nonnull.h that gets inserted into generated .h files is the same as
+# build-aux/arg-nonnull.h, except that it has the copyright header cut off.
+arg-nonnull.h: $(top_srcdir)/./arg-nonnull.h
+	$(AM_V_GEN)rm -f $@-t $@ && \
+	sed -n -e '/GL_ARG_NONNULL/,$$p' \
+	  < $(top_srcdir)/./arg-nonnull.h \
+	  > $@-t && \
+	mv $@-t $@
+# The c++defs.h that gets inserted into generated .h files is the same as
+# build-aux/c++defs.h, except that it has the copyright header cut off.
+c++defs.h: $(top_srcdir)/./c++defs.h
+	$(AM_V_GEN)rm -f $@-t $@ && \
+	sed -n -e '/_GL_CXXDEFS/,$$p' \
+	  < $(top_srcdir)/./c++defs.h \
+	  > $@-t && \
+	mv $@-t $@
+
+# We need the following in order to create <signal.h> when the system
+# doesn't have a complete one.
+signal.h: signal.in.h $(top_builddir)/config.status $(CXXDEFS_H) $(ARG_NONNULL_H) $(WARN_ON_USE_H)
+	$(AM_V_GEN)rm -f $@-t $@ && \
+	{ echo '/* DO NOT EDIT! GENERATED AUTOMATICALLY! */' && \
+	  sed -e 's|@''GUARD_PREFIX''@|GL|g' \
+	      -e 's|@''INCLUDE_NEXT''@|$(INCLUDE_NEXT)|g' \
+	      -e 's|@''PRAGMA_SYSTEM_HEADER''@|#pragma GCC system_header|g' \
+	      -e 's|@''PRAGMA_COLUMNS''@||g' \
+	      -e 's|@''NEXT_SIGNAL_H''@|$(NEXT_SIGNAL_H)|g' \
+	      -e 's/@''GNULIB_SIGNAL_H_SIGPIPE''@/$(GNULIB_SIGNAL_H_SIGPIPE)/g' \
+	      -e 's/@''GNULIB_SIGPROCMASK''@/$(GNULIB_SIGPROCMASK)/g' \
+	      -e 's/@''GNULIB_SIGACTION''@/$(GNULIB_SIGACTION)/g' \
+	      -e 's|@''HAVE_POSIX_SIGNALBLOCKING''@|$(HAVE_POSIX_SIGNALBLOCKING)|g' \
+	      -e 's|@''HAVE_SIGSET_T''@|$(HAVE_SIGSET_T)|g' \
+	      -e 's|@''HAVE_SIGINFO_T''@|$(HAVE_SIGINFO_T)|g' \
+	      -e 's|@''HAVE_SIGACTION''@|$(HAVE_SIGACTION)|g' \
+	      -e 's|@''HAVE_STRUCT_SIGACTION_SA_SIGACTION''@|$(HAVE_STRUCT_SIGACTION_SA_SIGACTION)|g' \
+	      -e 's|@''HAVE_TYPE_VOLATILE_SIG_ATOMIC_T''@|$(HAVE_TYPE_VOLATILE_SIG_ATOMIC_T)|g' \
+	      -e 's|@''HAVE_SIGHANDLER_T''@|$(HAVE_SIGHANDLER_T)|g' \
+	      -e '/definitions of _GL_FUNCDECL_RPL/r $(CXXDEFS_H)' \
+	      -e '/definition of _GL_ARG_NONNULL/r $(ARG_NONNULL_H)' \
+	      -e '/definition of _GL_WARN_ON_USE/r $(WARN_ON_USE_H)' \
+	      < $(srcdir)/signal.in.h; \
+	} > $@-t && \
+	mv $@-t $@
+
+# We need the following in order to create <stddef.h> when the system
+# doesn't have one that works with the given compiler.
+#stddef.h: stddef.in.h $(top_builddir)/config.status
+#	$(AM_V_GEN)rm -f $@-t $@ && \
+#	{ echo '/* DO NOT EDIT! GENERATED AUTOMATICALLY! */' && \
+#	  sed -e 's|@''GUARD_PREFIX''@|GL|g' \
+#	      -e 's|@''INCLUDE_NEXT''@|$(INCLUDE_NEXT)|g' \
+#	      -e 's|@''PRAGMA_SYSTEM_HEADER''@|#pragma GCC system_header|g' \
+#	      -e 's|@''PRAGMA_COLUMNS''@||g' \
+#	      -e 's|@''NEXT_STDDEF_H''@|$(NEXT_STDDEF_H)|g' \
+#	      -e 's|@''HAVE_WCHAR_T''@|$(HAVE_WCHAR_T)|g' \
+#	      -e 's|@''REPLACE_NULL''@|$(REPLACE_NULL)|g' \
+#	      < $(srcdir)/stddef.in.h; \
+#	} > $@-t && \
+#	mv $@-t $@
+stddef.h: $(top_builddir)/config.status
+	rm -f $@
+
+# We need the following in order to create <stdint.h> when the system
+# doesn't have one that works with the given compiler.
+#stdint.h: stdint.in.h $(top_builddir)/config.status
+#	$(AM_V_GEN)rm -f $@-t $@ && \
+#	{ echo '/* DO NOT EDIT! GENERATED AUTOMATICALLY! */'; \
+#	  sed -e 's|@''GUARD_PREFIX''@|GL|g' \
+#	      -e 's/@''HAVE_STDINT_H''@/$(HAVE_STDINT_H)/g' \
+#	      -e 's|@''INCLUDE_NEXT''@|$(INCLUDE_NEXT)|g' \
+#	      -e 's|@''PRAGMA_SYSTEM_HEADER''@|#pragma GCC system_header|g' \
+#	      -e 's|@''PRAGMA_COLUMNS''@||g' \
+#	      -e 's|@''NEXT_STDINT_H''@|$(NEXT_STDINT_H)|g' \
+#	      -e 's/@''HAVE_SYS_TYPES_H''@/$(HAVE_SYS_TYPES_H)/g' \
+#	      -e 's/@''HAVE_INTTYPES_H''@/$(HAVE_INTTYPES_H)/g' \
+#	      -e 's/@''HAVE_SYS_INTTYPES_H''@/$(HAVE_SYS_INTTYPES_H)/g' \
+#	      -e 's/@''HAVE_SYS_BITYPES_H''@/$(HAVE_SYS_BITYPES_H)/g' \
+#	      -e 's/@''HAVE_WCHAR_H''@/$(HAVE_WCHAR_H)/g' \
+#	      -e 's/@''HAVE_LONG_LONG_INT''@/$(HAVE_LONG_LONG_INT)/g' \
+#	      -e 's/@''HAVE_UNSIGNED_LONG_LONG_INT''@/$(HAVE_UNSIGNED_LONG_LONG_INT)/g' \
+#	      -e 's/@''APPLE_UNIVERSAL_BUILD''@/$(APPLE_UNIVERSAL_BUILD)/g' \
+#	      -e 's/@''BITSIZEOF_PTRDIFF_T''@/$(BITSIZEOF_PTRDIFF_T)/g' \
+#	      -e 's/@''PTRDIFF_T_SUFFIX''@/$(PTRDIFF_T_SUFFIX)/g' \
+#	      -e 's/@''BITSIZEOF_SIG_ATOMIC_T''@/$(BITSIZEOF_SIG_ATOMIC_T)/g' \
+#	      -e 's/@''HAVE_SIGNED_SIG_ATOMIC_T''@/$(HAVE_SIGNED_SIG_ATOMIC_T)/g' \
+#	      -e 's/@''SIG_ATOMIC_T_SUFFIX''@/$(SIG_ATOMIC_T_SUFFIX)/g' \
+#	      -e 's/@''BITSIZEOF_SIZE_T''@/$(BITSIZEOF_SIZE_T)/g' \
+#	      -e 's/@''SIZE_T_SUFFIX''@/$(SIZE_T_SUFFIX)/g' \
+#	      -e 's/@''BITSIZEOF_WCHAR_T''@/$(BITSIZEOF_WCHAR_T)/g' \
+#	      -e 's/@''HAVE_SIGNED_WCHAR_T''@/$(HAVE_SIGNED_WCHAR_T)/g' \
+#	      -e 's/@''WCHAR_T_SUFFIX''@/$(WCHAR_T_SUFFIX)/g' \
+#	      -e 's/@''BITSIZEOF_WINT_T''@/$(BITSIZEOF_WINT_T)/g' \
+#	      -e 's/@''HAVE_SIGNED_WINT_T''@/$(HAVE_SIGNED_WINT_T)/g' \
+#	      -e 's/@''WINT_T_SUFFIX''@/$(WINT_T_SUFFIX)/g' \
+#	      < $(srcdir)/stdint.in.h; \
+#	} > $@-t && \
+#	mv $@-t $@
+stdint.h: $(top_builddir)/config.status
+	rm -f $@
+
+# We need the following in order to create <string.h> when the system
+# doesn't have one that works with the given compiler.
+string.h: string.in.h $(top_builddir)/config.status $(CXXDEFS_H) $(ARG_NONNULL_H) $(WARN_ON_USE_H)
+	$(AM_V_GEN)rm -f $@-t $@ && \
+	{ echo '/* DO NOT EDIT! GENERATED AUTOMATICALLY! */' && \
+	  sed -e 's|@''GUARD_PREFIX''@|GL|g' \
+	      -e 's|@''INCLUDE_NEXT''@|$(INCLUDE_NEXT)|g' \
+	      -e 's|@''PRAGMA_SYSTEM_HEADER''@|#pragma GCC system_header|g' \
+	      -e 's|@''PRAGMA_COLUMNS''@||g' \
+	      -e 's|@''NEXT_STRING_H''@|$(NEXT_STRING_H)|g' \
+	      -e 's/@''GNULIB_MBSLEN''@/$(GNULIB_MBSLEN)/g' \
+	      -e 's/@''GNULIB_MBSNLEN''@/$(GNULIB_MBSNLEN)/g' \
+	      -e 's/@''GNULIB_MBSCHR''@/$(GNULIB_MBSCHR)/g' \
+	      -e 's/@''GNULIB_MBSRCHR''@/$(GNULIB_MBSRCHR)/g' \
+	      -e 's/@''GNULIB_MBSSTR''@/$(GNULIB_MBSSTR)/g' \
+	      -e 's/@''GNULIB_MBSCASECMP''@/$(GNULIB_MBSCASECMP)/g' \
+	      -e 's/@''GNULIB_MBSNCASECMP''@/$(GNULIB_MBSNCASECMP)/g' \
+	      -e 's/@''GNULIB_MBSPCASECMP''@/$(GNULIB_MBSPCASECMP)/g'
