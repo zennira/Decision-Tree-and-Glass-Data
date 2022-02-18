@@ -41,4 +41,36 @@ memmem (const void *haystack_start, size_t haystack_len,
         const void *needle_start, size_t needle_len)
 {
   /* Abstract memory is considered to be an array of 'unsigned char' values,
-     not an array of 'char' values.  See ISO C
+     not an array of 'char' values.  See ISO C 99 section 6.2.6.1.  */
+  const unsigned char *haystack = (const unsigned char *) haystack_start;
+  const unsigned char *needle = (const unsigned char *) needle_start;
+
+  if (needle_len == 0)
+    /* The first occurrence of the empty string is deemed to occur at
+       the beginning of the string.  */
+    return (void *) haystack;
+
+  /* Sanity check, otherwise the loop might search through the whole
+     memory.  */
+  if (__builtin_expect (haystack_len < needle_len, 0))
+    return NULL;
+
+  /* Use optimizations in memchr when possible, to reduce the search
+     size of haystack using a linear algorithm with a smaller
+     coefficient.  However, avoid memchr for long needles, since we
+     can often achieve sublinear performance.  */
+  if (needle_len < LONG_NEEDLE_THRESHOLD)
+    {
+      haystack = memchr (haystack, *needle, haystack_len);
+      if (!haystack || __builtin_expect (needle_len == 1, 0))
+        return (void *) haystack;
+      haystack_len -= haystack - (const unsigned char *) haystack_start;
+      if (haystack_len < needle_len)
+        return NULL;
+      return two_way_short_needle (haystack, haystack_len, needle, needle_len);
+    }
+  else
+    return two_way_long_needle (haystack, haystack_len, needle, needle_len);
+}
+
+#undef LONG_NEEDLE_THRESHOLD
