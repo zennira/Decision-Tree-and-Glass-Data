@@ -232,4 +232,180 @@
         reinterpret_cast<rettype(*)parameters>(                               \
           (rettype2(*)parameters2)(::func));                                  \
     }                                                                         \
-    _GL_
+    _GL_EXTERN_C int _gl_cxxalias_dummy
+#else
+# define _GL_CXXALIAS_SYS_CAST2(func,rettype,parameters,rettype2,parameters2) \
+    _GL_EXTERN_C int _gl_cxxalias_dummy
+#endif
+
+/* _GL_CXXALIASWARN (func);
+   causes a warning to be emitted when ::func is used but not when
+   GNULIB_NAMESPACE::func is used.  func must be defined without overloaded
+   variants.  */
+#if defined __cplusplus && defined GNULIB_NAMESPACE
+# define _GL_CXXALIASWARN(func) \
+   _GL_CXXALIASWARN_1 (func, GNULIB_NAMESPACE)
+# define _GL_CXXALIASWARN_1(func,namespace) \
+   _GL_CXXALIASWARN_2 (func, namespace)
+/* To work around GCC bug <http://gcc.gnu.org/bugzilla/show_bug.cgi?id=43881>,
+   we enable the warning only when not optimizing.  */
+# if !__OPTIMIZE__
+#  define _GL_CXXALIASWARN_2(func,namespace) \
+    _GL_WARN_ON_USE (func, \
+                     "The symbol ::" #func " refers to the system function. " \
+                     "Use " #namespace "::" #func " instead.")
+# elif __GNUC__ >= 3 && GNULIB_STRICT_CHECKING
+#  define _GL_CXXALIASWARN_2(func,namespace) \
+     extern __typeof__ (func) func
+# else
+#  define _GL_CXXALIASWARN_2(func,namespace) \
+     _GL_EXTERN_C int _gl_cxxalias_dummy
+# endif
+#else
+# define _GL_CXXALIASWARN(func) \
+    _GL_EXTERN_C int _gl_cxxalias_dummy
+#endif
+
+/* _GL_CXXALIASWARN1 (func, rettype, parameters_and_attributes);
+   causes a warning to be emitted when the given overloaded variant of ::func
+   is used but not when GNULIB_NAMESPACE::func is used.  */
+#if defined __cplusplus && defined GNULIB_NAMESPACE
+# define _GL_CXXALIASWARN1(func,rettype,parameters_and_attributes) \
+   _GL_CXXALIASWARN1_1 (func, rettype, parameters_and_attributes, \
+                        GNULIB_NAMESPACE)
+# define _GL_CXXALIASWARN1_1(func,rettype,parameters_and_attributes,namespace) \
+   _GL_CXXALIASWARN1_2 (func, rettype, parameters_and_attributes, namespace)
+/* To work around GCC bug <http://gcc.gnu.org/bugzilla/show_bug.cgi?id=43881>,
+   we enable the warning only when not optimizing.  */
+# if !__OPTIMIZE__
+#  define _GL_CXXALIASWARN1_2(func,rettype,parameters_and_attributes,namespace) \
+    _GL_WARN_ON_USE_CXX (func, rettype, parameters_and_attributes, \
+                         "The symbol ::" #func " refers to the system function. " \
+                         "Use " #namespace "::" #func " instead.")
+# elif __GNUC__ >= 3 && GNULIB_STRICT_CHECKING
+#  define _GL_CXXALIASWARN1_2(func,rettype,parameters_and_attributes,namespace) \
+     extern __typeof__ (func) func
+# else
+#  define _GL_CXXALIASWARN1_2(func,rettype,parameters_and_attributes,namespace) \
+     _GL_EXTERN_C int _gl_cxxalias_dummy
+# endif
+#else
+# define _GL_CXXALIASWARN1(func,rettype,parameters_and_attributes) \
+    _GL_EXTERN_C int _gl_cxxalias_dummy
+#endif
+
+#endif /* _GL_CXXDEFS_H */
+
+/* The definition of _GL_ARG_NONNULL is copied here.  */
+/* _GL_ARG_NONNULL((n,...,m)) tells the compiler and static analyzer tools
+   that the values passed as arguments n, ..., m must be non-NULL pointers.
+   n = 1 stands for the first argument, n = 2 for the second argument etc.  */
+#ifndef _GL_ARG_NONNULL
+# if (__GNUC__ == 3 && __GNUC_MINOR__ >= 3) || __GNUC__ > 3
+#  define _GL_ARG_NONNULL(params) __attribute__ ((__nonnull__ params))
+# else
+#  define _GL_ARG_NONNULL(params)
+# endif
+#endif
+
+/* The definition of _GL_WARN_ON_USE is copied here.  */
+#ifndef _GL_WARN_ON_USE
+
+# if 4 < __GNUC__ || (__GNUC__ == 4 && 3 <= __GNUC_MINOR__)
+/* A compiler attribute is available in gcc versions 4.3.0 and later.  */
+#  define _GL_WARN_ON_USE(function, message) \
+extern __typeof__ (function) function __attribute__ ((__warning__ (message)))
+# elif __GNUC__ >= 3 && GNULIB_STRICT_CHECKING
+/* Verify the existence of the function.  */
+#  define _GL_WARN_ON_USE(function, message) \
+extern __typeof__ (function) function
+# else /* Unsupported.  */
+#  define _GL_WARN_ON_USE(function, message) \
+_GL_WARN_EXTERN_C int _gl_warn_on_use
+# endif
+#endif
+
+/* _GL_WARN_ON_USE_CXX (function, rettype, parameters_and_attributes, "string")
+   is like _GL_WARN_ON_USE (function, "string"), except that the function is
+   declared with the given prototype, consisting of return type, parameters,
+   and attributes.
+   This variant is useful for overloaded functions in C++. _GL_WARN_ON_USE does
+   not work in this case.  */
+#ifndef _GL_WARN_ON_USE_CXX
+# if 4 < __GNUC__ || (__GNUC__ == 4 && 3 <= __GNUC_MINOR__)
+#  define _GL_WARN_ON_USE_CXX(function,rettype,parameters_and_attributes,msg) \
+extern rettype function parameters_and_attributes \
+     __attribute__ ((__warning__ (msg)))
+# elif __GNUC__ >= 3 && GNULIB_STRICT_CHECKING
+/* Verify the existence of the function.  */
+#  define _GL_WARN_ON_USE_CXX(function,rettype,parameters_and_attributes,msg) \
+extern rettype function parameters_and_attributes
+# else /* Unsupported.  */
+#  define _GL_WARN_ON_USE_CXX(function,rettype,parameters_and_attributes,msg) \
+_GL_WARN_EXTERN_C int _gl_warn_on_use
+# endif
+#endif
+
+/* _GL_WARN_EXTERN_C declaration;
+   performs the declaration with C linkage.  */
+#ifndef _GL_WARN_EXTERN_C
+# if defined __cplusplus
+#  define _GL_WARN_EXTERN_C extern "C"
+# else
+#  define _GL_WARN_EXTERN_C extern
+# endif
+#endif
+
+/* Define pid_t, uid_t.
+   Also, mingw defines sigset_t not in <signal.h>, but in <sys/types.h>.  */
+#include <sys/types.h>
+
+/* On AIX, sig_atomic_t already includes volatile.  C99 requires that
+   'volatile sig_atomic_t' ignore the extra modifier, but C89 did not.
+   Hence, redefine this to a non-volatile type as needed.  */
+#if ! 1
+# if !GNULIB_defined_sig_atomic_t
+typedef int rpl_sig_atomic_t;
+#  undef sig_atomic_t
+#  define sig_atomic_t rpl_sig_atomic_t
+#  define GNULIB_defined_sig_atomic_t 1
+# endif
+#endif
+
+/* A set or mask of signals.  */
+#if !1
+# if !GNULIB_defined_sigset_t
+typedef unsigned int sigset_t;
+#  define GNULIB_defined_sigset_t 1
+# endif
+#endif
+
+/* Define sighandler_t, the type of signal handlers.  A GNU extension.  */
+#if !0
+# ifdef __cplusplus
+extern "C" {
+# endif
+# if !GNULIB_defined_sighandler_t
+typedef void (*sighandler_t) (int);
+#  define GNULIB_defined_sighandler_t 1
+# endif
+# ifdef __cplusplus
+}
+# endif
+#endif
+
+
+#if 0
+# ifndef SIGPIPE
+/* Define SIGPIPE to a value that does not overlap with other signals.  */
+#  define SIGPIPE 13
+#  define GNULIB_defined_SIGPIPE 1
+/* To actually use SIGPIPE, you also need the gnulib modules 'sigprocmask',
+   'write', 'stdio'.  */
+# endif
+#endif
+
+
+/* Maximum signal number + 1.  */
+#ifndef NSIG
+# i
