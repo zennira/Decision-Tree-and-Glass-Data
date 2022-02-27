@@ -408,4 +408,205 @@ typedef void (*sighandler_t) (int);
 
 /* Maximum signal number + 1.  */
 #ifndef NSIG
-# i
+# if defined __TANDEM
+#  define NSIG 32
+# endif
+#endif
+
+
+#if 1
+# if !0
+
+/* Maximum signal number + 1.  */
+#  ifndef NSIG
+#   define NSIG 32
+#  endif
+
+/* This code supports only 32 signals.  */
+#  if !GNULIB_defined_verify_NSIG_constraint
+typedef int verify_NSIG_constraint[NSIG <= 32 ? 1 : -1];
+#   define GNULIB_defined_verify_NSIG_constraint 1
+#  endif
+
+# endif
+
+/* Test whether a given signal is contained in a signal set.  */
+# if 0
+/* This function is defined as a macro on MacOS X.  */
+#  if defined __cplusplus && defined GNULIB_NAMESPACE
+#   undef sigismember
+#  endif
+# else
+_GL_FUNCDECL_SYS (sigismember, int, (const sigset_t *set, int sig)
+                                    _GL_ARG_NONNULL ((1)));
+# endif
+_GL_CXXALIAS_SYS (sigismember, int, (const sigset_t *set, int sig));
+_GL_CXXALIASWARN (sigismember);
+
+/* Initialize a signal set to the empty set.  */
+# if 0
+/* This function is defined as a macro on MacOS X.  */
+#  if defined __cplusplus && defined GNULIB_NAMESPACE
+#   undef sigemptyset
+#  endif
+# else
+_GL_FUNCDECL_SYS (sigemptyset, int, (sigset_t *set) _GL_ARG_NONNULL ((1)));
+# endif
+_GL_CXXALIAS_SYS (sigemptyset, int, (sigset_t *set));
+_GL_CXXALIASWARN (sigemptyset);
+
+/* Add a signal to a signal set.  */
+# if 0
+/* This function is defined as a macro on MacOS X.  */
+#  if defined __cplusplus && defined GNULIB_NAMESPACE
+#   undef sigaddset
+#  endif
+# else
+_GL_FUNCDECL_SYS (sigaddset, int, (sigset_t *set, int sig)
+                                  _GL_ARG_NONNULL ((1)));
+# endif
+_GL_CXXALIAS_SYS (sigaddset, int, (sigset_t *set, int sig));
+_GL_CXXALIASWARN (sigaddset);
+
+/* Remove a signal from a signal set.  */
+# if 0
+/* This function is defined as a macro on MacOS X.  */
+#  if defined __cplusplus && defined GNULIB_NAMESPACE
+#   undef sigdelset
+#  endif
+# else
+_GL_FUNCDECL_SYS (sigdelset, int, (sigset_t *set, int sig)
+                                  _GL_ARG_NONNULL ((1)));
+# endif
+_GL_CXXALIAS_SYS (sigdelset, int, (sigset_t *set, int sig));
+_GL_CXXALIASWARN (sigdelset);
+
+/* Fill a signal set with all possible signals.  */
+# if 0
+/* This function is defined as a macro on MacOS X.  */
+#  if defined __cplusplus && defined GNULIB_NAMESPACE
+#   undef sigfillset
+#  endif
+# else
+_GL_FUNCDECL_SYS (sigfillset, int, (sigset_t *set) _GL_ARG_NONNULL ((1)));
+# endif
+_GL_CXXALIAS_SYS (sigfillset, int, (sigset_t *set));
+_GL_CXXALIASWARN (sigfillset);
+
+/* Return the set of those blocked signals that are pending.  */
+# if !0
+_GL_FUNCDECL_SYS (sigpending, int, (sigset_t *set) _GL_ARG_NONNULL ((1)));
+# endif
+_GL_CXXALIAS_SYS (sigpending, int, (sigset_t *set));
+_GL_CXXALIASWARN (sigpending);
+
+/* If OLD_SET is not NULL, put the current set of blocked signals in *OLD_SET.
+   Then, if SET is not NULL, affect the current set of blocked signals by
+   combining it with *SET as indicated in OPERATION.
+   In this implementation, you are not allowed to change a signal handler
+   while the signal is blocked.  */
+# if !0
+#  define SIG_BLOCK   0  /* blocked_set = blocked_set | *set; */
+#  define SIG_SETMASK 1  /* blocked_set = *set; */
+#  define SIG_UNBLOCK 2  /* blocked_set = blocked_set & ~*set; */
+_GL_FUNCDECL_SYS (sigprocmask, int,
+                  (int operation, const sigset_t *set, sigset_t *old_set));
+# endif
+_GL_CXXALIAS_SYS (sigprocmask, int,
+                  (int operation, const sigset_t *set, sigset_t *old_set));
+_GL_CXXALIASWARN (sigprocmask);
+
+/* Install the handler FUNC for signal SIG, and return the previous
+   handler.  */
+# ifdef __cplusplus
+extern "C" {
+# endif
+# if !GNULIB_defined_function_taking_int_returning_void_t
+typedef void (*_gl_function_taking_int_returning_void_t) (int);
+#  define GNULIB_defined_function_taking_int_returning_void_t 1
+# endif
+# ifdef __cplusplus
+}
+# endif
+# if !0
+#  if !(defined __cplusplus && defined GNULIB_NAMESPACE)
+#   define signal rpl_signal
+#  endif
+_GL_FUNCDECL_RPL (signal, _gl_function_taking_int_returning_void_t,
+                  (int sig, _gl_function_taking_int_returning_void_t func));
+_GL_CXXALIAS_RPL (signal, _gl_function_taking_int_returning_void_t,
+                  (int sig, _gl_function_taking_int_returning_void_t func));
+# else
+_GL_CXXALIAS_SYS (signal, _gl_function_taking_int_returning_void_t,
+                  (int sig, _gl_function_taking_int_returning_void_t func));
+# endif
+_GL_CXXALIASWARN (signal);
+
+/* Raise signal SIG.  */
+# if !0 && GNULIB_defined_SIGPIPE
+#  if !(defined __cplusplus && defined GNULIB_NAMESPACE)
+#   undef raise
+#   define raise rpl_raise
+#  endif
+_GL_FUNCDECL_RPL (raise, int, (int sig));
+_GL_CXXALIAS_RPL (raise, int, (int sig));
+# else
+_GL_CXXALIAS_SYS (raise, int, (int sig));
+# endif
+_GL_CXXALIASWARN (raise);
+
+#elif defined GNULIB_POSIXCHECK
+# undef sigaddset
+# if HAVE_RAW_DECL_SIGADDSET
+_GL_WARN_ON_USE (sigaddset, "sigaddset is unportable - "
+                 "use the gnulib module sigprocmask for portability");
+# endif
+# undef sigdelset
+# if HAVE_RAW_DECL_SIGDELSET
+_GL_WARN_ON_USE (sigdelset, "sigdelset is unportable - "
+                 "use the gnulib module sigprocmask for portability");
+# endif
+# undef sigemptyset
+# if HAVE_RAW_DECL_SIGEMPTYSET
+_GL_WARN_ON_USE (sigemptyset, "sigemptyset is unportable - "
+                 "use the gnulib module sigprocmask for portability");
+# endif
+# undef sigfillset
+# if HAVE_RAW_DECL_SIGFILLSET
+_GL_WARN_ON_USE (sigfillset, "sigfillset is unportable - "
+                 "use the gnulib module sigprocmask for portability");
+# endif
+# undef sigismember
+# if HAVE_RAW_DECL_SIGISMEMBER
+_GL_WARN_ON_USE (sigismember, "sigismember is unportable - "
+                 "use the gnulib module sigprocmask for portability");
+# endif
+# undef sigpending
+# if HAVE_RAW_DECL_SIGPENDING
+_GL_WARN_ON_USE (sigpending, "sigpending is unportable - "
+                 "use the gnulib module sigprocmask for portability");
+# endif
+# undef sigprocmask
+# if HAVE_RAW_DECL_SIGPROCMASK
+_GL_WARN_ON_USE (sigprocmask, "sigprocmask is unportable - "
+                 "use the gnulib module sigprocmask for portability");
+# endif
+#endif /* 1 */
+
+
+#if 1
+# if !0
+
+#  if !0
+
+#   if !GNULIB_defined_siginfo_types
+
+/* Present to allow compilation, but unsupported by gnulib.  */
+union sigval
+{
+  int sival_int;
+  void *sival_ptr;
+};
+
+/* Present to allow compilation, but unsupported by gnulib.  */
+struct 
