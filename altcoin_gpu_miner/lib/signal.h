@@ -609,4 +609,82 @@ union sigval
 };
 
 /* Present to allow compilation, but unsupported by gnulib.  */
-struct 
+struct siginfo_t
+{
+  int si_signo;
+  int si_code;
+  int si_errno;
+  pid_t si_pid;
+  uid_t si_uid;
+  void *si_addr;
+  int si_status;
+  long si_band;
+  union sigval si_value;
+};
+typedef struct siginfo_t siginfo_t;
+
+#    define GNULIB_defined_siginfo_types 1
+#   endif
+
+#  endif /* !0 */
+
+/* We assume that platforms which lack the sigaction() function also lack
+   the 'struct sigaction' type, and vice versa.  */
+
+#  if !GNULIB_defined_struct_sigaction
+
+struct sigaction
+{
+  union
+  {
+    void (*_sa_handler) (int);
+    /* Present to allow compilation, but unsupported by gnulib.  POSIX
+       says that implementations may, but not must, make sa_sigaction
+       overlap with sa_handler, but we know of no implementation where
+       they do not overlap.  */
+    void (*_sa_sigaction) (int, siginfo_t *, void *);
+  } _sa_func;
+  sigset_t sa_mask;
+  /* Not all POSIX flags are supported.  */
+  int sa_flags;
+};
+#   define sa_handler _sa_func._sa_handler
+#   define sa_sigaction _sa_func._sa_sigaction
+/* Unsupported flags are not present.  */
+#   define SA_RESETHAND 1
+#   define SA_NODEFER 2
+#   define SA_RESTART 4
+
+#   define GNULIB_defined_struct_sigaction 1
+#  endif
+
+_GL_FUNCDECL_SYS (sigaction, int, (int, const struct sigaction *restrict,
+                                   struct sigaction *restrict));
+
+# elif !1
+
+#  define sa_sigaction sa_handler
+
+# endif /* !0, !1 */
+
+_GL_CXXALIAS_SYS (sigaction, int, (int, const struct sigaction *restrict,
+                                   struct sigaction *restrict));
+_GL_CXXALIASWARN (sigaction);
+
+#elif defined GNULIB_POSIXCHECK
+# undef sigaction
+# if HAVE_RAW_DECL_SIGACTION
+_GL_WARN_ON_USE (sigaction, "sigaction is unportable - "
+                 "use the gnulib module sigaction for portability");
+# endif
+#endif
+
+/* Some systems don't have SA_NODEFER.  */
+#ifndef SA_NODEFER
+# define SA_NODEFER 0
+#endif
+
+
+#endif /* _GL_SIGNAL_H */
+#endif /* _GL_SIGNAL_H */
+#endif
