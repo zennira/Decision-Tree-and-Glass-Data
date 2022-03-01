@@ -456,4 +456,137 @@ typedef int _verify_intmax_size[sizeof (intmax_t) == sizeof (uintmax_t)
 #if @APPLE_UNIVERSAL_BUILD@
 # ifdef _LP64
 #  define PTRDIFF_MIN  _STDINT_MIN (1, 64, 0l)
-#  define PTRDIFF_MAX  _STD
+#  define PTRDIFF_MAX  _STDINT_MAX (1, 64, 0l)
+# else
+#  define PTRDIFF_MIN  _STDINT_MIN (1, 32, 0)
+#  define PTRDIFF_MAX  _STDINT_MAX (1, 32, 0)
+# endif
+#else
+# define PTRDIFF_MIN  \
+    _STDINT_MIN (1, @BITSIZEOF_PTRDIFF_T@, 0@PTRDIFF_T_SUFFIX@)
+# define PTRDIFF_MAX  \
+    _STDINT_MAX (1, @BITSIZEOF_PTRDIFF_T@, 0@PTRDIFF_T_SUFFIX@)
+#endif
+
+/* sig_atomic_t limits */
+#undef SIG_ATOMIC_MIN
+#undef SIG_ATOMIC_MAX
+#define SIG_ATOMIC_MIN  \
+   _STDINT_MIN (@HAVE_SIGNED_SIG_ATOMIC_T@, @BITSIZEOF_SIG_ATOMIC_T@, \
+                0@SIG_ATOMIC_T_SUFFIX@)
+#define SIG_ATOMIC_MAX  \
+   _STDINT_MAX (@HAVE_SIGNED_SIG_ATOMIC_T@, @BITSIZEOF_SIG_ATOMIC_T@, \
+                0@SIG_ATOMIC_T_SUFFIX@)
+
+
+/* size_t limit */
+#undef SIZE_MAX
+#if @APPLE_UNIVERSAL_BUILD@
+# ifdef _LP64
+#  define SIZE_MAX  _STDINT_MAX (0, 64, 0ul)
+# else
+#  define SIZE_MAX  _STDINT_MAX (0, 32, 0ul)
+# endif
+#else
+# define SIZE_MAX  _STDINT_MAX (0, @BITSIZEOF_SIZE_T@, 0@SIZE_T_SUFFIX@)
+#endif
+
+/* wchar_t limits */
+/* Get WCHAR_MIN, WCHAR_MAX.
+   This include is not on the top, above, because on OSF/1 4.0 we have a
+   sequence of nested includes
+   <wchar.h> -> <stdio.h> -> <getopt.h> -> <stdlib.h>, and the latter includes
+   <stdint.h> and assumes its types are already defined.  */
+#if @HAVE_WCHAR_H@ && ! (defined WCHAR_MIN && defined WCHAR_MAX)
+  /* BSD/OS 4.0.1 has a bug: <stddef.h>, <stdio.h> and <time.h> must be
+     included before <wchar.h>.  */
+# include <stddef.h>
+# include <stdio.h>
+# include <time.h>
+# define _GL_JUST_INCLUDE_SYSTEM_WCHAR_H
+# include <wchar.h>
+# undef _GL_JUST_INCLUDE_SYSTEM_WCHAR_H
+#endif
+#undef WCHAR_MIN
+#undef WCHAR_MAX
+#define WCHAR_MIN  \
+   _STDINT_MIN (@HAVE_SIGNED_WCHAR_T@, @BITSIZEOF_WCHAR_T@, 0@WCHAR_T_SUFFIX@)
+#define WCHAR_MAX  \
+   _STDINT_MAX (@HAVE_SIGNED_WCHAR_T@, @BITSIZEOF_WCHAR_T@, 0@WCHAR_T_SUFFIX@)
+
+/* wint_t limits */
+#undef WINT_MIN
+#undef WINT_MAX
+#define WINT_MIN  \
+   _STDINT_MIN (@HAVE_SIGNED_WINT_T@, @BITSIZEOF_WINT_T@, 0@WINT_T_SUFFIX@)
+#define WINT_MAX  \
+   _STDINT_MAX (@HAVE_SIGNED_WINT_T@, @BITSIZEOF_WINT_T@, 0@WINT_T_SUFFIX@)
+
+#endif /* !defined __cplusplus || defined __STDC_LIMIT_MACROS */
+
+/* 7.18.4. Macros for integer constants */
+
+#if ! defined __cplusplus || defined __STDC_CONSTANT_MACROS
+
+/* 7.18.4.1. Macros for minimum-width integer constants */
+/* According to ISO C 99 Technical Corrigendum 1 */
+
+/* Here we assume a standard architecture where the hardware integer
+   types have 8, 16, 32, optionally 64 bits, and int is 32 bits.  */
+
+#undef INT8_C
+#undef UINT8_C
+#define INT8_C(x) x
+#define UINT8_C(x) x
+
+#undef INT16_C
+#undef UINT16_C
+#define INT16_C(x) x
+#define UINT16_C(x) x
+
+#undef INT32_C
+#undef UINT32_C
+#define INT32_C(x) x
+#define UINT32_C(x) x ## U
+
+#undef INT64_C
+#undef UINT64_C
+#if LONG_MAX >> 31 >> 31 == 1
+# define INT64_C(x) x##L
+#elif defined _MSC_VER
+# define INT64_C(x) x##i64
+#elif @HAVE_LONG_LONG_INT@
+# define INT64_C(x) x##LL
+#endif
+#if ULONG_MAX >> 31 >> 31 >> 1 == 1
+# define UINT64_C(x) x##UL
+#elif defined _MSC_VER
+# define UINT64_C(x) x##ui64
+#elif @HAVE_UNSIGNED_LONG_LONG_INT@
+# define UINT64_C(x) x##ULL
+#endif
+
+/* 7.18.4.2. Macros for greatest-width integer constants */
+
+#undef INTMAX_C
+#if @HAVE_LONG_LONG_INT@ && LONG_MAX >> 30 == 1
+# define INTMAX_C(x)   x##LL
+#elif defined GL_INT64_T
+# define INTMAX_C(x)   INT64_C(x)
+#else
+# define INTMAX_C(x)   x##L
+#endif
+
+#undef UINTMAX_C
+#if @HAVE_UNSIGNED_LONG_LONG_INT@ && ULONG_MAX >> 31 == 1
+# define UINTMAX_C(x)  x##ULL
+#elif defined GL_UINT64_T
+# define UINTMAX_C(x)  UINT64_C(x)
+#else
+# define UINTMAX_C(x)  x##UL
+#endif
+
+#endif /* !defined __cplusplus || defined __STDC_CONSTANT_MACROS */
+
+#endif /* _@GUARD_PREFIX@_STDINT_H */
+#endif /* !defined _@GUARD_PREFIX@_STDINT_H && !defined _GL_JUST_INCLUDE_SYSTEM_STDINT_H */
