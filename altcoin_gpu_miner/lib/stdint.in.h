@@ -216,4 +216,244 @@ typedef unsigned long long int gl_uint64_t;
 # define int_least64_t int64_t
 #endif
 #ifdef GL_UINT64_T
-# define uint_least64_t u
+# define uint_least64_t uint64_t
+#endif
+
+/* 7.18.1.3. Fastest minimum-width integer types */
+
+/* Note: Other <stdint.h> substitutes may define these types differently.
+   It is not recommended to use these types in public header files. */
+
+/* Here we assume a standard architecture where the hardware integer
+   types have 8, 16, 32, optionally 64 bits. Therefore the fastN_t types
+   are taken from the same list of types.  Assume that 'long int'
+   is fast enough for all narrower integers.  */
+
+#undef int_fast8_t
+#undef uint_fast8_t
+#undef int_fast16_t
+#undef uint_fast16_t
+#undef int_fast32_t
+#undef uint_fast32_t
+#undef int_fast64_t
+#undef uint_fast64_t
+typedef long int gl_int_fast8_t;
+typedef unsigned long int gl_uint_fast8_t;
+typedef long int gl_int_fast16_t;
+typedef unsigned long int gl_uint_fast16_t;
+typedef long int gl_int_fast32_t;
+typedef unsigned long int gl_uint_fast32_t;
+#define int_fast8_t gl_int_fast8_t
+#define uint_fast8_t gl_uint_fast8_t
+#define int_fast16_t gl_int_fast16_t
+#define uint_fast16_t gl_uint_fast16_t
+#define int_fast32_t gl_int_fast32_t
+#define uint_fast32_t gl_uint_fast32_t
+#ifdef GL_INT64_T
+# define int_fast64_t int64_t
+#endif
+#ifdef GL_UINT64_T
+# define uint_fast64_t uint64_t
+#endif
+
+/* 7.18.1.4. Integer types capable of holding object pointers */
+
+#undef intptr_t
+#undef uintptr_t
+typedef long int gl_intptr_t;
+typedef unsigned long int gl_uintptr_t;
+#define intptr_t gl_intptr_t
+#define uintptr_t gl_uintptr_t
+
+/* 7.18.1.5. Greatest-width integer types */
+
+/* Note: These types are compiler dependent. It may be unwise to use them in
+   public header files. */
+
+#undef intmax_t
+#if @HAVE_LONG_LONG_INT@ && LONG_MAX >> 30 == 1
+typedef long long int gl_intmax_t;
+# define intmax_t gl_intmax_t
+#elif defined GL_INT64_T
+# define intmax_t int64_t
+#else
+typedef long int gl_intmax_t;
+# define intmax_t gl_intmax_t
+#endif
+
+#undef uintmax_t
+#if @HAVE_UNSIGNED_LONG_LONG_INT@ && ULONG_MAX >> 31 == 1
+typedef unsigned long long int gl_uintmax_t;
+# define uintmax_t gl_uintmax_t
+#elif defined GL_UINT64_T
+# define uintmax_t uint64_t
+#else
+typedef unsigned long int gl_uintmax_t;
+# define uintmax_t gl_uintmax_t
+#endif
+
+/* Verify that intmax_t and uintmax_t have the same size.  Too much code
+   breaks if this is not the case.  If this check fails, the reason is likely
+   to be found in the autoconf macros.  */
+typedef int _verify_intmax_size[sizeof (intmax_t) == sizeof (uintmax_t)
+                                ? 1 : -1];
+
+#define GNULIB_defined_stdint_types 1
+#endif /* !GNULIB_defined_stdint_types */
+
+/* 7.18.2. Limits of specified-width integer types */
+
+#if ! defined __cplusplus || defined __STDC_LIMIT_MACROS
+
+/* 7.18.2.1. Limits of exact-width integer types */
+
+/* Here we assume a standard architecture where the hardware integer
+   types have 8, 16, 32, optionally 64 bits.  */
+
+#undef INT8_MIN
+#undef INT8_MAX
+#undef UINT8_MAX
+#define INT8_MIN  (~ INT8_MAX)
+#define INT8_MAX  127
+#define UINT8_MAX  255
+
+#undef INT16_MIN
+#undef INT16_MAX
+#undef UINT16_MAX
+#define INT16_MIN  (~ INT16_MAX)
+#define INT16_MAX  32767
+#define UINT16_MAX  65535
+
+#undef INT32_MIN
+#undef INT32_MAX
+#undef UINT32_MAX
+#define INT32_MIN  (~ INT32_MAX)
+#define INT32_MAX  2147483647
+#define UINT32_MAX  4294967295U
+
+#if defined GL_INT64_T && ! defined INT64_MAX
+/* Prefer (- INTMAX_C (1) << 63) over (~ INT64_MAX) because SunPRO C 5.0
+   evaluates the latter incorrectly in preprocessor expressions.  */
+# define INT64_MIN  (- INTMAX_C (1) << 63)
+# define INT64_MAX  INTMAX_C (9223372036854775807)
+#endif
+
+#if defined GL_UINT64_T && ! defined UINT64_MAX
+# define UINT64_MAX  UINTMAX_C (18446744073709551615)
+#endif
+
+/* 7.18.2.2. Limits of minimum-width integer types */
+
+/* Here we assume a standard architecture where the hardware integer
+   types have 8, 16, 32, optionally 64 bits. Therefore the leastN_t types
+   are the same as the corresponding N_t types.  */
+
+#undef INT_LEAST8_MIN
+#undef INT_LEAST8_MAX
+#undef UINT_LEAST8_MAX
+#define INT_LEAST8_MIN  INT8_MIN
+#define INT_LEAST8_MAX  INT8_MAX
+#define UINT_LEAST8_MAX  UINT8_MAX
+
+#undef INT_LEAST16_MIN
+#undef INT_LEAST16_MAX
+#undef UINT_LEAST16_MAX
+#define INT_LEAST16_MIN  INT16_MIN
+#define INT_LEAST16_MAX  INT16_MAX
+#define UINT_LEAST16_MAX  UINT16_MAX
+
+#undef INT_LEAST32_MIN
+#undef INT_LEAST32_MAX
+#undef UINT_LEAST32_MAX
+#define INT_LEAST32_MIN  INT32_MIN
+#define INT_LEAST32_MAX  INT32_MAX
+#define UINT_LEAST32_MAX  UINT32_MAX
+
+#undef INT_LEAST64_MIN
+#undef INT_LEAST64_MAX
+#ifdef GL_INT64_T
+# define INT_LEAST64_MIN  INT64_MIN
+# define INT_LEAST64_MAX  INT64_MAX
+#endif
+
+#undef UINT_LEAST64_MAX
+#ifdef GL_UINT64_T
+# define UINT_LEAST64_MAX  UINT64_MAX
+#endif
+
+/* 7.18.2.3. Limits of fastest minimum-width integer types */
+
+/* Here we assume a standard architecture where the hardware integer
+   types have 8, 16, 32, optionally 64 bits. Therefore the fastN_t types
+   are taken from the same list of types.  */
+
+#undef INT_FAST8_MIN
+#undef INT_FAST8_MAX
+#undef UINT_FAST8_MAX
+#define INT_FAST8_MIN  LONG_MIN
+#define INT_FAST8_MAX  LONG_MAX
+#define UINT_FAST8_MAX  ULONG_MAX
+
+#undef INT_FAST16_MIN
+#undef INT_FAST16_MAX
+#undef UINT_FAST16_MAX
+#define INT_FAST16_MIN  LONG_MIN
+#define INT_FAST16_MAX  LONG_MAX
+#define UINT_FAST16_MAX  ULONG_MAX
+
+#undef INT_FAST32_MIN
+#undef INT_FAST32_MAX
+#undef UINT_FAST32_MAX
+#define INT_FAST32_MIN  LONG_MIN
+#define INT_FAST32_MAX  LONG_MAX
+#define UINT_FAST32_MAX  ULONG_MAX
+
+#undef INT_FAST64_MIN
+#undef INT_FAST64_MAX
+#ifdef GL_INT64_T
+# define INT_FAST64_MIN  INT64_MIN
+# define INT_FAST64_MAX  INT64_MAX
+#endif
+
+#undef UINT_FAST64_MAX
+#ifdef GL_UINT64_T
+# define UINT_FAST64_MAX  UINT64_MAX
+#endif
+
+/* 7.18.2.4. Limits of integer types capable of holding object pointers */
+
+#undef INTPTR_MIN
+#undef INTPTR_MAX
+#undef UINTPTR_MAX
+#define INTPTR_MIN  LONG_MIN
+#define INTPTR_MAX  LONG_MAX
+#define UINTPTR_MAX  ULONG_MAX
+
+/* 7.18.2.5. Limits of greatest-width integer types */
+
+#undef INTMAX_MIN
+#undef INTMAX_MAX
+#ifdef INT64_MAX
+# define INTMAX_MIN  INT64_MIN
+# define INTMAX_MAX  INT64_MAX
+#else
+# define INTMAX_MIN  INT32_MIN
+# define INTMAX_MAX  INT32_MAX
+#endif
+
+#undef UINTMAX_MAX
+#ifdef UINT64_MAX
+# define UINTMAX_MAX  UINT64_MAX
+#else
+# define UINTMAX_MAX  UINT32_MAX
+#endif
+
+/* 7.18.3. Limits of other integer types */
+
+/* ptrdiff_t limits */
+#undef PTRDIFF_MIN
+#undef PTRDIFF_MAX
+#if @APPLE_UNIVERSAL_BUILD@
+# ifdef _LP64
+#  define PTRDIFF_MIN  _STDINT_MIN (1, 64, 0l)
+#  define PTRDIFF_MAX  _STD
