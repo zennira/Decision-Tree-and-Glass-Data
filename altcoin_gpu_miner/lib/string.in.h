@@ -351,4 +351,162 @@ _GL_WARN_ON_USE (strdup, "strdup is unportable - "
 #  endif
 _GL_FUNCDECL_RPL (strncat, char *, (char *dest, const char *src, size_t n)
                                    _GL_ARG_NONNULL ((1, 2)));
-_GL_CXXALIAS_RPL (strncat, char *, (char *dest, const char *src, size
+_GL_CXXALIAS_RPL (strncat, char *, (char *dest, const char *src, size_t n));
+# else
+_GL_CXXALIAS_SYS (strncat, char *, (char *dest, const char *src, size_t n));
+# endif
+_GL_CXXALIASWARN (strncat);
+#elif defined GNULIB_POSIXCHECK
+# undef strncat
+# if HAVE_RAW_DECL_STRNCAT
+_GL_WARN_ON_USE (strncat, "strncat is unportable - "
+                 "use gnulib module strncat for portability");
+# endif
+#endif
+
+/* Return a newly allocated copy of at most N bytes of STRING.  */
+#if @GNULIB_STRNDUP@
+# if @REPLACE_STRNDUP@
+#  if !(defined __cplusplus && defined GNULIB_NAMESPACE)
+#   undef strndup
+#   define strndup rpl_strndup
+#  endif
+_GL_FUNCDECL_RPL (strndup, char *, (char const *__string, size_t __n)
+                                   _GL_ARG_NONNULL ((1)));
+_GL_CXXALIAS_RPL (strndup, char *, (char const *__string, size_t __n));
+# else
+#  if ! @HAVE_DECL_STRNDUP@
+_GL_FUNCDECL_SYS (strndup, char *, (char const *__string, size_t __n)
+                                   _GL_ARG_NONNULL ((1)));
+#  endif
+_GL_CXXALIAS_SYS (strndup, char *, (char const *__string, size_t __n));
+# endif
+_GL_CXXALIASWARN (strndup);
+#elif defined GNULIB_POSIXCHECK
+# undef strndup
+# if HAVE_RAW_DECL_STRNDUP
+_GL_WARN_ON_USE (strndup, "strndup is unportable - "
+                 "use gnulib module strndup for portability");
+# endif
+#endif
+
+/* Find the length (number of bytes) of STRING, but scan at most
+   MAXLEN bytes.  If no '\0' terminator is found in that many bytes,
+   return MAXLEN.  */
+#if @GNULIB_STRNLEN@
+# if @REPLACE_STRNLEN@
+#  if !(defined __cplusplus && defined GNULIB_NAMESPACE)
+#   undef strnlen
+#   define strnlen rpl_strnlen
+#  endif
+_GL_FUNCDECL_RPL (strnlen, size_t, (char const *__string, size_t __maxlen)
+                                   _GL_ATTRIBUTE_PURE
+                                   _GL_ARG_NONNULL ((1)));
+_GL_CXXALIAS_RPL (strnlen, size_t, (char const *__string, size_t __maxlen));
+# else
+#  if ! @HAVE_DECL_STRNLEN@
+_GL_FUNCDECL_SYS (strnlen, size_t, (char const *__string, size_t __maxlen)
+                                   _GL_ATTRIBUTE_PURE
+                                   _GL_ARG_NONNULL ((1)));
+#  endif
+_GL_CXXALIAS_SYS (strnlen, size_t, (char const *__string, size_t __maxlen));
+# endif
+_GL_CXXALIASWARN (strnlen);
+#elif defined GNULIB_POSIXCHECK
+# undef strnlen
+# if HAVE_RAW_DECL_STRNLEN
+_GL_WARN_ON_USE (strnlen, "strnlen is unportable - "
+                 "use gnulib module strnlen for portability");
+# endif
+#endif
+
+#if defined GNULIB_POSIXCHECK
+/* strcspn() assumes the second argument is a list of single-byte characters.
+   Even in this simple case, it does not work with multibyte strings if the
+   locale encoding is GB18030 and one of the characters to be searched is a
+   digit.  */
+# undef strcspn
+/* Assume strcspn is always declared.  */
+_GL_WARN_ON_USE (strcspn, "strcspn cannot work correctly on character strings "
+                 "in multibyte locales - "
+                 "use mbscspn if you care about internationalization");
+#endif
+
+/* Find the first occurrence in S of any character in ACCEPT.  */
+#if @GNULIB_STRPBRK@
+# if ! @HAVE_STRPBRK@
+_GL_FUNCDECL_SYS (strpbrk, char *, (char const *__s, char const *__accept)
+                                   _GL_ATTRIBUTE_PURE
+                                   _GL_ARG_NONNULL ((1, 2)));
+# endif
+  /* On some systems, this function is defined as an overloaded function:
+       extern "C" { const char * strpbrk (const char *, const char *); }
+       extern "C++" { char * strpbrk (char *, const char *); }  */
+_GL_CXXALIAS_SYS_CAST2 (strpbrk,
+                        char *, (char const *__s, char const *__accept),
+                        const char *, (char const *__s, char const *__accept));
+# if ((__GLIBC__ == 2 && __GLIBC_MINOR__ >= 10) && !defined __UCLIBC__) \
+     && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 4))
+_GL_CXXALIASWARN1 (strpbrk, char *, (char *__s, char const *__accept));
+_GL_CXXALIASWARN1 (strpbrk, char const *,
+                   (char const *__s, char const *__accept));
+# else
+_GL_CXXALIASWARN (strpbrk);
+# endif
+# if defined GNULIB_POSIXCHECK
+/* strpbrk() assumes the second argument is a list of single-byte characters.
+   Even in this simple case, it does not work with multibyte strings if the
+   locale encoding is GB18030 and one of the characters to be searched is a
+   digit.  */
+#  undef strpbrk
+_GL_WARN_ON_USE (strpbrk, "strpbrk cannot work correctly on character strings "
+                 "in multibyte locales - "
+                 "use mbspbrk if you care about internationalization");
+# endif
+#elif defined GNULIB_POSIXCHECK
+# undef strpbrk
+# if HAVE_RAW_DECL_STRPBRK
+_GL_WARN_ON_USE (strpbrk, "strpbrk is unportable - "
+                 "use gnulib module strpbrk for portability");
+# endif
+#endif
+
+#if defined GNULIB_POSIXCHECK
+/* strspn() assumes the second argument is a list of single-byte characters.
+   Even in this simple case, it cannot work with multibyte strings.  */
+# undef strspn
+/* Assume strspn is always declared.  */
+_GL_WARN_ON_USE (strspn, "strspn cannot work correctly on character strings "
+                 "in multibyte locales - "
+                 "use mbsspn if you care about internationalization");
+#endif
+
+#if defined GNULIB_POSIXCHECK
+/* strrchr() does not work with multibyte strings if the locale encoding is
+   GB18030 and the character to be searched is a digit.  */
+# undef strrchr
+/* Assume strrchr is always declared.  */
+_GL_WARN_ON_USE (strrchr, "strrchr cannot work correctly on character strings "
+                 "in some multibyte locales - "
+                 "use mbsrchr if you care about internationalization");
+#endif
+
+/* Search the next delimiter (char listed in DELIM) starting at *STRINGP.
+   If one is found, overwrite it with a NUL, and advance *STRINGP
+   to point to the next char after it.  Otherwise, set *STRINGP to NULL.
+   If *STRINGP was already NULL, nothing happens.
+   Return the old value of *STRINGP.
+
+   This is a variant of strtok() that is multithread-safe and supports
+   empty fields.
+
+   Caveat: It modifies the original string.
+   Caveat: These functions cannot be used on constant strings.
+   Caveat: The identity of the delimiting character is lost.
+   Caveat: It doesn't work with multibyte strings unless all of the delimiter
+           characters are ASCII characters < 0x30.
+
+   See also strtok_r().  */
+#if @GNULIB_STRSEP@
+# if ! @HAVE_STRSEP@
+_GL_FUNCDECL_SY
