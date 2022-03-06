@@ -509,4 +509,159 @@ _GL_WARN_ON_USE (strrchr, "strrchr cannot work correctly on character strings "
    See also strtok_r().  */
 #if @GNULIB_STRSEP@
 # if ! @HAVE_STRSEP@
-_GL_FUNCDECL_SY
+_GL_FUNCDECL_SYS (strsep, char *,
+                  (char **restrict __stringp, char const *restrict __delim)
+                  _GL_ARG_NONNULL ((1, 2)));
+# endif
+_GL_CXXALIAS_SYS (strsep, char *,
+                  (char **restrict __stringp, char const *restrict __delim));
+_GL_CXXALIASWARN (strsep);
+# if defined GNULIB_POSIXCHECK
+#  undef strsep
+_GL_WARN_ON_USE (strsep, "strsep cannot work correctly on character strings "
+                 "in multibyte locales - "
+                 "use mbssep if you care about internationalization");
+# endif
+#elif defined GNULIB_POSIXCHECK
+# undef strsep
+# if HAVE_RAW_DECL_STRSEP
+_GL_WARN_ON_USE (strsep, "strsep is unportable - "
+                 "use gnulib module strsep for portability");
+# endif
+#endif
+
+#if @GNULIB_STRSTR@
+# if @REPLACE_STRSTR@
+#  if !(defined __cplusplus && defined GNULIB_NAMESPACE)
+#   define strstr rpl_strstr
+#  endif
+_GL_FUNCDECL_RPL (strstr, char *, (const char *haystack, const char *needle)
+                                  _GL_ATTRIBUTE_PURE
+                                  _GL_ARG_NONNULL ((1, 2)));
+_GL_CXXALIAS_RPL (strstr, char *, (const char *haystack, const char *needle));
+# else
+  /* On some systems, this function is defined as an overloaded function:
+       extern "C++" { const char * strstr (const char *, const char *); }
+       extern "C++" { char * strstr (char *, const char *); }  */
+_GL_CXXALIAS_SYS_CAST2 (strstr,
+                        char *, (const char *haystack, const char *needle),
+                        const char *, (const char *haystack, const char *needle));
+# endif
+# if ((__GLIBC__ == 2 && __GLIBC_MINOR__ >= 10) && !defined __UCLIBC__) \
+     && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 4))
+_GL_CXXALIASWARN1 (strstr, char *, (char *haystack, const char *needle));
+_GL_CXXALIASWARN1 (strstr, const char *,
+                   (const char *haystack, const char *needle));
+# else
+_GL_CXXALIASWARN (strstr);
+# endif
+#elif defined GNULIB_POSIXCHECK
+/* strstr() does not work with multibyte strings if the locale encoding is
+   different from UTF-8:
+   POSIX says that it operates on "strings", and "string" in POSIX is defined
+   as a sequence of bytes, not of characters.  */
+# undef strstr
+/* Assume strstr is always declared.  */
+_GL_WARN_ON_USE (strstr, "strstr is quadratic on many systems, and cannot "
+                 "work correctly on character strings in most "
+                 "multibyte locales - "
+                 "use mbsstr if you care about internationalization, "
+                 "or use strstr if you care about speed");
+#endif
+
+/* Find the first occurrence of NEEDLE in HAYSTACK, using case-insensitive
+   comparison.  */
+#if @GNULIB_STRCASESTR@
+# if @REPLACE_STRCASESTR@
+#  if !(defined __cplusplus && defined GNULIB_NAMESPACE)
+#   define strcasestr rpl_strcasestr
+#  endif
+_GL_FUNCDECL_RPL (strcasestr, char *,
+                  (const char *haystack, const char *needle)
+                  _GL_ATTRIBUTE_PURE
+                  _GL_ARG_NONNULL ((1, 2)));
+_GL_CXXALIAS_RPL (strcasestr, char *,
+                  (const char *haystack, const char *needle));
+# else
+#  if ! @HAVE_STRCASESTR@
+_GL_FUNCDECL_SYS (strcasestr, char *,
+                  (const char *haystack, const char *needle)
+                  _GL_ATTRIBUTE_PURE
+                  _GL_ARG_NONNULL ((1, 2)));
+#  endif
+  /* On some systems, this function is defined as an overloaded function:
+       extern "C++" { const char * strcasestr (const char *, const char *); }
+       extern "C++" { char * strcasestr (char *, const char *); }  */
+_GL_CXXALIAS_SYS_CAST2 (strcasestr,
+                        char *, (const char *haystack, const char *needle),
+                        const char *, (const char *haystack, const char *needle));
+# endif
+# if ((__GLIBC__ == 2 && __GLIBC_MINOR__ >= 10) && !defined __UCLIBC__) \
+     && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 4))
+_GL_CXXALIASWARN1 (strcasestr, char *, (char *haystack, const char *needle));
+_GL_CXXALIASWARN1 (strcasestr, const char *,
+                   (const char *haystack, const char *needle));
+# else
+_GL_CXXALIASWARN (strcasestr);
+# endif
+#elif defined GNULIB_POSIXCHECK
+/* strcasestr() does not work with multibyte strings:
+   It is a glibc extension, and glibc implements it only for unibyte
+   locales.  */
+# undef strcasestr
+# if HAVE_RAW_DECL_STRCASESTR
+_GL_WARN_ON_USE (strcasestr, "strcasestr does work correctly on character "
+                 "strings in multibyte locales - "
+                 "use mbscasestr if you care about "
+                 "internationalization, or use c-strcasestr if you want "
+                 "a locale independent function");
+# endif
+#endif
+
+/* Parse S into tokens separated by characters in DELIM.
+   If S is NULL, the saved pointer in SAVE_PTR is used as
+   the next starting point.  For example:
+        char s[] = "-abc-=-def";
+        char *sp;
+        x = strtok_r(s, "-", &sp);      // x = "abc", sp = "=-def"
+        x = strtok_r(NULL, "-=", &sp);  // x = "def", sp = NULL
+        x = strtok_r(NULL, "=", &sp);   // x = NULL
+                // s = "abc\0-def\0"
+
+   This is a variant of strtok() that is multithread-safe.
+
+   For the POSIX documentation for this function, see:
+   http://www.opengroup.org/susv3xsh/strtok.html
+
+   Caveat: It modifies the original string.
+   Caveat: These functions cannot be used on constant strings.
+   Caveat: The identity of the delimiting character is lost.
+   Caveat: It doesn't work with multibyte strings unless all of the delimiter
+           characters are ASCII characters < 0x30.
+
+   See also strsep().  */
+#if @GNULIB_STRTOK_R@
+# if @REPLACE_STRTOK_R@
+#  if !(defined __cplusplus && defined GNULIB_NAMESPACE)
+#   undef strtok_r
+#   define strtok_r rpl_strtok_r
+#  endif
+_GL_FUNCDECL_RPL (strtok_r, char *,
+                  (char *restrict s, char const *restrict delim,
+                   char **restrict save_ptr)
+                  _GL_ARG_NONNULL ((2, 3)));
+_GL_CXXALIAS_RPL (strtok_r, char *,
+                  (char *restrict s, char const *restrict delim,
+                   char **restrict save_ptr));
+# else
+#  if @UNDEFINE_STRTOK_R@ || defined GNULIB_POSIXCHECK
+#   undef strtok_r
+#  endif
+#  if ! @HAVE_DECL_STRTOK_R@
+_GL_FUNCDECL_SYS (strtok_r, char *,
+                  (char *restrict s, char const *restrict delim,
+                   char **restrict save_ptr)
+                  _GL_ARG_NONNULL ((2, 3)));
+#  endif
+_GL_CXXALIAS_SYS (strtok_r, char *,
+                  (char *restrict s, cha
