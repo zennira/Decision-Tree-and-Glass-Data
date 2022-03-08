@@ -811,4 +811,171 @@ _GL_EXTERN_C char * mbscasestr (const char *haystack, const char *needle)
 #if @GNULIB_MBSCSPN@
 /* Find the first occurrence in the character string STRING of any character
    in the character string ACCEPT.  Return the number of bytes from the
-   beginning of the string to this occurrence, or t
+   beginning of the string to this occurrence, or to the end of the string
+   if none exists.
+   Unlike strcspn(), this function works correctly in multibyte locales.  */
+_GL_EXTERN_C size_t mbscspn (const char *string, const char *accept)
+     _GL_ARG_NONNULL ((1, 2));
+#endif
+
+#if @GNULIB_MBSPBRK@
+/* Find the first occurrence in the character string STRING of any character
+   in the character string ACCEPT.  Return the pointer to it, or NULL if none
+   exists.
+   Unlike strpbrk(), this function works correctly in multibyte locales.  */
+# if defined __hpux
+#  if !(defined __cplusplus && defined GNULIB_NAMESPACE)
+#   define mbspbrk rpl_mbspbrk /* avoid collision with HP-UX function */
+#  endif
+_GL_FUNCDECL_RPL (mbspbrk, char *, (const char *string, const char *accept)
+                                   _GL_ARG_NONNULL ((1, 2)));
+_GL_CXXALIAS_RPL (mbspbrk, char *, (const char *string, const char *accept));
+# else
+_GL_FUNCDECL_SYS (mbspbrk, char *, (const char *string, const char *accept)
+                                   _GL_ARG_NONNULL ((1, 2)));
+_GL_CXXALIAS_SYS (mbspbrk, char *, (const char *string, const char *accept));
+# endif
+_GL_CXXALIASWARN (mbspbrk);
+#endif
+
+#if @GNULIB_MBSSPN@
+/* Find the first occurrence in the character string STRING of any character
+   not in the character string REJECT.  Return the number of bytes from the
+   beginning of the string to this occurrence, or to the end of the string
+   if none exists.
+   Unlike strspn(), this function works correctly in multibyte locales.  */
+_GL_EXTERN_C size_t mbsspn (const char *string, const char *reject)
+     _GL_ARG_NONNULL ((1, 2));
+#endif
+
+#if @GNULIB_MBSSEP@
+/* Search the next delimiter (multibyte character listed in the character
+   string DELIM) starting at the character string *STRINGP.
+   If one is found, overwrite it with a NUL, and advance *STRINGP to point
+   to the next multibyte character after it.  Otherwise, set *STRINGP to NULL.
+   If *STRINGP was already NULL, nothing happens.
+   Return the old value of *STRINGP.
+
+   This is a variant of mbstok_r() that supports empty fields.
+
+   Caveat: It modifies the original string.
+   Caveat: These functions cannot be used on constant strings.
+   Caveat: The identity of the delimiting character is lost.
+
+   See also mbstok_r().  */
+_GL_EXTERN_C char * mbssep (char **stringp, const char *delim)
+     _GL_ARG_NONNULL ((1, 2));
+#endif
+
+#if @GNULIB_MBSTOK_R@
+/* Parse the character string STRING into tokens separated by characters in
+   the character string DELIM.
+   If STRING is NULL, the saved pointer in SAVE_PTR is used as
+   the next starting point.  For example:
+        char s[] = "-abc-=-def";
+        char *sp;
+        x = mbstok_r(s, "-", &sp);      // x = "abc", sp = "=-def"
+        x = mbstok_r(NULL, "-=", &sp);  // x = "def", sp = NULL
+        x = mbstok_r(NULL, "=", &sp);   // x = NULL
+                // s = "abc\0-def\0"
+
+   Caveat: It modifies the original string.
+   Caveat: These functions cannot be used on constant strings.
+   Caveat: The identity of the delimiting character is lost.
+
+   See also mbssep().  */
+_GL_EXTERN_C char * mbstok_r (char *string, const char *delim, char **save_ptr)
+     _GL_ARG_NONNULL ((2, 3));
+#endif
+
+/* Map any int, typically from errno, into an error message.  */
+#if @GNULIB_STRERROR@
+# if @REPLACE_STRERROR@
+#  if !(defined __cplusplus && defined GNULIB_NAMESPACE)
+#   undef strerror
+#   define strerror rpl_strerror
+#  endif
+_GL_FUNCDECL_RPL (strerror, char *, (int));
+_GL_CXXALIAS_RPL (strerror, char *, (int));
+# else
+_GL_CXXALIAS_SYS (strerror, char *, (int));
+# endif
+_GL_CXXALIASWARN (strerror);
+#elif defined GNULIB_POSIXCHECK
+# undef strerror
+/* Assume strerror is always declared.  */
+_GL_WARN_ON_USE (strerror, "strerror is unportable - "
+                 "use gnulib module strerror to guarantee non-NULL result");
+#endif
+
+/* Map any int, typically from errno, into an error message.  Multithread-safe.
+   Uses the POSIX declaration, not the glibc declaration.  */
+#if @GNULIB_STRERROR_R@
+# if @REPLACE_STRERROR_R@
+#  if !(defined __cplusplus && defined GNULIB_NAMESPACE)
+#   undef strerror_r
+#   define strerror_r rpl_strerror_r
+#  endif
+_GL_FUNCDECL_RPL (strerror_r, int, (int errnum, char *buf, size_t buflen)
+                                   _GL_ARG_NONNULL ((2)));
+_GL_CXXALIAS_RPL (strerror_r, int, (int errnum, char *buf, size_t buflen));
+# else
+#  if !@HAVE_DECL_STRERROR_R@
+_GL_FUNCDECL_SYS (strerror_r, int, (int errnum, char *buf, size_t buflen)
+                                   _GL_ARG_NONNULL ((2)));
+#  endif
+_GL_CXXALIAS_SYS (strerror_r, int, (int errnum, char *buf, size_t buflen));
+# endif
+# if @HAVE_DECL_STRERROR_R@
+_GL_CXXALIASWARN (strerror_r);
+# endif
+#elif defined GNULIB_POSIXCHECK
+# undef strerror_r
+# if HAVE_RAW_DECL_STRERROR_R
+_GL_WARN_ON_USE (strerror_r, "strerror_r is unportable - "
+                 "use gnulib module strerror_r-posix for portability");
+# endif
+#endif
+
+#if @GNULIB_STRSIGNAL@
+# if @REPLACE_STRSIGNAL@
+#  if !(defined __cplusplus && defined GNULIB_NAMESPACE)
+#   define strsignal rpl_strsignal
+#  endif
+_GL_FUNCDECL_RPL (strsignal, char *, (int __sig));
+_GL_CXXALIAS_RPL (strsignal, char *, (int __sig));
+# else
+#  if ! @HAVE_DECL_STRSIGNAL@
+_GL_FUNCDECL_SYS (strsignal, char *, (int __sig));
+#  endif
+/* Need to cast, because on Cygwin 1.5.x systems, the return type is
+   'const char *'.  */
+_GL_CXXALIAS_SYS_CAST (strsignal, char *, (int __sig));
+# endif
+_GL_CXXALIASWARN (strsignal);
+#elif defined GNULIB_POSIXCHECK
+# undef strsignal
+# if HAVE_RAW_DECL_STRSIGNAL
+_GL_WARN_ON_USE (strsignal, "strsignal is unportable - "
+                 "use gnulib module strsignal for portability");
+# endif
+#endif
+
+#if @GNULIB_STRVERSCMP@
+# if !@HAVE_STRVERSCMP@
+_GL_FUNCDECL_SYS (strverscmp, int, (const char *, const char *)
+                                   _GL_ARG_NONNULL ((1, 2)));
+# endif
+_GL_CXXALIAS_SYS (strverscmp, int, (const char *, const char *));
+_GL_CXXALIASWARN (strverscmp);
+#elif defined GNULIB_POSIXCHECK
+# undef strverscmp
+# if HAVE_RAW_DECL_STRVERSCMP
+_GL_WARN_ON_USE (strverscmp, "strverscmp is unportable - "
+                 "use gnulib module strverscmp for portability");
+# endif
+#endif
+
+
+#endif /* _@GUARD_PREFIX@_STRING_H */
+#endif /* _@GUARD_PREFIX@_STRING_H */
