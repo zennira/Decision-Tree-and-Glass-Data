@@ -664,4 +664,151 @@ _GL_FUNCDECL_SYS (strtok_r, char *,
                   _GL_ARG_NONNULL ((2, 3)));
 #  endif
 _GL_CXXALIAS_SYS (strtok_r, char *,
-                  (char *restrict s, cha
+                  (char *restrict s, char const *restrict delim,
+                   char **restrict save_ptr));
+# endif
+_GL_CXXALIASWARN (strtok_r);
+# if defined GNULIB_POSIXCHECK
+_GL_WARN_ON_USE (strtok_r, "strtok_r cannot work correctly on character "
+                 "strings in multibyte locales - "
+                 "use mbstok_r if you care about internationalization");
+# endif
+#elif defined GNULIB_POSIXCHECK
+# undef strtok_r
+# if HAVE_RAW_DECL_STRTOK_R
+_GL_WARN_ON_USE (strtok_r, "strtok_r is unportable - "
+                 "use gnulib module strtok_r for portability");
+# endif
+#endif
+
+
+/* The following functions are not specified by POSIX.  They are gnulib
+   extensions.  */
+
+#if @GNULIB_MBSLEN@
+/* Return the number of multibyte characters in the character string STRING.
+   This considers multibyte characters, unlike strlen, which counts bytes.  */
+# ifdef __MirBSD__  /* MirBSD defines mbslen as a macro.  Override it.  */
+#  undef mbslen
+# endif
+# if @HAVE_MBSLEN@  /* AIX, OSF/1, MirBSD define mbslen already in libc.  */
+#  if !(defined __cplusplus && defined GNULIB_NAMESPACE)
+#   define mbslen rpl_mbslen
+#  endif
+_GL_FUNCDECL_RPL (mbslen, size_t, (const char *string) _GL_ARG_NONNULL ((1)));
+_GL_CXXALIAS_RPL (mbslen, size_t, (const char *string));
+# else
+_GL_FUNCDECL_SYS (mbslen, size_t, (const char *string) _GL_ARG_NONNULL ((1)));
+_GL_CXXALIAS_SYS (mbslen, size_t, (const char *string));
+# endif
+_GL_CXXALIASWARN (mbslen);
+#endif
+
+#if @GNULIB_MBSNLEN@
+/* Return the number of multibyte characters in the character string starting
+   at STRING and ending at STRING + LEN.  */
+_GL_EXTERN_C size_t mbsnlen (const char *string, size_t len)
+     _GL_ARG_NONNULL ((1));
+#endif
+
+#if @GNULIB_MBSCHR@
+/* Locate the first single-byte character C in the character string STRING,
+   and return a pointer to it.  Return NULL if C is not found in STRING.
+   Unlike strchr(), this function works correctly in multibyte locales with
+   encodings such as GB18030.  */
+# if defined __hpux
+#  if !(defined __cplusplus && defined GNULIB_NAMESPACE)
+#   define mbschr rpl_mbschr /* avoid collision with HP-UX function */
+#  endif
+_GL_FUNCDECL_RPL (mbschr, char *, (const char *string, int c)
+                                  _GL_ARG_NONNULL ((1)));
+_GL_CXXALIAS_RPL (mbschr, char *, (const char *string, int c));
+# else
+_GL_FUNCDECL_SYS (mbschr, char *, (const char *string, int c)
+                                  _GL_ARG_NONNULL ((1)));
+_GL_CXXALIAS_SYS (mbschr, char *, (const char *string, int c));
+# endif
+_GL_CXXALIASWARN (mbschr);
+#endif
+
+#if @GNULIB_MBSRCHR@
+/* Locate the last single-byte character C in the character string STRING,
+   and return a pointer to it.  Return NULL if C is not found in STRING.
+   Unlike strrchr(), this function works correctly in multibyte locales with
+   encodings such as GB18030.  */
+# if defined __hpux || defined __INTERIX
+#  if !(defined __cplusplus && defined GNULIB_NAMESPACE)
+#   define mbsrchr rpl_mbsrchr /* avoid collision with system function */
+#  endif
+_GL_FUNCDECL_RPL (mbsrchr, char *, (const char *string, int c)
+                                   _GL_ARG_NONNULL ((1)));
+_GL_CXXALIAS_RPL (mbsrchr, char *, (const char *string, int c));
+# else
+_GL_FUNCDECL_SYS (mbsrchr, char *, (const char *string, int c)
+                                   _GL_ARG_NONNULL ((1)));
+_GL_CXXALIAS_SYS (mbsrchr, char *, (const char *string, int c));
+# endif
+_GL_CXXALIASWARN (mbsrchr);
+#endif
+
+#if @GNULIB_MBSSTR@
+/* Find the first occurrence of the character string NEEDLE in the character
+   string HAYSTACK.  Return NULL if NEEDLE is not found in HAYSTACK.
+   Unlike strstr(), this function works correctly in multibyte locales with
+   encodings different from UTF-8.  */
+_GL_EXTERN_C char * mbsstr (const char *haystack, const char *needle)
+     _GL_ARG_NONNULL ((1, 2));
+#endif
+
+#if @GNULIB_MBSCASECMP@
+/* Compare the character strings S1 and S2, ignoring case, returning less than,
+   equal to or greater than zero if S1 is lexicographically less than, equal to
+   or greater than S2.
+   Note: This function may, in multibyte locales, return 0 for strings of
+   different lengths!
+   Unlike strcasecmp(), this function works correctly in multibyte locales.  */
+_GL_EXTERN_C int mbscasecmp (const char *s1, const char *s2)
+     _GL_ARG_NONNULL ((1, 2));
+#endif
+
+#if @GNULIB_MBSNCASECMP@
+/* Compare the initial segment of the character string S1 consisting of at most
+   N characters with the initial segment of the character string S2 consisting
+   of at most N characters, ignoring case, returning less than, equal to or
+   greater than zero if the initial segment of S1 is lexicographically less
+   than, equal to or greater than the initial segment of S2.
+   Note: This function may, in multibyte locales, return 0 for initial segments
+   of different lengths!
+   Unlike strncasecmp(), this function works correctly in multibyte locales.
+   But beware that N is not a byte count but a character count!  */
+_GL_EXTERN_C int mbsncasecmp (const char *s1, const char *s2, size_t n)
+     _GL_ARG_NONNULL ((1, 2));
+#endif
+
+#if @GNULIB_MBSPCASECMP@
+/* Compare the initial segment of the character string STRING consisting of
+   at most mbslen (PREFIX) characters with the character string PREFIX,
+   ignoring case.  If the two match, return a pointer to the first byte
+   after this prefix in STRING.  Otherwise, return NULL.
+   Note: This function may, in multibyte locales, return non-NULL if STRING
+   is of smaller length than PREFIX!
+   Unlike strncasecmp(), this function works correctly in multibyte
+   locales.  */
+_GL_EXTERN_C char * mbspcasecmp (const char *string, const char *prefix)
+     _GL_ARG_NONNULL ((1, 2));
+#endif
+
+#if @GNULIB_MBSCASESTR@
+/* Find the first occurrence of the character string NEEDLE in the character
+   string HAYSTACK, using case-insensitive comparison.
+   Note: This function may, in multibyte locales, return success even if
+   strlen (haystack) < strlen (needle) !
+   Unlike strcasestr(), this function works correctly in multibyte locales.  */
+_GL_EXTERN_C char * mbscasestr (const char *haystack, const char *needle)
+     _GL_ARG_NONNULL ((1, 2));
+#endif
+
+#if @GNULIB_MBSCSPN@
+/* Find the first occurrence in the character string STRING of any character
+   in the character string ACCEPT.  Return the number of bytes from the
+   beginning of the string to this occurrence, or t
