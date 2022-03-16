@@ -509,4 +509,211 @@ hardcode_action=immediate
 #
 #         host-triplet:	$host
 #         shell:		$SHELL
-#         compi
+#         compiler:		$LTCC
+#         compiler flags:		$LTCFLAGS
+#         linker:		$LD (gnu? $with_gnu_ld)
+#         $progname:	(GNU libtool) 2.4
+#         automake:	$automake_version
+#         autoconf:	$autoconf_version
+#
+# Report bugs to <bug-libtool@gnu.org>.
+# GNU libtool home page: <http://www.gnu.org/software/libtool/>.
+# General help using GNU software: <http://www.gnu.org/gethelp/>.
+
+PROGRAM=libtool
+PACKAGE=libtool
+VERSION=2.4
+TIMESTAMP=""
+package_revision=1.3294
+
+# Be Bourne compatible
+if test -n "${ZSH_VERSION+set}" && (emulate sh) >/dev/null 2>&1; then
+  emulate sh
+  NULLCMD=:
+  # Zsh 3.x and 4.x performs word splitting on ${1+"$@"}, which
+  # is contrary to our usage.  Disable this feature.
+  alias -g '${1+"$@"}'='"$@"'
+  setopt NO_GLOB_SUBST
+else
+  case `(set -o) 2>/dev/null` in *posix*) set -o posix;; esac
+fi
+BIN_SH=xpg4; export BIN_SH # for Tru64
+DUALCASE=1; export DUALCASE # for MKS sh
+
+# A function that is used when there is no print builtin or printf.
+func_fallback_echo ()
+{
+  eval 'cat <<_LTECHO_EOF
+$1
+_LTECHO_EOF'
+}
+
+# NLS nuisances: We save the old values to restore during execute mode.
+lt_user_locale=
+lt_safe_locale=
+for lt_var in LANG LANGUAGE LC_ALL LC_CTYPE LC_COLLATE LC_MESSAGES
+do
+  eval "if test \"\${$lt_var+set}\" = set; then
+          save_$lt_var=\$$lt_var
+          $lt_var=C
+	  export $lt_var
+	  lt_user_locale=\"$lt_var=\\\$save_\$lt_var; \$lt_user_locale\"
+	  lt_safe_locale=\"$lt_var=C; \$lt_safe_locale\"
+	fi"
+done
+LC_ALL=C
+LANGUAGE=C
+export LANGUAGE LC_ALL
+
+$lt_unset CDPATH
+
+
+# Work around backward compatibility issue on IRIX 6.5. On IRIX 6.4+, sh
+# is ksh but when the shell is invoked as "sh" and the current value of
+# the _XPG environment variable is not equal to 1 (one), the special
+# positional parameter $0, within a function call, is the name of the
+# function.
+progpath="$0"
+
+
+
+: ${CP="cp -f"}
+test "${ECHO+set}" = set || ECHO=${as_echo-'printf %s\n'}
+: ${EGREP="/bin/grep -E"}
+: ${FGREP="/bin/grep -F"}
+: ${GREP="/bin/grep"}
+: ${LN_S="cp -p"}
+: ${MAKE="make"}
+: ${MKDIR="mkdir"}
+: ${MV="mv -f"}
+: ${RM="rm -f"}
+: ${SED="/bin/sed"}
+: ${SHELL="${CONFIG_SHELL-/bin/sh}"}
+: ${Xsed="$SED -e 1s/^X//"}
+
+# Global variables:
+EXIT_SUCCESS=0
+EXIT_FAILURE=1
+EXIT_MISMATCH=63  # $? = 63 is used to indicate version mismatch to missing.
+EXIT_SKIP=77	  # $? = 77 is used to indicate a skipped test to automake.
+
+exit_status=$EXIT_SUCCESS
+
+# Make sure IFS has a sensible default
+lt_nl='
+'
+IFS=" 	$lt_nl"
+
+dirname="s,/[^/]*$,,"
+basename="s,^.*/,,"
+
+# func_dirname file append nondir_replacement
+# Compute the dirname of FILE.  If nonempty, add APPEND to the result,
+# otherwise set result to NONDIR_REPLACEMENT.
+func_dirname ()
+{
+    case ${1} in
+      */*) func_dirname_result="${1%/*}${2}" ;;
+      *  ) func_dirname_result="${3}" ;;
+    esac
+} # Extended-shell func_dirname implementation
+
+
+# func_basename file
+func_basename ()
+{
+    func_basename_result="${1##*/}"
+} # Extended-shell func_basename implementation
+
+
+# func_dirname_and_basename file append nondir_replacement
+# perform func_basename and func_dirname in a single function
+# call:
+#   dirname:  Compute the dirname of FILE.  If nonempty,
+#             add APPEND to the result, otherwise set result
+#             to NONDIR_REPLACEMENT.
+#             value returned in "$func_dirname_result"
+#   basename: Compute filename of FILE.
+#             value retuned in "$func_basename_result"
+# Implementation must be kept synchronized with func_dirname
+# and func_basename. For efficiency, we do not delegate to
+# those functions but instead duplicate the functionality here.
+func_dirname_and_basename ()
+{
+    case ${1} in
+      */*) func_dirname_result="${1%/*}${2}" ;;
+      *  ) func_dirname_result="${3}" ;;
+    esac
+    func_basename_result="${1##*/}"
+} # Extended-shell func_dirname_and_basename implementation
+
+
+# func_stripname prefix suffix name
+# strip PREFIX and SUFFIX off of NAME.
+# PREFIX and SUFFIX must not contain globbing or regex special
+# characters, hashes, percent signs, but SUFFIX may contain a leading
+# dot (in which case that matches only a dot).
+# func_strip_suffix prefix name
+func_stripname ()
+{
+    # pdksh 5.2.14 does not do ${X%$Y} correctly if both X and Y are
+    # positional parameters, so assign one to ordinary parameter first.
+    func_stripname_result=${3}
+    func_stripname_result=${func_stripname_result#"${1}"}
+    func_stripname_result=${func_stripname_result%"${2}"}
+} # Extended-shell func_stripname implementation
+
+
+# These SED scripts presuppose an absolute path with a trailing slash.
+pathcar='s,^/\([^/]*\).*$,\1,'
+pathcdr='s,^/[^/]*,,'
+removedotparts=':dotsl
+		s@/\./@/@g
+		t dotsl
+		s,/\.$,/,'
+collapseslashes='s@/\{1,\}@/@g'
+finalslash='s,/*$,/,'
+
+# func_normal_abspath PATH
+# Remove doubled-up and trailing slashes, "." path components,
+# and cancel out any ".." path components in PATH after making
+# it an absolute path.
+#             value returned in "$func_normal_abspath_result"
+func_normal_abspath ()
+{
+  # Start from root dir and reassemble the path.
+  func_normal_abspath_result=
+  func_normal_abspath_tpath=$1
+  func_normal_abspath_altnamespace=
+  case $func_normal_abspath_tpath in
+    "")
+      # Empty path, that just means $cwd.
+      func_stripname '' '/' "`pwd`"
+      func_normal_abspath_result=$func_stripname_result
+      return
+    ;;
+    # The next three entries are used to spot a run of precisely
+    # two leading slashes without using negated character classes;
+    # we take advantage of case's first-match behaviour.
+    ///*)
+      # Unusual form of absolute path, do nothing.
+    ;;
+    //*)
+      # Not necessarily an ordinary path; POSIX reserves leading '//'
+      # and for example Cygwin uses it to access remote file shares
+      # over CIFS/SMB, so we conserve a leading double slash if found.
+      func_normal_abspath_altnamespace=/
+    ;;
+    /*)
+      # Absolute path, do nothing.
+    ;;
+    *)
+      # Relative path, prepend $cwd.
+      func_normal_abspath_tpath=`pwd`/$func_normal_abspath_tpath
+    ;;
+  esac
+  # Cancel out all the simple stuff to save iterations.  We also want
+  # the path to end with a slash for ease of parsing, so make sure
+  # there is one (and only one) here.
+  func_normal_abspath_tpath=`$ECHO "$func_normal_abspath_tpath" | $SED \
+        -e "$removedotparts" -e "$col
