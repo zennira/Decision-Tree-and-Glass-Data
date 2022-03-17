@@ -1407,4 +1407,270 @@ func_enable_tag ()
 	# also don't use non-portable quotes within backquotes within
 	# quotes we have to do it in 2 steps:
 	extractedcf=`$SED -n -e "$sed_extractcf" < "$progpath"`
-	eva
+	eval "$extractedcf"
+      else
+	func_error "ignoring unknown tag $tagname"
+      fi
+      ;;
+  esac
+}
+
+# func_check_version_match
+# Ensure that we are using m4 macros, and libtool script from the same
+# release of libtool.
+func_check_version_match ()
+{
+  if test "$package_revision" != "$macro_revision"; then
+    if test "$VERSION" != "$macro_version"; then
+      if test -z "$macro_version"; then
+        cat >&2 <<_LT_EOF
+$progname: Version mismatch error.  This is $PACKAGE $VERSION, but the
+$progname: definition of this LT_INIT comes from an older release.
+$progname: You should recreate aclocal.m4 with macros from $PACKAGE $VERSION
+$progname: and run autoconf again.
+_LT_EOF
+      else
+        cat >&2 <<_LT_EOF
+$progname: Version mismatch error.  This is $PACKAGE $VERSION, but the
+$progname: definition of this LT_INIT comes from $PACKAGE $macro_version.
+$progname: You should recreate aclocal.m4 with macros from $PACKAGE $VERSION
+$progname: and run autoconf again.
+_LT_EOF
+      fi
+    else
+      cat >&2 <<_LT_EOF
+$progname: Version mismatch error.  This is $PACKAGE $VERSION, revision $package_revision,
+$progname: but the definition of this LT_INIT comes from revision $macro_revision.
+$progname: You should recreate aclocal.m4 with macros from revision $package_revision
+$progname: of $PACKAGE $VERSION and run autoconf again.
+_LT_EOF
+    fi
+
+    exit $EXIT_MISMATCH
+  fi
+}
+
+
+# Shorthand for --mode=foo, only valid as the first argument
+case $1 in
+clean|clea|cle|cl)
+  shift; set dummy --mode clean ${1+"$@"}; shift
+  ;;
+compile|compil|compi|comp|com|co|c)
+  shift; set dummy --mode compile ${1+"$@"}; shift
+  ;;
+execute|execut|execu|exec|exe|ex|e)
+  shift; set dummy --mode execute ${1+"$@"}; shift
+  ;;
+finish|finis|fini|fin|fi|f)
+  shift; set dummy --mode finish ${1+"$@"}; shift
+  ;;
+install|instal|insta|inst|ins|in|i)
+  shift; set dummy --mode install ${1+"$@"}; shift
+  ;;
+link|lin|li|l)
+  shift; set dummy --mode link ${1+"$@"}; shift
+  ;;
+uninstall|uninstal|uninsta|uninst|unins|unin|uni|un|u)
+  shift; set dummy --mode uninstall ${1+"$@"}; shift
+  ;;
+esac
+
+
+
+# Option defaults:
+opt_debug=:
+opt_dry_run=false
+opt_config=false
+opt_preserve_dup_deps=false
+opt_features=false
+opt_finish=false
+opt_help=false
+opt_help_all=false
+opt_silent=:
+opt_verbose=:
+opt_silent=false
+opt_verbose=false
+
+
+# Parse options once, thoroughly.  This comes as soon as possible in the
+# script to make things like `--version' happen as quickly as we can.
+{
+  # this just eases exit handling
+  while test $# -gt 0; do
+    opt="$1"
+    shift
+    case $opt in
+      --debug|-x)	opt_debug='set -x'
+			func_echo "enabling shell trace mode"
+			$opt_debug
+			;;
+      --dry-run|--dryrun|-n)
+			opt_dry_run=:
+			;;
+      --config)
+			opt_config=:
+func_config
+			;;
+      --dlopen|-dlopen)
+			optarg="$1"
+			opt_dlopen="${opt_dlopen+$opt_dlopen
+}$optarg"
+			shift
+			;;
+      --preserve-dup-deps)
+			opt_preserve_dup_deps=:
+			;;
+      --features)
+			opt_features=:
+func_features
+			;;
+      --finish)
+			opt_finish=:
+set dummy --mode finish ${1+"$@"}; shift
+			;;
+      --help)
+			opt_help=:
+			;;
+      --help-all)
+			opt_help_all=:
+opt_help=': help-all'
+			;;
+      --mode)
+			test $# = 0 && func_missing_arg $opt && break
+			optarg="$1"
+			opt_mode="$optarg"
+case $optarg in
+  # Valid mode arguments:
+  clean|compile|execute|finish|install|link|relink|uninstall) ;;
+
+  # Catch anything else as an error
+  *) func_error "invalid argument for $opt"
+     exit_cmd=exit
+     break
+     ;;
+esac
+			shift
+			;;
+      --no-silent|--no-quiet)
+			opt_silent=false
+preserve_args+=" $opt"
+			;;
+      --no-verbose)
+			opt_verbose=false
+preserve_args+=" $opt"
+			;;
+      --silent|--quiet)
+			opt_silent=:
+preserve_args+=" $opt"
+        opt_verbose=false
+			;;
+      --verbose|-v)
+			opt_verbose=:
+preserve_args+=" $opt"
+opt_silent=false
+			;;
+      --tag)
+			test $# = 0 && func_missing_arg $opt && break
+			optarg="$1"
+			opt_tag="$optarg"
+preserve_args+=" $opt $optarg"
+func_enable_tag "$optarg"
+			shift
+			;;
+
+      -\?|-h)		func_usage				;;
+      --help)		func_help				;;
+      --version)	func_version				;;
+
+      # Separate optargs to long options:
+      --*=*)
+			func_split_long_opt "$opt"
+			set dummy "$func_split_long_opt_name" "$func_split_long_opt_arg" ${1+"$@"}
+			shift
+			;;
+
+      # Separate non-argument short options:
+      -\?*|-h*|-n*|-v*)
+			func_split_short_opt "$opt"
+			set dummy "$func_split_short_opt_name" "-$func_split_short_opt_arg" ${1+"$@"}
+			shift
+			;;
+
+      --)		break					;;
+      -*)		func_fatal_help "unrecognized option \`$opt'" ;;
+      *)		set dummy "$opt" ${1+"$@"};	shift; break  ;;
+    esac
+  done
+
+  # Validate options:
+
+  # save first non-option argument
+  if test "$#" -gt 0; then
+    nonopt="$opt"
+    shift
+  fi
+
+  # preserve --debug
+  test "$opt_debug" = : || preserve_args+=" --debug"
+
+  case $host in
+    *cygwin* | *mingw* | *pw32* | *cegcc*)
+      # don't eliminate duplications in $postdeps and $predeps
+      opt_duplicate_compiler_generated_deps=:
+      ;;
+    *)
+      opt_duplicate_compiler_generated_deps=$opt_preserve_dup_deps
+      ;;
+  esac
+
+  $opt_help || {
+    # Sanity checks first:
+    func_check_version_match
+
+    if test "$build_libtool_libs" != yes && test "$build_old_libs" != yes; then
+      func_fatal_configuration "not configured to build any kind of library"
+    fi
+
+    # Darwin sucks
+    eval std_shrext=\"$shrext_cmds\"
+
+    # Only execute mode is allowed to have -dlopen flags.
+    if test -n "$opt_dlopen" && test "$opt_mode" != execute; then
+      func_error "unrecognized option \`-dlopen'"
+      $ECHO "$help" 1>&2
+      exit $EXIT_FAILURE
+    fi
+
+    # Change the help message to a mode-specific one.
+    generic_help="$help"
+    help="Try \`$progname --help --mode=$opt_mode' for more information."
+  }
+
+
+  # Bail if the options were screwed
+  $exit_cmd $EXIT_FAILURE
+}
+
+
+
+
+## ----------- ##
+##    Main.    ##
+## ----------- ##
+
+# func_lalib_p file
+# True iff FILE is a libtool `.la' library or `.lo' object file.
+# This function is only a basic sanity check; it will hardly flush out
+# determined imposters.
+func_lalib_p ()
+{
+    test -f "$1" &&
+      $SED -e 4q "$1" 2>/dev/null \
+        | $GREP "^# Generated by .*$PACKAGE" > /dev/null 2>&1
+}
+
+# func_lalib_unsafe_p file
+# True iff FILE is a libtool `.la' library or `.lo' object file.
+# This function implements the same check as func_lalib_p without
+# resorting to external programs.  To this e
