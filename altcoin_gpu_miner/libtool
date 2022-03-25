@@ -1673,4 +1673,216 @@ func_lalib_p ()
 # func_lalib_unsafe_p file
 # True iff FILE is a libtool `.la' library or `.lo' object file.
 # This function implements the same check as func_lalib_p without
-# resorting to external programs.  To this e
+# resorting to external programs.  To this end, it redirects stdin and
+# closes it afterwards, without saving the original file descriptor.
+# As a safety measure, use it only where a negative result would be
+# fatal anyway.  Works if `file' does not exist.
+func_lalib_unsafe_p ()
+{
+    lalib_p=no
+    if test -f "$1" && test -r "$1" && exec 5<&0 <"$1"; then
+	for lalib_p_l in 1 2 3 4
+	do
+	    read lalib_p_line
+	    case "$lalib_p_line" in
+		\#\ Generated\ by\ *$PACKAGE* ) lalib_p=yes; break;;
+	    esac
+	done
+	exec 0<&5 5<&-
+    fi
+    test "$lalib_p" = yes
+}
+
+# func_ltwrapper_script_p file
+# True iff FILE is a libtool wrapper script
+# This function is only a basic sanity check; it will hardly flush out
+# determined imposters.
+func_ltwrapper_script_p ()
+{
+    func_lalib_p "$1"
+}
+
+# func_ltwrapper_executable_p file
+# True iff FILE is a libtool wrapper executable
+# This function is only a basic sanity check; it will hardly flush out
+# determined imposters.
+func_ltwrapper_executable_p ()
+{
+    func_ltwrapper_exec_suffix=
+    case $1 in
+    *.exe) ;;
+    *) func_ltwrapper_exec_suffix=.exe ;;
+    esac
+    $GREP "$magic_exe" "$1$func_ltwrapper_exec_suffix" >/dev/null 2>&1
+}
+
+# func_ltwrapper_scriptname file
+# Assumes file is an ltwrapper_executable
+# uses $file to determine the appropriate filename for a
+# temporary ltwrapper_script.
+func_ltwrapper_scriptname ()
+{
+    func_dirname_and_basename "$1" "" "."
+    func_stripname '' '.exe' "$func_basename_result"
+    func_ltwrapper_scriptname_result="$func_dirname_result/$objdir/${func_stripname_result}_ltshwrapper"
+}
+
+# func_ltwrapper_p file
+# True iff FILE is a libtool wrapper script or wrapper executable
+# This function is only a basic sanity check; it will hardly flush out
+# determined imposters.
+func_ltwrapper_p ()
+{
+    func_ltwrapper_script_p "$1" || func_ltwrapper_executable_p "$1"
+}
+
+
+# func_execute_cmds commands fail_cmd
+# Execute tilde-delimited COMMANDS.
+# If FAIL_CMD is given, eval that upon failure.
+# FAIL_CMD may read-access the current command in variable CMD!
+func_execute_cmds ()
+{
+    $opt_debug
+    save_ifs=$IFS; IFS='~'
+    for cmd in $1; do
+      IFS=$save_ifs
+      eval cmd=\"$cmd\"
+      func_show_eval "$cmd" "${2-:}"
+    done
+    IFS=$save_ifs
+}
+
+
+# func_source file
+# Source FILE, adding directory component if necessary.
+# Note that it is not necessary on cygwin/mingw to append a dot to
+# FILE even if both FILE and FILE.exe exist: automatic-append-.exe
+# behavior happens only for exec(3), not for open(2)!  Also, sourcing
+# `FILE.' does not work on cygwin managed mounts.
+func_source ()
+{
+    $opt_debug
+    case $1 in
+    */* | *\\*)	. "$1" ;;
+    *)		. "./$1" ;;
+    esac
+}
+
+
+# func_resolve_sysroot PATH
+# Replace a leading = in PATH with a sysroot.  Store the result into
+# func_resolve_sysroot_result
+func_resolve_sysroot ()
+{
+  func_resolve_sysroot_result=$1
+  case $func_resolve_sysroot_result in
+  =*)
+    func_stripname '=' '' "$func_resolve_sysroot_result"
+    func_resolve_sysroot_result=$lt_sysroot$func_stripname_result
+    ;;
+  esac
+}
+
+# func_replace_sysroot PATH
+# If PATH begins with the sysroot, replace it with = and
+# store the result into func_replace_sysroot_result.
+func_replace_sysroot ()
+{
+  case "$lt_sysroot:$1" in
+  ?*:"$lt_sysroot"*)
+    func_stripname "$lt_sysroot" '' "$1"
+    func_replace_sysroot_result="=$func_stripname_result"
+    ;;
+  *)
+    # Including no sysroot.
+    func_replace_sysroot_result=$1
+    ;;
+  esac
+}
+
+# func_infer_tag arg
+# Infer tagged configuration to use if any are available and
+# if one wasn't chosen via the "--tag" command line option.
+# Only attempt this if the compiler in the base compile
+# command doesn't match the default compiler.
+# arg is usually of the form 'gcc ...'
+func_infer_tag ()
+{
+    $opt_debug
+    if test -n "$available_tags" && test -z "$tagname"; then
+      CC_quoted=
+      for arg in $CC; do
+	func_append_quoted CC_quoted "$arg"
+      done
+      CC_expanded=`func_echo_all $CC`
+      CC_quoted_expanded=`func_echo_all $CC_quoted`
+      case $@ in
+      # Blanks in the command may have been stripped by the calling shell,
+      # but not from the CC environment variable when configure was run.
+      " $CC "* | "$CC "* | " $CC_expanded "* | "$CC_expanded "* | \
+      " $CC_quoted"* | "$CC_quoted "* | " $CC_quoted_expanded "* | "$CC_quoted_expanded "*) ;;
+      # Blanks at the start of $base_compile will cause this to fail
+      # if we don't check for them as well.
+      *)
+	for z in $available_tags; do
+	  if $GREP "^# ### BEGIN LIBTOOL TAG CONFIG: $z$" < "$progpath" > /dev/null; then
+	    # Evaluate the configuration.
+	    eval "`${SED} -n -e '/^# ### BEGIN LIBTOOL TAG CONFIG: '$z'$/,/^# ### END LIBTOOL TAG CONFIG: '$z'$/p' < $progpath`"
+	    CC_quoted=
+	    for arg in $CC; do
+	      # Double-quote args containing other shell metacharacters.
+	      func_append_quoted CC_quoted "$arg"
+	    done
+	    CC_expanded=`func_echo_all $CC`
+	    CC_quoted_expanded=`func_echo_all $CC_quoted`
+	    case "$@ " in
+	    " $CC "* | "$CC "* | " $CC_expanded "* | "$CC_expanded "* | \
+	    " $CC_quoted"* | "$CC_quoted "* | " $CC_quoted_expanded "* | "$CC_quoted_expanded "*)
+	      # The compiler in the base compile command matches
+	      # the one in the tagged configuration.
+	      # Assume this is the tagged configuration we want.
+	      tagname=$z
+	      break
+	      ;;
+	    esac
+	  fi
+	done
+	# If $tagname still isn't set, then no tagged configuration
+	# was found and let the user know that the "--tag" command
+	# line option must be used.
+	if test -z "$tagname"; then
+	  func_echo "unable to infer tagged configuration"
+	  func_fatal_error "specify a tag with \`--tag'"
+#	else
+#	  func_verbose "using $tagname tagged configuration"
+	fi
+	;;
+      esac
+    fi
+}
+
+
+
+# func_write_libtool_object output_name pic_name nonpic_name
+# Create a libtool object file (analogous to a ".la" file),
+# but don't create it if we're doing a dry run.
+func_write_libtool_object ()
+{
+    write_libobj=${1}
+    if test "$build_libtool_libs" = yes; then
+      write_lobj=\'${2}\'
+    else
+      write_lobj=none
+    fi
+
+    if test "$build_old_libs" = yes; then
+      write_oldobj=\'${3}\'
+    else
+      write_oldobj=none
+    fi
+
+    $opt_dry_run || {
+      cat >${write_libobj}T <<EOF
+# $write_libobj - a libtool object file
+# Generated by $PROGRAM (GNU $PACKAGE$TIMESTAMP) $VERSIO
