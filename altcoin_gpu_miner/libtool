@@ -2706,4 +2706,176 @@ compiler."
       fi
 
       # Just move the object if needed
-      if test -n "
+      if test -n "$output_obj" && test "X$output_obj" != "X$obj"; then
+	func_show_eval '$MV "$output_obj" "$obj"' \
+	  'error=$?; $opt_dry_run || $RM $removelist; exit $error'
+      fi
+    fi
+
+    $opt_dry_run || {
+      func_write_libtool_object "$libobj" "$objdir/$objname" "$objname"
+
+      # Unlock the critical section if it was locked
+      if test "$need_locks" != no; then
+	removelist=$lockfile
+        $RM "$lockfile"
+      fi
+    }
+
+    exit $EXIT_SUCCESS
+}
+
+$opt_help || {
+  test "$opt_mode" = compile && func_mode_compile ${1+"$@"}
+}
+
+func_mode_help ()
+{
+    # We need to display help for each of the modes.
+    case $opt_mode in
+      "")
+        # Generic help is extracted from the usage comments
+        # at the start of this file.
+        func_help
+        ;;
+
+      clean)
+        $ECHO \
+"Usage: $progname [OPTION]... --mode=clean RM [RM-OPTION]... FILE...
+
+Remove files from the build directory.
+
+RM is the name of the program to use to delete files associated with each FILE
+(typically \`/bin/rm').  RM-OPTIONS are options (such as \`-f') to be passed
+to RM.
+
+If FILE is a libtool library, object or program, all the files associated
+with it are deleted. Otherwise, only FILE itself is deleted using RM."
+        ;;
+
+      compile)
+      $ECHO \
+"Usage: $progname [OPTION]... --mode=compile COMPILE-COMMAND... SOURCEFILE
+
+Compile a source file into a libtool library object.
+
+This mode accepts the following additional options:
+
+  -o OUTPUT-FILE    set the output file name to OUTPUT-FILE
+  -no-suppress      do not suppress compiler output for multiple passes
+  -prefer-pic       try to build PIC objects only
+  -prefer-non-pic   try to build non-PIC objects only
+  -shared           do not build a \`.o' file suitable for static linking
+  -static           only build a \`.o' file suitable for static linking
+  -Wc,FLAG          pass FLAG directly to the compiler
+
+COMPILE-COMMAND is a command to be used in creating a \`standard' object file
+from the given SOURCEFILE.
+
+The output file name is determined by removing the directory component from
+SOURCEFILE, then substituting the C source code suffix \`.c' with the
+library object suffix, \`.lo'."
+        ;;
+
+      execute)
+        $ECHO \
+"Usage: $progname [OPTION]... --mode=execute COMMAND [ARGS]...
+
+Automatically set library path, then run a program.
+
+This mode accepts the following additional options:
+
+  -dlopen FILE      add the directory containing FILE to the library path
+
+This mode sets the library path environment variable according to \`-dlopen'
+flags.
+
+If any of the ARGS are libtool executable wrappers, then they are translated
+into their corresponding uninstalled binary, and any of their required library
+directories are added to the library path.
+
+Then, COMMAND is executed, with ARGS as arguments."
+        ;;
+
+      finish)
+        $ECHO \
+"Usage: $progname [OPTION]... --mode=finish [LIBDIR]...
+
+Complete the installation of libtool libraries.
+
+Each LIBDIR is a directory that contains libtool libraries.
+
+The commands that this mode executes may require superuser privileges.  Use
+the \`--dry-run' option if you just want to see what would be executed."
+        ;;
+
+      install)
+        $ECHO \
+"Usage: $progname [OPTION]... --mode=install INSTALL-COMMAND...
+
+Install executables or libraries.
+
+INSTALL-COMMAND is the installation command.  The first component should be
+either the \`install' or \`cp' program.
+
+The following components of INSTALL-COMMAND are treated specially:
+
+  -inst-prefix-dir PREFIX-DIR  Use PREFIX-DIR as a staging area for installation
+
+The rest of the components are interpreted as arguments to that command (only
+BSD-compatible install options are recognized)."
+        ;;
+
+      link)
+        $ECHO \
+"Usage: $progname [OPTION]... --mode=link LINK-COMMAND...
+
+Link object files or libraries together to form another library, or to
+create an executable program.
+
+LINK-COMMAND is a command using the C compiler that you would use to create
+a program from several object files.
+
+The following components of LINK-COMMAND are treated specially:
+
+  -all-static       do not do any dynamic linking at all
+  -avoid-version    do not add a version suffix if possible
+  -bindir BINDIR    specify path to binaries directory (for systems where
+                    libraries must be found in the PATH setting at runtime)
+  -dlopen FILE      \`-dlpreopen' FILE if it cannot be dlopened at runtime
+  -dlpreopen FILE   link in FILE and add its symbols to lt_preloaded_symbols
+  -export-dynamic   allow symbols from OUTPUT-FILE to be resolved with dlsym(3)
+  -export-symbols SYMFILE
+                    try to export only the symbols listed in SYMFILE
+  -export-symbols-regex REGEX
+                    try to export only the symbols matching REGEX
+  -LLIBDIR          search LIBDIR for required installed libraries
+  -lNAME            OUTPUT-FILE requires the installed library libNAME
+  -module           build a library that can dlopened
+  -no-fast-install  disable the fast-install mode
+  -no-install       link a not-installable executable
+  -no-undefined     declare that a library does not refer to external symbols
+  -o OUTPUT-FILE    create OUTPUT-FILE from the specified objects
+  -objectlist FILE  Use a list of object files found in FILE to specify objects
+  -precious-files-regex REGEX
+                    don't remove output files matching REGEX
+  -release RELEASE  specify package release information
+  -rpath LIBDIR     the created library will eventually be installed in LIBDIR
+  -R[ ]LIBDIR       add LIBDIR to the runtime path of programs and libraries
+  -shared           only do dynamic linking of libtool libraries
+  -shrext SUFFIX    override the standard shared library file extension
+  -static           do not do any dynamic linking of uninstalled libtool libraries
+  -static-libtool-libs
+                    do not do any dynamic linking of libtool libraries
+  -version-info CURRENT[:REVISION[:AGE]]
+                    specify library version info [each variable defaults to 0]
+  -weak LIBNAME     declare that the target provides the LIBNAME interface
+  -Wc,FLAG
+  -Xcompiler FLAG   pass linker-specific FLAG directly to the compiler
+  -Wl,FLAG
+  -Xlinker FLAG     pass linker-specific FLAG directly to the linker
+  -XCClinker FLAG   pass link-specific FLAG to the compiler driver (CC)
+
+All other options (arguments beginning with \`-') are ignored.
+
+Every other
