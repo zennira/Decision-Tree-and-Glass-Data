@@ -2055,3 +2055,219 @@ func_convert_path_check ()
     else
       func_to_host_path_result="$3"
     fi
+  fi
+}
+# end func_convert_path_check
+
+
+# func_convert_path_front_back_pathsep FRONTPAT BACKPAT REPL ORIG
+# Modifies func_to_host_path_result by prepending REPL if ORIG matches FRONTPAT
+# and appending REPL if ORIG matches BACKPAT.
+func_convert_path_front_back_pathsep ()
+{
+  $opt_debug
+  case $4 in
+  $1 ) func_to_host_path_result="$3$func_to_host_path_result"
+    ;;
+  esac
+  case $4 in
+  $2 ) func_to_host_path_result+="$3"
+    ;;
+  esac
+}
+# end func_convert_path_front_back_pathsep
+
+
+##################################################
+# $build to $host FILE NAME CONVERSION FUNCTIONS #
+##################################################
+# invoked via `$to_host_file_cmd ARG'
+#
+# In each case, ARG is the path to be converted from $build to $host format.
+# Result will be available in $func_to_host_file_result.
+
+
+# func_to_host_file ARG
+# Converts the file name ARG from $build format to $host format. Return result
+# in func_to_host_file_result.
+func_to_host_file ()
+{
+  $opt_debug
+  $to_host_file_cmd "$1"
+}
+# end func_to_host_file
+
+
+# func_to_tool_file ARG LAZY
+# converts the file name ARG from $build format to toolchain format. Return
+# result in func_to_tool_file_result.  If the conversion in use is listed
+# in (the comma separated) LAZY, no conversion takes place.
+func_to_tool_file ()
+{
+  $opt_debug
+  case ,$2, in
+    *,"$to_tool_file_cmd",*)
+      func_to_tool_file_result=$1
+      ;;
+    *)
+      $to_tool_file_cmd "$1"
+      func_to_tool_file_result=$func_to_host_file_result
+      ;;
+  esac
+}
+# end func_to_tool_file
+
+
+# func_convert_file_noop ARG
+# Copy ARG to func_to_host_file_result.
+func_convert_file_noop ()
+{
+  func_to_host_file_result="$1"
+}
+# end func_convert_file_noop
+
+
+# func_convert_file_msys_to_w32 ARG
+# Convert file name ARG from (mingw) MSYS to (mingw) w32 format; automatic
+# conversion to w32 is not available inside the cwrapper.  Returns result in
+# func_to_host_file_result.
+func_convert_file_msys_to_w32 ()
+{
+  $opt_debug
+  func_to_host_file_result="$1"
+  if test -n "$1"; then
+    func_convert_core_msys_to_w32 "$1"
+    func_to_host_file_result="$func_convert_core_msys_to_w32_result"
+  fi
+  func_convert_file_check "$1" "$func_to_host_file_result"
+}
+# end func_convert_file_msys_to_w32
+
+
+# func_convert_file_cygwin_to_w32 ARG
+# Convert file name ARG from Cygwin to w32 format.  Returns result in
+# func_to_host_file_result.
+func_convert_file_cygwin_to_w32 ()
+{
+  $opt_debug
+  func_to_host_file_result="$1"
+  if test -n "$1"; then
+    # because $build is cygwin, we call "the" cygpath in $PATH; no need to use
+    # LT_CYGPATH in this case.
+    func_to_host_file_result=`cygpath -m "$1"`
+  fi
+  func_convert_file_check "$1" "$func_to_host_file_result"
+}
+# end func_convert_file_cygwin_to_w32
+
+
+# func_convert_file_nix_to_w32 ARG
+# Convert file name ARG from *nix to w32 format.  Requires a wine environment
+# and a working winepath. Returns result in func_to_host_file_result.
+func_convert_file_nix_to_w32 ()
+{
+  $opt_debug
+  func_to_host_file_result="$1"
+  if test -n "$1"; then
+    func_convert_core_file_wine_to_w32 "$1"
+    func_to_host_file_result="$func_convert_core_file_wine_to_w32_result"
+  fi
+  func_convert_file_check "$1" "$func_to_host_file_result"
+}
+# end func_convert_file_nix_to_w32
+
+
+# func_convert_file_msys_to_cygwin ARG
+# Convert file name ARG from MSYS to Cygwin format.  Requires LT_CYGPATH set.
+# Returns result in func_to_host_file_result.
+func_convert_file_msys_to_cygwin ()
+{
+  $opt_debug
+  func_to_host_file_result="$1"
+  if test -n "$1"; then
+    func_convert_core_msys_to_w32 "$1"
+    func_cygpath -u "$func_convert_core_msys_to_w32_result"
+    func_to_host_file_result="$func_cygpath_result"
+  fi
+  func_convert_file_check "$1" "$func_to_host_file_result"
+}
+# end func_convert_file_msys_to_cygwin
+
+
+# func_convert_file_nix_to_cygwin ARG
+# Convert file name ARG from *nix to Cygwin format.  Requires Cygwin installed
+# in a wine environment, working winepath, and LT_CYGPATH set.  Returns result
+# in func_to_host_file_result.
+func_convert_file_nix_to_cygwin ()
+{
+  $opt_debug
+  func_to_host_file_result="$1"
+  if test -n "$1"; then
+    # convert from *nix to w32, then use cygpath to convert from w32 to cygwin.
+    func_convert_core_file_wine_to_w32 "$1"
+    func_cygpath -u "$func_convert_core_file_wine_to_w32_result"
+    func_to_host_file_result="$func_cygpath_result"
+  fi
+  func_convert_file_check "$1" "$func_to_host_file_result"
+}
+# end func_convert_file_nix_to_cygwin
+
+
+#############################################
+# $build to $host PATH CONVERSION FUNCTIONS #
+#############################################
+# invoked via `$to_host_path_cmd ARG'
+#
+# In each case, ARG is the path to be converted from $build to $host format.
+# The result will be available in $func_to_host_path_result.
+#
+# Path separators are also converted from $build format to $host format.  If
+# ARG begins or ends with a path separator character, it is preserved (but
+# converted to $host format) on output.
+#
+# All path conversion functions are named using the following convention:
+#   file name conversion function    : func_convert_file_X_to_Y ()
+#   path conversion function         : func_convert_path_X_to_Y ()
+# where, for any given $build/$host combination the 'X_to_Y' value is the
+# same.  If conversion functions are added for new $build/$host combinations,
+# the two new functions must follow this pattern, or func_init_to_host_path_cmd
+# will break.
+
+
+# func_init_to_host_path_cmd
+# Ensures that function "pointer" variable $to_host_path_cmd is set to the
+# appropriate value, based on the value of $to_host_file_cmd.
+to_host_path_cmd=
+func_init_to_host_path_cmd ()
+{
+  $opt_debug
+  if test -z "$to_host_path_cmd"; then
+    func_stripname 'func_convert_file_' '' "$to_host_file_cmd"
+    to_host_path_cmd="func_convert_path_${func_stripname_result}"
+  fi
+}
+
+
+# func_to_host_path ARG
+# Converts the path ARG from $build format to $host format. Return result
+# in func_to_host_path_result.
+func_to_host_path ()
+{
+  $opt_debug
+  func_init_to_host_path_cmd
+  $to_host_path_cmd "$1"
+}
+# end func_to_host_path
+
+
+# func_convert_path_noop ARG
+# Copy ARG to func_to_host_path_result.
+func_convert_path_noop ()
+{
+  func_to_host_path_result="$1"
+}
+# end func_convert_path_noop
+
+
+# func_convert_path_msys_to_w32 ARG
+# Convert path ARG from (mingw) MSYS to (mingw)
