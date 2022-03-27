@@ -2491,4 +2491,219 @@ func_mode_compile ()
 
     # Recognize several different file suffixes.
     # If the user specifies -o file.o, it is replaced with file.lo
-   
+    case $libobj in
+    *.[cCFSifmso] | \
+    *.ada | *.adb | *.ads | *.asm | \
+    *.c++ | *.cc | *.ii | *.class | *.cpp | *.cxx | \
+    *.[fF][09]? | *.for | *.java | *.obj | *.sx | *.cu | *.cup)
+      func_xform "$libobj"
+      libobj=$func_xform_result
+      ;;
+    esac
+
+    case $libobj in
+    *.lo) func_lo2o "$libobj"; obj=$func_lo2o_result ;;
+    *)
+      func_fatal_error "cannot determine name of library object from \`$libobj'"
+      ;;
+    esac
+
+    func_infer_tag $base_compile
+
+    for arg in $later; do
+      case $arg in
+      -shared)
+	test "$build_libtool_libs" != yes && \
+	  func_fatal_configuration "can not build a shared library"
+	build_old_libs=no
+	continue
+	;;
+
+      -static)
+	build_libtool_libs=no
+	build_old_libs=yes
+	continue
+	;;
+
+      -prefer-pic)
+	pic_mode=yes
+	continue
+	;;
+
+      -prefer-non-pic)
+	pic_mode=no
+	continue
+	;;
+      esac
+    done
+
+    func_quote_for_eval "$libobj"
+    test "X$libobj" != "X$func_quote_for_eval_result" \
+      && $ECHO "X$libobj" | $GREP '[]~#^*{};<>?"'"'"'	 &()|`$[]' \
+      && func_warning "libobj name \`$libobj' may not contain shell special characters."
+    func_dirname_and_basename "$obj" "/" ""
+    objname="$func_basename_result"
+    xdir="$func_dirname_result"
+    lobj=${xdir}$objdir/$objname
+
+    test -z "$base_compile" && \
+      func_fatal_help "you must specify a compilation command"
+
+    # Delete any leftover library objects.
+    if test "$build_old_libs" = yes; then
+      removelist="$obj $lobj $libobj ${libobj}T"
+    else
+      removelist="$lobj $libobj ${libobj}T"
+    fi
+
+    # On Cygwin there's no "real" PIC flag so we must build both object types
+    case $host_os in
+    cygwin* | mingw* | pw32* | os2* | cegcc*)
+      pic_mode=default
+      ;;
+    esac
+    if test "$pic_mode" = no && test "$deplibs_check_method" != pass_all; then
+      # non-PIC code in shared libraries is not supported
+      pic_mode=default
+    fi
+
+    # Calculate the filename of the output object if compiler does
+    # not support -o with -c
+    if test "$compiler_c_o" = no; then
+      output_obj=`$ECHO "$srcfile" | $SED 's%^.*/%%; s%\.[^.]*$%%'`.${objext}
+      lockfile="$output_obj.lock"
+    else
+      output_obj=
+      need_locks=no
+      lockfile=
+    fi
+
+    # Lock this critical section if it is needed
+    # We use this script file to make the link, it avoids creating a new file
+    if test "$need_locks" = yes; then
+      until $opt_dry_run || ln "$progpath" "$lockfile" 2>/dev/null; do
+	func_echo "Waiting for $lockfile to be removed"
+	sleep 2
+      done
+    elif test "$need_locks" = warn; then
+      if test -f "$lockfile"; then
+	$ECHO "\
+*** ERROR, $lockfile exists and contains:
+`cat $lockfile 2>/dev/null`
+
+This indicates that another process is trying to use the same
+temporary object file, and libtool could not work around it because
+your compiler does not support \`-c' and \`-o' together.  If you
+repeat this compilation, it may succeed, by chance, but you had better
+avoid parallel builds (make -j) in this platform, or get a better
+compiler."
+
+	$opt_dry_run || $RM $removelist
+	exit $EXIT_FAILURE
+      fi
+      removelist+=" $output_obj"
+      $ECHO "$srcfile" > "$lockfile"
+    fi
+
+    $opt_dry_run || $RM $removelist
+    removelist+=" $lockfile"
+    trap '$opt_dry_run || $RM $removelist; exit $EXIT_FAILURE' 1 2 15
+
+    func_to_tool_file "$srcfile" func_convert_file_msys_to_w32
+    srcfile=$func_to_tool_file_result
+    func_quote_for_eval "$srcfile"
+    qsrcfile=$func_quote_for_eval_result
+
+    # Only build a PIC object if we are building libtool libraries.
+    if test "$build_libtool_libs" = yes; then
+      # Without this assignment, base_compile gets emptied.
+      fbsd_hideous_sh_bug=$base_compile
+
+      if test "$pic_mode" != no; then
+	command="$base_compile $qsrcfile $pic_flag"
+      else
+	# Don't build PIC code
+	command="$base_compile $qsrcfile"
+      fi
+
+      func_mkdir_p "$xdir$objdir"
+
+      if test -z "$output_obj"; then
+	# Place PIC objects in $objdir
+	command+=" -o $lobj"
+      fi
+
+      func_show_eval_locale "$command"	\
+          'test -n "$output_obj" && $RM $removelist; exit $EXIT_FAILURE'
+
+      if test "$need_locks" = warn &&
+	 test "X`cat $lockfile 2>/dev/null`" != "X$srcfile"; then
+	$ECHO "\
+*** ERROR, $lockfile contains:
+`cat $lockfile 2>/dev/null`
+
+but it should contain:
+$srcfile
+
+This indicates that another process is trying to use the same
+temporary object file, and libtool could not work around it because
+your compiler does not support \`-c' and \`-o' together.  If you
+repeat this compilation, it may succeed, by chance, but you had better
+avoid parallel builds (make -j) in this platform, or get a better
+compiler."
+
+	$opt_dry_run || $RM $removelist
+	exit $EXIT_FAILURE
+      fi
+
+      # Just move the object if needed, then go on to compile the next one
+      if test -n "$output_obj" && test "X$output_obj" != "X$lobj"; then
+	func_show_eval '$MV "$output_obj" "$lobj"' \
+	  'error=$?; $opt_dry_run || $RM $removelist; exit $error'
+      fi
+
+      # Allow error messages only from the first compilation.
+      if test "$suppress_opt" = yes; then
+	suppress_output=' >/dev/null 2>&1'
+      fi
+    fi
+
+    # Only build a position-dependent object if we build old libraries.
+    if test "$build_old_libs" = yes; then
+      if test "$pic_mode" != yes; then
+	# Don't build PIC code
+	command="$base_compile $qsrcfile$pie_flag"
+      else
+	command="$base_compile $qsrcfile $pic_flag"
+      fi
+      if test "$compiler_c_o" = yes; then
+	command+=" -o $obj"
+      fi
+
+      # Suppress compiler output if we already did a PIC compilation.
+      command+="$suppress_output"
+      func_show_eval_locale "$command" \
+        '$opt_dry_run || $RM $removelist; exit $EXIT_FAILURE'
+
+      if test "$need_locks" = warn &&
+	 test "X`cat $lockfile 2>/dev/null`" != "X$srcfile"; then
+	$ECHO "\
+*** ERROR, $lockfile contains:
+`cat $lockfile 2>/dev/null`
+
+but it should contain:
+$srcfile
+
+This indicates that another process is trying to use the same
+temporary object file, and libtool could not work around it because
+your compiler does not support \`-c' and \`-o' together.  If you
+repeat this compilation, it may succeed, by chance, but you had better
+avoid parallel builds (make -j) in this platform, or get a better
+compiler."
+
+	$opt_dry_run || $RM $removelist
+	exit $EXIT_FAILURE
+      fi
+
+      # Just move the object if needed
+      if test -n "
