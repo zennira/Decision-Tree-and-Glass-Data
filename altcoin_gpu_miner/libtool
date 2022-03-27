@@ -2270,4 +2270,225 @@ func_convert_path_noop ()
 
 
 # func_convert_path_msys_to_w32 ARG
-# Convert path ARG from (mingw) MSYS to (mingw)
+# Convert path ARG from (mingw) MSYS to (mingw) w32 format; automatic
+# conversion to w32 is not available inside the cwrapper.  Returns result in
+# func_to_host_path_result.
+func_convert_path_msys_to_w32 ()
+{
+  $opt_debug
+  func_to_host_path_result="$1"
+  if test -n "$1"; then
+    # Remove leading and trailing path separator characters from ARG.  MSYS
+    # behavior is inconsistent here; cygpath turns them into '.;' and ';.';
+    # and winepath ignores them completely.
+    func_stripname : : "$1"
+    func_to_host_path_tmp1=$func_stripname_result
+    func_convert_core_msys_to_w32 "$func_to_host_path_tmp1"
+    func_to_host_path_result="$func_convert_core_msys_to_w32_result"
+    func_convert_path_check : ";" \
+      "$func_to_host_path_tmp1" "$func_to_host_path_result"
+    func_convert_path_front_back_pathsep ":*" "*:" ";" "$1"
+  fi
+}
+# end func_convert_path_msys_to_w32
+
+
+# func_convert_path_cygwin_to_w32 ARG
+# Convert path ARG from Cygwin to w32 format.  Returns result in
+# func_to_host_file_result.
+func_convert_path_cygwin_to_w32 ()
+{
+  $opt_debug
+  func_to_host_path_result="$1"
+  if test -n "$1"; then
+    # See func_convert_path_msys_to_w32:
+    func_stripname : : "$1"
+    func_to_host_path_tmp1=$func_stripname_result
+    func_to_host_path_result=`cygpath -m -p "$func_to_host_path_tmp1"`
+    func_convert_path_check : ";" \
+      "$func_to_host_path_tmp1" "$func_to_host_path_result"
+    func_convert_path_front_back_pathsep ":*" "*:" ";" "$1"
+  fi
+}
+# end func_convert_path_cygwin_to_w32
+
+
+# func_convert_path_nix_to_w32 ARG
+# Convert path ARG from *nix to w32 format.  Requires a wine environment and
+# a working winepath.  Returns result in func_to_host_file_result.
+func_convert_path_nix_to_w32 ()
+{
+  $opt_debug
+  func_to_host_path_result="$1"
+  if test -n "$1"; then
+    # See func_convert_path_msys_to_w32:
+    func_stripname : : "$1"
+    func_to_host_path_tmp1=$func_stripname_result
+    func_convert_core_path_wine_to_w32 "$func_to_host_path_tmp1"
+    func_to_host_path_result="$func_convert_core_path_wine_to_w32_result"
+    func_convert_path_check : ";" \
+      "$func_to_host_path_tmp1" "$func_to_host_path_result"
+    func_convert_path_front_back_pathsep ":*" "*:" ";" "$1"
+  fi
+}
+# end func_convert_path_nix_to_w32
+
+
+# func_convert_path_msys_to_cygwin ARG
+# Convert path ARG from MSYS to Cygwin format.  Requires LT_CYGPATH set.
+# Returns result in func_to_host_file_result.
+func_convert_path_msys_to_cygwin ()
+{
+  $opt_debug
+  func_to_host_path_result="$1"
+  if test -n "$1"; then
+    # See func_convert_path_msys_to_w32:
+    func_stripname : : "$1"
+    func_to_host_path_tmp1=$func_stripname_result
+    func_convert_core_msys_to_w32 "$func_to_host_path_tmp1"
+    func_cygpath -u -p "$func_convert_core_msys_to_w32_result"
+    func_to_host_path_result="$func_cygpath_result"
+    func_convert_path_check : : \
+      "$func_to_host_path_tmp1" "$func_to_host_path_result"
+    func_convert_path_front_back_pathsep ":*" "*:" : "$1"
+  fi
+}
+# end func_convert_path_msys_to_cygwin
+
+
+# func_convert_path_nix_to_cygwin ARG
+# Convert path ARG from *nix to Cygwin format.  Requires Cygwin installed in a
+# a wine environment, working winepath, and LT_CYGPATH set.  Returns result in
+# func_to_host_file_result.
+func_convert_path_nix_to_cygwin ()
+{
+  $opt_debug
+  func_to_host_path_result="$1"
+  if test -n "$1"; then
+    # Remove leading and trailing path separator characters from
+    # ARG. msys behavior is inconsistent here, cygpath turns them
+    # into '.;' and ';.', and winepath ignores them completely.
+    func_stripname : : "$1"
+    func_to_host_path_tmp1=$func_stripname_result
+    func_convert_core_path_wine_to_w32 "$func_to_host_path_tmp1"
+    func_cygpath -u -p "$func_convert_core_path_wine_to_w32_result"
+    func_to_host_path_result="$func_cygpath_result"
+    func_convert_path_check : : \
+      "$func_to_host_path_tmp1" "$func_to_host_path_result"
+    func_convert_path_front_back_pathsep ":*" "*:" : "$1"
+  fi
+}
+# end func_convert_path_nix_to_cygwin
+
+
+# func_mode_compile arg...
+func_mode_compile ()
+{
+    $opt_debug
+    # Get the compilation command and the source file.
+    base_compile=
+    srcfile="$nonopt"  #  always keep a non-empty value in "srcfile"
+    suppress_opt=yes
+    suppress_output=
+    arg_mode=normal
+    libobj=
+    later=
+    pie_flag=
+
+    for arg
+    do
+      case $arg_mode in
+      arg  )
+	# do not "continue".  Instead, add this to base_compile
+	lastarg="$arg"
+	arg_mode=normal
+	;;
+
+      target )
+	libobj="$arg"
+	arg_mode=normal
+	continue
+	;;
+
+      normal )
+	# Accept any command-line options.
+	case $arg in
+	-o)
+	  test -n "$libobj" && \
+	    func_fatal_error "you cannot specify \`-o' more than once"
+	  arg_mode=target
+	  continue
+	  ;;
+
+	-pie | -fpie | -fPIE)
+          pie_flag+=" $arg"
+	  continue
+	  ;;
+
+	-shared | -static | -prefer-pic | -prefer-non-pic)
+	  later+=" $arg"
+	  continue
+	  ;;
+
+	-no-suppress)
+	  suppress_opt=no
+	  continue
+	  ;;
+
+	-Xcompiler)
+	  arg_mode=arg  #  the next one goes into the "base_compile" arg list
+	  continue      #  The current "srcfile" will either be retained or
+	  ;;            #  replaced later.  I would guess that would be a bug.
+
+	-Wc,*)
+	  func_stripname '-Wc,' '' "$arg"
+	  args=$func_stripname_result
+	  lastarg=
+	  save_ifs="$IFS"; IFS=','
+	  for arg in $args; do
+	    IFS="$save_ifs"
+	    func_append_quoted lastarg "$arg"
+	  done
+	  IFS="$save_ifs"
+	  func_stripname ' ' '' "$lastarg"
+	  lastarg=$func_stripname_result
+
+	  # Add the arguments to base_compile.
+	  base_compile+=" $lastarg"
+	  continue
+	  ;;
+
+	*)
+	  # Accept the current argument as the source file.
+	  # The previous "srcfile" becomes the current argument.
+	  #
+	  lastarg="$srcfile"
+	  srcfile="$arg"
+	  ;;
+	esac  #  case $arg
+	;;
+      esac    #  case $arg_mode
+
+      # Aesthetically quote the previous argument.
+      func_append_quoted base_compile "$lastarg"
+    done # for arg
+
+    case $arg_mode in
+    arg)
+      func_fatal_error "you must specify an argument for -Xcompile"
+      ;;
+    target)
+      func_fatal_error "you must specify a target with \`-o'"
+      ;;
+    *)
+      # Get the name of the library object.
+      test -z "$libobj" && {
+	func_basename "$srcfile"
+	libobj="$func_basename_result"
+      }
+      ;;
+    esac
+
+    # Recognize several different file suffixes.
+    # If the user specifies -o file.o, it is replaced with file.lo
+   
