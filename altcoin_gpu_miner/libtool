@@ -3126,4 +3126,252 @@ func_mode_finish ()
 	    > $tmpdir/tmp-la
 	  mv -f $tmpdir/tmp-la $lib
 	done
-    
+        ${RM}r "$tmpdir"
+      fi
+    fi
+
+    if test -n "$finish_cmds$finish_eval" && test -n "$libdirs"; then
+      for libdir in $libdirs; do
+	if test -n "$finish_cmds"; then
+	  # Do each command in the finish commands.
+	  func_execute_cmds "$finish_cmds" 'admincmds="$admincmds
+'"$cmd"'"'
+	fi
+	if test -n "$finish_eval"; then
+	  # Do the single finish_eval.
+	  eval cmds=\"$finish_eval\"
+	  $opt_dry_run || eval "$cmds" || admincmds+="
+       $cmds"
+	fi
+      done
+    fi
+
+    # Exit here if they wanted silent mode.
+    $opt_silent && exit $EXIT_SUCCESS
+
+    if test -n "$finish_cmds$finish_eval" && test -n "$libdirs"; then
+      echo "----------------------------------------------------------------------"
+      echo "Libraries have been installed in:"
+      for libdir in $libdirs; do
+	$ECHO "   $libdir"
+      done
+      echo
+      echo "If you ever happen to want to link against installed libraries"
+      echo "in a given directory, LIBDIR, you must either use libtool, and"
+      echo "specify the full pathname of the library, or use the \`-LLIBDIR'"
+      echo "flag during linking and do at least one of the following:"
+      if test -n "$shlibpath_var"; then
+	echo "   - add LIBDIR to the \`$shlibpath_var' environment variable"
+	echo "     during execution"
+      fi
+      if test -n "$runpath_var"; then
+	echo "   - add LIBDIR to the \`$runpath_var' environment variable"
+	echo "     during linking"
+      fi
+      if test -n "$hardcode_libdir_flag_spec"; then
+	libdir=LIBDIR
+	eval flag=\"$hardcode_libdir_flag_spec\"
+
+	$ECHO "   - use the \`$flag' linker flag"
+      fi
+      if test -n "$admincmds"; then
+	$ECHO "   - have your system administrator run these commands:$admincmds"
+      fi
+      if test -f /etc/ld.so.conf; then
+	echo "   - have your system administrator add LIBDIR to \`/etc/ld.so.conf'"
+      fi
+      echo
+
+      echo "See any operating system documentation about shared libraries for"
+      case $host in
+	solaris2.[6789]|solaris2.1[0-9])
+	  echo "more information, such as the ld(1), crle(1) and ld.so(8) manual"
+	  echo "pages."
+	  ;;
+	*)
+	  echo "more information, such as the ld(1) and ld.so(8) manual pages."
+	  ;;
+      esac
+      echo "----------------------------------------------------------------------"
+    fi
+    exit $EXIT_SUCCESS
+}
+
+test "$opt_mode" = finish && func_mode_finish ${1+"$@"}
+
+
+# func_mode_install arg...
+func_mode_install ()
+{
+    $opt_debug
+    # There may be an optional sh(1) argument at the beginning of
+    # install_prog (especially on Windows NT).
+    if test "$nonopt" = "$SHELL" || test "$nonopt" = /bin/sh ||
+       # Allow the use of GNU shtool's install command.
+       case $nonopt in *shtool*) :;; *) false;; esac; then
+      # Aesthetically quote it.
+      func_quote_for_eval "$nonopt"
+      install_prog="$func_quote_for_eval_result "
+      arg=$1
+      shift
+    else
+      install_prog=
+      arg=$nonopt
+    fi
+
+    # The real first argument should be the name of the installation program.
+    # Aesthetically quote it.
+    func_quote_for_eval "$arg"
+    install_prog+="$func_quote_for_eval_result"
+    install_shared_prog=$install_prog
+    case " $install_prog " in
+      *[\\\ /]cp\ *) install_cp=: ;;
+      *) install_cp=false ;;
+    esac
+
+    # We need to accept at least all the BSD install flags.
+    dest=
+    files=
+    opts=
+    prev=
+    install_type=
+    isdir=no
+    stripme=
+    no_mode=:
+    for arg
+    do
+      arg2=
+      if test -n "$dest"; then
+	files+=" $dest"
+	dest=$arg
+	continue
+      fi
+
+      case $arg in
+      -d) isdir=yes ;;
+      -f)
+	if $install_cp; then :; else
+	  prev=$arg
+	fi
+	;;
+      -g | -m | -o)
+	prev=$arg
+	;;
+      -s)
+	stripme=" -s"
+	continue
+	;;
+      -*)
+	;;
+      *)
+	# If the previous option needed an argument, then skip it.
+	if test -n "$prev"; then
+	  if test "x$prev" = x-m && test -n "$install_override_mode"; then
+	    arg2=$install_override_mode
+	    no_mode=false
+	  fi
+	  prev=
+	else
+	  dest=$arg
+	  continue
+	fi
+	;;
+      esac
+
+      # Aesthetically quote the argument.
+      func_quote_for_eval "$arg"
+      install_prog+=" $func_quote_for_eval_result"
+      if test -n "$arg2"; then
+	func_quote_for_eval "$arg2"
+      fi
+      install_shared_prog+=" $func_quote_for_eval_result"
+    done
+
+    test -z "$install_prog" && \
+      func_fatal_help "you must specify an install program"
+
+    test -n "$prev" && \
+      func_fatal_help "the \`$prev' option requires an argument"
+
+    if test -n "$install_override_mode" && $no_mode; then
+      if $install_cp; then :; else
+	func_quote_for_eval "$install_override_mode"
+	install_shared_prog+=" -m $func_quote_for_eval_result"
+      fi
+    fi
+
+    if test -z "$files"; then
+      if test -z "$dest"; then
+	func_fatal_help "no file or destination specified"
+      else
+	func_fatal_help "you must specify a destination"
+      fi
+    fi
+
+    # Strip any trailing slash from the destination.
+    func_stripname '' '/' "$dest"
+    dest=$func_stripname_result
+
+    # Check to see that the destination is a directory.
+    test -d "$dest" && isdir=yes
+    if test "$isdir" = yes; then
+      destdir="$dest"
+      destname=
+    else
+      func_dirname_and_basename "$dest" "" "."
+      destdir="$func_dirname_result"
+      destname="$func_basename_result"
+
+      # Not a directory, so check to see that there is only one file specified.
+      set dummy $files; shift
+      test "$#" -gt 1 && \
+	func_fatal_help "\`$dest' is not a directory"
+    fi
+    case $destdir in
+    [\\/]* | [A-Za-z]:[\\/]*) ;;
+    *)
+      for file in $files; do
+	case $file in
+	*.lo) ;;
+	*)
+	  func_fatal_help "\`$destdir' must be an absolute directory name"
+	  ;;
+	esac
+      done
+      ;;
+    esac
+
+    # This variable tells wrapper scripts just to set variables rather
+    # than running their programs.
+    libtool_install_magic="$magic"
+
+    staticlibs=
+    future_libdirs=
+    current_libdirs=
+    for file in $files; do
+
+      # Do each installation.
+      case $file in
+      *.$libext)
+	# Do the static libraries later.
+	staticlibs+=" $file"
+	;;
+
+      *.la)
+	func_resolve_sysroot "$file"
+	file=$func_resolve_sysroot_result
+
+	# Check to see that this really is a libtool archive.
+	func_lalib_unsafe_p "$file" \
+	  || func_fatal_help "\`$file' is not a valid libtool archive"
+
+	library_names=
+	old_library=
+	relink_command=
+	func_source "$file"
+
+	# Add the libdir to current_libdirs if it is the destination.
+	if test "X$destdir" = "X$libdir"; then
+	  case "$current_libdirs " in
+	  *" $libdir "*) ;;
+	  *) curre
