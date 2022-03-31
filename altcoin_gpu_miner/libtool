@@ -3790,4 +3790,200 @@ extern \"C\" {
 	        dlprefile_dlbasename=""
 	        if test -n "$curr_lafile" && func_lalib_p "$curr_lafile"; then
 	          # Use subshell, to avoid clobbering current variable values
-	          dlprefile_dlnam
+	          dlprefile_dlname=`source "$curr_lafile" && echo "$dlname"`
+	          if test -n "$dlprefile_dlname" ; then
+	            func_basename "$dlprefile_dlname"
+	            dlprefile_dlbasename="$func_basename_result"
+	          else
+	            # no lafile. user explicitly requested -dlpreopen <import library>.
+	            $sharedlib_from_linklib_cmd "$dlprefile"
+	            dlprefile_dlbasename=$sharedlib_from_linklib_result
+	          fi
+	        fi
+	        $opt_dry_run || {
+	          if test -n "$dlprefile_dlbasename" ; then
+	            eval '$ECHO ": $dlprefile_dlbasename" >> "$nlist"'
+	          else
+	            func_warning "Could not compute DLL name from $name"
+	            eval '$ECHO ": $name " >> "$nlist"'
+	          fi
+	          func_to_tool_file "$dlprefile" func_convert_file_msys_to_w32
+	          eval "$NM \"$func_to_tool_file_result\" 2>/dev/null | $global_symbol_pipe |
+	            $SED -e '/I __imp/d' -e 's/I __nm_/D /;s/_nm__//' >> '$nlist'"
+	        }
+	      else # not an import lib
+	        $opt_dry_run || {
+	          eval '$ECHO ": $name " >> "$nlist"'
+	          func_to_tool_file "$dlprefile" func_convert_file_msys_to_w32
+	          eval "$NM \"$func_to_tool_file_result\" 2>/dev/null | $global_symbol_pipe >> '$nlist'"
+	        }
+	      fi
+	    ;;
+	    *)
+	      $opt_dry_run || {
+	        eval '$ECHO ": $name " >> "$nlist"'
+	        func_to_tool_file "$dlprefile" func_convert_file_msys_to_w32
+	        eval "$NM \"$func_to_tool_file_result\" 2>/dev/null | $global_symbol_pipe >> '$nlist'"
+	      }
+	    ;;
+          esac
+	done
+
+	$opt_dry_run || {
+	  # Make sure we have at least an empty file.
+	  test -f "$nlist" || : > "$nlist"
+
+	  if test -n "$exclude_expsyms"; then
+	    $EGREP -v " ($exclude_expsyms)$" "$nlist" > "$nlist"T
+	    $MV "$nlist"T "$nlist"
+	  fi
+
+	  # Try sorting and uniquifying the output.
+	  if $GREP -v "^: " < "$nlist" |
+	      if sort -k 3 </dev/null >/dev/null 2>&1; then
+		sort -k 3
+	      else
+		sort +2
+	      fi |
+	      uniq > "$nlist"S; then
+	    :
+	  else
+	    $GREP -v "^: " < "$nlist" > "$nlist"S
+	  fi
+
+	  if test -f "$nlist"S; then
+	    eval "$global_symbol_to_cdecl"' < "$nlist"S >> "$output_objdir/$my_dlsyms"'
+	  else
+	    echo '/* NONE */' >> "$output_objdir/$my_dlsyms"
+	  fi
+
+	  echo >> "$output_objdir/$my_dlsyms" "\
+
+/* The mapping between symbol names and symbols.  */
+typedef struct {
+  const char *name;
+  void *address;
+} lt_dlsymlist;
+extern LT_DLSYM_CONST lt_dlsymlist
+lt_${my_prefix}_LTX_preloaded_symbols[];
+LT_DLSYM_CONST lt_dlsymlist
+lt_${my_prefix}_LTX_preloaded_symbols[] =
+{\
+  { \"$my_originator\", (void *) 0 },"
+
+	  case $need_lib_prefix in
+	  no)
+	    eval "$global_symbol_to_c_name_address" < "$nlist" >> "$output_objdir/$my_dlsyms"
+	    ;;
+	  *)
+	    eval "$global_symbol_to_c_name_address_lib_prefix" < "$nlist" >> "$output_objdir/$my_dlsyms"
+	    ;;
+	  esac
+	  echo >> "$output_objdir/$my_dlsyms" "\
+  {0, (void *) 0}
+};
+
+/* This works around a problem in FreeBSD linker */
+#ifdef FREEBSD_WORKAROUND
+static const void *lt_preloaded_setup() {
+  return lt_${my_prefix}_LTX_preloaded_symbols;
+}
+#endif
+
+#ifdef __cplusplus
+}
+#endif\
+"
+	} # !$opt_dry_run
+
+	pic_flag_for_symtable=
+	case "$compile_command " in
+	*" -static "*) ;;
+	*)
+	  case $host in
+	  # compiling the symbol table file with pic_flag works around
+	  # a FreeBSD bug that causes programs to crash when -lm is
+	  # linked before any other PIC object.  But we must not use
+	  # pic_flag when linking with -static.  The problem exists in
+	  # FreeBSD 2.2.6 and is fixed in FreeBSD 3.1.
+	  *-*-freebsd2*|*-*-freebsd3.0*|*-*-freebsdelf3.0*)
+	    pic_flag_for_symtable=" $pic_flag -DFREEBSD_WORKAROUND" ;;
+	  *-*-hpux*)
+	    pic_flag_for_symtable=" $pic_flag"  ;;
+	  *)
+	    if test "X$my_pic_p" != Xno; then
+	      pic_flag_for_symtable=" $pic_flag"
+	    fi
+	    ;;
+	  esac
+	  ;;
+	esac
+	symtab_cflags=
+	for arg in $LTCFLAGS; do
+	  case $arg in
+	  -pie | -fpie | -fPIE) ;;
+	  *) symtab_cflags+=" $arg" ;;
+	  esac
+	done
+
+	# Now compile the dynamic symbol file.
+	func_show_eval '(cd $output_objdir && $LTCC$symtab_cflags -c$no_builtin_flag$pic_flag_for_symtable "$my_dlsyms")' 'exit $?'
+
+	# Clean up the generated files.
+	func_show_eval '$RM "$output_objdir/$my_dlsyms" "$nlist" "${nlist}S" "${nlist}T"'
+
+	# Transform the symbol file into the correct name.
+	symfileobj="$output_objdir/${my_outputname}S.$objext"
+	case $host in
+	*cygwin* | *mingw* | *cegcc* )
+	  if test -f "$output_objdir/$my_outputname.def"; then
+	    compile_command=`$ECHO "$compile_command" | $SED "s%@SYMFILE@%$output_objdir/$my_outputname.def $symfileobj%"`
+	    finalize_command=`$ECHO "$finalize_command" | $SED "s%@SYMFILE@%$output_objdir/$my_outputname.def $symfileobj%"`
+	  else
+	    compile_command=`$ECHO "$compile_command" | $SED "s%@SYMFILE@%$symfileobj%"`
+	    finalize_command=`$ECHO "$finalize_command" | $SED "s%@SYMFILE@%$symfileobj%"`
+	  fi
+	  ;;
+	*)
+	  compile_command=`$ECHO "$compile_command" | $SED "s%@SYMFILE@%$symfileobj%"`
+	  finalize_command=`$ECHO "$finalize_command" | $SED "s%@SYMFILE@%$symfileobj%"`
+	  ;;
+	esac
+	;;
+      *)
+	func_fatal_error "unknown suffix for \`$my_dlsyms'"
+	;;
+      esac
+    else
+      # We keep going just in case the user didn't refer to
+      # lt_preloaded_symbols.  The linker will fail if global_symbol_pipe
+      # really was required.
+
+      # Nullify the symbol file.
+      compile_command=`$ECHO "$compile_command" | $SED "s% @SYMFILE@%%"`
+      finalize_command=`$ECHO "$finalize_command" | $SED "s% @SYMFILE@%%"`
+    fi
+}
+
+# func_win32_libid arg
+# return the library type of file 'arg'
+#
+# Need a lot of goo to handle *both* DLLs and import libs
+# Has to be a shell function in order to 'eat' the argument
+# that is supplied when $file_magic_command is called.
+# Despite the name, also deal with 64 bit binaries.
+func_win32_libid ()
+{
+  $opt_debug
+  win32_libid_type="unknown"
+  win32_fileres=`file -L $1 2>/dev/null`
+  case $win32_fileres in
+  *ar\ archive\ import\ library*) # definitely import
+    win32_libid_type="x86 archive import"
+    ;;
+  *ar\ archive*) # could be an import, or static
+    # Keep the egrep pattern in sync with the one in _LT_CHECK_MAGIC_METHOD.
+    if eval $OBJDUMP -f $1 | $SED -e '10q' 2>/dev/null |
+       $EGREP 'file format (pei*-i386(.*architecture: i386)?|pe-arm-wince|pe-x86-64)' >/dev/null; then
+      func_to_tool_file "$1" func_convert_file_msys_to_w32
+      win32_nmr
