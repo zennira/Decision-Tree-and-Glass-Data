@@ -3986,4 +3986,215 @@ func_win32_libid ()
     if eval $OBJDUMP -f $1 | $SED -e '10q' 2>/dev/null |
        $EGREP 'file format (pei*-i386(.*architecture: i386)?|pe-arm-wince|pe-x86-64)' >/dev/null; then
       func_to_tool_file "$1" func_convert_file_msys_to_w32
-      win32_nmr
+      win32_nmres=`eval $NM -f posix -A \"$func_to_tool_file_result\" |
+	$SED -n -e '
+	    1,100{
+		/ I /{
+		    s,.*,import,
+		    p
+		    q
+		}
+	    }'`
+      case $win32_nmres in
+      import*)  win32_libid_type="x86 archive import";;
+      *)        win32_libid_type="x86 archive static";;
+      esac
+    fi
+    ;;
+  *DLL*)
+    win32_libid_type="x86 DLL"
+    ;;
+  *executable*) # but shell scripts are "executable" too...
+    case $win32_fileres in
+    *MS\ Windows\ PE\ Intel*)
+      win32_libid_type="x86 DLL"
+      ;;
+    esac
+    ;;
+  esac
+  $ECHO "$win32_libid_type"
+}
+
+# func_cygming_dll_for_implib ARG
+#
+# Platform-specific function to extract the
+# name of the DLL associated with the specified
+# import library ARG.
+# Invoked by eval'ing the libtool variable
+#    $sharedlib_from_linklib_cmd
+# Result is available in the variable
+#    $sharedlib_from_linklib_result
+func_cygming_dll_for_implib ()
+{
+  $opt_debug
+  sharedlib_from_linklib_result=`$DLLTOOL --identify-strict --identify "$1"`
+}
+
+# func_cygming_dll_for_implib_fallback_core SECTION_NAME LIBNAMEs
+#
+# The is the core of a fallback implementation of a
+# platform-specific function to extract the name of the
+# DLL associated with the specified import library LIBNAME.
+#
+# SECTION_NAME is either .idata$6 or .idata$7, depending
+# on the platform and compiler that created the implib.
+#
+# Echos the name of the DLL associated with the
+# specified import library.
+func_cygming_dll_for_implib_fallback_core ()
+{
+  $opt_debug
+  match_literal=`$ECHO "$1" | $SED "$sed_make_literal_regex"`
+  $OBJDUMP -s --section "$1" "$2" 2>/dev/null |
+    $SED '/^Contents of section '"$match_literal"':/{
+      # Place marker at beginning of archive member dllname section
+      s/.*/====MARK====/
+      p
+      d
+    }
+    # These lines can sometimes be longer than 43 characters, but
+    # are always uninteresting
+    /:[	 ]*file format pe[i]\{,1\}-/d
+    /^In archive [^:]*:/d
+    # Ensure marker is printed
+    /^====MARK====/p
+    # Remove all lines with less than 43 characters
+    /^.\{43\}/!d
+    # From remaining lines, remove first 43 characters
+    s/^.\{43\}//' |
+    $SED -n '
+      # Join marker and all lines until next marker into a single line
+      /^====MARK====/ b para
+      H
+      $ b para
+      b
+      :para
+      x
+      s/\n//g
+      # Remove the marker
+      s/^====MARK====//
+      # Remove trailing dots and whitespace
+      s/[\. \t]*$//
+      # Print
+      /./p' |
+    # we now have a list, one entry per line, of the stringified
+    # contents of the appropriate section of all members of the
+    # archive which possess that section. Heuristic: eliminate
+    # all those which have a first or second character that is
+    # a '.' (that is, objdump's representation of an unprintable
+    # character.) This should work for all archives with less than
+    # 0x302f exports -- but will fail for DLLs whose name actually
+    # begins with a literal '.' or a single character followed by
+    # a '.'.
+    #
+    # Of those that remain, print the first one.
+    $SED -e '/^\./d;/^.\./d;q'
+}
+
+# func_cygming_gnu_implib_p ARG
+# This predicate returns with zero status (TRUE) if
+# ARG is a GNU/binutils-style import library. Returns
+# with nonzero status (FALSE) otherwise.
+func_cygming_gnu_implib_p ()
+{
+  $opt_debug
+  func_to_tool_file "$1" func_convert_file_msys_to_w32
+  func_cygming_gnu_implib_tmp=`$NM "$func_to_tool_file_result" | eval "$global_symbol_pipe" | $EGREP ' (_head_[A-Za-z0-9_]+_[ad]l*|[A-Za-z0-9_]+_[ad]l*_iname)$'`
+  test -n "$func_cygming_gnu_implib_tmp"
+}
+
+# func_cygming_ms_implib_p ARG
+# This predicate returns with zero status (TRUE) if
+# ARG is an MS-style import library. Returns
+# with nonzero status (FALSE) otherwise.
+func_cygming_ms_implib_p ()
+{
+  $opt_debug
+  func_to_tool_file "$1" func_convert_file_msys_to_w32
+  func_cygming_ms_implib_tmp=`$NM "$func_to_tool_file_result" | eval "$global_symbol_pipe" | $GREP '_NULL_IMPORT_DESCRIPTOR'`
+  test -n "$func_cygming_ms_implib_tmp"
+}
+
+# func_cygming_dll_for_implib_fallback ARG
+# Platform-specific function to extract the
+# name of the DLL associated with the specified
+# import library ARG.
+#
+# This fallback implementation is for use when $DLLTOOL
+# does not support the --identify-strict option.
+# Invoked by eval'ing the libtool variable
+#    $sharedlib_from_linklib_cmd
+# Result is available in the variable
+#    $sharedlib_from_linklib_result
+func_cygming_dll_for_implib_fallback ()
+{
+  $opt_debug
+  if func_cygming_gnu_implib_p "$1" ; then
+    # binutils import library
+    sharedlib_from_linklib_result=`func_cygming_dll_for_implib_fallback_core '.idata$7' "$1"`
+  elif func_cygming_ms_implib_p "$1" ; then
+    # ms-generated import library
+    sharedlib_from_linklib_result=`func_cygming_dll_for_implib_fallback_core '.idata$6' "$1"`
+  else
+    # unknown
+    sharedlib_from_linklib_result=""
+  fi
+}
+
+
+# func_extract_an_archive dir oldlib
+func_extract_an_archive ()
+{
+    $opt_debug
+    f_ex_an_ar_dir="$1"; shift
+    f_ex_an_ar_oldlib="$1"
+    if test "$lock_old_archive_extraction" = yes; then
+      lockfile=$f_ex_an_ar_oldlib.lock
+      until $opt_dry_run || ln "$progpath" "$lockfile" 2>/dev/null; do
+	func_echo "Waiting for $lockfile to be removed"
+	sleep 2
+      done
+    fi
+    func_show_eval "(cd \$f_ex_an_ar_dir && $AR x \"\$f_ex_an_ar_oldlib\")" \
+		   'stat=$?; rm -f "$lockfile"; exit $stat'
+    if test "$lock_old_archive_extraction" = yes; then
+      $opt_dry_run || rm -f "$lockfile"
+    fi
+    if ($AR t "$f_ex_an_ar_oldlib" | sort | sort -uc >/dev/null 2>&1); then
+     :
+    else
+      func_fatal_error "object name conflicts in archive: $f_ex_an_ar_dir/$f_ex_an_ar_oldlib"
+    fi
+}
+
+
+# func_extract_archives gentop oldlib ...
+func_extract_archives ()
+{
+    $opt_debug
+    my_gentop="$1"; shift
+    my_oldlibs=${1+"$@"}
+    my_oldobjs=""
+    my_xlib=""
+    my_xabs=""
+    my_xdir=""
+
+    for my_xlib in $my_oldlibs; do
+      # Extract the objects.
+      case $my_xlib in
+	[\\/]* | [A-Za-z]:[\\/]*) my_xabs="$my_xlib" ;;
+	*) my_xabs=`pwd`"/$my_xlib" ;;
+      esac
+      func_basename "$my_xlib"
+      my_xlib="$func_basename_result"
+      my_xlib_u=$my_xlib
+      while :; do
+        case " $extracted_archives " in
+	*" $my_xlib_u "*)
+	  func_arith $extracted_serial + 1
+	  extracted_serial=$func_arith_result
+	  my_xlib_u=lt$extracted_serial-$my_xlib ;;
+	*) break ;;
+	esac
+      done
+      extracted_archives="$extr
