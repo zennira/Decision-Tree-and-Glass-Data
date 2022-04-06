@@ -5113,4 +5113,265 @@ find_executable (const char *wrapper)
 	      p_next = (*q == '\0' ? q : q + 1);
 	      if (p_len == 0)
 		{
-		 
+		  /* empty path: current directory */
+		  if (getcwd (tmp, LT_PATHMAX) == NULL)
+		    lt_fatal (__FILE__, __LINE__, "getcwd failed: %s",
+                              nonnull (strerror (errno)));
+		  tmp_len = strlen (tmp);
+		  concat_name =
+		    XMALLOC (char, tmp_len + 1 + strlen (wrapper) + 1);
+		  memcpy (concat_name, tmp, tmp_len);
+		  concat_name[tmp_len] = '/';
+		  strcpy (concat_name + tmp_len + 1, wrapper);
+		}
+	      else
+		{
+		  concat_name =
+		    XMALLOC (char, p_len + 1 + strlen (wrapper) + 1);
+		  memcpy (concat_name, p, p_len);
+		  concat_name[p_len] = '/';
+		  strcpy (concat_name + p_len + 1, wrapper);
+		}
+	      if (check_executable (concat_name))
+		return concat_name;
+	      XFREE (concat_name);
+	    }
+	}
+      /* not found in PATH; assume curdir */
+    }
+  /* Relative path | not found in path: prepend cwd */
+  if (getcwd (tmp, LT_PATHMAX) == NULL)
+    lt_fatal (__FILE__, __LINE__, "getcwd failed: %s",
+              nonnull (strerror (errno)));
+  tmp_len = strlen (tmp);
+  concat_name = XMALLOC (char, tmp_len + 1 + strlen (wrapper) + 1);
+  memcpy (concat_name, tmp, tmp_len);
+  concat_name[tmp_len] = '/';
+  strcpy (concat_name + tmp_len + 1, wrapper);
+
+  if (check_executable (concat_name))
+    return concat_name;
+  XFREE (concat_name);
+  return NULL;
+}
+
+char *
+chase_symlinks (const char *pathspec)
+{
+#ifndef S_ISLNK
+  return xstrdup (pathspec);
+#else
+  char buf[LT_PATHMAX];
+  struct stat s;
+  char *tmp_pathspec = xstrdup (pathspec);
+  char *p;
+  int has_symlinks = 0;
+  while (strlen (tmp_pathspec) && !has_symlinks)
+    {
+      lt_debugprintf (__FILE__, __LINE__,
+		      "checking path component for symlinks: %s\n",
+		      tmp_pathspec);
+      if (lstat (tmp_pathspec, &s) == 0)
+	{
+	  if (S_ISLNK (s.st_mode) != 0)
+	    {
+	      has_symlinks = 1;
+	      break;
+	    }
+
+	  /* search backwards for last DIR_SEPARATOR */
+	  p = tmp_pathspec + strlen (tmp_pathspec) - 1;
+	  while ((p > tmp_pathspec) && (!IS_DIR_SEPARATOR (*p)))
+	    p--;
+	  if ((p == tmp_pathspec) && (!IS_DIR_SEPARATOR (*p)))
+	    {
+	      /* no more DIR_SEPARATORS left */
+	      break;
+	    }
+	  *p = '\0';
+	}
+      else
+	{
+	  lt_fatal (__FILE__, __LINE__,
+		    "error accessing file \"%s\": %s",
+		    tmp_pathspec, nonnull (strerror (errno)));
+	}
+    }
+  XFREE (tmp_pathspec);
+
+  if (!has_symlinks)
+    {
+      return xstrdup (pathspec);
+    }
+
+  tmp_pathspec = realpath (pathspec, buf);
+  if (tmp_pathspec == 0)
+    {
+      lt_fatal (__FILE__, __LINE__,
+		"could not follow symlinks for %s", pathspec);
+    }
+  return xstrdup (tmp_pathspec);
+#endif
+}
+
+char *
+strendzap (char *str, const char *pat)
+{
+  size_t len, patlen;
+
+  assert (str != NULL);
+  assert (pat != NULL);
+
+  len = strlen (str);
+  patlen = strlen (pat);
+
+  if (patlen <= len)
+    {
+      str += len - patlen;
+      if (strcmp (str, pat) == 0)
+	*str = '\0';
+    }
+  return str;
+}
+
+void
+lt_debugprintf (const char *file, int line, const char *fmt, ...)
+{
+  va_list args;
+  if (lt_debug)
+    {
+      (void) fprintf (stderr, "%s:%s:%d: ", program_name, file, line);
+      va_start (args, fmt);
+      (void) vfprintf (stderr, fmt, args);
+      va_end (args);
+    }
+}
+
+static void
+lt_error_core (int exit_status, const char *file,
+	       int line, const char *mode,
+	       const char *message, va_list ap)
+{
+  fprintf (stderr, "%s:%s:%d: %s: ", program_name, file, line, mode);
+  vfprintf (stderr, message, ap);
+  fprintf (stderr, ".\n");
+
+  if (exit_status >= 0)
+    exit (exit_status);
+}
+
+void
+lt_fatal (const char *file, int line, const char *message, ...)
+{
+  va_list ap;
+  va_start (ap, message);
+  lt_error_core (EXIT_FAILURE, file, line, "FATAL", message, ap);
+  va_end (ap);
+}
+
+static const char *
+nonnull (const char *s)
+{
+  return s ? s : "(null)";
+}
+
+static const char *
+nonempty (const char *s)
+{
+  return (s && !*s) ? "(empty)" : nonnull (s);
+}
+
+void
+lt_setenv (const char *name, const char *value)
+{
+  lt_debugprintf (__FILE__, __LINE__,
+		  "(lt_setenv) setting '%s' to '%s'\n",
+                  nonnull (name), nonnull (value));
+  {
+#ifdef HAVE_SETENV
+    /* always make a copy, for consistency with !HAVE_SETENV */
+    char *str = xstrdup (value);
+    setenv (name, str, 1);
+#else
+    int len = strlen (name) + 1 + strlen (value) + 1;
+    char *str = XMALLOC (char, len);
+    sprintf (str, "%s=%s", name, value);
+    if (putenv (str) != EXIT_SUCCESS)
+      {
+        XFREE (str);
+      }
+#endif
+  }
+}
+
+char *
+lt_extend_str (const char *orig_value, const char *add, int to_end)
+{
+  char *new_value;
+  if (orig_value && *orig_value)
+    {
+      int orig_value_len = strlen (orig_value);
+      int add_len = strlen (add);
+      new_value = XMALLOC (char, add_len + orig_value_len + 1);
+      if (to_end)
+        {
+          strcpy (new_value, orig_value);
+          strcpy (new_value + orig_value_len, add);
+        }
+      else
+        {
+          strcpy (new_value, add);
+          strcpy (new_value + add_len, orig_value);
+        }
+    }
+  else
+    {
+      new_value = xstrdup (add);
+    }
+  return new_value;
+}
+
+void
+lt_update_exe_path (const char *name, const char *value)
+{
+  lt_debugprintf (__FILE__, __LINE__,
+		  "(lt_update_exe_path) modifying '%s' by prepending '%s'\n",
+                  nonnull (name), nonnull (value));
+
+  if (name && *name && value && *value)
+    {
+      char *new_value = lt_extend_str (getenv (name), value, 0);
+      /* some systems can't cope with a ':'-terminated path #' */
+      int len = strlen (new_value);
+      while (((len = strlen (new_value)) > 0) && IS_PATH_SEPARATOR (new_value[len-1]))
+        {
+          new_value[len-1] = '\0';
+        }
+      lt_setenv (name, new_value);
+      XFREE (new_value);
+    }
+}
+
+void
+lt_update_lib_path (const char *name, const char *value)
+{
+  lt_debugprintf (__FILE__, __LINE__,
+		  "(lt_update_lib_path) modifying '%s' by prepending '%s'\n",
+                  nonnull (name), nonnull (value));
+
+  if (name && *name && value && *value)
+    {
+      char *new_value = lt_extend_str (getenv (name), value, 0);
+      lt_setenv (name, new_value);
+      XFREE (new_value);
+    }
+}
+
+EOF
+	    case $host_os in
+	      mingw*)
+		cat <<"EOF"
+
+/* Prepares an argument vector before calling spawn().
+   Note that spawn() does not by itself call the command interpreter
+     (getenv ("COMSPEC") != NULL ? getenv 
