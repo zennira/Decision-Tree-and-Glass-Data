@@ -4389,4 +4389,240 @@ func_exec_program_core ()
   case $host in
   # Backslashes separate directories on plain windows
   *-*-mingw | *-*-os2* | *-cegcc*)
-   
+    $ECHO "\
+      if test -n \"\$lt_option_debug\"; then
+        \$ECHO \"${outputname}:${output}:\${LINENO}: newargv[0]: \$progdir\\\\\$program\" 1>&2
+        func_lt_dump_args \${1+\"\$@\"} 1>&2
+      fi
+      exec \"\$progdir\\\\\$program\" \${1+\"\$@\"}
+"
+    ;;
+
+  *)
+    $ECHO "\
+      if test -n \"\$lt_option_debug\"; then
+        \$ECHO \"${outputname}:${output}:\${LINENO}: newargv[0]: \$progdir/\$program\" 1>&2
+        func_lt_dump_args \${1+\"\$@\"} 1>&2
+      fi
+      exec \"\$progdir/\$program\" \${1+\"\$@\"}
+"
+    ;;
+  esac
+  $ECHO "\
+      \$ECHO \"\$0: cannot exec \$program \$*\" 1>&2
+      exit 1
+}
+
+# A function to encapsulate launching the target application
+# Strips options in the --lt-* namespace from \$@ and
+# launches target application with the remaining arguments.
+func_exec_program ()
+{
+  for lt_wr_arg
+  do
+    case \$lt_wr_arg in
+    --lt-*) ;;
+    *) set x \"\$@\" \"\$lt_wr_arg\"; shift;;
+    esac
+    shift
+  done
+  func_exec_program_core \${1+\"\$@\"}
+}
+
+  # Parse options
+  func_parse_lt_options \"\$0\" \${1+\"\$@\"}
+
+  # Find the directory that this script lives in.
+  thisdir=\`\$ECHO \"\$file\" | $SED 's%/[^/]*$%%'\`
+  test \"x\$thisdir\" = \"x\$file\" && thisdir=.
+
+  # Follow symbolic links until we get to the real thisdir.
+  file=\`ls -ld \"\$file\" | $SED -n 's/.*-> //p'\`
+  while test -n \"\$file\"; do
+    destdir=\`\$ECHO \"\$file\" | $SED 's%/[^/]*\$%%'\`
+
+    # If there was a directory component, then change thisdir.
+    if test \"x\$destdir\" != \"x\$file\"; then
+      case \"\$destdir\" in
+      [\\\\/]* | [A-Za-z]:[\\\\/]*) thisdir=\"\$destdir\" ;;
+      *) thisdir=\"\$thisdir/\$destdir\" ;;
+      esac
+    fi
+
+    file=\`\$ECHO \"\$file\" | $SED 's%^.*/%%'\`
+    file=\`ls -ld \"\$thisdir/\$file\" | $SED -n 's/.*-> //p'\`
+  done
+
+  # Usually 'no', except on cygwin/mingw when embedded into
+  # the cwrapper.
+  WRAPPER_SCRIPT_BELONGS_IN_OBJDIR=$func_emit_wrapper_arg1
+  if test \"\$WRAPPER_SCRIPT_BELONGS_IN_OBJDIR\" = \"yes\"; then
+    # special case for '.'
+    if test \"\$thisdir\" = \".\"; then
+      thisdir=\`pwd\`
+    fi
+    # remove .libs from thisdir
+    case \"\$thisdir\" in
+    *[\\\\/]$objdir ) thisdir=\`\$ECHO \"\$thisdir\" | $SED 's%[\\\\/][^\\\\/]*$%%'\` ;;
+    $objdir )   thisdir=. ;;
+    esac
+  fi
+
+  # Try to get the absolute directory name.
+  absdir=\`cd \"\$thisdir\" && pwd\`
+  test -n \"\$absdir\" && thisdir=\"\$absdir\"
+"
+
+	if test "$fast_install" = yes; then
+	  $ECHO "\
+  program=lt-'$outputname'$exeext
+  progdir=\"\$thisdir/$objdir\"
+
+  if test ! -f \"\$progdir/\$program\" ||
+     { file=\`ls -1dt \"\$progdir/\$program\" \"\$progdir/../\$program\" 2>/dev/null | ${SED} 1q\`; \\
+       test \"X\$file\" != \"X\$progdir/\$program\"; }; then
+
+    file=\"\$\$-\$program\"
+
+    if test ! -d \"\$progdir\"; then
+      $MKDIR \"\$progdir\"
+    else
+      $RM \"\$progdir/\$file\"
+    fi"
+
+	  $ECHO "\
+
+    # relink executable if necessary
+    if test -n \"\$relink_command\"; then
+      if relink_command_output=\`eval \$relink_command 2>&1\`; then :
+      else
+	$ECHO \"\$relink_command_output\" >&2
+	$RM \"\$progdir/\$file\"
+	exit 1
+      fi
+    fi
+
+    $MV \"\$progdir/\$file\" \"\$progdir/\$program\" 2>/dev/null ||
+    { $RM \"\$progdir/\$program\";
+      $MV \"\$progdir/\$file\" \"\$progdir/\$program\"; }
+    $RM \"\$progdir/\$file\"
+  fi"
+	else
+	  $ECHO "\
+  program='$outputname'
+  progdir=\"\$thisdir/$objdir\"
+"
+	fi
+
+	$ECHO "\
+
+  if test -f \"\$progdir/\$program\"; then"
+
+	# fixup the dll searchpath if we need to.
+	#
+	# Fix the DLL searchpath if we need to.  Do this before prepending
+	# to shlibpath, because on Windows, both are PATH and uninstalled
+	# libraries must come first.
+	if test -n "$dllsearchpath"; then
+	  $ECHO "\
+    # Add the dll search path components to the executable PATH
+    PATH=$dllsearchpath:\$PATH
+"
+	fi
+
+	# Export our shlibpath_var if we have one.
+	if test "$shlibpath_overrides_runpath" = yes && test -n "$shlibpath_var" && test -n "$temp_rpath"; then
+	  $ECHO "\
+    # Add our own library path to $shlibpath_var
+    $shlibpath_var=\"$temp_rpath\$$shlibpath_var\"
+
+    # Some systems cannot cope with colon-terminated $shlibpath_var
+    # The second colon is a workaround for a bug in BeOS R4 sed
+    $shlibpath_var=\`\$ECHO \"\$$shlibpath_var\" | $SED 's/::*\$//'\`
+
+    export $shlibpath_var
+"
+	fi
+
+	$ECHO "\
+    if test \"\$libtool_execute_magic\" != \"$magic\"; then
+      # Run the actual program with our arguments.
+      func_exec_program \${1+\"\$@\"}
+    fi
+  else
+    # The program doesn't exist.
+    \$ECHO \"\$0: error: \\\`\$progdir/\$program' does not exist\" 1>&2
+    \$ECHO \"This script is just a wrapper for \$program.\" 1>&2
+    \$ECHO \"See the $PACKAGE documentation for more information.\" 1>&2
+    exit 1
+  fi
+fi\
+"
+}
+
+
+# func_emit_cwrapperexe_src
+# emit the source code for a wrapper executable on stdout
+# Must ONLY be called from within func_mode_link because
+# it depends on a number of variable set therein.
+func_emit_cwrapperexe_src ()
+{
+	cat <<EOF
+
+/* $cwrappersource - temporary wrapper executable for $objdir/$outputname
+   Generated by $PROGRAM (GNU $PACKAGE$TIMESTAMP) $VERSION
+
+   The $output program cannot be directly executed until all the libtool
+   libraries that it depends on are installed.
+
+   This wrapper executable should never be moved out of the build directory.
+   If it is, it will not operate correctly.
+*/
+EOF
+	    cat <<"EOF"
+#ifdef _MSC_VER
+# define _CRT_SECURE_NO_DEPRECATE 1
+#endif
+#include <stdio.h>
+#include <stdlib.h>
+#ifdef _MSC_VER
+# include <direct.h>
+# include <process.h>
+# include <io.h>
+#else
+# include <unistd.h>
+# include <stdint.h>
+# ifdef __CYGWIN__
+#  include <io.h>
+# endif
+#endif
+#include <malloc.h>
+#include <stdarg.h>
+#include <assert.h>
+#include <string.h>
+#include <ctype.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+
+/* declarations of non-ANSI functions */
+#if defined(__MINGW32__)
+# ifdef __STRICT_ANSI__
+int _putenv (const char *);
+# endif
+#elif defined(__CYGWIN__)
+# ifdef __STRICT_ANSI__
+char *realpath (const char *, char *);
+int putenv (char *);
+int setenv (const char *, const char *, int);
+# endif
+/* #elif defined (other platforms) ... */
+#endif
+
+/* portability defines, excluding path handling macros */
+#if defined(_MSC_VER)
+# define setmode _setmode
+# define stat    _stat
+# define chmod   _chmod
+# define getcwd  _getcwd
+# define putenv 
