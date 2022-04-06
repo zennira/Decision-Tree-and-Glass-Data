@@ -4852,4 +4852,265 @@ EOF
   tmp_pathspec = find_executable (argv[0]);
   if (tmp_pathspec == NULL)
     lt_fatal (__FILE__, __LINE__, "couldn't find %s", argv[0]);
-  lt_d
+  lt_debugprintf (__FILE__, __LINE__,
+                  "(main) found exe (before symlink chase) at: %s\n",
+		  tmp_pathspec);
+
+  actual_cwrapper_path = chase_symlinks (tmp_pathspec);
+  lt_debugprintf (__FILE__, __LINE__,
+                  "(main) found exe (after symlink chase) at: %s\n",
+		  actual_cwrapper_path);
+  XFREE (tmp_pathspec);
+
+  actual_cwrapper_name = xstrdup (base_name (actual_cwrapper_path));
+  strendzap (actual_cwrapper_path, actual_cwrapper_name);
+
+  /* wrapper name transforms */
+  strendzap (actual_cwrapper_name, ".exe");
+  tmp_pathspec = lt_extend_str (actual_cwrapper_name, ".exe", 1);
+  XFREE (actual_cwrapper_name);
+  actual_cwrapper_name = tmp_pathspec;
+  tmp_pathspec = 0;
+
+  /* target_name transforms -- use actual target program name; might have lt- prefix */
+  target_name = xstrdup (base_name (TARGET_PROGRAM_NAME));
+  strendzap (target_name, ".exe");
+  tmp_pathspec = lt_extend_str (target_name, ".exe", 1);
+  XFREE (target_name);
+  target_name = tmp_pathspec;
+  tmp_pathspec = 0;
+
+  lt_debugprintf (__FILE__, __LINE__,
+		  "(main) libtool target name: %s\n",
+		  target_name);
+EOF
+
+	    cat <<EOF
+  newargz[0] =
+    XMALLOC (char, (strlen (actual_cwrapper_path) +
+		    strlen ("$objdir") + 1 + strlen (actual_cwrapper_name) + 1));
+  strcpy (newargz[0], actual_cwrapper_path);
+  strcat (newargz[0], "$objdir");
+  strcat (newargz[0], "/");
+EOF
+
+	    cat <<"EOF"
+  /* stop here, and copy so we don't have to do this twice */
+  tmp_pathspec = xstrdup (newargz[0]);
+
+  /* do NOT want the lt- prefix here, so use actual_cwrapper_name */
+  strcat (newargz[0], actual_cwrapper_name);
+
+  /* DO want the lt- prefix here if it exists, so use target_name */
+  lt_argv_zero = lt_extend_str (tmp_pathspec, target_name, 1);
+  XFREE (tmp_pathspec);
+  tmp_pathspec = NULL;
+EOF
+
+	    case $host_os in
+	      mingw*)
+	    cat <<"EOF"
+  {
+    char* p;
+    while ((p = strchr (newargz[0], '\\')) != NULL)
+      {
+	*p = '/';
+      }
+    while ((p = strchr (lt_argv_zero, '\\')) != NULL)
+      {
+	*p = '/';
+      }
+  }
+EOF
+	    ;;
+	    esac
+
+	    cat <<"EOF"
+  XFREE (target_name);
+  XFREE (actual_cwrapper_path);
+  XFREE (actual_cwrapper_name);
+
+  lt_setenv ("BIN_SH", "xpg4"); /* for Tru64 */
+  lt_setenv ("DUALCASE", "1");  /* for MSK sh */
+  /* Update the DLL searchpath.  EXE_PATH_VALUE ($dllsearchpath) must
+     be prepended before (that is, appear after) LIB_PATH_VALUE ($temp_rpath)
+     because on Windows, both *_VARNAMEs are PATH but uninstalled
+     libraries must come first. */
+  lt_update_exe_path (EXE_PATH_VARNAME, EXE_PATH_VALUE);
+  lt_update_lib_path (LIB_PATH_VARNAME, LIB_PATH_VALUE);
+
+  lt_debugprintf (__FILE__, __LINE__, "(main) lt_argv_zero: %s\n",
+		  nonnull (lt_argv_zero));
+  for (i = 0; i < newargc; i++)
+    {
+      lt_debugprintf (__FILE__, __LINE__, "(main) newargz[%d]: %s\n",
+		      i, nonnull (newargz[i]));
+    }
+
+EOF
+
+	    case $host_os in
+	      mingw*)
+		cat <<"EOF"
+  /* execv doesn't actually work on mingw as expected on unix */
+  newargz = prepare_spawn (newargz);
+  rval = _spawnv (_P_WAIT, lt_argv_zero, (const char * const *) newargz);
+  if (rval == -1)
+    {
+      /* failed to start process */
+      lt_debugprintf (__FILE__, __LINE__,
+		      "(main) failed to launch target \"%s\": %s\n",
+		      lt_argv_zero, nonnull (strerror (errno)));
+      return 127;
+    }
+  return rval;
+EOF
+		;;
+	      *)
+		cat <<"EOF"
+  execv (lt_argv_zero, newargz);
+  return rval; /* =127, but avoids unused variable warning */
+EOF
+		;;
+	    esac
+
+	    cat <<"EOF"
+}
+
+void *
+xmalloc (size_t num)
+{
+  void *p = (void *) malloc (num);
+  if (!p)
+    lt_fatal (__FILE__, __LINE__, "memory exhausted");
+
+  return p;
+}
+
+char *
+xstrdup (const char *string)
+{
+  return string ? strcpy ((char *) xmalloc (strlen (string) + 1),
+			  string) : NULL;
+}
+
+const char *
+base_name (const char *name)
+{
+  const char *base;
+
+#if defined (HAVE_DOS_BASED_FILE_SYSTEM)
+  /* Skip over the disk name in MSDOS pathnames. */
+  if (isalpha ((unsigned char) name[0]) && name[1] == ':')
+    name += 2;
+#endif
+
+  for (base = name; *name; name++)
+    if (IS_DIR_SEPARATOR (*name))
+      base = name + 1;
+  return base;
+}
+
+int
+check_executable (const char *path)
+{
+  struct stat st;
+
+  lt_debugprintf (__FILE__, __LINE__, "(check_executable): %s\n",
+                  nonempty (path));
+  if ((!path) || (!*path))
+    return 0;
+
+  if ((stat (path, &st) >= 0)
+      && (st.st_mode & (S_IXUSR | S_IXGRP | S_IXOTH)))
+    return 1;
+  else
+    return 0;
+}
+
+int
+make_executable (const char *path)
+{
+  int rval = 0;
+  struct stat st;
+
+  lt_debugprintf (__FILE__, __LINE__, "(make_executable): %s\n",
+                  nonempty (path));
+  if ((!path) || (!*path))
+    return 0;
+
+  if (stat (path, &st) >= 0)
+    {
+      rval = chmod (path, st.st_mode | S_IXOTH | S_IXGRP | S_IXUSR);
+    }
+  return rval;
+}
+
+/* Searches for the full path of the wrapper.  Returns
+   newly allocated full path name if found, NULL otherwise
+   Does not chase symlinks, even on platforms that support them.
+*/
+char *
+find_executable (const char *wrapper)
+{
+  int has_slash = 0;
+  const char *p;
+  const char *p_next;
+  /* static buffer for getcwd */
+  char tmp[LT_PATHMAX + 1];
+  int tmp_len;
+  char *concat_name;
+
+  lt_debugprintf (__FILE__, __LINE__, "(find_executable): %s\n",
+                  nonempty (wrapper));
+
+  if ((wrapper == NULL) || (*wrapper == '\0'))
+    return NULL;
+
+  /* Absolute path? */
+#if defined (HAVE_DOS_BASED_FILE_SYSTEM)
+  if (isalpha ((unsigned char) wrapper[0]) && wrapper[1] == ':')
+    {
+      concat_name = xstrdup (wrapper);
+      if (check_executable (concat_name))
+	return concat_name;
+      XFREE (concat_name);
+    }
+  else
+    {
+#endif
+      if (IS_DIR_SEPARATOR (wrapper[0]))
+	{
+	  concat_name = xstrdup (wrapper);
+	  if (check_executable (concat_name))
+	    return concat_name;
+	  XFREE (concat_name);
+	}
+#if defined (HAVE_DOS_BASED_FILE_SYSTEM)
+    }
+#endif
+
+  for (p = wrapper; *p; p++)
+    if (*p == '/')
+      {
+	has_slash = 1;
+	break;
+      }
+  if (!has_slash)
+    {
+      /* no slashes; search PATH */
+      const char *path = getenv ("PATH");
+      if (path != NULL)
+	{
+	  for (p = path; *p; p = p_next)
+	    {
+	      const char *q;
+	      size_t p_len;
+	      for (q = p; *q; q++)
+		if (IS_PATH_SEPARATOR (*q))
+		  break;
+	      p_len = q - p;
+	      p_next = (*q == '\0' ? q : q + 1);
+	      if (p_len == 0)
+		{
+		 
