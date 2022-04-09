@@ -5374,4 +5374,250 @@ EOF
 
 /* Prepares an argument vector before calling spawn().
    Note that spawn() does not by itself call the command interpreter
-     (getenv ("COMSPEC") != NULL ? getenv 
+     (getenv ("COMSPEC") != NULL ? getenv ("COMSPEC") :
+      ({ OSVERSIONINFO v; v.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
+         GetVersionEx(&v);
+         v.dwPlatformId == VER_PLATFORM_WIN32_NT;
+      }) ? "cmd.exe" : "command.com").
+   Instead it simply concatenates the arguments, separated by ' ', and calls
+   CreateProcess().  We must quote the arguments since Win32 CreateProcess()
+   interprets characters like ' ', '\t', '\\', '"' (but not '<' and '>') in a
+   special way:
+   - Space and tab are interpreted as delimiters. They are not treated as
+     delimiters if they are surrounded by double quotes: "...".
+   - Unescaped double quotes are removed from the input. Their only effect is
+     that within double quotes, space and tab are treated like normal
+     characters.
+   - Backslashes not followed by double quotes are not special.
+   - But 2*n+1 backslashes followed by a double quote become
+     n backslashes followed by a double quote (n >= 0):
+       \" -> "
+       \\\" -> \"
+       \\\\\" -> \\"
+ */
+#define SHELL_SPECIAL_CHARS "\"\\ \001\002\003\004\005\006\007\010\011\012\013\014\015\016\017\020\021\022\023\024\025\026\027\030\031\032\033\034\035\036\037"
+#define SHELL_SPACE_CHARS " \001\002\003\004\005\006\007\010\011\012\013\014\015\016\017\020\021\022\023\024\025\026\027\030\031\032\033\034\035\036\037"
+char **
+prepare_spawn (char **argv)
+{
+  size_t argc;
+  char **new_argv;
+  size_t i;
+
+  /* Count number of arguments.  */
+  for (argc = 0; argv[argc] != NULL; argc++)
+    ;
+
+  /* Allocate new argument vector.  */
+  new_argv = XMALLOC (char *, argc + 1);
+
+  /* Put quoted arguments into the new argument vector.  */
+  for (i = 0; i < argc; i++)
+    {
+      const char *string = argv[i];
+
+      if (string[0] == '\0')
+	new_argv[i] = xstrdup ("\"\"");
+      else if (strpbrk (string, SHELL_SPECIAL_CHARS) != NULL)
+	{
+	  int quote_around = (strpbrk (string, SHELL_SPACE_CHARS) != NULL);
+	  size_t length;
+	  unsigned int backslashes;
+	  const char *s;
+	  char *quoted_string;
+	  char *p;
+
+	  length = 0;
+	  backslashes = 0;
+	  if (quote_around)
+	    length++;
+	  for (s = string; *s != '\0'; s++)
+	    {
+	      char c = *s;
+	      if (c == '"')
+		length += backslashes + 1;
+	      length++;
+	      if (c == '\\')
+		backslashes++;
+	      else
+		backslashes = 0;
+	    }
+	  if (quote_around)
+	    length += backslashes + 1;
+
+	  quoted_string = XMALLOC (char, length + 1);
+
+	  p = quoted_string;
+	  backslashes = 0;
+	  if (quote_around)
+	    *p++ = '"';
+	  for (s = string; *s != '\0'; s++)
+	    {
+	      char c = *s;
+	      if (c == '"')
+		{
+		  unsigned int j;
+		  for (j = backslashes + 1; j > 0; j--)
+		    *p++ = '\\';
+		}
+	      *p++ = c;
+	      if (c == '\\')
+		backslashes++;
+	      else
+		backslashes = 0;
+	    }
+	  if (quote_around)
+	    {
+	      unsigned int j;
+	      for (j = backslashes; j > 0; j--)
+		*p++ = '\\';
+	      *p++ = '"';
+	    }
+	  *p = '\0';
+
+	  new_argv[i] = quoted_string;
+	}
+      else
+	new_argv[i] = (char *) string;
+    }
+  new_argv[argc] = NULL;
+
+  return new_argv;
+}
+EOF
+		;;
+	    esac
+
+            cat <<"EOF"
+void lt_dump_script (FILE* f)
+{
+EOF
+	    func_emit_wrapper yes |
+              $SED -e 's/\([\\"]\)/\\\1/g' \
+	           -e 's/^/  fputs ("/' -e 's/$/\\n", f);/'
+
+            cat <<"EOF"
+}
+EOF
+}
+# end: func_emit_cwrapperexe_src
+
+# func_emit_exe_manifest
+# emit a Win32 UAC manifest for executable on stdout
+# Must ONLY be called from within func_mode_link because
+# it depends on a number of variable set therein.
+func_emit_exe_manifest ()
+{
+    cat <<EOF
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
+  <assemblyIdentity version="1.0.0.0"
+EOF
+
+    case $host in
+    i?86-*-* )   echo '     processorArchitecture="x86"' ;;
+    ia64-*-* )   echo '     processorArchitecture="ia64"' ;;
+    x86_64-*-* ) echo '     processorArchitecture="amd64"' ;;
+    *)           echo '     processorArchitecture="*"' ;;
+    esac
+
+    cat <<EOF
+     name="$host_os.$PROGRAM.$outputname"
+     type="win32"/>
+
+  <!-- Identify the application security requirements. -->
+  <trustInfo xmlns="urn:schemas-microsoft-com:asm.v3">
+    <security>
+      <requestedPrivileges>
+        <requestedExecutionLevel level="asInvoker" uiAccess="false"/>
+      </requestedPrivileges>
+    </security>
+  </trustInfo>
+</assembly>
+EOF
+}
+
+# func_win32_import_lib_p ARG
+# True if ARG is an import lib, as indicated by $file_magic_cmd
+func_win32_import_lib_p ()
+{
+    $opt_debug
+    case `eval $file_magic_cmd \"\$1\" 2>/dev/null | $SED -e 10q` in
+    *import*) : ;;
+    *) false ;;
+    esac
+}
+
+# func_mode_link arg...
+func_mode_link ()
+{
+    $opt_debug
+    case $host in
+    *-*-cygwin* | *-*-mingw* | *-*-pw32* | *-*-os2* | *-cegcc*)
+      # It is impossible to link a dll without this setting, and
+      # we shouldn't force the makefile maintainer to figure out
+      # which system we are compiling for in order to pass an extra
+      # flag for every libtool invocation.
+      # allow_undefined=no
+
+      # FIXME: Unfortunately, there are problems with the above when trying
+      # to make a dll which has undefined symbols, in which case not
+      # even a static library is built.  For now, we need to specify
+      # -no-undefined on the libtool link line when we can be certain
+      # that all symbols are satisfied, otherwise we get a static library.
+      allow_undefined=yes
+      ;;
+    *)
+      allow_undefined=yes
+      ;;
+    esac
+    libtool_args=$nonopt
+    base_compile="$nonopt $@"
+    compile_command=$nonopt
+    finalize_command=$nonopt
+
+    compile_rpath=
+    finalize_rpath=
+    compile_shlibpath=
+    finalize_shlibpath=
+    convenience=
+    old_convenience=
+    deplibs=
+    old_deplibs=
+    compiler_flags=
+    linker_flags=
+    dllsearchpath=
+    lib_search_path=`pwd`
+    inst_prefix_dir=
+    new_inherited_linker_flags=
+
+    avoid_version=no
+    bindir=
+    dlfiles=
+    dlprefiles=
+    dlself=no
+    export_dynamic=no
+    export_symbols=
+    export_symbols_regex=
+    generated=
+    libobjs=
+    ltlibs=
+    module=no
+    no_install=no
+    objs=
+    non_pic_objects=
+    precious_files_regex=
+    prefer_static_libs=no
+    preload=no
+    prev=
+    prevarg=
+    release=
+    rpath=
+    xrpath=
+    perm_rpath=
+    temp_rpath=
+    thread_safe=no
+    vinfo=
+    vinfo_number=no
+    weak_libs=
+    single_module="${wl}-
