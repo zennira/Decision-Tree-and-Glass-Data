@@ -5620,4 +5620,293 @@ func_mode_link ()
     vinfo=
     vinfo_number=no
     weak_libs=
-    single_module="${wl}-
+    single_module="${wl}-single_module"
+    func_infer_tag $base_compile
+
+    # We need to know -static, to get the right output filenames.
+    for arg
+    do
+      case $arg in
+      -shared)
+	test "$build_libtool_libs" != yes && \
+	  func_fatal_configuration "can not build a shared library"
+	build_old_libs=no
+	break
+	;;
+      -all-static | -static | -static-libtool-libs)
+	case $arg in
+	-all-static)
+	  if test "$build_libtool_libs" = yes && test -z "$link_static_flag"; then
+	    func_warning "complete static linking is impossible in this configuration"
+	  fi
+	  if test -n "$link_static_flag"; then
+	    dlopen_self=$dlopen_self_static
+	  fi
+	  prefer_static_libs=yes
+	  ;;
+	-static)
+	  if test -z "$pic_flag" && test -n "$link_static_flag"; then
+	    dlopen_self=$dlopen_self_static
+	  fi
+	  prefer_static_libs=built
+	  ;;
+	-static-libtool-libs)
+	  if test -z "$pic_flag" && test -n "$link_static_flag"; then
+	    dlopen_self=$dlopen_self_static
+	  fi
+	  prefer_static_libs=yes
+	  ;;
+	esac
+	build_libtool_libs=no
+	build_old_libs=yes
+	break
+	;;
+      esac
+    done
+
+    # See if our shared archives depend on static archives.
+    test -n "$old_archive_from_new_cmds" && build_old_libs=yes
+
+    # Go through the arguments, transforming them on the way.
+    while test "$#" -gt 0; do
+      arg="$1"
+      shift
+      func_quote_for_eval "$arg"
+      qarg=$func_quote_for_eval_unquoted_result
+      libtool_args+=" $func_quote_for_eval_result"
+
+      # If the previous option needs an argument, assign it.
+      if test -n "$prev"; then
+	case $prev in
+	output)
+	  compile_command+=" @OUTPUT@"
+	  finalize_command+=" @OUTPUT@"
+	  ;;
+	esac
+
+	case $prev in
+	bindir)
+	  bindir="$arg"
+	  prev=
+	  continue
+	  ;;
+	dlfiles|dlprefiles)
+	  if test "$preload" = no; then
+	    # Add the symbol object into the linking commands.
+	    compile_command+=" @SYMFILE@"
+	    finalize_command+=" @SYMFILE@"
+	    preload=yes
+	  fi
+	  case $arg in
+	  *.la | *.lo) ;;  # We handle these cases below.
+	  force)
+	    if test "$dlself" = no; then
+	      dlself=needless
+	      export_dynamic=yes
+	    fi
+	    prev=
+	    continue
+	    ;;
+	  self)
+	    if test "$prev" = dlprefiles; then
+	      dlself=yes
+	    elif test "$prev" = dlfiles && test "$dlopen_self" != yes; then
+	      dlself=yes
+	    else
+	      dlself=needless
+	      export_dynamic=yes
+	    fi
+	    prev=
+	    continue
+	    ;;
+	  *)
+	    if test "$prev" = dlfiles; then
+	      dlfiles+=" $arg"
+	    else
+	      dlprefiles+=" $arg"
+	    fi
+	    prev=
+	    continue
+	    ;;
+	  esac
+	  ;;
+	expsyms)
+	  export_symbols="$arg"
+	  test -f "$arg" \
+	    || func_fatal_error "symbol file \`$arg' does not exist"
+	  prev=
+	  continue
+	  ;;
+	expsyms_regex)
+	  export_symbols_regex="$arg"
+	  prev=
+	  continue
+	  ;;
+	framework)
+	  case $host in
+	    *-*-darwin*)
+	      case "$deplibs " in
+		*" $qarg.ltframework "*) ;;
+		*) deplibs+=" $qarg.ltframework" # this is fixed later
+		   ;;
+	      esac
+	      ;;
+	  esac
+	  prev=
+	  continue
+	  ;;
+	inst_prefix)
+	  inst_prefix_dir="$arg"
+	  prev=
+	  continue
+	  ;;
+	objectlist)
+	  if test -f "$arg"; then
+	    save_arg=$arg
+	    moreargs=
+	    for fil in `cat "$save_arg"`
+	    do
+#	      moreargs+=" $fil"
+	      arg=$fil
+	      # A libtool-controlled object.
+
+	      # Check to see that this really is a libtool object.
+	      if func_lalib_unsafe_p "$arg"; then
+		pic_object=
+		non_pic_object=
+
+		# Read the .lo file
+		func_source "$arg"
+
+		if test -z "$pic_object" ||
+		   test -z "$non_pic_object" ||
+		   test "$pic_object" = none &&
+		   test "$non_pic_object" = none; then
+		  func_fatal_error "cannot find name of object for \`$arg'"
+		fi
+
+		# Extract subdirectory from the argument.
+		func_dirname "$arg" "/" ""
+		xdir="$func_dirname_result"
+
+		if test "$pic_object" != none; then
+		  # Prepend the subdirectory the object is found in.
+		  pic_object="$xdir$pic_object"
+
+		  if test "$prev" = dlfiles; then
+		    if test "$build_libtool_libs" = yes && test "$dlopen_support" = yes; then
+		      dlfiles+=" $pic_object"
+		      prev=
+		      continue
+		    else
+		      # If libtool objects are unsupported, then we need to preload.
+		      prev=dlprefiles
+		    fi
+		  fi
+
+		  # CHECK ME:  I think I busted this.  -Ossama
+		  if test "$prev" = dlprefiles; then
+		    # Preload the old-style object.
+		    dlprefiles+=" $pic_object"
+		    prev=
+		  fi
+
+		  # A PIC object.
+		  libobjs+=" $pic_object"
+		  arg="$pic_object"
+		fi
+
+		# Non-PIC object.
+		if test "$non_pic_object" != none; then
+		  # Prepend the subdirectory the object is found in.
+		  non_pic_object="$xdir$non_pic_object"
+
+		  # A standard non-PIC object
+		  non_pic_objects+=" $non_pic_object"
+		  if test -z "$pic_object" || test "$pic_object" = none ; then
+		    arg="$non_pic_object"
+		  fi
+		else
+		  # If the PIC object exists, use it instead.
+		  # $xdir was prepended to $pic_object above.
+		  non_pic_object="$pic_object"
+		  non_pic_objects+=" $non_pic_object"
+		fi
+	      else
+		# Only an error if not doing a dry-run.
+		if $opt_dry_run; then
+		  # Extract subdirectory from the argument.
+		  func_dirname "$arg" "/" ""
+		  xdir="$func_dirname_result"
+
+		  func_lo2o "$arg"
+		  pic_object=$xdir$objdir/$func_lo2o_result
+		  non_pic_object=$xdir$func_lo2o_result
+		  libobjs+=" $pic_object"
+		  non_pic_objects+=" $non_pic_object"
+	        else
+		  func_fatal_error "\`$arg' is not a valid libtool object"
+		fi
+	      fi
+	    done
+	  else
+	    func_fatal_error "link input file \`$arg' does not exist"
+	  fi
+	  arg=$save_arg
+	  prev=
+	  continue
+	  ;;
+	precious_regex)
+	  precious_files_regex="$arg"
+	  prev=
+	  continue
+	  ;;
+	release)
+	  release="-$arg"
+	  prev=
+	  continue
+	  ;;
+	rpath | xrpath)
+	  # We need an absolute path.
+	  case $arg in
+	  [\\/]* | [A-Za-z]:[\\/]*) ;;
+	  *)
+	    func_fatal_error "only absolute run-paths are allowed"
+	    ;;
+	  esac
+	  if test "$prev" = rpath; then
+	    case "$rpath " in
+	    *" $arg "*) ;;
+	    *) rpath+=" $arg" ;;
+	    esac
+	  else
+	    case "$xrpath " in
+	    *" $arg "*) ;;
+	    *) xrpath+=" $arg" ;;
+	    esac
+	  fi
+	  prev=
+	  continue
+	  ;;
+	shrext)
+	  shrext_cmds="$arg"
+	  prev=
+	  continue
+	  ;;
+	weak)
+	  weak_libs+=" $arg"
+	  prev=
+	  continue
+	  ;;
+	xcclinker)
+	  linker_flags+=" $qarg"
+	  compiler_flags+=" $qarg"
+	  prev=
+	  compile_command+=" $qarg"
+	  finalize_command+=" $qarg"
+	  continue
+	  ;;
+	xcompiler)
+	  compiler_flags+=" $qarg"
+	  prev=
+	  compile_command+=" $qarg"
