@@ -5910,3 +5910,309 @@ func_mode_link ()
 	  compiler_flags+=" $qarg"
 	  prev=
 	  compile_command+=" $qarg"
+	  finalize_command+=" $qarg"
+	  continue
+	  ;;
+	xlinker)
+	  linker_flags+=" $qarg"
+	  compiler_flags+=" $wl$qarg"
+	  prev=
+	  compile_command+=" $wl$qarg"
+	  finalize_command+=" $wl$qarg"
+	  continue
+	  ;;
+	*)
+	  eval "$prev=\"\$arg\""
+	  prev=
+	  continue
+	  ;;
+	esac
+      fi # test -n "$prev"
+
+      prevarg="$arg"
+
+      case $arg in
+      -all-static)
+	if test -n "$link_static_flag"; then
+	  # See comment for -static flag below, for more details.
+	  compile_command+=" $link_static_flag"
+	  finalize_command+=" $link_static_flag"
+	fi
+	continue
+	;;
+
+      -allow-undefined)
+	# FIXME: remove this flag sometime in the future.
+	func_fatal_error "\`-allow-undefined' must not be used because it is the default"
+	;;
+
+      -avoid-version)
+	avoid_version=yes
+	continue
+	;;
+
+      -bindir)
+	prev=bindir
+	continue
+	;;
+
+      -dlopen)
+	prev=dlfiles
+	continue
+	;;
+
+      -dlpreopen)
+	prev=dlprefiles
+	continue
+	;;
+
+      -export-dynamic)
+	export_dynamic=yes
+	continue
+	;;
+
+      -export-symbols | -export-symbols-regex)
+	if test -n "$export_symbols" || test -n "$export_symbols_regex"; then
+	  func_fatal_error "more than one -exported-symbols argument is not allowed"
+	fi
+	if test "X$arg" = "X-export-symbols"; then
+	  prev=expsyms
+	else
+	  prev=expsyms_regex
+	fi
+	continue
+	;;
+
+      -framework)
+	prev=framework
+	continue
+	;;
+
+      -inst-prefix-dir)
+	prev=inst_prefix
+	continue
+	;;
+
+      # The native IRIX linker understands -LANG:*, -LIST:* and -LNO:*
+      # so, if we see these flags be careful not to treat them like -L
+      -L[A-Z][A-Z]*:*)
+	case $with_gcc/$host in
+	no/*-*-irix* | /*-*-irix*)
+	  compile_command+=" $arg"
+	  finalize_command+=" $arg"
+	  ;;
+	esac
+	continue
+	;;
+
+      -L*)
+	func_stripname "-L" '' "$arg"
+	if test -z "$func_stripname_result"; then
+	  if test "$#" -gt 0; then
+	    func_fatal_error "require no space between \`-L' and \`$1'"
+	  else
+	    func_fatal_error "need path for \`-L' option"
+	  fi
+	fi
+	func_resolve_sysroot "$func_stripname_result"
+	dir=$func_resolve_sysroot_result
+	# We need an absolute path.
+	case $dir in
+	[\\/]* | [A-Za-z]:[\\/]*) ;;
+	*)
+	  absdir=`cd "$dir" && pwd`
+	  test -z "$absdir" && \
+	    func_fatal_error "cannot determine absolute directory name of \`$dir'"
+	  dir="$absdir"
+	  ;;
+	esac
+	case "$deplibs " in
+	*" -L$dir "* | *" $arg "*)
+	  # Will only happen for absolute or sysroot arguments
+	  ;;
+	*)
+	  # Preserve sysroot, but never include relative directories
+	  case $dir in
+	    [\\/]* | [A-Za-z]:[\\/]* | =*) deplibs+=" $arg" ;;
+	    *) deplibs+=" -L$dir" ;;
+	  esac
+	  lib_search_path+=" $dir"
+	  ;;
+	esac
+	case $host in
+	*-*-cygwin* | *-*-mingw* | *-*-pw32* | *-*-os2* | *-cegcc*)
+	  testbindir=`$ECHO "$dir" | $SED 's*/lib$*/bin*'`
+	  case :$dllsearchpath: in
+	  *":$dir:"*) ;;
+	  ::) dllsearchpath=$dir;;
+	  *) dllsearchpath+=":$dir";;
+	  esac
+	  case :$dllsearchpath: in
+	  *":$testbindir:"*) ;;
+	  ::) dllsearchpath=$testbindir;;
+	  *) dllsearchpath+=":$testbindir";;
+	  esac
+	  ;;
+	esac
+	continue
+	;;
+
+      -l*)
+	if test "X$arg" = "X-lc" || test "X$arg" = "X-lm"; then
+	  case $host in
+	  *-*-cygwin* | *-*-mingw* | *-*-pw32* | *-*-beos* | *-cegcc* | *-*-haiku*)
+	    # These systems don't actually have a C or math library (as such)
+	    continue
+	    ;;
+	  *-*-os2*)
+	    # These systems don't actually have a C library (as such)
+	    test "X$arg" = "X-lc" && continue
+	    ;;
+	  *-*-openbsd* | *-*-freebsd* | *-*-dragonfly*)
+	    # Do not include libc due to us having libc/libc_r.
+	    test "X$arg" = "X-lc" && continue
+	    ;;
+	  *-*-rhapsody* | *-*-darwin1.[012])
+	    # Rhapsody C and math libraries are in the System framework
+	    deplibs+=" System.ltframework"
+	    continue
+	    ;;
+	  *-*-sco3.2v5* | *-*-sco5v6*)
+	    # Causes problems with __ctype
+	    test "X$arg" = "X-lc" && continue
+	    ;;
+	  *-*-sysv4.2uw2* | *-*-sysv5* | *-*-unixware* | *-*-OpenUNIX*)
+	    # Compiler inserts libc in the correct place for threads to work
+	    test "X$arg" = "X-lc" && continue
+	    ;;
+	  esac
+	elif test "X$arg" = "X-lc_r"; then
+	 case $host in
+	 *-*-openbsd* | *-*-freebsd* | *-*-dragonfly*)
+	   # Do not include libc_r directly, use -pthread flag.
+	   continue
+	   ;;
+	 esac
+	fi
+	deplibs+=" $arg"
+	continue
+	;;
+
+      -module)
+	module=yes
+	continue
+	;;
+
+      # Tru64 UNIX uses -model [arg] to determine the layout of C++
+      # classes, name mangling, and exception handling.
+      # Darwin uses the -arch flag to determine output architecture.
+      -model|-arch|-isysroot|--sysroot)
+	compiler_flags+=" $arg"
+	compile_command+=" $arg"
+	finalize_command+=" $arg"
+	prev=xcompiler
+	continue
+	;;
+
+      -mt|-mthreads|-kthread|-Kthread|-pthread|-pthreads|--thread-safe|-threads)
+	compiler_flags+=" $arg"
+	compile_command+=" $arg"
+	finalize_command+=" $arg"
+	case "$new_inherited_linker_flags " in
+	    *" $arg "*) ;;
+	    * ) new_inherited_linker_flags+=" $arg" ;;
+	esac
+	continue
+	;;
+
+      -multi_module)
+	single_module="${wl}-multi_module"
+	continue
+	;;
+
+      -no-fast-install)
+	fast_install=no
+	continue
+	;;
+
+      -no-install)
+	case $host in
+	*-*-cygwin* | *-*-mingw* | *-*-pw32* | *-*-os2* | *-*-darwin* | *-cegcc*)
+	  # The PATH hackery in wrapper scripts is required on Windows
+	  # and Darwin in order for the loader to find any dlls it needs.
+	  func_warning "\`-no-install' is ignored for $host"
+	  func_warning "assuming \`-no-fast-install' instead"
+	  fast_install=no
+	  ;;
+	*) no_install=yes ;;
+	esac
+	continue
+	;;
+
+      -no-undefined)
+	allow_undefined=no
+	continue
+	;;
+
+      -objectlist)
+	prev=objectlist
+	continue
+	;;
+
+      -o) prev=output ;;
+
+      -precious-files-regex)
+	prev=precious_regex
+	continue
+	;;
+
+      -release)
+	prev=release
+	continue
+	;;
+
+      -rpath)
+	prev=rpath
+	continue
+	;;
+
+      -R)
+	prev=xrpath
+	continue
+	;;
+
+      -R*)
+	func_stripname '-R' '' "$arg"
+	dir=$func_stripname_result
+	# We need an absolute path.
+	case $dir in
+	[\\/]* | [A-Za-z]:[\\/]*) ;;
+	=*)
+	  func_stripname '=' '' "$dir"
+	  dir=$lt_sysroot$func_stripname_result
+	  ;;
+	*)
+	  func_fatal_error "only absolute run-paths are allowed"
+	  ;;
+	esac
+	case "$xrpath " in
+	*" $dir "*) ;;
+	*) xrpath+=" $dir" ;;
+	esac
+	continue
+	;;
+
+      -shared)
+	# The effects of -shared are defined in a previous loop.
+	continue
+	;;
+
+      -shrext)
+	prev=shrext
+	continue
+	;;
+
+      -static | -static-libtool-libs)
+	# The effects of -static are defined in a previous loop.
+	# We used to do the same as -all-static on platforms that
+	#
