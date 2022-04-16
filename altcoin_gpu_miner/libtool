@@ -6215,4 +6215,252 @@ func_mode_link ()
       -static | -static-libtool-libs)
 	# The effects of -static are defined in a previous loop.
 	# We used to do the same as -all-static on platforms that
-	#
+	# didn't have a PIC flag, but the assumption that the effects
+	# would be equivalent was wrong.  It would break on at least
+	# Digital Unix and AIX.
+	continue
+	;;
+
+      -thread-safe)
+	thread_safe=yes
+	continue
+	;;
+
+      -version-info)
+	prev=vinfo
+	continue
+	;;
+
+      -version-number)
+	prev=vinfo
+	vinfo_number=yes
+	continue
+	;;
+
+      -weak)
+        prev=weak
+	continue
+	;;
+
+      -Wc,*)
+	func_stripname '-Wc,' '' "$arg"
+	args=$func_stripname_result
+	arg=
+	save_ifs="$IFS"; IFS=','
+	for flag in $args; do
+	  IFS="$save_ifs"
+          func_quote_for_eval "$flag"
+	  arg+=" $func_quote_for_eval_result"
+	  compiler_flags+=" $func_quote_for_eval_result"
+	done
+	IFS="$save_ifs"
+	func_stripname ' ' '' "$arg"
+	arg=$func_stripname_result
+	;;
+
+      -Wl,*)
+	func_stripname '-Wl,' '' "$arg"
+	args=$func_stripname_result
+	arg=
+	save_ifs="$IFS"; IFS=','
+	for flag in $args; do
+	  IFS="$save_ifs"
+          func_quote_for_eval "$flag"
+	  arg+=" $wl$func_quote_for_eval_result"
+	  compiler_flags+=" $wl$func_quote_for_eval_result"
+	  linker_flags+=" $func_quote_for_eval_result"
+	done
+	IFS="$save_ifs"
+	func_stripname ' ' '' "$arg"
+	arg=$func_stripname_result
+	;;
+
+      -Xcompiler)
+	prev=xcompiler
+	continue
+	;;
+
+      -Xlinker)
+	prev=xlinker
+	continue
+	;;
+
+      -XCClinker)
+	prev=xcclinker
+	continue
+	;;
+
+      # -msg_* for osf cc
+      -msg_*)
+	func_quote_for_eval "$arg"
+	arg="$func_quote_for_eval_result"
+	;;
+
+      # Flags to be passed through unchanged, with rationale:
+      # -64, -mips[0-9]      enable 64-bit mode for the SGI compiler
+      # -r[0-9][0-9]*        specify processor for the SGI compiler
+      # -xarch=*, -xtarget=* enable 64-bit mode for the Sun compiler
+      # +DA*, +DD*           enable 64-bit mode for the HP compiler
+      # -q*                  compiler args for the IBM compiler
+      # -m*, -t[45]*, -txscale* architecture-specific flags for GCC
+      # -F/path              path to uninstalled frameworks, gcc on darwin
+      # -p, -pg, --coverage, -fprofile-*  profiling flags for GCC
+      # @file                GCC response files
+      # -tp=*                Portland pgcc target processor selection
+      # --sysroot=*          for sysroot support
+      # -O*, -flto*, -fwhopr*, -fuse-linker-plugin GCC link-time optimization
+      # -{shared,static}-libgcc, -static-{libgfortran|libstdc++}
+      #                      link against specified runtime library
+      # -fstack-protector*   stack protector flags for GCC
+      -64|-mips[0-9]|-r[0-9][0-9]*|-xarch=*|-xtarget=*|+DA*|+DD*|-q*|-m*| \
+      -t[45]*|-txscale*|-p|-pg|--coverage|-fprofile-*|-F*|@*|-tp=*|--sysroot=*| \
+      -O*|-flto*|-fwhopr*|-fuse-linker-plugin| \
+      -shared-libgcc|-static-libgcc|-static-libgfortran|-static-libstdc++| \
+      -fstack-protector*)
+        func_quote_for_eval "$arg"
+	arg="$func_quote_for_eval_result"
+        compile_command+=" $arg"
+        finalize_command+=" $arg"
+        compiler_flags+=" $arg"
+        continue
+        ;;
+
+      # Some other compiler flag.
+      -* | +*)
+        func_quote_for_eval "$arg"
+	arg="$func_quote_for_eval_result"
+	;;
+
+      *.$objext)
+	# A standard object.
+	objs+=" $arg"
+	;;
+
+      *.lo)
+	# A libtool-controlled object.
+
+	# Check to see that this really is a libtool object.
+	if func_lalib_unsafe_p "$arg"; then
+	  pic_object=
+	  non_pic_object=
+
+	  # Read the .lo file
+	  func_source "$arg"
+
+	  if test -z "$pic_object" ||
+	     test -z "$non_pic_object" ||
+	     test "$pic_object" = none &&
+	     test "$non_pic_object" = none; then
+	    func_fatal_error "cannot find name of object for \`$arg'"
+	  fi
+
+	  # Extract subdirectory from the argument.
+	  func_dirname "$arg" "/" ""
+	  xdir="$func_dirname_result"
+
+	  if test "$pic_object" != none; then
+	    # Prepend the subdirectory the object is found in.
+	    pic_object="$xdir$pic_object"
+
+	    if test "$prev" = dlfiles; then
+	      if test "$build_libtool_libs" = yes && test "$dlopen_support" = yes; then
+		dlfiles+=" $pic_object"
+		prev=
+		continue
+	      else
+		# If libtool objects are unsupported, then we need to preload.
+		prev=dlprefiles
+	      fi
+	    fi
+
+	    # CHECK ME:  I think I busted this.  -Ossama
+	    if test "$prev" = dlprefiles; then
+	      # Preload the old-style object.
+	      dlprefiles+=" $pic_object"
+	      prev=
+	    fi
+
+	    # A PIC object.
+	    libobjs+=" $pic_object"
+	    arg="$pic_object"
+	  fi
+
+	  # Non-PIC object.
+	  if test "$non_pic_object" != none; then
+	    # Prepend the subdirectory the object is found in.
+	    non_pic_object="$xdir$non_pic_object"
+
+	    # A standard non-PIC object
+	    non_pic_objects+=" $non_pic_object"
+	    if test -z "$pic_object" || test "$pic_object" = none ; then
+	      arg="$non_pic_object"
+	    fi
+	  else
+	    # If the PIC object exists, use it instead.
+	    # $xdir was prepended to $pic_object above.
+	    non_pic_object="$pic_object"
+	    non_pic_objects+=" $non_pic_object"
+	  fi
+	else
+	  # Only an error if not doing a dry-run.
+	  if $opt_dry_run; then
+	    # Extract subdirectory from the argument.
+	    func_dirname "$arg" "/" ""
+	    xdir="$func_dirname_result"
+
+	    func_lo2o "$arg"
+	    pic_object=$xdir$objdir/$func_lo2o_result
+	    non_pic_object=$xdir$func_lo2o_result
+	    libobjs+=" $pic_object"
+	    non_pic_objects+=" $non_pic_object"
+	  else
+	    func_fatal_error "\`$arg' is not a valid libtool object"
+	  fi
+	fi
+	;;
+
+      *.$libext)
+	# An archive.
+	deplibs+=" $arg"
+	old_deplibs+=" $arg"
+	continue
+	;;
+
+      *.la)
+	# A libtool-controlled library.
+
+	func_resolve_sysroot "$arg"
+	if test "$prev" = dlfiles; then
+	  # This library was specified with -dlopen.
+	  dlfiles+=" $func_resolve_sysroot_result"
+	  prev=
+	elif test "$prev" = dlprefiles; then
+	  # The library was specified with -dlpreopen.
+	  dlprefiles+=" $func_resolve_sysroot_result"
+	  prev=
+	else
+	  deplibs+=" $func_resolve_sysroot_result"
+	fi
+	continue
+	;;
+
+      # Some other compiler argument.
+      *)
+	# Unknown arguments in both finalize_command and compile_command need
+	# to be aesthetically quoted because they are evaled later.
+	func_quote_for_eval "$arg"
+	arg="$func_quote_for_eval_result"
+	;;
+      esac # arg
+
+      # Now actually substitute the argument into the commands.
+      if test -n "$arg"; then
+	compile_command+=" $arg"
+	finalize_command+=" $arg"
+      fi
+    done # argument parsing loop
+
+    test -n "$prev" && \
+      func_fatal_help "the \`$prevarg' option requires an argument"
+
+    if test "$export_dynamic" = yes
