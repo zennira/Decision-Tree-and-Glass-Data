@@ -6463,4 +6463,228 @@ func_mode_link ()
     test -n "$prev" && \
       func_fatal_help "the \`$prevarg' option requires an argument"
 
-    if test "$export_dynamic" = yes
+    if test "$export_dynamic" = yes && test -n "$export_dynamic_flag_spec"; then
+      eval arg=\"$export_dynamic_flag_spec\"
+      compile_command+=" $arg"
+      finalize_command+=" $arg"
+    fi
+
+    oldlibs=
+    # calculate the name of the file, without its directory
+    func_basename "$output"
+    outputname="$func_basename_result"
+    libobjs_save="$libobjs"
+
+    if test -n "$shlibpath_var"; then
+      # get the directories listed in $shlibpath_var
+      eval shlib_search_path=\`\$ECHO \"\${$shlibpath_var}\" \| \$SED \'s/:/ /g\'\`
+    else
+      shlib_search_path=
+    fi
+    eval sys_lib_search_path=\"$sys_lib_search_path_spec\"
+    eval sys_lib_dlsearch_path=\"$sys_lib_dlsearch_path_spec\"
+
+    func_dirname "$output" "/" ""
+    output_objdir="$func_dirname_result$objdir"
+    func_to_tool_file "$output_objdir/"
+    tool_output_objdir=$func_to_tool_file_result
+    # Create the object directory.
+    func_mkdir_p "$output_objdir"
+
+    # Determine the type of output
+    case $output in
+    "")
+      func_fatal_help "you must specify an output file"
+      ;;
+    *.$libext) linkmode=oldlib ;;
+    *.lo | *.$objext) linkmode=obj ;;
+    *.la) linkmode=lib ;;
+    *) linkmode=prog ;; # Anything else should be a program.
+    esac
+
+    specialdeplibs=
+
+    libs=
+    # Find all interdependent deplibs by searching for libraries
+    # that are linked more than once (e.g. -la -lb -la)
+    for deplib in $deplibs; do
+      if $opt_preserve_dup_deps ; then
+	case "$libs " in
+	*" $deplib "*) specialdeplibs+=" $deplib" ;;
+	esac
+      fi
+      libs+=" $deplib"
+    done
+
+    if test "$linkmode" = lib; then
+      libs="$predeps $libs $compiler_lib_search_path $postdeps"
+
+      # Compute libraries that are listed more than once in $predeps
+      # $postdeps and mark them as special (i.e., whose duplicates are
+      # not to be eliminated).
+      pre_post_deps=
+      if $opt_duplicate_compiler_generated_deps; then
+	for pre_post_dep in $predeps $postdeps; do
+	  case "$pre_post_deps " in
+	  *" $pre_post_dep "*) specialdeplibs+=" $pre_post_deps" ;;
+	  esac
+	  pre_post_deps+=" $pre_post_dep"
+	done
+      fi
+      pre_post_deps=
+    fi
+
+    deplibs=
+    newdependency_libs=
+    newlib_search_path=
+    need_relink=no # whether we're linking any uninstalled libtool libraries
+    notinst_deplibs= # not-installed libtool libraries
+    notinst_path= # paths that contain not-installed libtool libraries
+
+    case $linkmode in
+    lib)
+	passes="conv dlpreopen link"
+	for file in $dlfiles $dlprefiles; do
+	  case $file in
+	  *.la) ;;
+	  *)
+	    func_fatal_help "libraries can \`-dlopen' only libtool libraries: $file"
+	    ;;
+	  esac
+	done
+	;;
+    prog)
+	compile_deplibs=
+	finalize_deplibs=
+	alldeplibs=no
+	newdlfiles=
+	newdlprefiles=
+	passes="conv scan dlopen dlpreopen link"
+	;;
+    *)  passes="conv"
+	;;
+    esac
+
+    for pass in $passes; do
+      # The preopen pass in lib mode reverses $deplibs; put it back here
+      # so that -L comes before libs that need it for instance...
+      if test "$linkmode,$pass" = "lib,link"; then
+	## FIXME: Find the place where the list is rebuilt in the wrong
+	##        order, and fix it there properly
+        tmp_deplibs=
+	for deplib in $deplibs; do
+	  tmp_deplibs="$deplib $tmp_deplibs"
+	done
+	deplibs="$tmp_deplibs"
+      fi
+
+      if test "$linkmode,$pass" = "lib,link" ||
+	 test "$linkmode,$pass" = "prog,scan"; then
+	libs="$deplibs"
+	deplibs=
+      fi
+      if test "$linkmode" = prog; then
+	case $pass in
+	dlopen) libs="$dlfiles" ;;
+	dlpreopen) libs="$dlprefiles" ;;
+	link) libs="$deplibs %DEPLIBS% $dependency_libs" ;;
+	esac
+      fi
+      if test "$linkmode,$pass" = "lib,dlpreopen"; then
+	# Collect and forward deplibs of preopened libtool libs
+	for lib in $dlprefiles; do
+	  # Ignore non-libtool-libs
+	  dependency_libs=
+	  func_resolve_sysroot "$lib"
+	  case $lib in
+	  *.la)	func_source "$func_resolve_sysroot_result" ;;
+	  esac
+
+	  # Collect preopened libtool deplibs, except any this library
+	  # has declared as weak libs
+	  for deplib in $dependency_libs; do
+	    func_basename "$deplib"
+            deplib_base=$func_basename_result
+	    case " $weak_libs " in
+	    *" $deplib_base "*) ;;
+	    *) deplibs+=" $deplib" ;;
+	    esac
+	  done
+	done
+	libs="$dlprefiles"
+      fi
+      if test "$pass" = dlopen; then
+	# Collect dlpreopened libraries
+	save_deplibs="$deplibs"
+	deplibs=
+      fi
+
+      for deplib in $libs; do
+	lib=
+	found=no
+	case $deplib in
+	-mt|-mthreads|-kthread|-Kthread|-pthread|-pthreads|--thread-safe|-threads)
+	  if test "$linkmode,$pass" = "prog,link"; then
+	    compile_deplibs="$deplib $compile_deplibs"
+	    finalize_deplibs="$deplib $finalize_deplibs"
+	  else
+	    compiler_flags+=" $deplib"
+	    if test "$linkmode" = lib ; then
+		case "$new_inherited_linker_flags " in
+		    *" $deplib "*) ;;
+		    * ) new_inherited_linker_flags+=" $deplib" ;;
+		esac
+	    fi
+	  fi
+	  continue
+	  ;;
+	-l*)
+	  if test "$linkmode" != lib && test "$linkmode" != prog; then
+	    func_warning "\`-l' is ignored for archives/objects"
+	    continue
+	  fi
+	  func_stripname '-l' '' "$deplib"
+	  name=$func_stripname_result
+	  if test "$linkmode" = lib; then
+	    searchdirs="$newlib_search_path $lib_search_path $compiler_lib_search_dirs $sys_lib_search_path $shlib_search_path"
+	  else
+	    searchdirs="$newlib_search_path $lib_search_path $sys_lib_search_path $shlib_search_path"
+	  fi
+	  for searchdir in $searchdirs; do
+	    for search_ext in .la $std_shrext .so .a; do
+	      # Search the libtool library
+	      lib="$searchdir/lib${name}${search_ext}"
+	      if test -f "$lib"; then
+		if test "$search_ext" = ".la"; then
+		  found=yes
+		else
+		  found=no
+		fi
+		break 2
+	      fi
+	    done
+	  done
+	  if test "$found" != yes; then
+	    # deplib doesn't seem to be a libtool library
+	    if test "$linkmode,$pass" = "prog,link"; then
+	      compile_deplibs="$deplib $compile_deplibs"
+	      finalize_deplibs="$deplib $finalize_deplibs"
+	    else
+	      deplibs="$deplib $deplibs"
+	      test "$linkmode" = lib && newdependency_libs="$deplib $newdependency_libs"
+	    fi
+	    continue
+	  else # deplib is a libtool library
+	    # If $allow_libtool_libs_with_static_runtimes && $deplib is a stdlib,
+	    # We need to do some special things here, and not later.
+	    if test "X$allow_libtool_libs_with_static_runtimes" = "Xyes" ; then
+	      case " $predeps $postdeps " in
+	      *" $deplib "*)
+		if func_lalib_p "$lib"; then
+		  library_names=
+		  old_library=
+		  func_source "$lib"
+		  for l in $old_library $library_names; do
+		    ll="$l"
+		  done
+		  i
