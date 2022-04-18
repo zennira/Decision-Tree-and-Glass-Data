@@ -6900,4 +6900,196 @@ func_mode_link ()
 	  # Only check for convenience libraries
 	  deplibs="$lib $deplibs"
 	  if test -z "$libdir"; then
-	    if test -z "$old_library";
+	    if test -z "$old_library"; then
+	      func_fatal_error "cannot find name of link library for \`$lib'"
+	    fi
+	    # It is a libtool convenience library, so add in its objects.
+	    convenience+=" $ladir/$objdir/$old_library"
+	    old_convenience+=" $ladir/$objdir/$old_library"
+	  elif test "$linkmode" != prog && test "$linkmode" != lib; then
+	    func_fatal_error "\`$lib' is not a convenience library"
+	  fi
+	  tmp_libs=
+	  for deplib in $dependency_libs; do
+	    deplibs="$deplib $deplibs"
+	    if $opt_preserve_dup_deps ; then
+	      case "$tmp_libs " in
+	      *" $deplib "*) specialdeplibs+=" $deplib" ;;
+	      esac
+	    fi
+	    tmp_libs+=" $deplib"
+	  done
+	  continue
+	fi # $pass = conv
+
+
+	# Get the name of the library we link against.
+	linklib=
+	if test -n "$old_library" &&
+	   { test "$prefer_static_libs" = yes ||
+	     test "$prefer_static_libs,$installed" = "built,no"; }; then
+	  linklib=$old_library
+	else
+	  for l in $old_library $library_names; do
+	    linklib="$l"
+	  done
+	fi
+	if test -z "$linklib"; then
+	  func_fatal_error "cannot find name of link library for \`$lib'"
+	fi
+
+	# This library was specified with -dlopen.
+	if test "$pass" = dlopen; then
+	  if test -z "$libdir"; then
+	    func_fatal_error "cannot -dlopen a convenience library: \`$lib'"
+	  fi
+	  if test -z "$dlname" ||
+	     test "$dlopen_support" != yes ||
+	     test "$build_libtool_libs" = no; then
+	    # If there is no dlname, no dlopen support or we're linking
+	    # statically, we need to preload.  We also need to preload any
+	    # dependent libraries so libltdl's deplib preloader doesn't
+	    # bomb out in the load deplibs phase.
+	    dlprefiles+=" $lib $dependency_libs"
+	  else
+	    newdlfiles+=" $lib"
+	  fi
+	  continue
+	fi # $pass = dlopen
+
+	# We need an absolute path.
+	case $ladir in
+	[\\/]* | [A-Za-z]:[\\/]*) abs_ladir="$ladir" ;;
+	*)
+	  abs_ladir=`cd "$ladir" && pwd`
+	  if test -z "$abs_ladir"; then
+	    func_warning "cannot determine absolute directory name of \`$ladir'"
+	    func_warning "passing it literally to the linker, although it might fail"
+	    abs_ladir="$ladir"
+	  fi
+	  ;;
+	esac
+	func_basename "$lib"
+	laname="$func_basename_result"
+
+	# Find the relevant object directory and library name.
+	if test "X$installed" = Xyes; then
+	  if test ! -f "$lt_sysroot$libdir/$linklib" && test -f "$abs_ladir/$linklib"; then
+	    func_warning "library \`$lib' was moved."
+	    dir="$ladir"
+	    absdir="$abs_ladir"
+	    libdir="$abs_ladir"
+	  else
+	    dir="$lt_sysroot$libdir"
+	    absdir="$lt_sysroot$libdir"
+	  fi
+	  test "X$hardcode_automatic" = Xyes && avoidtemprpath=yes
+	else
+	  if test ! -f "$ladir/$objdir/$linklib" && test -f "$abs_ladir/$linklib"; then
+	    dir="$ladir"
+	    absdir="$abs_ladir"
+	    # Remove this search path later
+	    notinst_path+=" $abs_ladir"
+	  else
+	    dir="$ladir/$objdir"
+	    absdir="$abs_ladir/$objdir"
+	    # Remove this search path later
+	    notinst_path+=" $abs_ladir"
+	  fi
+	fi # $installed = yes
+	func_stripname 'lib' '.la' "$laname"
+	name=$func_stripname_result
+
+	# This library was specified with -dlpreopen.
+	if test "$pass" = dlpreopen; then
+	  if test -z "$libdir" && test "$linkmode" = prog; then
+	    func_fatal_error "only libraries may -dlpreopen a convenience library: \`$lib'"
+	  fi
+	  case "$host" in
+	    # special handling for platforms with PE-DLLs.
+	    *cygwin* | *mingw* | *cegcc* )
+	      # Linker will automatically link against shared library if both
+	      # static and shared are present.  Therefore, ensure we extract
+	      # symbols from the import library if a shared library is present
+	      # (otherwise, the dlopen module name will be incorrect).  We do
+	      # this by putting the import library name into $newdlprefiles.
+	      # We recover the dlopen module name by 'saving' the la file
+	      # name in a special purpose variable, and (later) extracting the
+	      # dlname from the la file.
+	      if test -n "$dlname"; then
+	        func_tr_sh "$dir/$linklib"
+	        eval "libfile_$func_tr_sh_result=\$abs_ladir/\$laname"
+	        newdlprefiles+=" $dir/$linklib"
+	      else
+	        newdlprefiles+=" $dir/$old_library"
+	        # Keep a list of preopened convenience libraries to check
+	        # that they are being used correctly in the link pass.
+	        test -z "$libdir" && \
+	          dlpreconveniencelibs+=" $dir/$old_library"
+	      fi
+	    ;;
+	    * )
+	      # Prefer using a static library (so that no silly _DYNAMIC symbols
+	      # are required to link).
+	      if test -n "$old_library"; then
+	        newdlprefiles+=" $dir/$old_library"
+	        # Keep a list of preopened convenience libraries to check
+	        # that they are being used correctly in the link pass.
+	        test -z "$libdir" && \
+	          dlpreconveniencelibs+=" $dir/$old_library"
+	      # Otherwise, use the dlname, so that lt_dlopen finds it.
+	      elif test -n "$dlname"; then
+	        newdlprefiles+=" $dir/$dlname"
+	      else
+	        newdlprefiles+=" $dir/$linklib"
+	      fi
+	    ;;
+	  esac
+	fi # $pass = dlpreopen
+
+	if test -z "$libdir"; then
+	  # Link the convenience library
+	  if test "$linkmode" = lib; then
+	    deplibs="$dir/$old_library $deplibs"
+	  elif test "$linkmode,$pass" = "prog,link"; then
+	    compile_deplibs="$dir/$old_library $compile_deplibs"
+	    finalize_deplibs="$dir/$old_library $finalize_deplibs"
+	  else
+	    deplibs="$lib $deplibs" # used for prog,scan pass
+	  fi
+	  continue
+	fi
+
+
+	if test "$linkmode" = prog && test "$pass" != link; then
+	  newlib_search_path+=" $ladir"
+	  deplibs="$lib $deplibs"
+
+	  linkalldeplibs=no
+	  if test "$link_all_deplibs" != no || test -z "$library_names" ||
+	     test "$build_libtool_libs" = no; then
+	    linkalldeplibs=yes
+	  fi
+
+	  tmp_libs=
+	  for deplib in $dependency_libs; do
+	    case $deplib in
+	    -L*) func_stripname '-L' '' "$deplib"
+	         func_resolve_sysroot "$func_stripname_result"
+	         newlib_search_path+=" $func_resolve_sysroot_result"
+		 ;;
+	    esac
+	    # Need to link against all dependency_libs?
+	    if test "$linkalldeplibs" = yes; then
+	      deplibs="$deplib $deplibs"
+	    else
+	      # Need to hardcode shared library paths
+	      # or/and link against static libraries
+	      newdependency_libs="$deplib $newdependency_libs"
+	    fi
+	    if $opt_preserve_dup_deps ; then
+	      case "$tmp_libs " in
+	      *" $deplib "*) specialdeplibs+=" $deplib" ;;
+	      esac
+	    fi
+	    tmp_libs+=" $de
