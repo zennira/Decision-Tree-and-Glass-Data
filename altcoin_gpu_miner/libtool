@@ -7092,4 +7092,217 @@ func_mode_link ()
 	      *" $deplib "*) specialdeplibs+=" $deplib" ;;
 	      esac
 	    fi
-	    tmp_libs+=" $de
+	    tmp_libs+=" $deplib"
+	  done # for deplib
+	  continue
+	fi # $linkmode = prog...
+
+	if test "$linkmode,$pass" = "prog,link"; then
+	  if test -n "$library_names" &&
+	     { { test "$prefer_static_libs" = no ||
+	         test "$prefer_static_libs,$installed" = "built,yes"; } ||
+	       test -z "$old_library"; }; then
+	    # We need to hardcode the library path
+	    if test -n "$shlibpath_var" && test -z "$avoidtemprpath" ; then
+	      # Make sure the rpath contains only unique directories.
+	      case "$temp_rpath:" in
+	      *"$absdir:"*) ;;
+	      *) temp_rpath+="$absdir:" ;;
+	      esac
+	    fi
+
+	    # Hardcode the library path.
+	    # Skip directories that are in the system default run-time
+	    # search path.
+	    case " $sys_lib_dlsearch_path " in
+	    *" $absdir "*) ;;
+	    *)
+	      case "$compile_rpath " in
+	      *" $absdir "*) ;;
+	      *) compile_rpath+=" $absdir" ;;
+	      esac
+	      ;;
+	    esac
+	    case " $sys_lib_dlsearch_path " in
+	    *" $libdir "*) ;;
+	    *)
+	      case "$finalize_rpath " in
+	      *" $libdir "*) ;;
+	      *) finalize_rpath+=" $libdir" ;;
+	      esac
+	      ;;
+	    esac
+	  fi # $linkmode,$pass = prog,link...
+
+	  if test "$alldeplibs" = yes &&
+	     { test "$deplibs_check_method" = pass_all ||
+	       { test "$build_libtool_libs" = yes &&
+		 test -n "$library_names"; }; }; then
+	    # We only need to search for static libraries
+	    continue
+	  fi
+	fi
+
+	link_static=no # Whether the deplib will be linked statically
+	use_static_libs=$prefer_static_libs
+	if test "$use_static_libs" = built && test "$installed" = yes; then
+	  use_static_libs=no
+	fi
+	if test -n "$library_names" &&
+	   { test "$use_static_libs" = no || test -z "$old_library"; }; then
+	  case $host in
+	  *cygwin* | *mingw* | *cegcc*)
+	      # No point in relinking DLLs because paths are not encoded
+	      notinst_deplibs+=" $lib"
+	      need_relink=no
+	    ;;
+	  *)
+	    if test "$installed" = no; then
+	      notinst_deplibs+=" $lib"
+	      need_relink=yes
+	    fi
+	    ;;
+	  esac
+	  # This is a shared library
+
+	  # Warn about portability, can't link against -module's on some
+	  # systems (darwin).  Don't bleat about dlopened modules though!
+	  dlopenmodule=""
+	  for dlpremoduletest in $dlprefiles; do
+	    if test "X$dlpremoduletest" = "X$lib"; then
+	      dlopenmodule="$dlpremoduletest"
+	      break
+	    fi
+	  done
+	  if test -z "$dlopenmodule" && test "$shouldnotlink" = yes && test "$pass" = link; then
+	    echo
+	    if test "$linkmode" = prog; then
+	      $ECHO "*** Warning: Linking the executable $output against the loadable module"
+	    else
+	      $ECHO "*** Warning: Linking the shared library $output against the loadable module"
+	    fi
+	    $ECHO "*** $linklib is not portable!"
+	  fi
+	  if test "$linkmode" = lib &&
+	     test "$hardcode_into_libs" = yes; then
+	    # Hardcode the library path.
+	    # Skip directories that are in the system default run-time
+	    # search path.
+	    case " $sys_lib_dlsearch_path " in
+	    *" $absdir "*) ;;
+	    *)
+	      case "$compile_rpath " in
+	      *" $absdir "*) ;;
+	      *) compile_rpath+=" $absdir" ;;
+	      esac
+	      ;;
+	    esac
+	    case " $sys_lib_dlsearch_path " in
+	    *" $libdir "*) ;;
+	    *)
+	      case "$finalize_rpath " in
+	      *" $libdir "*) ;;
+	      *) finalize_rpath+=" $libdir" ;;
+	      esac
+	      ;;
+	    esac
+	  fi
+
+	  if test -n "$old_archive_from_expsyms_cmds"; then
+	    # figure out the soname
+	    set dummy $library_names
+	    shift
+	    realname="$1"
+	    shift
+	    libname=`eval "\\$ECHO \"$libname_spec\""`
+	    # use dlname if we got it. it's perfectly good, no?
+	    if test -n "$dlname"; then
+	      soname="$dlname"
+	    elif test -n "$soname_spec"; then
+	      # bleh windows
+	      case $host in
+	      *cygwin* | mingw* | *cegcc*)
+	        func_arith $current - $age
+		major=$func_arith_result
+		versuffix="-$major"
+		;;
+	      esac
+	      eval soname=\"$soname_spec\"
+	    else
+	      soname="$realname"
+	    fi
+
+	    # Make a new name for the extract_expsyms_cmds to use
+	    soroot="$soname"
+	    func_basename "$soroot"
+	    soname="$func_basename_result"
+	    func_stripname 'lib' '.dll' "$soname"
+	    newlib=libimp-$func_stripname_result.a
+
+	    # If the library has no export list, then create one now
+	    if test -f "$output_objdir/$soname-def"; then :
+	    else
+	      func_verbose "extracting exported symbol list from \`$soname'"
+	      func_execute_cmds "$extract_expsyms_cmds" 'exit $?'
+	    fi
+
+	    # Create $newlib
+	    if test -f "$output_objdir/$newlib"; then :; else
+	      func_verbose "generating import library for \`$soname'"
+	      func_execute_cmds "$old_archive_from_expsyms_cmds" 'exit $?'
+	    fi
+	    # make sure the library variables are pointing to the new library
+	    dir=$output_objdir
+	    linklib=$newlib
+	  fi # test -n "$old_archive_from_expsyms_cmds"
+
+	  if test "$linkmode" = prog || test "$opt_mode" != relink; then
+	    add_shlibpath=
+	    add_dir=
+	    add=
+	    lib_linked=yes
+	    case $hardcode_action in
+	    immediate | unsupported)
+	      if test "$hardcode_direct" = no; then
+		add="$dir/$linklib"
+		case $host in
+		  *-*-sco3.2v5.0.[024]*) add_dir="-L$dir" ;;
+		  *-*-sysv4*uw2*) add_dir="-L$dir" ;;
+		  *-*-sysv5OpenUNIX* | *-*-sysv5UnixWare7.[01].[10]* | \
+		    *-*-unixware7*) add_dir="-L$dir" ;;
+		  *-*-darwin* )
+		    # if the lib is a (non-dlopened) module then we can not
+		    # link against it, someone is ignoring the earlier warnings
+		    if /usr/bin/file -L $add 2> /dev/null |
+			 $GREP ": [^:]* bundle" >/dev/null ; then
+		      if test "X$dlopenmodule" != "X$lib"; then
+			$ECHO "*** Warning: lib $linklib is a module, not a shared library"
+			if test -z "$old_library" ; then
+			  echo
+			  echo "*** And there doesn't seem to be a static archive available"
+			  echo "*** The link will probably fail, sorry"
+			else
+			  add="$dir/$old_library"
+			fi
+		      elif test -n "$old_library"; then
+			add="$dir/$old_library"
+		      fi
+		    fi
+		esac
+	      elif test "$hardcode_minus_L" = no; then
+		case $host in
+		*-*-sunos*) add_shlibpath="$dir" ;;
+		esac
+		add_dir="-L$dir"
+		add="-l$name"
+	      elif test "$hardcode_shlibpath_var" = no; then
+		add_shlibpath="$dir"
+		add="-l$name"
+	      else
+		lib_linked=no
+	      fi
+	      ;;
+	    relink)
+	      if test "$hardcode_direct" = yes &&
+	         test "$hardcode_direct_absolute" = no; then
+		add="$
