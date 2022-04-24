@@ -7929,3 +7929,223 @@ func_mode_link ()
 	    loop=$func_arith_result
 	    verstring="$verstring:${iface}.0"
 	  done
+
+	  # Make executables depend on our current version.
+	  verstring+=":${current}.0"
+	  ;;
+
+	qnx)
+	  major=".$current"
+	  versuffix=".$current"
+	  ;;
+
+	sunos)
+	  major=".$current"
+	  versuffix=".$current.$revision"
+	  ;;
+
+	windows)
+	  # Use '-' rather than '.', since we only want one
+	  # extension on DOS 8.3 filesystems.
+	  func_arith $current - $age
+	  major=$func_arith_result
+	  versuffix="-$major"
+	  ;;
+
+	*)
+	  func_fatal_configuration "unknown library version type \`$version_type'"
+	  ;;
+	esac
+
+	# Clear the version info if we defaulted, and they specified a release.
+	if test -z "$vinfo" && test -n "$release"; then
+	  major=
+	  case $version_type in
+	  darwin)
+	    # we can't check for "0.0" in archive_cmds due to quoting
+	    # problems, so we reset it completely
+	    verstring=
+	    ;;
+	  *)
+	    verstring="0.0"
+	    ;;
+	  esac
+	  if test "$need_version" = no; then
+	    versuffix=
+	  else
+	    versuffix=".0.0"
+	  fi
+	fi
+
+	# Remove version info from name if versioning should be avoided
+	if test "$avoid_version" = yes && test "$need_version" = no; then
+	  major=
+	  versuffix=
+	  verstring=""
+	fi
+
+	# Check to see if the archive will have undefined symbols.
+	if test "$allow_undefined" = yes; then
+	  if test "$allow_undefined_flag" = unsupported; then
+	    func_warning "undefined symbols not allowed in $host shared libraries"
+	    build_libtool_libs=no
+	    build_old_libs=yes
+	  fi
+	else
+	  # Don't allow undefined symbols.
+	  allow_undefined_flag="$no_undefined_flag"
+	fi
+
+      fi
+
+      func_generate_dlsyms "$libname" "$libname" "yes"
+      libobjs+=" $symfileobj"
+      test "X$libobjs" = "X " && libobjs=
+
+      if test "$opt_mode" != relink; then
+	# Remove our outputs, but don't remove object files since they
+	# may have been created when compiling PIC objects.
+	removelist=
+	tempremovelist=`$ECHO "$output_objdir/*"`
+	for p in $tempremovelist; do
+	  case $p in
+	    *.$objext | *.gcno)
+	       ;;
+	    $output_objdir/$outputname | $output_objdir/$libname.* | $output_objdir/${libname}${release}.*)
+	       if test "X$precious_files_regex" != "X"; then
+		 if $ECHO "$p" | $EGREP -e "$precious_files_regex" >/dev/null 2>&1
+		 then
+		   continue
+		 fi
+	       fi
+	       removelist+=" $p"
+	       ;;
+	    *) ;;
+	  esac
+	done
+	test -n "$removelist" && \
+	  func_show_eval "${RM}r \$removelist"
+      fi
+
+      # Now set the variables for building old libraries.
+      if test "$build_old_libs" = yes && test "$build_libtool_libs" != convenience ; then
+	oldlibs+=" $output_objdir/$libname.$libext"
+
+	# Transform .lo files to .o files.
+	oldobjs="$objs "`$ECHO "$libobjs" | $SP2NL | $SED "/\.${libext}$/d; $lo2o" | $NL2SP`
+      fi
+
+      # Eliminate all temporary directories.
+      #for path in $notinst_path; do
+      #	lib_search_path=`$ECHO "$lib_search_path " | $SED "s% $path % %g"`
+      #	deplibs=`$ECHO "$deplibs " | $SED "s% -L$path % %g"`
+      #	dependency_libs=`$ECHO "$dependency_libs " | $SED "s% -L$path % %g"`
+      #done
+
+      if test -n "$xrpath"; then
+	# If the user specified any rpath flags, then add them.
+	temp_xrpath=
+	for libdir in $xrpath; do
+	  func_replace_sysroot "$libdir"
+	  temp_xrpath+=" -R$func_replace_sysroot_result"
+	  case "$finalize_rpath " in
+	  *" $libdir "*) ;;
+	  *) finalize_rpath+=" $libdir" ;;
+	  esac
+	done
+	if test "$hardcode_into_libs" != yes || test "$build_old_libs" = yes; then
+	  dependency_libs="$temp_xrpath $dependency_libs"
+	fi
+      fi
+
+      # Make sure dlfiles contains only unique files that won't be dlpreopened
+      old_dlfiles="$dlfiles"
+      dlfiles=
+      for lib in $old_dlfiles; do
+	case " $dlprefiles $dlfiles " in
+	*" $lib "*) ;;
+	*) dlfiles+=" $lib" ;;
+	esac
+      done
+
+      # Make sure dlprefiles contains only unique files
+      old_dlprefiles="$dlprefiles"
+      dlprefiles=
+      for lib in $old_dlprefiles; do
+	case "$dlprefiles " in
+	*" $lib "*) ;;
+	*) dlprefiles+=" $lib" ;;
+	esac
+      done
+
+      if test "$build_libtool_libs" = yes; then
+	if test -n "$rpath"; then
+	  case $host in
+	  *-*-cygwin* | *-*-mingw* | *-*-pw32* | *-*-os2* | *-*-beos* | *-cegcc* | *-*-haiku*)
+	    # these systems don't actually have a c library (as such)!
+	    ;;
+	  *-*-rhapsody* | *-*-darwin1.[012])
+	    # Rhapsody C library is in the System framework
+	    deplibs+=" System.ltframework"
+	    ;;
+	  *-*-netbsd*)
+	    # Don't link with libc until the a.out ld.so is fixed.
+	    ;;
+	  *-*-openbsd* | *-*-freebsd* | *-*-dragonfly*)
+	    # Do not include libc due to us having libc/libc_r.
+	    ;;
+	  *-*-sco3.2v5* | *-*-sco5v6*)
+	    # Causes problems with __ctype
+	    ;;
+	  *-*-sysv4.2uw2* | *-*-sysv5* | *-*-unixware* | *-*-OpenUNIX*)
+	    # Compiler inserts libc in the correct place for threads to work
+	    ;;
+	  *)
+	    # Add libc to deplibs on all other systems if necessary.
+	    if test "$build_libtool_need_lc" = "yes"; then
+	      deplibs+=" -lc"
+	    fi
+	    ;;
+	  esac
+	fi
+
+	# Transform deplibs into only deplibs that can be linked in shared.
+	name_save=$name
+	libname_save=$libname
+	release_save=$release
+	versuffix_save=$versuffix
+	major_save=$major
+	# I'm not sure if I'm treating the release correctly.  I think
+	# release should show up in the -l (ie -lgmp5) so we don't want to
+	# add it in twice.  Is that correct?
+	release=""
+	versuffix=""
+	major=""
+	newdeplibs=
+	droppeddeps=no
+	case $deplibs_check_method in
+	pass_all)
+	  # Don't check for shared/static.  Everything works.
+	  # This might be a little naive.  We might want to check
+	  # whether the library exists or not.  But this is on
+	  # osf3 & osf4 and I'm not really sure... Just
+	  # implementing what was already the behavior.
+	  newdeplibs=$deplibs
+	  ;;
+	test_compile)
+	  # This code stresses the "libraries are programs" paradigm to its
+	  # limits. Maybe even breaks it.  We compile a program, linking it
+	  # against the deplibs as a proxy for the library.  Then we can check
+	  # whether they linked in statically or dynamically with ldd.
+	  $opt_dry_run || $RM conftest.c
+	  cat > conftest.c <<EOF
+	  int main() { return 0; }
+EOF
+	  $opt_dry_run || $RM conftest
+	  if $LTCC $LTCFLAGS -o conftest conftest.c $deplibs; then
+	    ldd_output=`ldd conftest`
+	    for i in $deplibs; do
+	      case $i in
+	      -l*)
+		func_stripname -l '' "$i"
+		name=$func_s
