@@ -7493,4 +7493,212 @@ func_mode_link ()
 
 	  if test "$link_all_deplibs" != no; then
 	    # Add the search paths of all dependency libraries
-	    fo
+	    for deplib in $dependency_libs; do
+	      path=
+	      case $deplib in
+	      -L*) path="$deplib" ;;
+	      *.la)
+	        func_resolve_sysroot "$deplib"
+	        deplib=$func_resolve_sysroot_result
+	        func_dirname "$deplib" "" "."
+		dir=$func_dirname_result
+		# We need an absolute path.
+		case $dir in
+		[\\/]* | [A-Za-z]:[\\/]*) absdir="$dir" ;;
+		*)
+		  absdir=`cd "$dir" && pwd`
+		  if test -z "$absdir"; then
+		    func_warning "cannot determine absolute directory name of \`$dir'"
+		    absdir="$dir"
+		  fi
+		  ;;
+		esac
+		if $GREP "^installed=no" $deplib > /dev/null; then
+		case $host in
+		*-*-darwin*)
+		  depdepl=
+		  eval deplibrary_names=`${SED} -n -e 's/^library_names=\(.*\)$/\1/p' $deplib`
+		  if test -n "$deplibrary_names" ; then
+		    for tmp in $deplibrary_names ; do
+		      depdepl=$tmp
+		    done
+		    if test -f "$absdir/$objdir/$depdepl" ; then
+		      depdepl="$absdir/$objdir/$depdepl"
+		      darwin_install_name=`${OTOOL} -L $depdepl | awk '{if (NR == 2) {print $1;exit}}'`
+                      if test -z "$darwin_install_name"; then
+                          darwin_install_name=`${OTOOL64} -L $depdepl  | awk '{if (NR == 2) {print $1;exit}}'`
+                      fi
+		      compiler_flags+=" ${wl}-dylib_file ${wl}${darwin_install_name}:${depdepl}"
+		      linker_flags+=" -dylib_file ${darwin_install_name}:${depdepl}"
+		      path=
+		    fi
+		  fi
+		  ;;
+		*)
+		  path="-L$absdir/$objdir"
+		  ;;
+		esac
+		else
+		  eval libdir=`${SED} -n -e 's/^libdir=\(.*\)$/\1/p' $deplib`
+		  test -z "$libdir" && \
+		    func_fatal_error "\`$deplib' is not a valid libtool archive"
+		  test "$absdir" != "$libdir" && \
+		    func_warning "\`$deplib' seems to be moved"
+
+		  path="-L$absdir"
+		fi
+		;;
+	      esac
+	      case " $deplibs " in
+	      *" $path "*) ;;
+	      *) deplibs="$path $deplibs" ;;
+	      esac
+	    done
+	  fi # link_all_deplibs != no
+	fi # linkmode = lib
+      done # for deplib in $libs
+      if test "$pass" = link; then
+	if test "$linkmode" = "prog"; then
+	  compile_deplibs="$new_inherited_linker_flags $compile_deplibs"
+	  finalize_deplibs="$new_inherited_linker_flags $finalize_deplibs"
+	else
+	  compiler_flags="$compiler_flags "`$ECHO " $new_inherited_linker_flags" | $SED 's% \([^ $]*\).ltframework% -framework \1%g'`
+	fi
+      fi
+      dependency_libs="$newdependency_libs"
+      if test "$pass" = dlpreopen; then
+	# Link the dlpreopened libraries before other libraries
+	for deplib in $save_deplibs; do
+	  deplibs="$deplib $deplibs"
+	done
+      fi
+      if test "$pass" != dlopen; then
+	if test "$pass" != conv; then
+	  # Make sure lib_search_path contains only unique directories.
+	  lib_search_path=
+	  for dir in $newlib_search_path; do
+	    case "$lib_search_path " in
+	    *" $dir "*) ;;
+	    *) lib_search_path+=" $dir" ;;
+	    esac
+	  done
+	  newlib_search_path=
+	fi
+
+	if test "$linkmode,$pass" != "prog,link"; then
+	  vars="deplibs"
+	else
+	  vars="compile_deplibs finalize_deplibs"
+	fi
+	for var in $vars dependency_libs; do
+	  # Add libraries to $var in reverse order
+	  eval tmp_libs=\"\$$var\"
+	  new_libs=
+	  for deplib in $tmp_libs; do
+	    # FIXME: Pedantically, this is the right thing to do, so
+	    #        that some nasty dependency loop isn't accidentally
+	    #        broken:
+	    #new_libs="$deplib $new_libs"
+	    # Pragmatically, this seems to cause very few problems in
+	    # practice:
+	    case $deplib in
+	    -L*) new_libs="$deplib $new_libs" ;;
+	    -R*) ;;
+	    *)
+	      # And here is the reason: when a library appears more
+	      # than once as an explicit dependence of a library, or
+	      # is implicitly linked in more than once by the
+	      # compiler, it is considered special, and multiple
+	      # occurrences thereof are not removed.  Compare this
+	      # with having the same library being listed as a
+	      # dependency of multiple other libraries: in this case,
+	      # we know (pedantically, we assume) the library does not
+	      # need to be listed more than once, so we keep only the
+	      # last copy.  This is not always right, but it is rare
+	      # enough that we require users that really mean to play
+	      # such unportable linking tricks to link the library
+	      # using -Wl,-lname, so that libtool does not consider it
+	      # for duplicate removal.
+	      case " $specialdeplibs " in
+	      *" $deplib "*) new_libs="$deplib $new_libs" ;;
+	      *)
+		case " $new_libs " in
+		*" $deplib "*) ;;
+		*) new_libs="$deplib $new_libs" ;;
+		esac
+		;;
+	      esac
+	      ;;
+	    esac
+	  done
+	  tmp_libs=
+	  for deplib in $new_libs; do
+	    case $deplib in
+	    -L*)
+	      case " $tmp_libs " in
+	      *" $deplib "*) ;;
+	      *) tmp_libs+=" $deplib" ;;
+	      esac
+	      ;;
+	    *) tmp_libs+=" $deplib" ;;
+	    esac
+	  done
+	  eval $var=\"$tmp_libs\"
+	done # for var
+      fi
+      # Last step: remove runtime libs from dependency_libs
+      # (they stay in deplibs)
+      tmp_libs=
+      for i in $dependency_libs ; do
+	case " $predeps $postdeps $compiler_lib_search_path " in
+	*" $i "*)
+	  i=""
+	  ;;
+	esac
+	if test -n "$i" ; then
+	  tmp_libs+=" $i"
+	fi
+      done
+      dependency_libs=$tmp_libs
+    done # for pass
+    if test "$linkmode" = prog; then
+      dlfiles="$newdlfiles"
+    fi
+    if test "$linkmode" = prog || test "$linkmode" = lib; then
+      dlprefiles="$newdlprefiles"
+    fi
+
+    case $linkmode in
+    oldlib)
+      if test -n "$dlfiles$dlprefiles" || test "$dlself" != no; then
+	func_warning "\`-dlopen' is ignored for archives"
+      fi
+
+      case " $deplibs" in
+      *\ -l* | *\ -L*)
+	func_warning "\`-l' and \`-L' are ignored for archives" ;;
+      esac
+
+      test -n "$rpath" && \
+	func_warning "\`-rpath' is ignored for archives"
+
+      test -n "$xrpath" && \
+	func_warning "\`-R' is ignored for archives"
+
+      test -n "$vinfo" && \
+	func_warning "\`-version-info/-version-number' is ignored for archives"
+
+      test -n "$release" && \
+	func_warning "\`-release' is ignored for archives"
+
+      test -n "$export_symbols$export_symbols_regex" && \
+	func_warning "\`-export-symbols' is ignored for archives"
+
+      # Now set the variables for building old libraries.
+      build_libtool_libs=no
+      oldlibs="$output"
+      objs+="$old_deplibs"
+      ;;
+
+    lib)
+      # Make sure we only generate libraries of the form `libNAME.la'.
