@@ -7305,4 +7305,192 @@ func_mode_link ()
 	    relink)
 	      if test "$hardcode_direct" = yes &&
 	         test "$hardcode_direct_absolute" = no; then
-		add="$
+		add="$dir/$linklib"
+	      elif test "$hardcode_minus_L" = yes; then
+		add_dir="-L$dir"
+		# Try looking first in the location we're being installed to.
+		if test -n "$inst_prefix_dir"; then
+		  case $libdir in
+		    [\\/]*)
+		      add_dir+=" -L$inst_prefix_dir$libdir"
+		      ;;
+		  esac
+		fi
+		add="-l$name"
+	      elif test "$hardcode_shlibpath_var" = yes; then
+		add_shlibpath="$dir"
+		add="-l$name"
+	      else
+		lib_linked=no
+	      fi
+	      ;;
+	    *) lib_linked=no ;;
+	    esac
+
+	    if test "$lib_linked" != yes; then
+	      func_fatal_configuration "unsupported hardcode properties"
+	    fi
+
+	    if test -n "$add_shlibpath"; then
+	      case :$compile_shlibpath: in
+	      *":$add_shlibpath:"*) ;;
+	      *) compile_shlibpath+="$add_shlibpath:" ;;
+	      esac
+	    fi
+	    if test "$linkmode" = prog; then
+	      test -n "$add_dir" && compile_deplibs="$add_dir $compile_deplibs"
+	      test -n "$add" && compile_deplibs="$add $compile_deplibs"
+	    else
+	      test -n "$add_dir" && deplibs="$add_dir $deplibs"
+	      test -n "$add" && deplibs="$add $deplibs"
+	      if test "$hardcode_direct" != yes &&
+		 test "$hardcode_minus_L" != yes &&
+		 test "$hardcode_shlibpath_var" = yes; then
+		case :$finalize_shlibpath: in
+		*":$libdir:"*) ;;
+		*) finalize_shlibpath+="$libdir:" ;;
+		esac
+	      fi
+	    fi
+	  fi
+
+	  if test "$linkmode" = prog || test "$opt_mode" = relink; then
+	    add_shlibpath=
+	    add_dir=
+	    add=
+	    # Finalize command for both is simple: just hardcode it.
+	    if test "$hardcode_direct" = yes &&
+	       test "$hardcode_direct_absolute" = no; then
+	      add="$libdir/$linklib"
+	    elif test "$hardcode_minus_L" = yes; then
+	      add_dir="-L$libdir"
+	      add="-l$name"
+	    elif test "$hardcode_shlibpath_var" = yes; then
+	      case :$finalize_shlibpath: in
+	      *":$libdir:"*) ;;
+	      *) finalize_shlibpath+="$libdir:" ;;
+	      esac
+	      add="-l$name"
+	    elif test "$hardcode_automatic" = yes; then
+	      if test -n "$inst_prefix_dir" &&
+		 test -f "$inst_prefix_dir$libdir/$linklib" ; then
+		add="$inst_prefix_dir$libdir/$linklib"
+	      else
+		add="$libdir/$linklib"
+	      fi
+	    else
+	      # We cannot seem to hardcode it, guess we'll fake it.
+	      add_dir="-L$libdir"
+	      # Try looking first in the location we're being installed to.
+	      if test -n "$inst_prefix_dir"; then
+		case $libdir in
+		  [\\/]*)
+		    add_dir+=" -L$inst_prefix_dir$libdir"
+		    ;;
+		esac
+	      fi
+	      add="-l$name"
+	    fi
+
+	    if test "$linkmode" = prog; then
+	      test -n "$add_dir" && finalize_deplibs="$add_dir $finalize_deplibs"
+	      test -n "$add" && finalize_deplibs="$add $finalize_deplibs"
+	    else
+	      test -n "$add_dir" && deplibs="$add_dir $deplibs"
+	      test -n "$add" && deplibs="$add $deplibs"
+	    fi
+	  fi
+	elif test "$linkmode" = prog; then
+	  # Here we assume that one of hardcode_direct or hardcode_minus_L
+	  # is not unsupported.  This is valid on all known static and
+	  # shared platforms.
+	  if test "$hardcode_direct" != unsupported; then
+	    test -n "$old_library" && linklib="$old_library"
+	    compile_deplibs="$dir/$linklib $compile_deplibs"
+	    finalize_deplibs="$dir/$linklib $finalize_deplibs"
+	  else
+	    compile_deplibs="-l$name -L$dir $compile_deplibs"
+	    finalize_deplibs="-l$name -L$dir $finalize_deplibs"
+	  fi
+	elif test "$build_libtool_libs" = yes; then
+	  # Not a shared library
+	  if test "$deplibs_check_method" != pass_all; then
+	    # We're trying link a shared library against a static one
+	    # but the system doesn't support it.
+
+	    # Just print a warning and add the library to dependency_libs so
+	    # that the program can be linked against the static library.
+	    echo
+	    $ECHO "*** Warning: This system can not link to static lib archive $lib."
+	    echo "*** I have the capability to make that library automatically link in when"
+	    echo "*** you link to this library.  But I can only do this if you have a"
+	    echo "*** shared version of the library, which you do not appear to have."
+	    if test "$module" = yes; then
+	      echo "*** But as you try to build a module library, libtool will still create "
+	      echo "*** a static module, that should work as long as the dlopening application"
+	      echo "*** is linked with the -dlopen flag to resolve symbols at runtime."
+	      if test -z "$global_symbol_pipe"; then
+		echo
+		echo "*** However, this would only work if libtool was able to extract symbol"
+		echo "*** lists from a program, using \`nm' or equivalent, but libtool could"
+		echo "*** not find such a program.  So, this module is probably useless."
+		echo "*** \`nm' from GNU binutils and a full rebuild may help."
+	      fi
+	      if test "$build_old_libs" = no; then
+		build_libtool_libs=module
+		build_old_libs=yes
+	      else
+		build_libtool_libs=no
+	      fi
+	    fi
+	  else
+	    deplibs="$dir/$old_library $deplibs"
+	    link_static=yes
+	  fi
+	fi # link shared/static library?
+
+	if test "$linkmode" = lib; then
+	  if test -n "$dependency_libs" &&
+	     { test "$hardcode_into_libs" != yes ||
+	       test "$build_old_libs" = yes ||
+	       test "$link_static" = yes; }; then
+	    # Extract -R from dependency_libs
+	    temp_deplibs=
+	    for libdir in $dependency_libs; do
+	      case $libdir in
+	      -R*) func_stripname '-R' '' "$libdir"
+	           temp_xrpath=$func_stripname_result
+		   case " $xrpath " in
+		   *" $temp_xrpath "*) ;;
+		   *) xrpath+=" $temp_xrpath";;
+		   esac;;
+	      *) temp_deplibs+=" $libdir";;
+	      esac
+	    done
+	    dependency_libs="$temp_deplibs"
+	  fi
+
+	  newlib_search_path+=" $absdir"
+	  # Link against this library
+	  test "$link_static" = no && newdependency_libs="$abs_ladir/$laname $newdependency_libs"
+	  # ... and its dependency_libs
+	  tmp_libs=
+	  for deplib in $dependency_libs; do
+	    newdependency_libs="$deplib $newdependency_libs"
+	    case $deplib in
+              -L*) func_stripname '-L' '' "$deplib"
+                   func_resolve_sysroot "$func_stripname_result";;
+              *) func_resolve_sysroot "$deplib" ;;
+            esac
+	    if $opt_preserve_dup_deps ; then
+	      case "$tmp_libs " in
+	      *" $func_resolve_sysroot_result "*)
+                specialdeplibs+=" $func_resolve_sysroot_result" ;;
+	      esac
+	    fi
+	    tmp_libs+=" $func_resolve_sysroot_result"
+	  done
+
+	  if test "$link_all_deplibs" != no; then
+	    # Add the search paths of all dependency libraries
+	    fo
