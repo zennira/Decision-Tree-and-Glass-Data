@@ -8521,4 +8521,196 @@ EOF
 		fi
 	      else
 		eval flag=\"$hardcode_libdir_flag_spec\"
-		dep_rpath+="
+		dep_rpath+=" $flag"
+	      fi
+	    elif test -n "$runpath_var"; then
+	      case "$perm_rpath " in
+	      *" $libdir "*) ;;
+	      *) func_apped perm_rpath " $libdir" ;;
+	      esac
+	    fi
+	  done
+	  # Substitute the hardcoded libdirs into the rpath.
+	  if test -n "$hardcode_libdir_separator" &&
+	     test -n "$hardcode_libdirs"; then
+	    libdir="$hardcode_libdirs"
+	    if test -n "$hardcode_libdir_flag_spec_ld"; then
+	      eval dep_rpath=\"$hardcode_libdir_flag_spec_ld\"
+	    else
+	      eval dep_rpath=\"$hardcode_libdir_flag_spec\"
+	    fi
+	  fi
+	  if test -n "$runpath_var" && test -n "$perm_rpath"; then
+	    # We should set the runpath_var.
+	    rpath=
+	    for dir in $perm_rpath; do
+	      rpath+="$dir:"
+	    done
+	    eval "$runpath_var='$rpath\$$runpath_var'; export $runpath_var"
+	  fi
+	  test -n "$dep_rpath" && deplibs="$dep_rpath $deplibs"
+	fi
+
+	shlibpath="$finalize_shlibpath"
+	test "$opt_mode" != relink && shlibpath="$compile_shlibpath$shlibpath"
+	if test -n "$shlibpath"; then
+	  eval "$shlibpath_var='$shlibpath\$$shlibpath_var'; export $shlibpath_var"
+	fi
+
+	# Get the real and link names of the library.
+	eval shared_ext=\"$shrext_cmds\"
+	eval library_names=\"$library_names_spec\"
+	set dummy $library_names
+	shift
+	realname="$1"
+	shift
+
+	if test -n "$soname_spec"; then
+	  eval soname=\"$soname_spec\"
+	else
+	  soname="$realname"
+	fi
+	if test -z "$dlname"; then
+	  dlname=$soname
+	fi
+
+	lib="$output_objdir/$realname"
+	linknames=
+	for link
+	do
+	  linknames+=" $link"
+	done
+
+	# Use standard objects if they are pic
+	test -z "$pic_flag" && libobjs=`$ECHO "$libobjs" | $SP2NL | $SED "$lo2o" | $NL2SP`
+	test "X$libobjs" = "X " && libobjs=
+
+	delfiles=
+	if test -n "$export_symbols" && test -n "$include_expsyms"; then
+	  $opt_dry_run || cp "$export_symbols" "$output_objdir/$libname.uexp"
+	  export_symbols="$output_objdir/$libname.uexp"
+	  delfiles+=" $export_symbols"
+	fi
+
+	orig_export_symbols=
+	case $host_os in
+	cygwin* | mingw* | cegcc*)
+	  if test -n "$export_symbols" && test -z "$export_symbols_regex"; then
+	    # exporting using user supplied symfile
+	    if test "x`$SED 1q $export_symbols`" != xEXPORTS; then
+	      # and it's NOT already a .def file. Must figure out
+	      # which of the given symbols are data symbols and tag
+	      # them as such. So, trigger use of export_symbols_cmds.
+	      # export_symbols gets reassigned inside the "prepare
+	      # the list of exported symbols" if statement, so the
+	      # include_expsyms logic still works.
+	      orig_export_symbols="$export_symbols"
+	      export_symbols=
+	      always_export_symbols=yes
+	    fi
+	  fi
+	  ;;
+	esac
+
+	# Prepare the list of exported symbols
+	if test -z "$export_symbols"; then
+	  if test "$always_export_symbols" = yes || test -n "$export_symbols_regex"; then
+	    func_verbose "generating symbol list for \`$libname.la'"
+	    export_symbols="$output_objdir/$libname.exp"
+	    $opt_dry_run || $RM $export_symbols
+	    cmds=$export_symbols_cmds
+	    save_ifs="$IFS"; IFS='~'
+	    for cmd1 in $cmds; do
+	      IFS="$save_ifs"
+	      # Take the normal branch if the nm_file_list_spec branch
+	      # doesn't work or if tool conversion is not needed.
+	      case $nm_file_list_spec~$to_tool_file_cmd in
+		*~func_convert_file_noop | *~func_convert_file_msys_to_w32 | ~*)
+		  try_normal_branch=yes
+		  eval cmd=\"$cmd1\"
+		  func_len " $cmd"
+		  len=$func_len_result
+		  ;;
+		*)
+		  try_normal_branch=no
+		  ;;
+	      esac
+	      if test "$try_normal_branch" = yes \
+		 && { test "$len" -lt "$max_cmd_len" \
+		      || test "$max_cmd_len" -le -1; }
+	      then
+		func_show_eval "$cmd" 'exit $?'
+		skipped_export=false
+	      elif test -n "$nm_file_list_spec"; then
+		func_basename "$output"
+		output_la=$func_basename_result
+		save_libobjs=$libobjs
+		save_output=$output
+		output=${output_objdir}/${output_la}.nm
+		func_to_tool_file "$output"
+		libobjs=$nm_file_list_spec$func_to_tool_file_result
+		delfiles+=" $output"
+		func_verbose "creating $NM input file list: $output"
+		for obj in $save_libobjs; do
+		  func_to_tool_file "$obj"
+		  $ECHO "$func_to_tool_file_result"
+		done > "$output"
+		eval cmd=\"$cmd1\"
+		func_show_eval "$cmd" 'exit $?'
+		output=$save_output
+		libobjs=$save_libobjs
+		skipped_export=false
+	      else
+		# The command line is too long to execute in one step.
+		func_verbose "using reloadable object file for export list..."
+		skipped_export=:
+		# Break out early, otherwise skipped_export may be
+		# set to false by a later but shorter cmd.
+		break
+	      fi
+	    done
+	    IFS="$save_ifs"
+	    if test -n "$export_symbols_regex" && test "X$skipped_export" != "X:"; then
+	      func_show_eval '$EGREP -e "$export_symbols_regex" "$export_symbols" > "${export_symbols}T"'
+	      func_show_eval '$MV "${export_symbols}T" "$export_symbols"'
+	    fi
+	  fi
+	fi
+
+	if test -n "$export_symbols" && test -n "$include_expsyms"; then
+	  tmp_export_symbols="$export_symbols"
+	  test -n "$orig_export_symbols" && tmp_export_symbols="$orig_export_symbols"
+	  $opt_dry_run || eval '$ECHO "$include_expsyms" | $SP2NL >> "$tmp_export_symbols"'
+	fi
+
+	if test "X$skipped_export" != "X:" && test -n "$orig_export_symbols"; then
+	  # The given exports_symbols file has to be filtered, so filter it.
+	  func_verbose "filter symbol list for \`$libname.la' to tag DATA exports"
+	  # FIXME: $output_objdir/$libname.filter potentially contains lots of
+	  # 's' commands which not all seds can handle. GNU sed should be fine
+	  # though. Also, the filter scales superlinearly with the number of
+	  # global variables. join(1) would be nice here, but unfortunately
+	  # isn't a blessed tool.
+	  $opt_dry_run || $SED -e '/[ ,]DATA/!d;s,\(.*\)\([ \,].*\),s|^\1$|\1\2|,' < $export_symbols > $output_objdir/$libname.filter
+	  delfiles+=" $export_symbols $output_objdir/$libname.filter"
+	  export_symbols=$output_objdir/$libname.def
+	  $opt_dry_run || $SED -f $output_objdir/$libname.filter < $orig_export_symbols > $export_symbols
+	fi
+
+	tmp_deplibs=
+	for test_deplib in $deplibs; do
+	  case " $convenience " in
+	  *" $test_deplib "*) ;;
+	  *)
+	    tmp_deplibs+=" $test_deplib"
+	    ;;
+	  esac
+	done
+	deplibs="$tmp_deplibs"
+
+	if test -n "$convenience"; then
+	  if test -n "$whole_archive_flag_spec" &&
+	    test "$compiler_needs_object" = yes &&
+	    test -z "$libobjs"; then
+	    # extract the archives, so we have objects to list.
+	    # TO
