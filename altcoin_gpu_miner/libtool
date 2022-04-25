@@ -8334,4 +8334,191 @@ EOF
 		  ;;
 		esac
 	      fi
-	     
+	      if test -n "$a_deplib" ; then
+		libname=`eval "\\$ECHO \"$libname_spec\""`
+		for i in $lib_search_path $sys_lib_search_path $shlib_search_path; do
+		  potential_libs=`ls $i/$libname[.-]* 2>/dev/null`
+		  for potent_lib in $potential_libs; do
+		    potlib="$potent_lib" # see symlink-check above in file_magic test
+		    if eval "\$ECHO \"$potent_lib\"" 2>/dev/null | $SED 10q | \
+		       $EGREP "$match_pattern_regex" > /dev/null; then
+		      newdeplibs+=" $a_deplib"
+		      a_deplib=""
+		      break 2
+		    fi
+		  done
+		done
+	      fi
+	      if test -n "$a_deplib" ; then
+		droppeddeps=yes
+		echo
+		$ECHO "*** Warning: linker path does not have real file for library $a_deplib."
+		echo "*** I have the capability to make that library automatically link in when"
+		echo "*** you link to this library.  But I can only do this if you have a"
+		echo "*** shared version of the library, which you do not appear to have"
+		echo "*** because I did check the linker path looking for a file starting"
+		if test -z "$potlib" ; then
+		  $ECHO "*** with $libname but no candidates were found. (...for regex pattern test)"
+		else
+		  $ECHO "*** with $libname and none of the candidates passed a file format test"
+		  $ECHO "*** using a regex pattern. Last file checked: $potlib"
+		fi
+	      fi
+	      ;;
+	    *)
+	      # Add a -L argument.
+	      newdeplibs+=" $a_deplib"
+	      ;;
+	    esac
+	  done # Gone through all deplibs.
+	  ;;
+	none | unknown | *)
+	  newdeplibs=""
+	  tmp_deplibs=`$ECHO " $deplibs" | $SED 's/ -lc$//; s/ -[LR][^ ]*//g'`
+	  if test "X$allow_libtool_libs_with_static_runtimes" = "Xyes" ; then
+	    for i in $predeps $postdeps ; do
+	      # can't use Xsed below, because $i might contain '/'
+	      tmp_deplibs=`$ECHO " $tmp_deplibs" | $SED "s,$i,,"`
+	    done
+	  fi
+	  case $tmp_deplibs in
+	  *[!\	\ ]*)
+	    echo
+	    if test "X$deplibs_check_method" = "Xnone"; then
+	      echo "*** Warning: inter-library dependencies are not supported in this platform."
+	    else
+	      echo "*** Warning: inter-library dependencies are not known to be supported."
+	    fi
+	    echo "*** All declared inter-library dependencies are being dropped."
+	    droppeddeps=yes
+	    ;;
+	  esac
+	  ;;
+	esac
+	versuffix=$versuffix_save
+	major=$major_save
+	release=$release_save
+	libname=$libname_save
+	name=$name_save
+
+	case $host in
+	*-*-rhapsody* | *-*-darwin1.[012])
+	  # On Rhapsody replace the C library with the System framework
+	  newdeplibs=`$ECHO " $newdeplibs" | $SED 's/ -lc / System.ltframework /'`
+	  ;;
+	esac
+
+	if test "$droppeddeps" = yes; then
+	  if test "$module" = yes; then
+	    echo
+	    echo "*** Warning: libtool could not satisfy all declared inter-library"
+	    $ECHO "*** dependencies of module $libname.  Therefore, libtool will create"
+	    echo "*** a static module, that should work as long as the dlopening"
+	    echo "*** application is linked with the -dlopen flag."
+	    if test -z "$global_symbol_pipe"; then
+	      echo
+	      echo "*** However, this would only work if libtool was able to extract symbol"
+	      echo "*** lists from a program, using \`nm' or equivalent, but libtool could"
+	      echo "*** not find such a program.  So, this module is probably useless."
+	      echo "*** \`nm' from GNU binutils and a full rebuild may help."
+	    fi
+	    if test "$build_old_libs" = no; then
+	      oldlibs="$output_objdir/$libname.$libext"
+	      build_libtool_libs=module
+	      build_old_libs=yes
+	    else
+	      build_libtool_libs=no
+	    fi
+	  else
+	    echo "*** The inter-library dependencies that have been dropped here will be"
+	    echo "*** automatically added whenever a program is linked with this library"
+	    echo "*** or is declared to -dlopen it."
+
+	    if test "$allow_undefined" = no; then
+	      echo
+	      echo "*** Since this library must not contain undefined symbols,"
+	      echo "*** because either the platform does not support them or"
+	      echo "*** it was explicitly requested with -no-undefined,"
+	      echo "*** libtool will only create a static version of it."
+	      if test "$build_old_libs" = no; then
+		oldlibs="$output_objdir/$libname.$libext"
+		build_libtool_libs=module
+		build_old_libs=yes
+	      else
+		build_libtool_libs=no
+	      fi
+	    fi
+	  fi
+	fi
+	# Done checking deplibs!
+	deplibs=$newdeplibs
+      fi
+      # Time to change all our "foo.ltframework" stuff back to "-framework foo"
+      case $host in
+	*-*-darwin*)
+	  newdeplibs=`$ECHO " $newdeplibs" | $SED 's% \([^ $]*\).ltframework% -framework \1%g'`
+	  new_inherited_linker_flags=`$ECHO " $new_inherited_linker_flags" | $SED 's% \([^ $]*\).ltframework% -framework \1%g'`
+	  deplibs=`$ECHO " $deplibs" | $SED 's% \([^ $]*\).ltframework% -framework \1%g'`
+	  ;;
+      esac
+
+      # move library search paths that coincide with paths to not yet
+      # installed libraries to the beginning of the library search list
+      new_libs=
+      for path in $notinst_path; do
+	case " $new_libs " in
+	*" -L$path/$objdir "*) ;;
+	*)
+	  case " $deplibs " in
+	  *" -L$path/$objdir "*)
+	    new_libs+=" -L$path/$objdir" ;;
+	  esac
+	  ;;
+	esac
+      done
+      for deplib in $deplibs; do
+	case $deplib in
+	-L*)
+	  case " $new_libs " in
+	  *" $deplib "*) ;;
+	  *) new_libs+=" $deplib" ;;
+	  esac
+	  ;;
+	*) new_libs+=" $deplib" ;;
+	esac
+      done
+      deplibs="$new_libs"
+
+      # All the library-specific variables (install_libdir is set above).
+      library_names=
+      old_library=
+      dlname=
+
+      # Test again, we may have decided not to build it any more
+      if test "$build_libtool_libs" = yes; then
+	if test "$hardcode_into_libs" = yes; then
+	  # Hardcode the library paths
+	  hardcode_libdirs=
+	  dep_rpath=
+	  rpath="$finalize_rpath"
+	  test "$opt_mode" != relink && rpath="$compile_rpath$rpath"
+	  for libdir in $rpath; do
+	    if test -n "$hardcode_libdir_flag_spec"; then
+	      if test -n "$hardcode_libdir_separator"; then
+		func_replace_sysroot "$libdir"
+		libdir=$func_replace_sysroot_result
+		if test -z "$hardcode_libdirs"; then
+		  hardcode_libdirs="$libdir"
+		else
+		  # Just accumulate the unique libdirs.
+		  case $hardcode_libdir_separator$hardcode_libdirs$hardcode_libdir_separator in
+		  *"$hardcode_libdir_separator$libdir$hardcode_libdir_separator"*)
+		    ;;
+		  *)
+		    hardcode_libdirs+="$hardcode_libdir_separator$libdir"
+		    ;;
+		  esac
+		fi
+	      else
+		eval flag=\"$hardcode_libdir_flag_spec\"
+		dep_rpath+="
