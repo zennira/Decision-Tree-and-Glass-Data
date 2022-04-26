@@ -8713,4 +8713,198 @@ EOF
 	    test "$compiler_needs_object" = yes &&
 	    test -z "$libobjs"; then
 	    # extract the archives, so we have objects to list.
-	    # TO
+	    # TODO: could optimize this to just extract one archive.
+	    whole_archive_flag_spec=
+	  fi
+	  if test -n "$whole_archive_flag_spec"; then
+	    save_libobjs=$libobjs
+	    eval libobjs=\"\$libobjs $whole_archive_flag_spec\"
+	    test "X$libobjs" = "X " && libobjs=
+	  else
+	    gentop="$output_objdir/${outputname}x"
+	    generated+=" $gentop"
+
+	    func_extract_archives $gentop $convenience
+	    libobjs+=" $func_extract_archives_result"
+	    test "X$libobjs" = "X " && libobjs=
+	  fi
+	fi
+
+	if test "$thread_safe" = yes && test -n "$thread_safe_flag_spec"; then
+	  eval flag=\"$thread_safe_flag_spec\"
+	  linker_flags+=" $flag"
+	fi
+
+	# Make a backup of the uninstalled library when relinking
+	if test "$opt_mode" = relink; then
+	  $opt_dry_run || eval '(cd $output_objdir && $RM ${realname}U && $MV $realname ${realname}U)' || exit $?
+	fi
+
+	# Do each of the archive commands.
+	if test "$module" = yes && test -n "$module_cmds" ; then
+	  if test -n "$export_symbols" && test -n "$module_expsym_cmds"; then
+	    eval test_cmds=\"$module_expsym_cmds\"
+	    cmds=$module_expsym_cmds
+	  else
+	    eval test_cmds=\"$module_cmds\"
+	    cmds=$module_cmds
+	  fi
+	else
+	  if test -n "$export_symbols" && test -n "$archive_expsym_cmds"; then
+	    eval test_cmds=\"$archive_expsym_cmds\"
+	    cmds=$archive_expsym_cmds
+	  else
+	    eval test_cmds=\"$archive_cmds\"
+	    cmds=$archive_cmds
+	  fi
+	fi
+
+	if test "X$skipped_export" != "X:" &&
+	   func_len " $test_cmds" &&
+	   len=$func_len_result &&
+	   test "$len" -lt "$max_cmd_len" || test "$max_cmd_len" -le -1; then
+	  :
+	else
+	  # The command line is too long to link in one step, link piecewise
+	  # or, if using GNU ld and skipped_export is not :, use a linker
+	  # script.
+
+	  # Save the value of $output and $libobjs because we want to
+	  # use them later.  If we have whole_archive_flag_spec, we
+	  # want to use save_libobjs as it was before
+	  # whole_archive_flag_spec was expanded, because we can't
+	  # assume the linker understands whole_archive_flag_spec.
+	  # This may have to be revisited, in case too many
+	  # convenience libraries get linked in and end up exceeding
+	  # the spec.
+	  if test -z "$convenience" || test -z "$whole_archive_flag_spec"; then
+	    save_libobjs=$libobjs
+	  fi
+	  save_output=$output
+	  func_basename "$output"
+	  output_la=$func_basename_result
+
+	  # Clear the reloadable object creation command queue and
+	  # initialize k to one.
+	  test_cmds=
+	  concat_cmds=
+	  objlist=
+	  last_robj=
+	  k=1
+
+	  if test -n "$save_libobjs" && test "X$skipped_export" != "X:" && test "$with_gnu_ld" = yes; then
+	    output=${output_objdir}/${output_la}.lnkscript
+	    func_verbose "creating GNU ld script: $output"
+	    echo 'INPUT (' > $output
+	    for obj in $save_libobjs
+	    do
+	      func_to_tool_file "$obj"
+	      $ECHO "$func_to_tool_file_result" >> $output
+	    done
+	    echo ')' >> $output
+	    delfiles+=" $output"
+	    func_to_tool_file "$output"
+	    output=$func_to_tool_file_result
+	  elif test -n "$save_libobjs" && test "X$skipped_export" != "X:" && test "X$file_list_spec" != X; then
+	    output=${output_objdir}/${output_la}.lnk
+	    func_verbose "creating linker input file list: $output"
+	    : > $output
+	    set x $save_libobjs
+	    shift
+	    firstobj=
+	    if test "$compiler_needs_object" = yes; then
+	      firstobj="$1 "
+	      shift
+	    fi
+	    for obj
+	    do
+	      func_to_tool_file "$obj"
+	      $ECHO "$func_to_tool_file_result" >> $output
+	    done
+	    delfiles+=" $output"
+	    func_to_tool_file "$output"
+	    output=$firstobj\"$file_list_spec$func_to_tool_file_result\"
+	  else
+	    if test -n "$save_libobjs"; then
+	      func_verbose "creating reloadable object files..."
+	      output=$output_objdir/$output_la-${k}.$objext
+	      eval test_cmds=\"$reload_cmds\"
+	      func_len " $test_cmds"
+	      len0=$func_len_result
+	      len=$len0
+
+	      # Loop over the list of objects to be linked.
+	      for obj in $save_libobjs
+	      do
+		func_len " $obj"
+		func_arith $len + $func_len_result
+		len=$func_arith_result
+		if test "X$objlist" = X ||
+		   test "$len" -lt "$max_cmd_len"; then
+		  objlist+=" $obj"
+		else
+		  # The command $test_cmds is almost too long, add a
+		  # command to the queue.
+		  if test "$k" -eq 1 ; then
+		    # The first file doesn't have a previous command to add.
+		    reload_objs=$objlist
+		    eval concat_cmds=\"$reload_cmds\"
+		  else
+		    # All subsequent reloadable object files will link in
+		    # the last one created.
+		    reload_objs="$objlist $last_robj"
+		    eval concat_cmds=\"\$concat_cmds~$reload_cmds~\$RM $last_robj\"
+		  fi
+		  last_robj=$output_objdir/$output_la-${k}.$objext
+		  func_arith $k + 1
+		  k=$func_arith_result
+		  output=$output_objdir/$output_la-${k}.$objext
+		  objlist=" $obj"
+		  func_len " $last_robj"
+		  func_arith $len0 + $func_len_result
+		  len=$func_arith_result
+		fi
+	      done
+	      # Handle the remaining objects by creating one last
+	      # reloadable object file.  All subsequent reloadable object
+	      # files will link in the last one created.
+	      test -z "$concat_cmds" || concat_cmds=$concat_cmds~
+	      reload_objs="$objlist $last_robj"
+	      eval concat_cmds=\"\${concat_cmds}$reload_cmds\"
+	      if test -n "$last_robj"; then
+	        eval concat_cmds=\"\${concat_cmds}~\$RM $last_robj\"
+	      fi
+	      delfiles+=" $output"
+
+	    else
+	      output=
+	    fi
+
+	    if ${skipped_export-false}; then
+	      func_verbose "generating symbol list for \`$libname.la'"
+	      export_symbols="$output_objdir/$libname.exp"
+	      $opt_dry_run || $RM $export_symbols
+	      libobjs=$output
+	      # Append the command to create the export file.
+	      test -z "$concat_cmds" || concat_cmds=$concat_cmds~
+	      eval concat_cmds=\"\$concat_cmds$export_symbols_cmds\"
+	      if test -n "$last_robj"; then
+		eval concat_cmds=\"\$concat_cmds~\$RM $last_robj\"
+	      fi
+	    fi
+
+	    test -n "$save_libobjs" &&
+	      func_verbose "creating a temporary reloadable object file: $output"
+
+	    # Loop through the commands generated above and execute them.
+	    save_ifs="$IFS"; IFS='~'
+	    for cmd in $concat_cmds; do
+	      IFS="$save_ifs"
+	      $opt_silent || {
+		  func_quote_for_expand "$cmd"
+		  eval "func_echo $func_quote_for_expand_result"
+	      }
+	      $opt_dry_run || eval "$cmd" || {
+		lt_exit=$?
+
+		# Restore the uninstalled library
