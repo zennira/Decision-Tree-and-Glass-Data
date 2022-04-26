@@ -8907,4 +8907,205 @@ EOF
 	      $opt_dry_run || eval "$cmd" || {
 		lt_exit=$?
 
-		# Restore the uninstalled library
+		# Restore the uninstalled library and exit
+		if test "$opt_mode" = relink; then
+		  ( cd "$output_objdir" && \
+		    $RM "${realname}T" && \
+		    $MV "${realname}U" "$realname" )
+		fi
+
+		exit $lt_exit
+	      }
+	    done
+	    IFS="$save_ifs"
+
+	    if test -n "$export_symbols_regex" && ${skipped_export-false}; then
+	      func_show_eval '$EGREP -e "$export_symbols_regex" "$export_symbols" > "${export_symbols}T"'
+	      func_show_eval '$MV "${export_symbols}T" "$export_symbols"'
+	    fi
+	  fi
+
+          if ${skipped_export-false}; then
+	    if test -n "$export_symbols" && test -n "$include_expsyms"; then
+	      tmp_export_symbols="$export_symbols"
+	      test -n "$orig_export_symbols" && tmp_export_symbols="$orig_export_symbols"
+	      $opt_dry_run || eval '$ECHO "$include_expsyms" | $SP2NL >> "$tmp_export_symbols"'
+	    fi
+
+	    if test -n "$orig_export_symbols"; then
+	      # The given exports_symbols file has to be filtered, so filter it.
+	      func_verbose "filter symbol list for \`$libname.la' to tag DATA exports"
+	      # FIXME: $output_objdir/$libname.filter potentially contains lots of
+	      # 's' commands which not all seds can handle. GNU sed should be fine
+	      # though. Also, the filter scales superlinearly with the number of
+	      # global variables. join(1) would be nice here, but unfortunately
+	      # isn't a blessed tool.
+	      $opt_dry_run || $SED -e '/[ ,]DATA/!d;s,\(.*\)\([ \,].*\),s|^\1$|\1\2|,' < $export_symbols > $output_objdir/$libname.filter
+	      delfiles+=" $export_symbols $output_objdir/$libname.filter"
+	      export_symbols=$output_objdir/$libname.def
+	      $opt_dry_run || $SED -f $output_objdir/$libname.filter < $orig_export_symbols > $export_symbols
+	    fi
+	  fi
+
+	  libobjs=$output
+	  # Restore the value of output.
+	  output=$save_output
+
+	  if test -n "$convenience" && test -n "$whole_archive_flag_spec"; then
+	    eval libobjs=\"\$libobjs $whole_archive_flag_spec\"
+	    test "X$libobjs" = "X " && libobjs=
+	  fi
+	  # Expand the library linking commands again to reset the
+	  # value of $libobjs for piecewise linking.
+
+	  # Do each of the archive commands.
+	  if test "$module" = yes && test -n "$module_cmds" ; then
+	    if test -n "$export_symbols" && test -n "$module_expsym_cmds"; then
+	      cmds=$module_expsym_cmds
+	    else
+	      cmds=$module_cmds
+	    fi
+	  else
+	    if test -n "$export_symbols" && test -n "$archive_expsym_cmds"; then
+	      cmds=$archive_expsym_cmds
+	    else
+	      cmds=$archive_cmds
+	    fi
+	  fi
+	fi
+
+	if test -n "$delfiles"; then
+	  # Append the command to remove temporary files to $cmds.
+	  eval cmds=\"\$cmds~\$RM $delfiles\"
+	fi
+
+	# Add any objects from preloaded convenience libraries
+	if test -n "$dlprefiles"; then
+	  gentop="$output_objdir/${outputname}x"
+	  generated+=" $gentop"
+
+	  func_extract_archives $gentop $dlprefiles
+	  libobjs+=" $func_extract_archives_result"
+	  test "X$libobjs" = "X " && libobjs=
+	fi
+
+	save_ifs="$IFS"; IFS='~'
+	for cmd in $cmds; do
+	  IFS="$save_ifs"
+	  eval cmd=\"$cmd\"
+	  $opt_silent || {
+	    func_quote_for_expand "$cmd"
+	    eval "func_echo $func_quote_for_expand_result"
+	  }
+	  $opt_dry_run || eval "$cmd" || {
+	    lt_exit=$?
+
+	    # Restore the uninstalled library and exit
+	    if test "$opt_mode" = relink; then
+	      ( cd "$output_objdir" && \
+	        $RM "${realname}T" && \
+		$MV "${realname}U" "$realname" )
+	    fi
+
+	    exit $lt_exit
+	  }
+	done
+	IFS="$save_ifs"
+
+	# Restore the uninstalled library and exit
+	if test "$opt_mode" = relink; then
+	  $opt_dry_run || eval '(cd $output_objdir && $RM ${realname}T && $MV $realname ${realname}T && $MV ${realname}U $realname)' || exit $?
+
+	  if test -n "$convenience"; then
+	    if test -z "$whole_archive_flag_spec"; then
+	      func_show_eval '${RM}r "$gentop"'
+	    fi
+	  fi
+
+	  exit $EXIT_SUCCESS
+	fi
+
+	# Create links to the real library.
+	for linkname in $linknames; do
+	  if test "$realname" != "$linkname"; then
+	    func_show_eval '(cd "$output_objdir" && $RM "$linkname" && $LN_S "$realname" "$linkname")' 'exit $?'
+	  fi
+	done
+
+	# If -module or -export-dynamic was specified, set the dlname.
+	if test "$module" = yes || test "$export_dynamic" = yes; then
+	  # On all known operating systems, these are identical.
+	  dlname="$soname"
+	fi
+      fi
+      ;;
+
+    obj)
+      if test -n "$dlfiles$dlprefiles" || test "$dlself" != no; then
+	func_warning "\`-dlopen' is ignored for objects"
+      fi
+
+      case " $deplibs" in
+      *\ -l* | *\ -L*)
+	func_warning "\`-l' and \`-L' are ignored for objects" ;;
+      esac
+
+      test -n "$rpath" && \
+	func_warning "\`-rpath' is ignored for objects"
+
+      test -n "$xrpath" && \
+	func_warning "\`-R' is ignored for objects"
+
+      test -n "$vinfo" && \
+	func_warning "\`-version-info' is ignored for objects"
+
+      test -n "$release" && \
+	func_warning "\`-release' is ignored for objects"
+
+      case $output in
+      *.lo)
+	test -n "$objs$old_deplibs" && \
+	  func_fatal_error "cannot build library object \`$output' from non-libtool objects"
+
+	libobj=$output
+	func_lo2o "$libobj"
+	obj=$func_lo2o_result
+	;;
+      *)
+	libobj=
+	obj="$output"
+	;;
+      esac
+
+      # Delete the old objects.
+      $opt_dry_run || $RM $obj $libobj
+
+      # Objects from convenience libraries.  This assumes
+      # single-version convenience libraries.  Whenever we create
+      # different ones for PIC/non-PIC, this we'll have to duplicate
+      # the extraction.
+      reload_conv_objs=
+      gentop=
+      # reload_cmds runs $LD directly, so let us get rid of
+      # -Wl from whole_archive_flag_spec and hope we can get by with
+      # turning comma into space..
+      wl=
+
+      if test -n "$convenience"; then
+	if test -n "$whole_archive_flag_spec"; then
+	  eval tmp_whole_archive_flags=\"$whole_archive_flag_spec\"
+	  reload_conv_objs=$reload_objs\ `$ECHO "$tmp_whole_archive_flags" | $SED 's|,| |g'`
+	else
+	  gentop="$output_objdir/${obj}x"
+	  generated+=" $gentop"
+
+	  func_extract_archives $gentop $convenience
+	  reload_conv_objs="$reload_objs $func_extract_archives_result"
+	fi
+      fi
+
+      # If we're not building shared, we need to use non_pic_objs
+      test "$build_libtool_libs" != yes && libobjs="$non_pic_objects"
+
+      # Create the old-style object.
+      reload_objs="$objs$old_deplibs "`$ECHO "$libobjs" | $SP2NL | $SED "/\.${libext}$/d; /\.lib$/d; $lo2o" | $NL2SP`" $reload_conv_objs" ### testsuite: skip
