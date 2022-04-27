@@ -9509,4 +9509,222 @@ EOF
 	    # The wrapper executable is built using the $host compiler,
 	    # because it contains $host paths and files. If cross-
 	    # compiling, it, like the target executable, must be
-	    # executed on the $host or under an emulati
+	    # executed on the $host or under an emulation environment.
+	    $opt_dry_run || {
+	      $LTCC $LTCFLAGS -o $cwrapper $cwrappersource
+	      $STRIP $cwrapper
+	    }
+
+	    # Now, create the wrapper script for func_source use:
+	    func_ltwrapper_scriptname $cwrapper
+	    $RM $func_ltwrapper_scriptname_result
+	    trap "$RM $func_ltwrapper_scriptname_result; exit $EXIT_FAILURE" 1 2 15
+	    $opt_dry_run || {
+	      # note: this script will not be executed, so do not chmod.
+	      if test "x$build" = "x$host" ; then
+		# Create the UAC manifests first if necessary (but the
+		# manifest files must have executable permission regardless).
+		case $output_name in
+		  *instal*|*patch*|*setup*|*update*)
+		    func_emit_exe_manifest > $cwrapper.manifest
+		    func_emit_exe_manifest > $output_path/$objdir/$output_name.exe.manifest
+		    chmod +x $cwrapper.manifest
+		    chmod +x $output_path/$objdir/$output_name.exe.manifest
+		  ;;
+		esac
+		$cwrapper --lt-dump-script > $func_ltwrapper_scriptname_result
+	      else
+		func_emit_wrapper no > $func_ltwrapper_scriptname_result
+	      fi
+	    }
+	  ;;
+	  * )
+	    $RM $output
+	    trap "$RM $output; exit $EXIT_FAILURE" 1 2 15
+
+	    func_emit_wrapper no > $output
+	    chmod +x $output
+	  ;;
+	esac
+      }
+      exit $EXIT_SUCCESS
+      ;;
+    esac
+
+    # See if we need to build an old-fashioned archive.
+    for oldlib in $oldlibs; do
+
+      if test "$build_libtool_libs" = convenience; then
+	oldobjs="$libobjs_save $symfileobj"
+	addlibs="$convenience"
+	build_libtool_libs=no
+      else
+	if test "$build_libtool_libs" = module; then
+	  oldobjs="$libobjs_save"
+	  build_libtool_libs=no
+	else
+	  oldobjs="$old_deplibs $non_pic_objects"
+	  if test "$preload" = yes && test -f "$symfileobj"; then
+	    oldobjs+=" $symfileobj"
+	  fi
+	fi
+	addlibs="$old_convenience"
+      fi
+
+      if test -n "$addlibs"; then
+	gentop="$output_objdir/${outputname}x"
+	generated+=" $gentop"
+
+	func_extract_archives $gentop $addlibs
+	oldobjs+=" $func_extract_archives_result"
+      fi
+
+      # Do each command in the archive commands.
+      if test -n "$old_archive_from_new_cmds" && test "$build_libtool_libs" = yes; then
+	cmds=$old_archive_from_new_cmds
+      else
+
+	# Add any objects from preloaded convenience libraries
+	if test -n "$dlprefiles"; then
+	  gentop="$output_objdir/${outputname}x"
+	  generated+=" $gentop"
+
+	  func_extract_archives $gentop $dlprefiles
+	  oldobjs+=" $func_extract_archives_result"
+	fi
+
+	# POSIX demands no paths to be encoded in archives.  We have
+	# to avoid creating archives with duplicate basenames if we
+	# might have to extract them afterwards, e.g., when creating a
+	# static archive out of a convenience library, or when linking
+	# the entirety of a libtool archive into another (currently
+	# not supported by libtool).
+	if (for obj in $oldobjs
+	    do
+	      func_basename "$obj"
+	      $ECHO "$func_basename_result"
+	    done | sort | sort -uc >/dev/null 2>&1); then
+	  :
+	else
+	  echo "copying selected object files to avoid basename conflicts..."
+	  gentop="$output_objdir/${outputname}x"
+	  generated+=" $gentop"
+	  func_mkdir_p "$gentop"
+	  save_oldobjs=$oldobjs
+	  oldobjs=
+	  counter=1
+	  for obj in $save_oldobjs
+	  do
+	    func_basename "$obj"
+	    objbase="$func_basename_result"
+	    case " $oldobjs " in
+	    " ") oldobjs=$obj ;;
+	    *[\ /]"$objbase "*)
+	      while :; do
+		# Make sure we don't pick an alternate name that also
+		# overlaps.
+		newobj=lt$counter-$objbase
+		func_arith $counter + 1
+		counter=$func_arith_result
+		case " $oldobjs " in
+		*[\ /]"$newobj "*) ;;
+		*) if test ! -f "$gentop/$newobj"; then break; fi ;;
+		esac
+	      done
+	      func_show_eval "ln $obj $gentop/$newobj || cp $obj $gentop/$newobj"
+	      oldobjs+=" $gentop/$newobj"
+	      ;;
+	    *) oldobjs+=" $obj" ;;
+	    esac
+	  done
+	fi
+	eval cmds=\"$old_archive_cmds\"
+
+	func_len " $cmds"
+	len=$func_len_result
+	if test "$len" -lt "$max_cmd_len" || test "$max_cmd_len" -le -1; then
+	  cmds=$old_archive_cmds
+	elif test -n "$archiver_list_spec"; then
+	  func_verbose "using command file archive linking..."
+	  for obj in $oldobjs
+	  do
+	    func_to_tool_file "$obj"
+	    $ECHO "$func_to_tool_file_result"
+	  done > $output_objdir/$libname.libcmd
+	  func_to_tool_file "$output_objdir/$libname.libcmd"
+	  oldobjs=" $archiver_list_spec$func_to_tool_file_result"
+	  cmds=$old_archive_cmds
+	else
+	  # the command line is too long to link in one step, link in parts
+	  func_verbose "using piecewise archive linking..."
+	  save_RANLIB=$RANLIB
+	  RANLIB=:
+	  objlist=
+	  concat_cmds=
+	  save_oldobjs=$oldobjs
+	  oldobjs=
+	  # Is there a better way of finding the last object in the list?
+	  for obj in $save_oldobjs
+	  do
+	    last_oldobj=$obj
+	  done
+	  eval test_cmds=\"$old_archive_cmds\"
+	  func_len " $test_cmds"
+	  len0=$func_len_result
+	  len=$len0
+	  for obj in $save_oldobjs
+	  do
+	    func_len " $obj"
+	    func_arith $len + $func_len_result
+	    len=$func_arith_result
+	    objlist+=" $obj"
+	    if test "$len" -lt "$max_cmd_len"; then
+	      :
+	    else
+	      # the above command should be used before it gets too long
+	      oldobjs=$objlist
+	      if test "$obj" = "$last_oldobj" ; then
+		RANLIB=$save_RANLIB
+	      fi
+	      test -z "$concat_cmds" || concat_cmds=$concat_cmds~
+	      eval concat_cmds=\"\${concat_cmds}$old_archive_cmds\"
+	      objlist=
+	      len=$len0
+	    fi
+	  done
+	  RANLIB=$save_RANLIB
+	  oldobjs=$objlist
+	  if test "X$oldobjs" = "X" ; then
+	    eval cmds=\"\$concat_cmds\"
+	  else
+	    eval cmds=\"\$concat_cmds~\$old_archive_cmds\"
+	  fi
+	fi
+      fi
+      func_execute_cmds "$cmds" 'exit $?'
+    done
+
+    test -n "$generated" && \
+      func_show_eval "${RM}r$generated"
+
+    # Now create the libtool archive.
+    case $output in
+    *.la)
+      old_library=
+      test "$build_old_libs" = yes && old_library="$libname.$libext"
+      func_verbose "creating $output"
+
+      # Preserve any variables that may affect compiler behavior
+      for var in $variables_saved_for_relink; do
+	if eval test -z \"\${$var+set}\"; then
+	  relink_command="{ test -z \"\${$var+set}\" || $lt_unset $var || { $var=; export $var; }; }; $relink_command"
+	elif eval var_value=\$$var; test -z "$var_value"; then
+	  relink_command="$var=; export $var; $relink_command"
+	else
+	  func_quote_for_eval "$var_value"
+	  relink_command="$var=$func_quote_for_eval_result; export $var; $relink_command"
+	fi
+      done
+      # Quote the link command for shipping.
+      relink_command="(cd `pwd`; $SHELL $progpath $preserve_args --mode=relink $libtool_args @inst_prefix_dir@)"
+      relink_c
