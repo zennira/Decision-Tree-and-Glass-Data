@@ -9108,4 +9108,227 @@ EOF
       test "$build_libtool_libs" != yes && libobjs="$non_pic_objects"
 
       # Create the old-style object.
-      reload_objs="$objs$old_deplibs "`$ECHO "$libobjs" | $SP2NL | $SED "/\.${libext}$/d; /\.lib$/d; $lo2o" | $NL2SP`" $reload_conv_objs" ### testsuite: skip
+      reload_objs="$objs$old_deplibs "`$ECHO "$libobjs" | $SP2NL | $SED "/\.${libext}$/d; /\.lib$/d; $lo2o" | $NL2SP`" $reload_conv_objs" ### testsuite: skip nested quoting test
+
+      output="$obj"
+      func_execute_cmds "$reload_cmds" 'exit $?'
+
+      # Exit if we aren't doing a library object file.
+      if test -z "$libobj"; then
+	if test -n "$gentop"; then
+	  func_show_eval '${RM}r "$gentop"'
+	fi
+
+	exit $EXIT_SUCCESS
+      fi
+
+      if test "$build_libtool_libs" != yes; then
+	if test -n "$gentop"; then
+	  func_show_eval '${RM}r "$gentop"'
+	fi
+
+	# Create an invalid libtool object if no PIC, so that we don't
+	# accidentally link it into a program.
+	# $show "echo timestamp > $libobj"
+	# $opt_dry_run || eval "echo timestamp > $libobj" || exit $?
+	exit $EXIT_SUCCESS
+      fi
+
+      if test -n "$pic_flag" || test "$pic_mode" != default; then
+	# Only do commands if we really have different PIC objects.
+	reload_objs="$libobjs $reload_conv_objs"
+	output="$libobj"
+	func_execute_cmds "$reload_cmds" 'exit $?'
+      fi
+
+      if test -n "$gentop"; then
+	func_show_eval '${RM}r "$gentop"'
+      fi
+
+      exit $EXIT_SUCCESS
+      ;;
+
+    prog)
+      case $host in
+	*cygwin*) func_stripname '' '.exe' "$output"
+	          output=$func_stripname_result.exe;;
+      esac
+      test -n "$vinfo" && \
+	func_warning "\`-version-info' is ignored for programs"
+
+      test -n "$release" && \
+	func_warning "\`-release' is ignored for programs"
+
+      test "$preload" = yes \
+        && test "$dlopen_support" = unknown \
+	&& test "$dlopen_self" = unknown \
+	&& test "$dlopen_self_static" = unknown && \
+	  func_warning "\`LT_INIT([dlopen])' not used. Assuming no dlopen support."
+
+      case $host in
+      *-*-rhapsody* | *-*-darwin1.[012])
+	# On Rhapsody replace the C library is the System framework
+	compile_deplibs=`$ECHO " $compile_deplibs" | $SED 's/ -lc / System.ltframework /'`
+	finalize_deplibs=`$ECHO " $finalize_deplibs" | $SED 's/ -lc / System.ltframework /'`
+	;;
+      esac
+
+      case $host in
+      *-*-darwin*)
+	# Don't allow lazy linking, it breaks C++ global constructors
+	# But is supposedly fixed on 10.4 or later (yay!).
+	if test "$tagname" = CXX ; then
+	  case ${MACOSX_DEPLOYMENT_TARGET-10.0} in
+	    10.[0123])
+	      compile_command+=" ${wl}-bind_at_load"
+	      finalize_command+=" ${wl}-bind_at_load"
+	    ;;
+	  esac
+	fi
+	# Time to change all our "foo.ltframework" stuff back to "-framework foo"
+	compile_deplibs=`$ECHO " $compile_deplibs" | $SED 's% \([^ $]*\).ltframework% -framework \1%g'`
+	finalize_deplibs=`$ECHO " $finalize_deplibs" | $SED 's% \([^ $]*\).ltframework% -framework \1%g'`
+	;;
+      esac
+
+
+      # move library search paths that coincide with paths to not yet
+      # installed libraries to the beginning of the library search list
+      new_libs=
+      for path in $notinst_path; do
+	case " $new_libs " in
+	*" -L$path/$objdir "*) ;;
+	*)
+	  case " $compile_deplibs " in
+	  *" -L$path/$objdir "*)
+	    new_libs+=" -L$path/$objdir" ;;
+	  esac
+	  ;;
+	esac
+      done
+      for deplib in $compile_deplibs; do
+	case $deplib in
+	-L*)
+	  case " $new_libs " in
+	  *" $deplib "*) ;;
+	  *) new_libs+=" $deplib" ;;
+	  esac
+	  ;;
+	*) new_libs+=" $deplib" ;;
+	esac
+      done
+      compile_deplibs="$new_libs"
+
+
+      compile_command+=" $compile_deplibs"
+      finalize_command+=" $finalize_deplibs"
+
+      if test -n "$rpath$xrpath"; then
+	# If the user specified any rpath flags, then add them.
+	for libdir in $rpath $xrpath; do
+	  # This is the magic to use -rpath.
+	  case "$finalize_rpath " in
+	  *" $libdir "*) ;;
+	  *) finalize_rpath+=" $libdir" ;;
+	  esac
+	done
+      fi
+
+      # Now hardcode the library paths
+      rpath=
+      hardcode_libdirs=
+      for libdir in $compile_rpath $finalize_rpath; do
+	if test -n "$hardcode_libdir_flag_spec"; then
+	  if test -n "$hardcode_libdir_separator"; then
+	    if test -z "$hardcode_libdirs"; then
+	      hardcode_libdirs="$libdir"
+	    else
+	      # Just accumulate the unique libdirs.
+	      case $hardcode_libdir_separator$hardcode_libdirs$hardcode_libdir_separator in
+	      *"$hardcode_libdir_separator$libdir$hardcode_libdir_separator"*)
+		;;
+	      *)
+		hardcode_libdirs+="$hardcode_libdir_separator$libdir"
+		;;
+	      esac
+	    fi
+	  else
+	    eval flag=\"$hardcode_libdir_flag_spec\"
+	    rpath+=" $flag"
+	  fi
+	elif test -n "$runpath_var"; then
+	  case "$perm_rpath " in
+	  *" $libdir "*) ;;
+	  *) perm_rpath+=" $libdir" ;;
+	  esac
+	fi
+	case $host in
+	*-*-cygwin* | *-*-mingw* | *-*-pw32* | *-*-os2* | *-cegcc*)
+	  testbindir=`${ECHO} "$libdir" | ${SED} -e 's*/lib$*/bin*'`
+	  case :$dllsearchpath: in
+	  *":$libdir:"*) ;;
+	  ::) dllsearchpath=$libdir;;
+	  *) dllsearchpath+=":$libdir";;
+	  esac
+	  case :$dllsearchpath: in
+	  *":$testbindir:"*) ;;
+	  ::) dllsearchpath=$testbindir;;
+	  *) dllsearchpath+=":$testbindir";;
+	  esac
+	  ;;
+	esac
+      done
+      # Substitute the hardcoded libdirs into the rpath.
+      if test -n "$hardcode_libdir_separator" &&
+	 test -n "$hardcode_libdirs"; then
+	libdir="$hardcode_libdirs"
+	eval rpath=\" $hardcode_libdir_flag_spec\"
+      fi
+      compile_rpath="$rpath"
+
+      rpath=
+      hardcode_libdirs=
+      for libdir in $finalize_rpath; do
+	if test -n "$hardcode_libdir_flag_spec"; then
+	  if test -n "$hardcode_libdir_separator"; then
+	    if test -z "$hardcode_libdirs"; then
+	      hardcode_libdirs="$libdir"
+	    else
+	      # Just accumulate the unique libdirs.
+	      case $hardcode_libdir_separator$hardcode_libdirs$hardcode_libdir_separator in
+	      *"$hardcode_libdir_separator$libdir$hardcode_libdir_separator"*)
+		;;
+	      *)
+		hardcode_libdirs+="$hardcode_libdir_separator$libdir"
+		;;
+	      esac
+	    fi
+	  else
+	    eval flag=\"$hardcode_libdir_flag_spec\"
+	    rpath+=" $flag"
+	  fi
+	elif test -n "$runpath_var"; then
+	  case "$finalize_perm_rpath " in
+	  *" $libdir "*) ;;
+	  *) finalize_perm_rpath+=" $libdir" ;;
+	  esac
+	fi
+      done
+      # Substitute the hardcoded libdirs into the rpath.
+      if test -n "$hardcode_libdir_separator" &&
+	 test -n "$hardcode_libdirs"; then
+	libdir="$hardcode_libdirs"
+	eval rpath=\" $hardcode_libdir_flag_spec\"
+      fi
+      finalize_rpath="$rpath"
+
+      if test -n "$libobjs" && test "$build_old_libs" = yes; then
+	# Transform all the library objects into standard objects.
+	compile_command=`$ECHO "$compile_command" | $SP2NL | $SED "$lo2o" | $NL2SP`
+	finalize_command=`$ECHO "$finalize_command" | $SP2NL | $SED "$lo2o" | $NL2SP`
+      fi
+
+      func_generate_dlsyms "$outputname" "@PROGRAM@" "no"
+
+      # template prelinking step
+      if test -n "$prelink_cmds"; then
