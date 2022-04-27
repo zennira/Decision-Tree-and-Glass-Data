@@ -9332,3 +9332,181 @@ EOF
 
       # template prelinking step
       if test -n "$prelink_cmds"; then
+	func_execute_cmds "$prelink_cmds" 'exit $?'
+      fi
+
+      wrappers_required=yes
+      case $host in
+      *cegcc* | *mingw32ce*)
+        # Disable wrappers for cegcc and mingw32ce hosts, we are cross compiling anyway.
+        wrappers_required=no
+        ;;
+      *cygwin* | *mingw* )
+        if test "$build_libtool_libs" != yes; then
+          wrappers_required=no
+        fi
+        ;;
+      *)
+        if test "$need_relink" = no || test "$build_libtool_libs" != yes; then
+          wrappers_required=no
+        fi
+        ;;
+      esac
+      if test "$wrappers_required" = no; then
+	# Replace the output file specification.
+	compile_command=`$ECHO "$compile_command" | $SED 's%@OUTPUT@%'"$output"'%g'`
+	link_command="$compile_command$compile_rpath"
+
+	# We have no uninstalled library dependencies, so finalize right now.
+	exit_status=0
+	func_show_eval "$link_command" 'exit_status=$?'
+
+	if test -n "$postlink_cmds"; then
+	  func_to_tool_file "$output"
+	  postlink_cmds=`func_echo_all "$postlink_cmds" | $SED -e 's%@OUTPUT@%'"$output"'%g' -e 's%@TOOL_OUTPUT@%'"$func_to_tool_file_result"'%g'`
+	  func_execute_cmds "$postlink_cmds" 'exit $?'
+	fi
+
+	# Delete the generated files.
+	if test -f "$output_objdir/${outputname}S.${objext}"; then
+	  func_show_eval '$RM "$output_objdir/${outputname}S.${objext}"'
+	fi
+
+	exit $exit_status
+      fi
+
+      if test -n "$compile_shlibpath$finalize_shlibpath"; then
+	compile_command="$shlibpath_var=\"$compile_shlibpath$finalize_shlibpath\$$shlibpath_var\" $compile_command"
+      fi
+      if test -n "$finalize_shlibpath"; then
+	finalize_command="$shlibpath_var=\"$finalize_shlibpath\$$shlibpath_var\" $finalize_command"
+      fi
+
+      compile_var=
+      finalize_var=
+      if test -n "$runpath_var"; then
+	if test -n "$perm_rpath"; then
+	  # We should set the runpath_var.
+	  rpath=
+	  for dir in $perm_rpath; do
+	    rpath+="$dir:"
+	  done
+	  compile_var="$runpath_var=\"$rpath\$$runpath_var\" "
+	fi
+	if test -n "$finalize_perm_rpath"; then
+	  # We should set the runpath_var.
+	  rpath=
+	  for dir in $finalize_perm_rpath; do
+	    rpath+="$dir:"
+	  done
+	  finalize_var="$runpath_var=\"$rpath\$$runpath_var\" "
+	fi
+      fi
+
+      if test "$no_install" = yes; then
+	# We don't need to create a wrapper script.
+	link_command="$compile_var$compile_command$compile_rpath"
+	# Replace the output file specification.
+	link_command=`$ECHO "$link_command" | $SED 's%@OUTPUT@%'"$output"'%g'`
+	# Delete the old output file.
+	$opt_dry_run || $RM $output
+	# Link the executable and exit
+	func_show_eval "$link_command" 'exit $?'
+
+	if test -n "$postlink_cmds"; then
+	  func_to_tool_file "$output"
+	  postlink_cmds=`func_echo_all "$postlink_cmds" | $SED -e 's%@OUTPUT@%'"$output"'%g' -e 's%@TOOL_OUTPUT@%'"$func_to_tool_file_result"'%g'`
+	  func_execute_cmds "$postlink_cmds" 'exit $?'
+	fi
+
+	exit $EXIT_SUCCESS
+      fi
+
+      if test "$hardcode_action" = relink; then
+	# Fast installation is not supported
+	link_command="$compile_var$compile_command$compile_rpath"
+	relink_command="$finalize_var$finalize_command$finalize_rpath"
+
+	func_warning "this platform does not like uninstalled shared libraries"
+	func_warning "\`$output' will be relinked during installation"
+      else
+	if test "$fast_install" != no; then
+	  link_command="$finalize_var$compile_command$finalize_rpath"
+	  if test "$fast_install" = yes; then
+	    relink_command=`$ECHO "$compile_var$compile_command$compile_rpath" | $SED 's%@OUTPUT@%\$progdir/\$file%g'`
+	  else
+	    # fast_install is set to needless
+	    relink_command=
+	  fi
+	else
+	  link_command="$compile_var$compile_command$compile_rpath"
+	  relink_command="$finalize_var$finalize_command$finalize_rpath"
+	fi
+      fi
+
+      # Replace the output file specification.
+      link_command=`$ECHO "$link_command" | $SED 's%@OUTPUT@%'"$output_objdir/$outputname"'%g'`
+
+      # Delete the old output files.
+      $opt_dry_run || $RM $output $output_objdir/$outputname $output_objdir/lt-$outputname
+
+      func_show_eval "$link_command" 'exit $?'
+
+      if test -n "$postlink_cmds"; then
+	func_to_tool_file "$output_objdir/$outputname"
+	postlink_cmds=`func_echo_all "$postlink_cmds" | $SED -e 's%@OUTPUT@%'"$output_objdir/$outputname"'%g' -e 's%@TOOL_OUTPUT@%'"$func_to_tool_file_result"'%g'`
+	func_execute_cmds "$postlink_cmds" 'exit $?'
+      fi
+
+      # Now create the wrapper script.
+      func_verbose "creating $output"
+
+      # Quote the relink command for shipping.
+      if test -n "$relink_command"; then
+	# Preserve any variables that may affect compiler behavior
+	for var in $variables_saved_for_relink; do
+	  if eval test -z \"\${$var+set}\"; then
+	    relink_command="{ test -z \"\${$var+set}\" || $lt_unset $var || { $var=; export $var; }; }; $relink_command"
+	  elif eval var_value=\$$var; test -z "$var_value"; then
+	    relink_command="$var=; export $var; $relink_command"
+	  else
+	    func_quote_for_eval "$var_value"
+	    relink_command="$var=$func_quote_for_eval_result; export $var; $relink_command"
+	  fi
+	done
+	relink_command="(cd `pwd`; $relink_command)"
+	relink_command=`$ECHO "$relink_command" | $SED "$sed_quote_subst"`
+      fi
+
+      # Only actually do things if not in dry run mode.
+      $opt_dry_run || {
+	# win32 will think the script is a binary if it has
+	# a .exe suffix, so we strip it off here.
+	case $output in
+	  *.exe) func_stripname '' '.exe' "$output"
+	         output=$func_stripname_result ;;
+	esac
+	# test for cygwin because mv fails w/o .exe extensions
+	case $host in
+	  *cygwin*)
+	    exeext=.exe
+	    func_stripname '' '.exe' "$outputname"
+	    outputname=$func_stripname_result ;;
+	  *) exeext= ;;
+	esac
+	case $host in
+	  *cygwin* | *mingw* )
+	    func_dirname_and_basename "$output" "" "."
+	    output_name=$func_basename_result
+	    output_path=$func_dirname_result
+	    cwrappersource="$output_path/$objdir/lt-$output_name.c"
+	    cwrapper="$output_path/$output_name.exe"
+	    $RM $cwrappersource $cwrapper
+	    trap "$RM $cwrappersource $cwrapper $cwrapper.manifest; exit $EXIT_FAILURE" 1 2 15
+
+	    func_emit_cwrapperexe_src > $cwrappersource
+
+	    # The wrapper executable is built using the $host compiler,
+	    # because it contains $host paths and files. If cross-
+	    # compiling, it, like the target executable, must be
+	    # executed on the $host or under an emulati
