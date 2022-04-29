@@ -227,4 +227,79 @@ If you wish to install to an HDD instead of a USB:
 
 As per before:
 
-1) Download the xubuntu 11.04 desktop 
+1) Download the xubuntu 11.04 desktop live CD iso for amd64
+   ( look here for mirrors: http://www.xubuntu.org/getubuntu )
+
+Then:
+
+2) Burn it to CD then boot that on your new mining PC
+   Select "English" then select "Install Xubuntu"
+   (you have 30 seconds to do this)
+
+3) When the Install window comes up - again select "English" and click "Forward"
+
+4) The next page will show you if you meet certain install requirements
+   (make sure you do meet them all)
+   Don't select the download option
+   The 3rd party option isn't needed for mining so ignore that also
+
+   Click "Forward"
+
+5) With "Allocate drive space" it's probably easiest to say to use the
+   "Erase" option.
+
+   This is just for mining right? :)
+
+   However, if you have anything on the HDD that you want to keep - the
+   "Erase" install process will delete it - so back it up (quit the install)
+   Also make sure there are no OTHER HDD attached that it may erase also
+   i.e. only have attached the one HDD that you want to install onto unless
+   you know exactly what you are doing
+
+   If you see the "Install Xubuntu 11.04 alongside 'something'" then that
+   just means that the HDD wasn't blank.
+   If you want to try this option - do that yourself and then skip to step
+   7) below when you get to that.
+
+   There are plenty of other options available if you select "Something else"
+   but I'm not going to go into all the details here other than to say that
+   my preferred partioning is: /boot = 1GB = ext2, swap = twice memory size,
+   / = 100GB = ext3 and the rest: /extra = ext3
+
+   Click "Forward"
+
+6) If you selected "Erase" then it allows you to choose the drive to install to
+   Then click "Install Now"
+
+7) "Where are you?" sort that out then click "Forward"
+
+8) "Keyboard layout" sort that out (use the default) then click "Forward"
+
+9) "Who are you?" The important one here is "Pick a username:" coz that's
+   the name you will need to ssh into, to access it remotely (and of course
+   the "Choose a Password" you set)
+
+   If you set the "username" to anything but "ubuntu" then: wherever in this
+   document I have mentioned the username "ubuntu" you must of course use the
+   username you chose here instead of "ubuntu"
+
+   Important: set it to "log in automatically" if you ever want to be able
+   to start cgminer without being in front of the computer since 'X' must
+   be running to use cgminer properly
+   That does of course mean that the computer isn't secure from anyone who
+   has access to it - but then again no computer that can automatically
+   reboot is secure from anyone who has access to the actual computer itself
+
+   Then click "Forward"
+
+10) Of course when it completes click on "Restart Now"
+    ... and remove the Xubuntu CD when it asks you
+
+11) Wait for it to finish rebooting ... and it will auto login
+    (unless you didn't do step 9) "Important:")
+
+12) After it logs in, an upgrade popup for 11.10 (or later) will appear
+    Select "Don't Upgrade"
+
+13) Now go to step 6) of the USB script above for what to do next and that
+    covers everything else needed
