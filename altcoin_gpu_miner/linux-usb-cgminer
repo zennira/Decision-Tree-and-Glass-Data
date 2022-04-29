@@ -1,0 +1,40 @@
+How to setup a cgminer using xubuntu 11.04 live on a USB
+
+The master version of this document is here:
+ https://github.com/kanoi/linux-usb-cgminer
+
+The actual file is:
+ https://github.com/kanoi/linux-usb-cgminer/blob/master/linux-usb-cgminer
+
+The copy in cgminer (check to make sure it isn't older) is:
+ https://github.com/ckolivas/cgminer/blob/master/linux-usb-cgminer
+
+The original old verion on bitcointalk is:
+ https://bitcointalk.org/index.php?topic=28402.msg426741#msg426741
+
+========
+
+I have said to select English for the install process for 2 reasons:
+1) I don't know any other spoken language very well
+and
+2) I'm not sure what problems installing under a different language
+might cause (it will probably cause no problems but I don't know)
+
+Software
+========
+Short hardware comment:
+Your mining computer doesn't need any HDD or CD/DVD/BD as long as it has at
+least 2GB of RAM, can boot USB, has some network connection to the internet
+and of course a reasonable mining ATI graphics card
+... Or you can boot a windows PC with the USB to only do mining ... and ignore
+the system HDD ... wasting energy running the HDD (roughly 10 Watts per HDD) :)
+
+If you wish to install to an HDD instead of a USB,
+ see the changes to the instructions at the end
+
+To create the USB, you need of course a 4GB USB and temporarily need a PC
+with a CD (or DVD/BD) writer, a USB port and of course an internet
+connection to the PC
+
+1) Download the xubuntu 11.04 desktop live CD iso for amd64
+   (
