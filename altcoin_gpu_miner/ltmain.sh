@@ -9476,3 +9476,212 @@ func_mode_uninstall ()
     $opt_debug
     RM="$nonopt"
     files=
+    rmforce=
+    exit_status=0
+
+    # This variable tells wrapper scripts just to set variables rather
+    # than running their programs.
+    libtool_install_magic="$magic"
+
+    for arg
+    do
+      case $arg in
+      -f) func_append RM " $arg"; rmforce=yes ;;
+      -*) func_append RM " $arg" ;;
+      *) func_append files " $arg" ;;
+      esac
+    done
+
+    test -z "$RM" && \
+      func_fatal_help "you must specify an RM program"
+
+    rmdirs=
+
+    for file in $files; do
+      func_dirname "$file" "" "."
+      dir="$func_dirname_result"
+      if test "X$dir" = X.; then
+	odir="$objdir"
+      else
+	odir="$dir/$objdir"
+      fi
+      func_basename "$file"
+      name="$func_basename_result"
+      test "$opt_mode" = uninstall && odir="$dir"
+
+      # Remember odir for removal later, being careful to avoid duplicates
+      if test "$opt_mode" = clean; then
+	case " $rmdirs " in
+	  *" $odir "*) ;;
+	  *) func_append rmdirs " $odir" ;;
+	esac
+      fi
+
+      # Don't error if the file doesn't exist and rm -f was used.
+      if { test -L "$file"; } >/dev/null 2>&1 ||
+	 { test -h "$file"; } >/dev/null 2>&1 ||
+	 test -f "$file"; then
+	:
+      elif test -d "$file"; then
+	exit_status=1
+	continue
+      elif test "$rmforce" = yes; then
+	continue
+      fi
+
+      rmfiles="$file"
+
+      case $name in
+      *.la)
+	# Possibly a libtool archive, so verify it.
+	if func_lalib_p "$file"; then
+	  func_source $dir/$name
+
+	  # Delete the libtool libraries and symlinks.
+	  for n in $library_names; do
+	    func_append rmfiles " $odir/$n"
+	  done
+	  test -n "$old_library" && func_append rmfiles " $odir/$old_library"
+
+	  case "$opt_mode" in
+	  clean)
+	    case " $library_names " in
+	    *" $dlname "*) ;;
+	    *) test -n "$dlname" && func_append rmfiles " $odir/$dlname" ;;
+	    esac
+	    test -n "$libdir" && func_append rmfiles " $odir/$name $odir/${name}i"
+	    ;;
+	  uninstall)
+	    if test -n "$library_names"; then
+	      # Do each command in the postuninstall commands.
+	      func_execute_cmds "$postuninstall_cmds" 'test "$rmforce" = yes || exit_status=1'
+	    fi
+
+	    if test -n "$old_library"; then
+	      # Do each command in the old_postuninstall commands.
+	      func_execute_cmds "$old_postuninstall_cmds" 'test "$rmforce" = yes || exit_status=1'
+	    fi
+	    # FIXME: should reinstall the best remaining shared library.
+	    ;;
+	  esac
+	fi
+	;;
+
+      *.lo)
+	# Possibly a libtool object, so verify it.
+	if func_lalib_p "$file"; then
+
+	  # Read the .lo file
+	  func_source $dir/$name
+
+	  # Add PIC object to the list of files to remove.
+	  if test -n "$pic_object" &&
+	     test "$pic_object" != none; then
+	    func_append rmfiles " $dir/$pic_object"
+	  fi
+
+	  # Add non-PIC object to the list of files to remove.
+	  if test -n "$non_pic_object" &&
+	     test "$non_pic_object" != none; then
+	    func_append rmfiles " $dir/$non_pic_object"
+	  fi
+	fi
+	;;
+
+      *)
+	if test "$opt_mode" = clean ; then
+	  noexename=$name
+	  case $file in
+	  *.exe)
+	    func_stripname '' '.exe' "$file"
+	    file=$func_stripname_result
+	    func_stripname '' '.exe' "$name"
+	    noexename=$func_stripname_result
+	    # $file with .exe has already been added to rmfiles,
+	    # add $file without .exe
+	    func_append rmfiles " $file"
+	    ;;
+	  esac
+	  # Do a test to see if this is a libtool program.
+	  if func_ltwrapper_p "$file"; then
+	    if func_ltwrapper_executable_p "$file"; then
+	      func_ltwrapper_scriptname "$file"
+	      relink_command=
+	      func_source $func_ltwrapper_scriptname_result
+	      func_append rmfiles " $func_ltwrapper_scriptname_result"
+	    else
+	      relink_command=
+	      func_source $dir/$noexename
+	    fi
+
+	    # note $name still contains .exe if it was in $file originally
+	    # as does the version of $file that was added into $rmfiles
+	    func_append rmfiles " $odir/$name $odir/${name}S.${objext}"
+	    func_append rmfiles " ${name}.manifest $objdir/${name}.manifest"
+	    if test "$fast_install" = yes && test -n "$relink_command"; then
+	      func_append rmfiles " $odir/lt-$name $objdir/lt-${name}.manifest"
+	    fi
+	    if test "X$noexename" != "X$name" ; then
+	      func_append rmfiles " $odir/lt-${noexename}.c"
+	    fi
+	  fi
+	fi
+	;;
+      esac
+      func_show_eval "$RM $rmfiles" 'exit_status=1'
+    done
+
+    # Try to remove the ${objdir}s in the directories where we deleted files
+    for dir in $rmdirs; do
+      if test -d "$dir"; then
+	func_show_eval "rmdir $dir >/dev/null 2>&1"
+      fi
+    done
+
+    exit $exit_status
+}
+
+{ test "$opt_mode" = uninstall || test "$opt_mode" = clean; } &&
+    func_mode_uninstall ${1+"$@"}
+
+test -z "$opt_mode" && {
+  help="$generic_help"
+  func_fatal_help "you must specify a MODE"
+}
+
+test -z "$exec_cmd" && \
+  func_fatal_help "invalid operation mode \`$opt_mode'"
+
+if test -n "$exec_cmd"; then
+  eval exec "$exec_cmd"
+  exit $EXIT_FAILURE
+fi
+
+exit $exit_status
+
+
+# The TAGs below are defined such that we never get into a situation
+# in which we disable both kinds of libraries.  Given conflicting
+# choices, we go for a static library, that is the most portable,
+# since we can't tell whether shared libraries were disabled because
+# the user asked for that or because the platform doesn't support
+# them.  This is particularly important on AIX, because we don't
+# support having both static and shared libraries enabled at the same
+# time on that platform, so we default to a shared-only configuration.
+# If a disable-shared tag is given, we'll fallback to a static-only
+# configuration.  But we'll never go from static-only to shared-only.
+
+# ### BEGIN LIBTOOL TAG CONFIG: disable-shared
+build_libtool_libs=no
+build_old_libs=yes
+# ### END LIBTOOL TAG CONFIG: disable-shared
+
+# ### BEGIN LIBTOOL TAG CONFIG: disable-static
+build_old_libs=`case $build_libtool_libs in yes) echo no;; *) echo yes;; esac`
+# ### END LIBTOOL TAG CONFIG: disable-static
+
+# Local Variables:
+# mode:shell-script
+# sh-indentation:2
+# End:
+# vi:sw=2
