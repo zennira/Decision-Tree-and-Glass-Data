@@ -314,4 +314,56 @@ AC_DIAGNOSE([obsolete],
 the `disable-fast-install' option into LT_INIT's first parameter.])
 ])
 
-dnl aclocal-1.4 b
+dnl aclocal-1.4 backwards compatibility:
+dnl AC_DEFUN([AC_ENABLE_FAST_INSTALL], [])
+dnl AC_DEFUN([AM_DISABLE_FAST_INSTALL], [])
+
+
+# _LT_WITH_PIC([MODE])
+# --------------------
+# implement the --with-pic flag, and support the `pic-only' and `no-pic'
+# LT_INIT options.
+# MODE is either `yes' or `no'.  If omitted, it defaults to `both'.
+m4_define([_LT_WITH_PIC],
+[AC_ARG_WITH([pic],
+    [AS_HELP_STRING([--with-pic],
+	[try to use only PIC/non-PIC objects @<:@default=use both@:>@])],
+    [pic_mode="$withval"],
+    [pic_mode=default])
+
+test -z "$pic_mode" && pic_mode=m4_default([$1], [default])
+
+_LT_DECL([], [pic_mode], [0], [What type of objects to build])dnl
+])# _LT_WITH_PIC
+
+LT_OPTION_DEFINE([LT_INIT], [pic-only], [_LT_WITH_PIC([yes])])
+LT_OPTION_DEFINE([LT_INIT], [no-pic], [_LT_WITH_PIC([no])])
+
+# Old name:
+AU_DEFUN([AC_LIBTOOL_PICMODE],
+[_LT_SET_OPTION([LT_INIT], [pic-only])
+AC_DIAGNOSE([obsolete],
+[$0: Remove this warning and the call to _LT_SET_OPTION when you
+put the `pic-only' option into LT_INIT's first parameter.])
+])
+
+dnl aclocal-1.4 backwards compatibility:
+dnl AC_DEFUN([AC_LIBTOOL_PICMODE], [])
+
+## ----------------- ##
+## LTDL_INIT Options ##
+## ----------------- ##
+
+m4_define([_LTDL_MODE], [])
+LT_OPTION_DEFINE([LTDL_INIT], [nonrecursive],
+		 [m4_define([_LTDL_MODE], [nonrecursive])])
+LT_OPTION_DEFINE([LTDL_INIT], [recursive],
+		 [m4_define([_LTDL_MODE], [recursive])])
+LT_OPTION_DEFINE([LTDL_INIT], [subproject],
+		 [m4_define([_LTDL_MODE], [subproject])])
+
+m4_define([_LTDL_TYPE], [])
+LT_OPTION_DEFINE([LTDL_INIT], [installable],
+		 [m4_define([_LTDL_TYPE], [installable])])
+LT_OPTION_DEFINE([LTDL_INIT], [convenience],
+		 [m4_define([_LTDL_TYPE], [convenience])])
