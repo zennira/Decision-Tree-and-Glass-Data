@@ -160,4 +160,197 @@ $poolssum = array(
 			'Work Utility'),
  'POOL+STATS' => array('POOL.Difficulty Accepted', 'POOL.Difficulty Rejected',
 			'STATS.Times Sent', 'STATS.Bytes Sent', 'STATS.Net Bytes Sent',
-			'STATS.Times Rec
+			'STATS.Times Recv', 'STATS.Bytes Recv', 'STATS.Net Bytes Recv'));
+#
+$poolsext = array(
+ 'POOL+STATS' => array(
+	'where' => null,
+	'group' => array('POOL.URL', 'POOL.Has Stratum', 'POOL.Stratum Active', 'POOL.Has GBT'),
+	'calc' => array('POOL.Difficulty Accepted' => 'sum', 'POOL.Difficulty Rejected' => 'sum',
+			'STATS.Times Sent' => 'sum', 'STATS.Bytes Sent' => 'sum',
+			'STATS.Net Bytes Sent' => 'sum', 'STATS.Times Recv' => 'sum',
+			'STATS.Bytes Recv' => 'sum', 'STATS.Net Bytes Recv' => 'sum',
+			'POOL.Accepted' => 'sum'),
+	'gen' => array('AvShr' => 'round(POOL.Difficulty Accepted/max(POOL.Accepted,1)*100)/100'),
+	'having' => array(array('STATS.Bytes Recv', '>', 0)))
+);
+
+#
+# customsummarypages is an array of these Custom Summary Pages
+$customsummarypages = array('Mobile' => array($mobilepage, $mobilesum),
+ 'Stats' => array($statspage, $statssum),
+ 'Pools' => array($poolspage, $poolssum, $poolsext));
+#
+$here = $_SERVER['PHP_SELF'];
+#
+global $tablebegin, $tableend, $warnfont, $warnoff, $dfmt;
+#
+$tablebegin = '<tr><td><table border=1 cellpadding=5 cellspacing=0>';
+$tableend = '</table></td></tr>';
+$warnfont = '<font color=red><b>';
+$warnoff = '</b></font>';
+$dfmt = 'H:i:s j-M-Y \U\T\CP';
+#
+$miner_font_family = 'Verdana, Arial, sans-serif, sans';
+$miner_font_size = '13pt';
+#
+$bad_font_family = '"Times New Roman", Times, serif';
+$bad_font_size = '18pt';
+#
+# Edit this or redefine it in myminer.php to change the colour scheme
+# See $colourtable below for the list of names
+$colouroverride = array();
+#
+# Where to place the buttons: 'top' 'bot' 'both'
+#  anything else means don't show them - case sensitive
+$placebuttons = 'top';
+#
+# This below allows you to put your own settings into a seperate file
+# so you don't need to update miner.php with your preferred settings
+# every time a new version is released
+# Just create the file 'myminer.php' in the same directory as
+# 'miner.php' - and put your own settings in there
+if (file_exists('myminer.php'))
+ include_once('myminer.php');
+#
+# This is the system default that must always contain all necessary
+# colours so it must be a constant
+# You can override these values with $colouroverride
+# The only one missing is $warnfont
+# - which you can override directly anyway
+global $colourtable;
+$colourtable = array(
+	'body bgcolor'		=> '#ecffff',
+	'td color'		=> 'blue',
+	'td.two color'		=> 'blue',
+	'td.two background'	=> '#ecffff',
+	'td.h color'		=> 'blue',
+	'td.h background'	=> '#c4ffff',
+	'td.err color'		=> 'black',
+	'td.err background'	=> '#ff3050',
+	'td.bad color'		=> 'black',
+	'td.bad background'	=> '#ff3050',
+	'td.warn color'		=> 'black',
+	'td.warn background'	=> '#ffb050',
+	'td.sta color'		=> 'green',
+	'td.tot color'		=> 'blue',
+	'td.tot background'	=> '#fff8f2',
+	'td.lst color'		=> 'blue',
+	'td.lst background'	=> '#ffffdd',
+	'td.hi color'		=> 'blue',
+	'td.hi background'	=> '#f6ffff',
+	'td.lo color'		=> 'blue',
+	'td.lo background'	=> '#deffff'
+);
+#
+# Don't touch these 2
+$miner = null;
+$port = null;
+#
+# Ensure it is only ever shown once
+global $showndate;
+$showndate = false;
+#
+# For summary page to stop retrying failed rigs
+global $rigerror;
+$rigerror = array();
+#
+global $rownum;
+$rownum = 0;
+#
+// Login
+global $ses;
+$ses = 'rutroh';
+#
+function getcss($cssname, $dom = false)
+{
+ global $colourtable, $colouroverride;
+
+ $css = '';
+ foreach ($colourtable as $cssdata => $value)
+ {
+	$cssobj = explode(' ', $cssdata, 2);
+	if ($cssobj[0] == $cssname)
+	{
+		if (isset($colouroverride[$cssdata]))
+			$value = $colouroverride[$cssdata];
+
+		if ($dom == true)
+			$css .= ' '.$cssobj[1].'='.$value;
+		else
+			$css .= $cssobj[1].':'.$value.'; ';
+	}
+ }
+ return $css;
+}
+#
+function getdom($domname)
+{
+ return getcss($domname, true);
+}
+#
+function htmlhead($mcerr, $checkapi, $rig, $pg = null, $noscript = false)
+{
+ global $doctype, $title, $miner_font_family, $miner_font_size;
+ global $bad_font_family, $bad_font_size;
+ global $error, $readonly, $poolinputs, $here;
+ global $ignorerefresh, $autorefresh;
+
+ $extraparams = '';
+ if ($rig != null && $rig != '')
+	$extraparams = "&rig=$rig";
+ else
+	if ($pg != null && $pg != '')
+		$extraparams = "&pg=$pg";
+
+ if ($ignorerefresh == true || $autorefresh == 0)
+	$refreshmeta = '';
+ else
+ {
+	$url = "$here?ref=$autorefresh$extraparams";
+	$refreshmeta = "\n<meta http-equiv='refresh' content='$autorefresh;url=$url'>";
+ }
+
+ if ($readonly === false && $checkapi === true)
+ {
+	$error = null;
+	$access = api($rig, 'privileged');
+	if ($error != null
+	||  !isset($access['STATUS']['STATUS'])
+	||  $access['STATUS']['STATUS'] != 'S')
+		$readonly = true;
+ }
+ $miner_font = "font-family:$miner_font_family; font-size:$miner_font_size;";
+ $bad_font = "font-family:$bad_font_family; font-size:$bad_font_size;";
+
+ echo "$doctype<html><head>$refreshmeta
+<title>$title</title>
+<style type='text/css'>
+td { $miner_font ".getcss('td')."}
+td.two { $miner_font ".getcss('td.two')."}
+td.h { $miner_font ".getcss('td.h')."}
+td.err { $miner_font ".getcss('td.err')."}
+td.bad { $bad_font ".getcss('td.bad')."}
+td.warn { $miner_font ".getcss('td.warn')."}
+td.sta { $miner_font ".getcss('td.sta')."}
+td.tot { $miner_font ".getcss('td.tot')."}
+td.lst { $miner_font ".getcss('td.lst')."}
+td.hi { $miner_font ".getcss('td.hi')."}
+td.lo { $miner_font ".getcss('td.lo')."}
+</style>
+</head><body".getdom('body').">\n";
+if ($noscript === false)
+{
+echo "<script type='text/javascript'>
+function pr(a,m){if(m!=null){if(!confirm(m+'?'))return}window.location='$here?ref=$autorefresh'+a}\n";
+
+if ($ignorerefresh == false)
+ echo "function prr(a){if(a){v=document.getElementById('refval').value}else{v=0}window.location='$here?ref='+v+'$extraparams'}\n";
+
+ if ($readonly === false && $checkapi === true)
+ {
+echo "function prc(a,m){pr('&arg='+a,m)}
+function prs(a,r){var c=a.substr(3);var z=c.split('|',2);var m=z[0].substr(0,1).toUpperCase()+z[0].substr(1)+' GPU '+z[1];prc(a+'&rig='+r,m)}
+function prs2(a,n,r){var v=document.getElementById('gi'+n).value;var c=a.substr(3);var z=c.split('|',2);var m='Set GPU '+z[1]+' '+z[0].substr(0,1).toUpperCase()+z[0].substr(1)+' to '+v;prc(a+','+v+'&rig='+r,m)}\n";
+	if ($poolinputs === true)
+		echo "function cbs(s){var t=s.replace(/\\\\/g,'\\\\\\\\'); return t.replace(/,/g, '\\\\,')}\nfunction pla(r){var u=document.getElementById('purl').value;var w=document.getElementById('pwork').value;var p=document.getElementById('ppass').value;pr('&rig='+r+'&arg=addpoo
