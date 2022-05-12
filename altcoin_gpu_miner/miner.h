@@ -1331,3 +1331,289 @@ struct pool {
 
 	int curls;
 	pthread_cond_t cr_cond;
+	struct list_head curlring;
+
+	time_t last_share_time;
+	double last_share_diff;
+	uint64_t best_diff;
+
+	struct cgminer_stats cgminer_stats;
+	struct cgminer_pool_stats cgminer_pool_stats;
+
+	/* The last block this particular pool knows about */
+	char prev_block[32];
+
+	/* Stratum variables */
+	char *stratum_url;
+	char *stratum_port;
+	struct addrinfo stratum_hints;
+	SOCKETTYPE sock;
+	char *sockbuf;
+	size_t sockbuf_size;
+	char *sockaddr_url; /* stripped url used for sockaddr */
+	char *sockaddr_proxy_url;
+	char *sockaddr_proxy_port;
+
+	char *nonce1;
+	unsigned char *nonce1bin;
+	size_t n1_len;
+	uint64_t nonce2;
+	int n2size;
+	char *sessionid;
+	bool has_stratum;
+	bool stratum_active;
+	bool stratum_init;
+	bool stratum_notify;
+	struct stratum_work swork;
+	pthread_t stratum_sthread;
+	pthread_t stratum_rthread;
+	pthread_mutex_t stratum_lock;
+	struct thread_q *stratum_q;
+	int sshares; /* stratum shares submitted waiting on response */
+
+	/* GBT  variables */
+	bool has_gbt;
+	cglock_t gbt_lock;
+	unsigned char previousblockhash[32];
+	unsigned char gbt_target[32];
+	char *coinbasetxn;
+	char *longpollid;
+	char *gbt_workid;
+	int gbt_expires;
+	uint32_t gbt_version;
+	uint32_t curtime;
+	uint32_t gbt_bits;
+	unsigned char *txn_hashes;
+	int gbt_txns;
+	int coinbase_len;
+
+	/* Shared by both stratum & GBT */
+	unsigned char *coinbase;
+	int nonce2_offset;
+	unsigned char header_bin[128];
+	int merkle_offset;
+
+	struct timeval tv_lastwork;
+};
+
+#define GETWORK_MODE_TESTPOOL 'T'
+#define GETWORK_MODE_POOL 'P'
+#define GETWORK_MODE_LP 'L'
+#define GETWORK_MODE_BENCHMARK 'B'
+#define GETWORK_MODE_STRATUM 'S'
+#define GETWORK_MODE_GBT 'G'
+
+struct work {
+	unsigned char	data[128];
+	unsigned char	midstate[32];
+	unsigned char	target[32];
+	unsigned char	hash[32];
+
+#ifdef USE_SCRYPT
+	unsigned char	device_target[32];
+#endif
+	double		device_diff;
+	uint64_t	share_diff;
+
+	int		rolls;
+	int		drv_rolllimit; /* How much the driver can roll ntime */
+
+	dev_blk_ctx	blk;
+
+	struct thr_info	*thr;
+	int		thr_id;
+	struct pool	*pool;
+	struct timeval	tv_staged;
+
+	bool		mined;
+	bool		clone;
+	bool		cloned;
+	int		rolltime;
+	bool		longpoll;
+	bool		stale;
+	bool		mandatory;
+	bool		block;
+
+	bool		stratum;
+	char 		*job_id;
+	uint64_t	nonce2;
+	size_t		nonce2_len;
+	char		*ntime;
+	double		sdiff;
+	char		*nonce1;
+
+	bool		gbt;
+	char		*coinbase;
+	int		gbt_txns;
+
+	unsigned int	work_block;
+	int		id;
+	UT_hash_handle	hh;
+
+	double		work_difficulty;
+
+	// Allow devices to identify work if multiple sub-devices
+	int		subid;
+	// Allow devices to flag work for their own purposes
+	bool		devflag;
+	// Allow devices to timestamp work for their own purposes
+	struct timeval	tv_stamp;
+
+	struct timeval	tv_getwork;
+	struct timeval	tv_getwork_reply;
+	struct timeval	tv_cloned;
+	struct timeval	tv_work_start;
+	struct timeval	tv_work_found;
+	char		getwork_mode;
+};
+
+#ifdef USE_MODMINER 
+struct modminer_fpga_state {
+	bool work_running;
+	struct work running_work;
+	struct timeval tv_workstart;
+	uint32_t hashes;
+
+	char next_work_cmd[46];
+	char fpgaid;
+
+	bool overheated;
+	bool new_work;
+
+	uint32_t shares;
+	uint32_t shares_last_hw;
+	uint32_t hw_errors;
+	uint32_t shares_to_good;
+	uint32_t timeout_fail;
+	uint32_t success_more;
+	struct timeval last_changed;
+	struct timeval last_nonce;
+	struct timeval first_work;
+	bool death_stage_one;
+	bool tried_two_byte_temp;
+	bool one_byte_temp;
+};
+#endif
+
+#define TAILBUFSIZ 64
+
+#define tailsprintf(buf, bufsiz, fmt, ...) do { \
+	char tmp13[TAILBUFSIZ]; \
+	size_t len13, buflen = strlen(buf); \
+	snprintf(tmp13, sizeof(tmp13), fmt, ##__VA_ARGS__); \
+	len13 = strlen(tmp13); \
+	if ((buflen + len13) >= bufsiz) \
+		quit(1, "tailsprintf buffer overflow in %s %s line %d", __FILE__, __func__, __LINE__); \
+	strcat(buf, tmp13); \
+} while (0)
+
+extern void get_datestamp(char *, size_t, struct timeval *);
+extern void inc_hw_errors(struct thr_info *thr);
+extern bool test_nonce(struct work *work, uint32_t nonce);
+extern bool test_nonce_diff(struct work *work, uint32_t nonce, double diff);
+extern void submit_tested_work(struct thr_info *thr, struct work *work);
+extern bool submit_nonce(struct thr_info *thr, struct work *work, uint32_t nonce);
+extern bool submit_noffset_nonce(struct thr_info *thr, struct work *work, uint32_t nonce,
+			  int noffset);
+extern struct work *get_work(struct thr_info *thr, const int thr_id);
+extern struct work *get_queued(struct cgpu_info *cgpu);
+extern struct work *__find_work_bymidstate(struct work *que, char *midstate, size_t midstatelen, char *data, int offset, size_t datalen);
+extern struct work *find_queued_work_bymidstate(struct cgpu_info *cgpu, char *midstate, size_t midstatelen, char *data, int offset, size_t datalen);
+extern struct work *clone_queued_work_bymidstate(struct cgpu_info *cgpu, char *midstate, size_t midstatelen, char *data, int offset, size_t datalen);
+extern void __work_completed(struct cgpu_info *cgpu, struct work *work);
+extern void work_completed(struct cgpu_info *cgpu, struct work *work);
+extern struct work *take_queued_work_bymidstate(struct cgpu_info *cgpu, char *midstate, size_t midstatelen, char *data, int offset, size_t datalen);
+extern void hash_driver_work(struct thr_info *mythr);
+extern void hash_queued_work(struct thr_info *mythr);
+extern void _wlog(const char *str);
+extern void _wlogprint(const char *str);
+extern int curses_int(const char *query);
+extern char *curses_input(const char *query);
+extern void kill_work(void);
+extern void switch_pools(struct pool *selected);
+extern void discard_work(struct work *work);
+extern void remove_pool(struct pool *pool);
+extern void write_config(FILE *fcfg);
+extern void zero_bestshare(void);
+extern void zero_stats(void);
+extern void default_save_file(char *filename);
+extern bool log_curses_only(int prio, const char *datetime, const char *str);
+extern void clear_logwin(void);
+extern void logwin_update(void);
+extern bool pool_tclear(struct pool *pool, bool *var);
+extern struct thread_q *tq_new(void);
+extern void tq_free(struct thread_q *tq);
+extern bool tq_push(struct thread_q *tq, void *data);
+extern void *tq_pop(struct thread_q *tq, const struct timespec *abstime);
+extern void tq_freeze(struct thread_q *tq);
+extern void tq_thaw(struct thread_q *tq);
+extern bool successful_connect;
+extern void adl(void);
+extern void app_restart(void);
+extern void clean_work(struct work *work);
+extern void free_work(struct work *work);
+extern struct work *copy_work_noffset(struct work *base_work, int noffset);
+#define copy_work(work_in) copy_work_noffset(work_in, 0)
+extern struct thr_info *get_thread(int thr_id);
+extern struct cgpu_info *get_devices(int id);
+
+enum api_data_type {
+	API_ESCAPE,
+	API_STRING,
+	API_CONST,
+	API_UINT8,
+	API_UINT16,
+	API_INT,
+	API_UINT,
+	API_UINT32,
+	API_UINT64,
+	API_DOUBLE,
+	API_ELAPSED,
+	API_BOOL,
+	API_TIMEVAL,
+	API_TIME,
+	API_MHS,
+	API_MHTOTAL,
+	API_TEMP,
+	API_UTILITY,
+	API_FREQ,
+	API_VOLTS,
+	API_HS,
+	API_DIFF,
+	API_PERCENT
+};
+
+struct api_data {
+	enum api_data_type type;
+	char *name;
+	void *data;
+	bool data_was_malloc;
+	struct api_data *prev;
+	struct api_data *next;
+};
+
+extern struct api_data *api_add_escape(struct api_data *root, char *name, char *data, bool copy_data);
+extern struct api_data *api_add_string(struct api_data *root, char *name, char *data, bool copy_data);
+extern struct api_data *api_add_const(struct api_data *root, char *name, const char *data, bool copy_data);
+extern struct api_data *api_add_uint8(struct api_data *root, char *name, uint8_t *data, bool copy_data);
+extern struct api_data *api_add_uint16(struct api_data *root, char *name, uint16_t *data, bool copy_data);
+extern struct api_data *api_add_int(struct api_data *root, char *name, int *data, bool copy_data);
+extern struct api_data *api_add_uint(struct api_data *root, char *name, unsigned int *data, bool copy_data);
+extern struct api_data *api_add_uint32(struct api_data *root, char *name, uint32_t *data, bool copy_data);
+extern struct api_data *api_add_uint64(struct api_data *root, char *name, uint64_t *data, bool copy_data);
+extern struct api_data *api_add_double(struct api_data *root, char *name, double *data, bool copy_data);
+extern struct api_data *api_add_elapsed(struct api_data *root, char *name, double *data, bool copy_data);
+extern struct api_data *api_add_bool(struct api_data *root, char *name, bool *data, bool copy_data);
+extern struct api_data *api_add_timeval(struct api_data *root, char *name, struct timeval *data, bool copy_data);
+extern struct api_data *api_add_time(struct api_data *root, char *name, time_t *data, bool copy_data);
+extern struct api_data *api_add_mhs(struct api_data *root, char *name, double *data, bool copy_data);
+extern struct api_data *api_add_mhstotal(struct api_data *root, char *name, double *data, bool copy_data);
+extern struct api_data *api_add_temp(struct api_data *root, char *name, float *data, bool copy_data);
+extern struct api_data *api_add_utility(struct api_data *root, char *name, double *data, bool copy_data);
+extern struct api_data *api_add_freq(struct api_data *root, char *name, double *data, bool copy_data);
+extern struct api_data *api_add_volts(struct api_data *root, char *name, float *data, bool copy_data);
+extern struct api_data *api_add_hs(struct api_data *root, char *name, double *data, bool copy_data);
+extern struct api_data *api_add_diff(struct api_data *root, char *name, double *data, bool copy_data);
+extern struct api_data *api_add_percent(struct api_data *root, char *name, double *data, bool copy_data);
+
+#endif /* __MINER_H__ */
