@@ -353,4 +353,322 @@ echo "function prc(a,m){pr('&arg='+a,m)}
 function prs(a,r){var c=a.substr(3);var z=c.split('|',2);var m=z[0].substr(0,1).toUpperCase()+z[0].substr(1)+' GPU '+z[1];prc(a+'&rig='+r,m)}
 function prs2(a,n,r){var v=document.getElementById('gi'+n).value;var c=a.substr(3);var z=c.split('|',2);var m='Set GPU '+z[1]+' '+z[0].substr(0,1).toUpperCase()+z[0].substr(1)+' to '+v;prc(a+','+v+'&rig='+r,m)}\n";
 	if ($poolinputs === true)
-		echo "function cbs(s){var t=s.replace(/\\\\/g,'\\\\\\\\'); return t.replace(/,/g, '\\\\,')}\nfunction pla(r){var u=document.getElementById('purl').value;var w=document.getElementById('pwork').value;var p=document.getElementById('ppass').value;pr('&rig='+r+'&arg=addpoo
+		echo "function cbs(s){var t=s.replace(/\\\\/g,'\\\\\\\\'); return t.replace(/,/g, '\\\\,')}\nfunction pla(r){var u=document.getElementById('purl').value;var w=document.getElementById('pwork').value;var p=document.getElementById('ppass').value;pr('&rig='+r+'&arg=addpool|'+cbs(u)+','+cbs(w)+','+cbs(p),'Add Pool '+u)}\nfunction psp(r){var p=document.getElementById('prio').value;pr('&rig='+r+'&arg=poolpriority|'+p,'Set Pool Priorities to '+p)}\n";
+ }
+echo "</script>\n";
+}
+?>
+<table width=100% height=100% border=0 cellpadding=0 cellspacing=0 summary='Mine'>
+<tr><td align=center valign=top>
+<table border=0 cellpadding=4 cellspacing=0 summary='Mine'>
+<?php
+ echo $mcerr;
+}
+#
+function minhead($mcerr = '')
+{
+ global $readonly;
+ $readonly = true;
+ htmlhead($mcerr, false, null, null, true);
+}
+#
+global $haderror, $error;
+$haderror = false;
+$error = null;
+#
+function mcastrigs()
+{
+ global $rigs, $mcastexpect, $mcastaddr, $mcastport, $mcastcode;
+ global $mcastlistport, $mcasttimeout, $mcastretries, $error;
+
+ $listname = "0.0.0.0";
+
+ $rigs = array();
+
+ $rep_soc = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
+ if ($rep_soc === false || $rep_soc == null)
+ {
+	$msg = "ERR: mcast listen socket create(UDP) failed";
+	if ($rigipsecurity === false)
+	{
+		$error = socket_strerror(socket_last_error());
+		$error = "$msg '$error'\n";
+	}
+	else
+		$error = "$msg\n";
+
+	return;
+ }
+
+ $res = socket_bind($rep_soc, $listname, $mcastlistport);
+ if ($res === false)
+ {
+	$msg1 = "ERR: mcast listen socket bind(";
+	$msg2 = ") failed";
+	if ($rigipsecurity === false)
+	{
+		$error = socket_strerror(socket_last_error());
+		$error = "$msg1$listname,$mcastlistport$msg2 '$error'\n";
+	}
+	else
+		$error = "$msg1$msg2\n";
+
+	socket_close($rep_soc);
+	return;
+ }
+
+ $retries = $mcastretries;
+ $doretry = ($retries > 0);
+ do
+ {
+	$mcast_soc = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
+	if ($mcast_soc === false || $mcast_soc == null)
+	{
+		$msg = "ERR: mcast send socket create(UDP) failed";
+		if ($rigipsecurity === false)
+		{
+			$error = socket_strerror(socket_last_error());
+			$error = "$msg '$error'\n";
+		}
+		else
+			$error = "$msg\n";
+
+		socket_close($rep_soc);
+		return;
+	}
+
+	$buf = "cgminer-$mcastcode-$mcastlistport";
+	socket_sendto($mcast_soc, $buf, strlen($buf), 0, $mcastaddr, $mcastport);
+	socket_close($mcast_soc);
+
+	$stt = microtime(true);
+	while (true)
+	{
+		$got = @socket_recvfrom($rep_soc, $buf, 32, MSG_DONTWAIT, $ip, $p);
+		if ($got !== false && $got > 0)
+		{
+			$ans = explode('-', $buf, 4);
+			if (count($ans) >= 3 && $ans[0] == 'cgm' && $ans[1] == 'FTW')
+			{
+				$rp = intval($ans[2]);
+
+				if (count($ans) > 3)
+					$mdes = str_replace("\0", '', $ans[3]);
+				else
+					$mdes = '';
+
+				if (strlen($mdes) > 0)
+					$rig = "$ip:$rp:$mdes";
+				else
+					$rig = "$ip:$rp";
+
+				if (!in_array($rig, $rigs))
+					$rigs[] = $rig;
+			}
+		}
+		if ((microtime(true) - $stt) >= $mcasttimeout)
+			break;
+
+		usleep(100000);
+	}
+
+	if ($mcastexpect > 0 && count($rigs) >= $mcastexpect)
+		$doretry = false;
+
+ } while ($doretry && --$retries > 0);
+
+ socket_close($rep_soc);
+}
+#
+function getrigs()
+{
+ global $rigs;
+
+ mcastrigs();
+
+ sort($rigs);
+}
+#
+function getsock($rig, $addr, $port)
+{
+ global $rigipsecurity;
+ global $haderror, $error, $socksndtimeoutsec, $sockrcvtimeoutsec;
+
+ $error = null;
+ $socket = null;
+ $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+ if ($socket === false || $socket === null)
+ {
+	$haderror = true;
+	if ($rigipsecurity === false)
+	{
+		$error = socket_strerror(socket_last_error());
+		$msg = "socket create(TCP) failed";
+		$error = "ERR: $msg '$error'\n";
+	}
+	else
+		$error = "ERR: socket create(TCP) failed\n";
+
+	return null;
+ }
+
+ // Ignore if this fails since the socket connect may work anyway
+ //  and nothing is gained by aborting if the option cannot be set
+ //  since we don't know in advance if it can connect
+ socket_set_option($socket, SOL_SOCKET, SO_SNDTIMEO, array('sec' => $socksndtimeoutsec, 'usec' => 0));
+ socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, array('sec' => $sockrcvtimeoutsec, 'usec' => 0));
+
+ $res = socket_connect($socket, $addr, $port);
+ if ($res === false)
+ {
+	$haderror = true;
+	if ($rigipsecurity === false)
+	{
+		$error = socket_strerror(socket_last_error());
+		$msg = "socket connect($addr,$port) failed";
+		$error = "ERR: $msg '$error'\n";
+	}
+	else
+		$error = "ERR: socket connect($rig) failed\n";
+
+	socket_close($socket);
+	return null;
+ }
+ return $socket;
+}
+#
+function readsockline($socket)
+{
+ $line = '';
+ while (true)
+ {
+	$byte = socket_read($socket, 1);
+	if ($byte === false || $byte === '')
+		break;
+	if ($byte === "\0")
+		break;
+	$line .= $byte;
+ }
+ return $line;
+}
+#
+function api_convert_escape($str)
+{
+ $res = '';
+ $len = strlen($str);
+ for ($i = 0; $i < $len; $i++)
+ {
+	$ch = substr($str, $i, 1);
+	if ($ch != '\\' || $i == ($len-1))
+		$res .= $ch;
+	else
+	{
+		$i++;
+		$ch = substr($str, $i, 1);
+		switch ($ch)
+		{
+		case '|':
+			$res .= "\1";
+			break;
+		case '\\':
+			$res .= "\2";
+			break;
+		case '=':
+			$res .= "\3";
+			break;
+		case ',':
+			$res .= "\4";
+			break;
+		default:
+			$res .= $ch;
+		}
+	}
+ }
+ return $res;
+}
+#
+function revert($str)
+{
+ return str_replace(array("\1", "\2", "\3", "\4"), array("|", "\\", "=", ","), $str);
+}
+#
+function api($rig, $cmd)
+{
+ global $haderror, $error;
+ global $miner, $port, $hidefields;
+
+ $socket = getsock($rig, $miner, $port);
+ if ($socket != null)
+ {
+	socket_write($socket, $cmd, strlen($cmd));
+	$line = readsockline($socket);
+	socket_close($socket);
+
+	if (strlen($line) == 0)
+	{
+		$haderror = true;
+		$error = "WARN: '$cmd' returned nothing\n";
+		return $line;
+	}
+
+#	print "$cmd returned '$line'\n";
+
+	$line = api_convert_escape($line);
+
+	$data = array();
+
+	$objs = explode('|', $line);
+	foreach ($objs as $obj)
+	{
+		if (strlen($obj) > 0)
+		{
+			$items = explode(',', $obj);
+			$item = $items[0];
+			$id = explode('=', $items[0], 2);
+			if (count($id) == 1 or !ctype_digit($id[1]))
+				$name = $id[0];
+			else
+				$name = $id[0].$id[1];
+
+			if (strlen($name) == 0)
+				$name = 'null';
+
+			$sectionname = preg_replace('/\d/', '', $name);
+
+			if (isset($data[$name]))
+			{
+				$num = 1;
+				while (isset($data[$name.$num]))
+					$num++;
+				$name .= $num;
+			}
+
+			$counter = 0;
+			foreach ($items as $item)
+			{
+				$id = explode('=', $item, 2);
+
+				if (isset($hidefields[$sectionname.'.'.$id[0]]))
+					continue;
+
+				if (count($id) == 2)
+					$data[$name][$id[0]] = revert($id[1]);
+				else
+					$data[$name][$counter] = $id[0];
+
+				$counter++;
+			}
+		}
+	}
+	return $data;
+ }
+ return null;
+}
+#
+function getparam($name, $both = false)
+{
+ $a = null;
+ if (isset($_POST[$name]))
+	$a = $_POST[$name];
+
+ if (($both ===
