@@ -671,4 +671,331 @@ function getparam($name, $both = false)
  if (isset($_POST[$name]))
 	$a = $_POST[$name];
 
- if (($both ===
+ if (($both === true) and ($a === null))
+ {
+	if (isset($_GET[$name]))
+		$a = $_GET[$name];
+ }
+
+ if ($a == '' || $a == null)
+	return null;
+
+ // limit to 1K just to be safe
+ return substr($a, 0, 1024);
+}
+#
+function newtable()
+{
+ global $tablebegin, $rownum;
+ echo $tablebegin;
+ $rownum = 0;
+}
+#
+function newrow()
+{
+ echo '<tr>';
+}
+#
+function othrow($row)
+{
+ return "<tr>$row</tr>";
+}
+#
+function otherrow($row)
+{
+ echo othrow($row);
+}
+#
+function endrow()
+{
+ global $rownum;
+ echo '</tr>';
+ $rownum++;
+}
+#
+function endtable()
+{
+ global $tableend;
+ echo $tableend;
+}
+#
+function classlastshare($when, $alldata, $warnclass, $errorclass)
+{
+ global $checklastshare;
+
+ if ($checklastshare === false)
+	return '';
+
+ if ($when == 0)
+	return '';
+
+ if (!isset($alldata['MHS av']))
+	return '';
+
+ if ($alldata['MHS av'] == 0)
+	return '';
+
+ if (!isset($alldata['Last Share Time']))
+	return '';
+
+ if (!isset($alldata['Last Share Difficulty']))
+	return '';
+
+ $expected = pow(2, 32) / ($alldata['MHS av'] * pow(10, 6));
+
+ // If the share difficulty changes while waiting on a share,
+ // this calculation will of course be incorrect
+ $expected *= $alldata['Last Share Difficulty'];
+
+ $howlong = $when - $alldata['Last Share Time'];
+ if ($howlong < 1)
+	$howlong = 1;
+
+ if ($howlong > ($expected * 12))
+	return $errorclass;
+
+ if ($howlong > ($expected * 8))
+	return $warnclass;
+
+ return '';
+}
+#
+function endzero($num)
+{
+ $rep = preg_replace('/0*$/', '', $num);
+ if ($rep === '')
+	$rep = '0';
+ return $rep;
+}
+#
+function fmt($section, $name, $value, $when, $alldata)
+{
+ global $dfmt, $rownum;
+
+ if ($alldata == null)
+	$alldata = array();
+
+ $errorclass = ' class=err';
+ $warnclass = ' class=warn';
+ $lstclass = ' class=lst';
+ $hiclass = ' class=hi';
+ $loclass = ' class=lo';
+ $c2class = ' class=two';
+ $totclass = ' class=tot';
+ $b = '&nbsp;';
+
+ $ret = $value;
+ $class = '';
+
+ $nams = explode('.', $name);
+ if (count($nams) > 1)
+	$name = $nams[count($nams)-1];
+
+ if ($value === null)
+	$ret = $b;
+ else
+	switch ($section.'.'.$name)
+	{
+	case 'GPU.Last Share Time':
+	case 'PGA.Last Share Time':
+	case 'ASC.Last Share Time':
+	case 'DEVS.Last Share Time':
+		if ($value == 0
+		||  (isset($alldata['Last Share Pool']) && $alldata['Last Share Pool'] == -1))
+		{
+			$ret = 'Never';
+			$class = $warnclass;
+		}
+		else
+		{
+			$ret = date('H:i:s', $value);
+			$class = classlastshare($when, $alldata, $warnclass, $errorclass);
+		}
+		break;
+	case 'GPU.Last Valid Work':
+	case 'PGA.Last Valid Work':
+	case 'ASC.Last Valid Work':
+	case 'DEVS.Last Valid Work':
+		if ($value == 0)
+			$ret = 'Never';
+		else
+			$ret = ($value - $when) . 's';
+		break;
+	case 'POOL.Last Share Time':
+		if ($value == 0)
+			$ret = 'Never';
+		else
+			$ret = date('H:i:s d-M', $value);
+		break;
+	case 'GPU.Last Share Pool':
+	case 'PGA.Last Share Pool':
+	case 'ASC.Last Share Pool':
+	case 'DEVS.Last Share Pool':
+		if ($value == -1)
+		{
+			$ret = 'None';
+			$class = $warnclass;
+		}
+		break;
+	case 'SUMMARY.Elapsed':
+	case 'STATS.Elapsed':
+		$s = $value % 60;
+		$value -= $s;
+		$value /= 60;
+		if ($value == 0)
+			$ret = $s.'s';
+		else
+		{
+			$m = $value % 60;
+			$value -= $m;
+			$value /= 60;
+			if ($value == 0)
+				$ret = sprintf("%dm$b%02ds", $m, $s);
+			else
+			{
+				$h = $value % 24;
+				$value -= $h;
+				$value /= 24;
+				if ($value == 0)
+					$ret = sprintf("%dh$b%02dm$b%02ds", $h, $m, $s);
+				else
+				{
+					if ($value == 1)
+						$days = '';
+					else
+						$days = 's';
+	
+					$ret = sprintf("%dday$days$b%02dh$b%02dm$b%02ds", $value, $h, $m, $s);
+				}
+			}
+		}
+		break;
+	case 'NOTIFY.Last Well':
+		if ($value == '0')
+		{
+			$ret = 'Never';
+			$class = $warnclass;
+		}
+		else
+			$ret = date('H:i:s', $value);
+		break;
+	case 'NOTIFY.Last Not Well':
+		if ($value == '0')
+			$ret = 'Never';
+		else
+		{
+			$ret = date('H:i:s', $value);
+			$class = $errorclass;
+		}
+		break;
+	case 'NOTIFY.Reason Not Well':
+		if ($value != 'None')
+			$class = $errorclass;
+		break;
+	case 'GPU.Utility':
+	case 'PGA.Utility':
+	case 'ASC.Utility':
+	case 'DEVS.Utility':
+	case 'SUMMARY.Utility':
+	case 'total.Utility':
+		$ret = $value.'/m';
+		if ($value == 0)
+			$class = $errorclass;
+		else
+			if (isset($alldata['Difficulty Accepted'])
+			&&  isset($alldata['Accepted'])
+			&&  isset($alldata['MHS av'])
+			&&  ($alldata['Difficulty Accepted'] > 0)
+			&&  ($alldata['Accepted'] > 0))
+			{
+				$expected = 60 * $alldata['MHS av'] * (pow(10, 6) / pow(2, 32));
+				if ($expected == 0)
+					$expected = 0.000001; // 1 H/s
+
+				$da = $alldata['Difficulty Accepted'];
+				$a = $alldata['Accepted'];
+				$expected /= ($da / $a);
+
+				$ratio = $value / $expected;
+				if ($ratio < 0.9)
+					$class = $loclass;
+				else
+					if ($ratio > 1.1)
+						$class = $hiclass;
+			}
+		break;
+	case 'SUMMARY.Work Utility':
+	case 'total.Work Utility':
+		$ret = $value.'/m';
+		break;
+	case 'GPU.Temperature':
+	case 'PGA.Temperature':
+	case 'ASC.Temperature':
+	case 'DEVS.Temperature':
+		$ret = $value.'&deg;C';
+		if (!isset($alldata['GPU']))
+		{
+			if ($value == 0)
+				$ret = '&nbsp;';
+			break;
+		}
+	case 'GPU.GPU Clock':
+	case 'DEVS.GPU Clock':
+	case 'GPU.Memory Clock':
+	case 'DEVS.Memory Clock':
+	case 'GPU.GPU Voltage':
+	case 'DEVS.GPU Voltage':
+	case 'GPU.GPU Activity':
+	case 'DEVS.GPU Activity':
+		if ($value == 0)
+			$class = $warnclass;
+		break;
+	case 'GPU.Fan Percent':
+	case 'DEVS.Fan Percent':
+		if ($value == 0)
+			$class = $warnclass;
+		else
+		{
+			if ($value == 100)
+				$class = $errorclass;
+			else
+				if ($value > 85)
+					$class = $warnclass;
+		}
+		break;
+	case 'GPU.Fan Speed':
+	case 'DEVS.Fan Speed':
+		if ($value == 0)
+			$class = $warnclass;
+		else
+			if (isset($alldata['Fan Percent']))
+			{
+				$test = $alldata['Fan Percent'];
+				if ($test == 100)
+					$class = $errorclass;
+				else
+					if ($test > 85)
+						$class = $warnclass;
+			}
+		break;
+	case 'GPU.MHS av':
+	case 'PGA.MHS av':
+	case 'ASC.MHS av':
+	case 'DEVS.MHS av':
+	case 'SUMMARY.MHS av':
+	case 'total.MHS av':
+		$parts = explode('.', $value, 2);
+		if (count($parts) == 1)
+			$dec = '';
+		else
+			$dec = '.'.$parts[1];
+		$ret = number_format((float)$parts[0]).$dec;
+
+		if ($value == 0)
+			$class = $errorclass;
+		else
+			if (isset($alldata['Difficulty Accepted'])
+			&&  isset($alldata['Accepted'])
+			&&  isset($alldata['Utility'])
+			&&  ($alldata['Difficulty Accepted'] > 0)
+			&&  ($alldata['Accepte
