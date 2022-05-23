@@ -1254,4 +1254,317 @@ function showtotal($total, $when, $oldvalues)
 function details($cmd, $list, $rig)
 {
  global $dfmt, $poolcmd, $readonly, $showndate;
- 
+ global $rownum, $rigtotals, $forcerigtotals, $singlerigsum;
+
+ $when = 0;
+
+ $stas = array('S' => 'Success', 'W' => 'Warning', 'I' => 'Informational', 'E' => 'Error', 'F' => 'Fatal');
+
+ newtable();
+
+ if ($showndate === false)
+ {
+	showdatetime();
+
+	endtable();
+	newtable();
+
+	$showndate = true;
+ }
+
+ if (isset($list['STATUS']))
+ {
+	newrow();
+	echo '<td>Computer: '.$list['STATUS']['Description'].'</td>';
+	if (isset($list['STATUS']['When']))
+	{
+		echo '<td>When: '.date($dfmt, $list['STATUS']['When']).'</td>';
+		$when = $list['STATUS']['When'];
+	}
+	$sta = $list['STATUS']['STATUS'];
+	echo '<td>Status: '.$stas[$sta].'</td>';
+	echo '<td>Message: '.$list['STATUS']['Msg'].'</td>';
+	endrow();
+ }
+
+ if ($rigtotals === true && isset($singlerigsum[$cmd]))
+	$dototal = $singlerigsum[$cmd];
+ else
+	$dototal = array();
+
+ $total = array();
+
+ $section = '';
+ $oldvalues = null;
+ foreach ($list as $item => $values)
+ {
+	if ($item == 'STATUS')
+		continue;
+
+	$sectionname = preg_replace('/\d/', '', $item);
+
+	// Handle 'devs' possibly containing >1 table
+	if ($sectionname != $section)
+	{
+		if ($oldvalues != null && count($total) > 0
+		&&  ($rownum > 2 || $forcerigtotals === true))
+			showtotal($total, $when, $oldvalues);
+
+		endtable();
+		newtable();
+		showhead($cmd, $values);
+		$section = $sectionname;
+	}
+
+	newrow();
+
+	foreach ($values as $name => $value)
+	{
+		list($showvalue, $class) = fmt($section, $name, $value, $when, $values);
+		echo "<td$class";
+		if ($rigtotals === true)
+			echo ' align=right';
+		echo ">$showvalue</td>";
+
+		if (isset($dototal[$name])
+		||  (isset($dototal['*']) and substr($name, 0, 1) == '*'))
+		{
+			if (isset($total[$name]))
+				$total[$name] += $value;
+			else
+				$total[$name] = $value;
+		}
+	}
+
+	if ($cmd == 'pools' && $readonly === false)
+	{
+		reset($values);
+		$pool = current($values);
+		foreach ($poolcmd as $name => $pcmd)
+		{
+			list($ignore, $class) = fmt('BUTTON', 'Pool', '', $when, $values);
+			echo "<td$class>";
+			if ($pool === false)
+				echo '&nbsp;';
+			else
+			{
+				echo "<input type=button value='Pool $pool'";
+				echo " onclick='prc(\"$pcmd|$pool&rig=$rig\",\"$name Pool $pool\")'>";
+			}
+			echo '</td>';
+		}
+	}
+	endrow();
+
+	$oldvalues = $values;
+ }
+
+ if ($oldvalues != null && count($total) > 0
+ &&  ($rownum > 2 || $forcerigtotals === true))
+	showtotal($total, $when, $oldvalues);
+
+ endtable();
+}
+#
+global $devs;
+$devs = null;
+#
+function gpubuttons($count, $rig)
+{
+ global $devs;
+
+ $basic = array( 'GPU', 'Enable', 'Disable', 'Restart' );
+
+ $options = array(	'intensity' => 'Intensity',
+			'fan' => 'Fan Percent',
+			'engine' => 'GPU Clock',
+			'mem' => 'Memory Clock',
+			'vddc' => 'GPU Voltage' );
+
+ newtable();
+ newrow();
+
+ foreach ($basic as $head)
+	echo "<td class=h>$head</td>";
+
+ foreach ($options as $name => $des)
+	echo "<td class=h nowrap>$des</td>";
+
+ $n = 0;
+ for ($c = 0; $c < $count; $c++)
+ {
+	endrow();
+	newrow();
+
+	foreach ($basic as $name)
+	{
+		list($ignore, $class) = fmt('BUTTON', 'GPU', '', 0, null);
+		echo "<td$class>";
+
+		if ($name == 'GPU')
+			echo $c;
+		else
+		{
+			echo "<input type=button value='$name $c' onclick='prs(\"gpu";
+			echo strtolower($name);
+			echo "|$c\",$rig)'>";
+		}
+
+		echo '</td>';
+	}
+
+	foreach ($options as $name => $des)
+	{
+		list($ignore, $class) = fmt('BUTTON', 'GPU', '', 0, null);
+		echo "<td$class>";
+
+		if (!isset($devs["GPU$c"][$des]))
+			echo '&nbsp;';
+		else
+		{
+			$value = $devs["GPU$c"][$des];
+			echo "<input type=button value='Set $c:' onclick='prs2(\"gpu$name|$c\",$n,$rig)'>";
+			echo "<input size=7 type=text name=gi$n value='$value' id=gi$n>";
+			$n++;
+		}
+
+		echo '</td>';
+	}
+
+ }
+ endrow();
+ endtable();
+}
+#
+function processgpus($rig)
+{
+ global $error;
+ global $warnfont, $warnoff;
+
+ $gpus = api($rig, 'gpucount');
+
+ if ($error != null)
+	otherrow("<td>Error getting GPU count: $warnfont$error$warnoff</td>");
+ else
+ {
+	if (!isset($gpus['GPUS']['Count']))
+	{
+		$rw = '<td>No GPU count returned: '.$warnfont;
+		$rw .= $gpus['STATUS']['STATUS'].' '.$gpus['STATUS']['Msg'];
+		$rw .= $warnoff.'</td>';
+		otherrow($rw);
+	}
+	else
+	{
+		$count = $gpus['GPUS']['Count'];
+		if ($count == 0)
+			otherrow('<td>No GPUs</td>');
+		else
+			gpubuttons($count, $rig);
+	}
+ }
+}
+#
+function showpoolinputs($rig, $ans)
+{
+ global $readonly, $poolinputs;
+
+ if ($readonly === true || $poolinputs === false)
+	return;
+
+ newtable();
+ newrow();
+
+ $inps = array('Pool URL' => array('purl', 20),
+		'Worker Name' => array('pwork', 10),
+		'Worker Password' => array('ppass', 10));
+ $b = '&nbsp;';
+
+ echo "<td align=right class=h> Add a pool: </td><td>";
+
+ foreach ($inps as $text => $name)
+	echo "$text: <input name='".$name[0]."' id='".$name[0]."' value='' type=text size=".$name[1]."> ";
+
+ echo "</td><td align=middle><input type=button value='Add' onclick='pla($rig)'></td>";
+
+ endrow();
+
+ if (count($ans) > 1)
+ {
+	newrow();
+
+	echo '<td align=right class=h> Set pool priorities: </td>';
+	echo "<td> Comma list of pool numbers: <input type=text name=prio id=prio size=20>";
+	echo "</td><td align=middle><input type=button value='Set' onclick='psp($rig)'></td>";
+
+	endrow();
+ }
+ endtable();
+}
+#
+function process($cmds, $rig)
+{
+ global $error, $devs;
+ global $warnfont, $warnoff;
+
+ $count = count($cmds);
+ foreach ($cmds as $cmd => $des)
+ {
+	$process = api($rig, $cmd);
+
+	if ($error != null)
+	{
+		otherrow("<td colspan=100>Error getting $des: $warnfont$error$warnoff</td>");
+		break;
+	}
+	else
+	{
+		details($cmd, $process, $rig);
+
+		if ($cmd == 'devs')
+			$devs = $process;
+
+		if ($cmd == 'pools')
+			showpoolinputs($rig, $process);
+
+		# Not after the last one
+		if (--$count > 0)
+			otherrow('<td><br><br></td>');
+	}
+ }
+}
+#
+function rigname($rig, $rigname)
+{
+ global $rigs;
+
+ if (isset($rigs[$rig]))
+ {
+	$parts = explode(':', $rigs[$rig], 3);
+	if (count($parts) == 3)
+		$rigname = $parts[2];
+ }
+
+ return $rigname;
+}
+#
+function riginput($rig, $rigname)
+{
+ $rigname = rigname($rig, $rigname);
+
+ return "<input type=button value='$rigname' onclick='pr(\"&rig=$rig\",null)'>";
+}
+#
+function rigbutton($rig, $rigname, $when, $row)
+{
+ list($value, $class) = fmt('BUTTON', 'Rig', '', $when, $row);
+
+ if ($rig === '')
+	$ri = '&nbsp;';
+ else
+	$ri = riginput($rig, $rigname);
+
+ return "<td align=middle$class>$ri</td>";
+}
+#
+function showrigs(
