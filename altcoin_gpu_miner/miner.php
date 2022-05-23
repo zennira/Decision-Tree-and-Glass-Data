@@ -998,4 +998,260 @@ function fmt($section, $name, $value, $when, $alldata)
 			&&  isset($alldata['Accepted'])
 			&&  isset($alldata['Utility'])
 			&&  ($alldata['Difficulty Accepted'] > 0)
-			&&  ($alldata['Accepte
+			&&  ($alldata['Accepted'] > 0))
+			{
+				$expected = 60 * $value * (pow(10, 6) / pow(2, 32));
+				if ($expected == 0)
+					$expected = 0.000001; // 1 H/s
+
+				$da = $alldata['Difficulty Accepted'];
+				$a = $alldata['Accepted'];
+				$expected /= ($da / $a);
+
+				$ratio = $alldata['Utility'] / $expected;
+				if ($ratio < 0.9)
+					$class = $hiclass;
+				else
+					if ($ratio > 1.1)
+						$class = $loclass;
+			}
+		break;
+	case 'GPU.Total MH':
+	case 'PGA.Total MH':
+	case 'ASC.Total MH':
+	case 'DEVS.Total MH':
+	case 'SUMMARY.Total MH':
+	case 'total.Total MH':
+	case 'SUMMARY.Getworks':
+	case 'POOL.Getworks':
+	case 'total.Getworks':
+	case 'GPU.Accepted':
+	case 'PGA.Accepted':
+	case 'ASC.Accepted':
+	case 'DEVS.Accepted':
+	case 'SUMMARY.Accepted':
+	case 'POOL.Accepted':
+	case 'total.Accepted':
+	case 'GPU.Rejected':
+	case 'PGA.Rejected':
+	case 'ASC.Rejected':
+	case 'DEVS.Rejected':
+	case 'SUMMARY.Rejected':
+	case 'POOL.Rejected':
+	case 'total.Rejected':
+	case 'SUMMARY.Local Work':
+	case 'total.Local Work':
+	case 'SUMMARY.Discarded':
+	case 'POOL.Discarded':
+	case 'total.Discarded':
+	case 'POOL.Diff1 Shares':
+	case 'total.Diff1 Shares':
+	case 'GPU.Diff1 Work':
+	case 'PGA.Diff1 Work':
+	case 'ASC.Diff1 Work':
+	case 'total.Diff1 Work':
+	case 'STATS.Times Sent':
+	case 'STATS.Bytes Sent':
+	case 'STATS.Net Bytes Sent':
+	case 'STATS.Times Recv':
+	case 'STATS.Bytes Recv':
+	case 'STATS.Net Bytes Recv':
+	case 'total.Times Sent':
+	case 'total.Bytes Sent':
+	case 'total.Net Bytes Sent':
+	case 'total.Times Recv':
+	case 'total.Bytes Recv':
+	case 'total.Net Bytes Recv':
+		$parts = explode('.', $value, 2);
+		if (count($parts) == 1)
+			$dec = '';
+		else
+			$dec = '.'.$parts[1];
+		$ret = number_format((float)$parts[0]).$dec;
+		break;
+	case 'STATS.Hs':
+	case 'STATS.W':
+	case 'STATS.history_time':
+	case 'STATS.Pool Wait':
+	case 'STATS.Pool Max':
+	case 'STATS.Pool Min':
+	case 'STATS.Pool Av':
+	case 'STATS.Min Diff':
+	case 'STATS.Max Diff':
+	case 'STATS.Work Diff':
+		$parts = explode('.', $value, 2);
+		if (count($parts) == 1)
+			$dec = '';
+		else
+			$dec = '.'.endzero($parts[1]);
+		$ret = number_format((float)$parts[0]).$dec;
+		break;
+	case 'GPU.Status':
+	case 'PGA.Status':
+	case 'ASC.Status':
+	case 'DEVS.Status':
+	case 'POOL.Status':
+		if ($value != 'Alive')
+			$class = $errorclass;
+		break;
+	case 'GPU.Enabled':
+	case 'PGA.Enabled':
+	case 'ASC.Enabled':
+	case 'ASC.Enabled':
+	case 'DEVS.Enabled':
+		if ($value != 'Y')
+			$class = $warnclass;
+		break;
+	case 'STATUS.When':
+	case 'COIN.Current Block Time':
+		$ret = date($dfmt, $value);
+		break;
+	case 'BUTTON.Rig':
+	case 'BUTTON.Pool':
+	case 'BUTTON.GPU':
+		$ret = $value;
+		break;
+	case 'SUMMARY.Difficulty Accepted':
+	case 'GPU.Difficulty Accepted':
+	case 'PGA.Difficulty Accepted':
+	case 'ASC.Difficulty Accepted':
+	case 'DEVS.Difficulty Accepted':
+	case 'POOL.Difficulty Accepted':
+	case 'total.Difficulty Accepted':
+	case 'SUMMARY.Difficulty Rejected':
+	case 'GPU.Difficulty Rejected':
+	case 'PGA.Difficulty Rejected':
+	case 'ASC.Difficulty Rejected':
+	case 'DEVS.Difficulty Rejected':
+	case 'POOL.Difficulty Rejected':
+	case 'total.Difficulty Rejected':
+	case 'SUMMARY.Difficulty Stale':
+	case 'POOL.Difficulty Stale':
+	case 'total.Difficulty Stale':
+	case 'GPU.Last Share Difficulty':
+	case 'PGA.Last Share Difficulty':
+	case 'ASC.Last Share Difficulty':
+	case 'DEVS.Last Share Difficulty':
+	case 'POOL.Last Share Difficulty':
+		if ($value != '')
+			$ret = number_format((float)$value, 2);
+		break;
+	case 'DEVS.Device Hardware%':
+	case 'DEVS.Device Rejected%':
+	case 'ASC.Device Hardware%':
+	case 'ASC.Device Rejected%':
+	case 'PGA.Device Hardware%':
+	case 'PGA.Device Rejected%':
+	case 'GPU.Device Hardware%':
+	case 'GPU.Device Rejected%':
+	case 'POOL.Pool Rejected%':
+	case 'POOL.Pool Stale%':
+	case 'SUMMARY.Device Hardware%':
+	case 'SUMMARY.Device Rejected%':
+	case 'SUMMARY.Pool Rejected%':
+	case 'SUMMARY.Pool Stale%':
+		if ($value != '')
+			$ret = number_format((float)$value, 2) . '%';
+		break;
+	case 'SUMMARY.Best Share':
+		if ($value != '')
+			$ret = number_format((float)$value);
+		break;
+	}
+
+ if ($section == 'NOTIFY' && substr($name, 0, 1) == '*' && $value != '0')
+	$class = $errorclass;
+
+ if ($class == '' && $section != 'POOL')
+	$class = classlastshare($when, $alldata, $lstclass, $lstclass);
+
+ if ($class == '' && $section == 'total')
+	$class = $totclass;
+
+ if ($class == '' && ($rownum % 2) == 0)
+	$class = $c2class;
+
+ if ($ret === '')
+	$ret = $b;
+
+ return array($ret, $class);
+}
+#
+global $poolcmd;
+$poolcmd = array(	'Switch to'	=> 'switchpool',
+			'Enable'	=> 'enablepool',
+			'Disable'	=> 'disablepool',
+			'Remove'	=> 'removepool' );
+#
+function showhead($cmd, $values, $justnames = false)
+{
+ global $poolcmd, $readonly;
+
+ newrow();
+
+ foreach ($values as $name => $value)
+ {
+	if ($name == '0' or $name == '')
+		$name = '&nbsp;';
+	echo "<td valign=bottom class=h>$name</td>";
+ }
+
+ if ($justnames === false && $cmd == 'pools' && $readonly === false)
+	foreach ($poolcmd as $name => $pcmd)
+		echo "<td valign=bottom class=h>$name</td>";
+
+ endrow();
+}
+#
+function showdatetime()
+{
+ global $dfmt;
+
+ otherrow('<td class=sta>Date: '.date($dfmt).'</td>');
+}
+#
+global $singlerigsum;
+$singlerigsum = array(
+ 'devs' => array('MHS av' => 1, 'MHS 5s' => 1, 'Accepted' => 1, 'Rejected' => 1,
+			'Hardware Errors' => 1, 'Utility' => 1, 'Total MH' => 1,
+			'Diff1 Shares' => 1, 'Diff1 Work' => 1, 'Difficulty Accepted' => 1,
+			'Difficulty Rejected' => 1),
+ 'pools' => array('Getworks' => 1, 'Accepted' => 1, 'Rejected' => 1, 'Discarded' => 1,
+			'Stale' => 1, 'Get Failures' => 1, 'Remote Failures' => 1,
+			'Diff1 Shares' => 1, 'Diff1 Work' => 1, 'Difficulty Accepted' => 1,
+			'Difficulty Rejected' => 1, 'Difficulty Stale' => 1),
+ 'notify' => array('*' => 1));
+#
+function showtotal($total, $when, $oldvalues)
+{
+ global $rigtotals;
+
+ list($showvalue, $class) = fmt('total', '', 'Total:', $when, null);
+ echo "<td$class align=right>$showvalue</td>";
+
+ $skipfirst = true;
+ foreach ($oldvalues as $name => $value)
+ {
+	if ($skipfirst === true)
+	{
+		$skipfirst = false;
+		continue;
+	}
+
+	if (isset($total[$name]))
+		$newvalue = $total[$name];
+	else
+		$newvalue = '';
+
+	list($showvalue, $class) = fmt('total', $name, $newvalue, $when, null);
+	echo "<td$class";
+	if ($rigtotals === true)
+		echo ' align=right';
+	echo ">$showvalue</td>";
+ }
+}
+#
+function details($cmd, $list, $rig)
+{
+ global $dfmt, $poolcmd, $readonly, $showndate;
+ 
