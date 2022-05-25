@@ -1879,4 +1879,270 @@ function doOne($rig, $preprocess)
 		'pools'   => 'pool list');
 
  if ($notify)
-	$cmds['notify'] = 'de
+	$cmds['notify'] = 'device status';
+
+ $cmds['config'] = 'cgminer config';
+
+ process($cmds, $rig);
+
+ if ($haderror == false && $readonly === false)
+	processgpus($rig);
+
+ if ($placebuttons == 'bot' || $placebuttons == 'both')
+	pagebuttons($rig, null);
+}
+#
+global $sectionmap;
+# map sections to their api command
+# DEVS is a special case that will match GPU, PGA or ASC
+# so you can have a single table with both in it
+# DATE is hard coded so not in here
+$sectionmap = array(
+	'RIGS' => 'version',
+	'SUMMARY' => 'summary',
+	'POOL' => 'pools',
+	'DEVS' => 'devs',
+	'GPU' => 'devs',	// You would normally use DEVS
+	'PGA' => 'devs',	// You would normally use DEVS
+	'ASC' => 'devs',	// You would normally use DEVS
+	'NOTIFY' => 'notify',
+	'DEVDETAILS' => 'devdetails',
+	'STATS' => 'stats',
+	'CONFIG' => 'config',
+	'COIN' => 'coin',
+	'USBSTATS' => 'usbstats');
+#
+function joinfields($section1, $section2, $join, $results)
+{
+ global $sectionmap;
+
+ $name1 = $sectionmap[$section1];
+ $name2 = $sectionmap[$section2];
+ $newres = array();
+
+ // foreach rig in section1
+ foreach ($results[$name1] as $rig => $result)
+ {
+	$status = null;
+
+	// foreach answer section in the rig api call
+	foreach ($result as $name1b => $fields1b)
+	{
+		if ($name1b == 'STATUS')
+		{
+			// remember the STATUS from section1
+			$status = $result[$name1b];
+			continue;
+		}
+
+		// foreach answer section in the rig api call (for the other api command)
+		foreach ($results[$name2][$rig] as $name2b => $fields2b)
+		{
+			if ($name2b == 'STATUS')
+				continue;
+
+			// If match the same field values of fields in $join
+			$match = true;
+			foreach ($join as $field)
+				if ($fields1b[$field] != $fields2b[$field])
+				{
+					$match = false;
+					break;
+				}
+
+			if ($match === true)
+			{
+				if ($status != null)
+				{
+					$newres[$rig]['STATUS'] = $status;
+					$status = null;
+				}
+
+				$subsection = $section1.'+'.$section2;
+				$subsection .= preg_replace('/[^0-9]/', '', $name1b.$name2b);
+
+				foreach ($fields1b as $nam => $val)
+					$newres[$rig][$subsection]["$section1.$nam"] = $val;
+				foreach ($fields2b as $nam => $val)
+					$newres[$rig][$subsection]["$section2.$nam"] = $val;
+			}
+		}
+	}
+ }
+ return $newres;
+}
+#
+function joinlr($section1, $section2, $join, $results)
+{
+ global $sectionmap;
+
+ $name1 = $sectionmap[$section1];
+ $name2 = $sectionmap[$section2];
+ $newres = array();
+
+ // foreach rig in section1
+ foreach ($results[$name1] as $rig => $result)
+ {
+	$status = null;
+
+	// foreach answer section in the rig api call
+	foreach ($result as $name1b => $fields1b)
+	{
+		if ($name1b == 'STATUS')
+		{
+			// remember the STATUS from section1
+			$status = $result[$name1b];
+			continue;
+		}
+
+		// Build L string to be matched
+		// : means a string constant otherwise it's a field name
+		$Lval = '';
+		foreach ($join['L'] as $field)
+		{
+			if (substr($field, 0, 1) == ':')
+				$Lval .= substr($field, 1);
+			else
+				$Lval .= $fields1b[$field];
+		}
+
+		// foreach answer section in the rig api call (for the other api command)
+		foreach ($results[$name2][$rig] as $name2b => $fields2b)
+		{
+			if ($name2b == 'STATUS')
+				continue;
+
+			// Build R string and compare
+			// : means a string constant otherwise it's a field name
+			$Rval = '';
+			foreach ($join['R'] as $field)
+			{
+				if (substr($field, 0, 1) == ':')
+					$Rval .= substr($field, 1);
+				else
+					$Rval .= $fields2b[$field];
+			}
+
+			if ($Lval === $Rval)
+			{
+				if ($status != null)
+				{
+					$newres[$rig]['STATUS'] = $status;
+					$status = null;
+				}
+
+				$subsection = $section1.'+'.$section2;
+				$subsection .= preg_replace('/[^0-9]/', '', $name1b.$name2b);
+
+				foreach ($fields1b as $nam => $val)
+					$newres[$rig][$subsection]["$section1.$nam"] = $val;
+				foreach ($fields2b as $nam => $val)
+					$newres[$rig][$subsection]["$section2.$nam"] = $val;
+			}
+		}
+	}
+ }
+ return $newres;
+}
+#
+function joinall($section1, $section2, $results)
+{
+ global $sectionmap;
+
+ $name1 = $sectionmap[$section1];
+ $name2 = $sectionmap[$section2];
+ $newres = array();
+
+ // foreach rig in section1
+ foreach ($results[$name1] as $rig => $result)
+ {
+	// foreach answer section in the rig api call
+	foreach ($result as $name1b => $fields1b)
+	{
+		if ($name1b == 'STATUS')
+		{
+			// copy the STATUS from section1
+			$newres[$rig][$name1b] = $result[$name1b];
+			continue;
+		}
+
+		// foreach answer section in the rig api call (for the other api command)
+		foreach ($results[$name2][$rig] as $name2b => $fields2b)
+		{
+			if ($name2b == 'STATUS')
+				continue;
+
+			$subsection = $section1.'+'.$section2;
+			$subsection .= preg_replace('/[^0-9]/', '', $name1b.$name2b);
+
+			foreach ($fields1b as $nam => $val)
+				$newres[$rig][$subsection]["$section1.$nam"] = $val;
+			foreach ($fields2b as $nam => $val)
+				$newres[$rig][$subsection]["$section2.$nam"] = $val;
+		}
+	}
+ }
+ return $newres;
+}
+#
+function joinsections($sections, $results, $errors)
+{
+ global $sectionmap;
+
+ // GPU's don't have Name,ID fields - so create them
+ foreach ($results as $section => $res)
+	foreach ($res as $rig => $result)
+		foreach ($result as $name => $fields)
+		{
+			$subname = preg_replace('/[0-9]/', '', $name);
+			if ($subname == 'GPU' and isset($result[$name]['GPU']))
+			{
+				$results[$section][$rig][$name]['Name'] = 'GPU';
+				$results[$section][$rig][$name]['ID'] = $result[$name]['GPU'];
+			}
+		}
+
+ foreach ($sections as $section => $fields)
+	if ($section != 'DATE' && !isset($sectionmap[$section]))
+	{
+		$both = explode('+', $section, 2);
+		if (count($both) > 1)
+		{
+			switch($both[0])
+			{
+			case 'SUMMARY':
+				switch($both[1])
+				{
+				case 'POOL':
+				case 'DEVS':
+				case 'CONFIG':
+				case 'COIN':
+					$sectionmap[$section] = $section;
+					$results[$section] = joinall($both[0], $both[1], $results);
+					break;
+				default:
+					$errors[] = "Error: Invalid section '$section'";
+					break;
+				}
+				break;
+			case 'DEVS':
+				switch($both[1])
+				{
+				case 'NOTIFY':
+				case 'DEVDETAILS':
+				case 'USBSTATS':
+					$join = array('Name', 'ID');
+					$sectionmap[$section] = $section;
+					$results[$section] = joinfields($both[0], $both[1], $join, $results);
+					break;
+				case 'STATS':
+					$join = array('L' => array('Name','ID'), 'R' => array('ID'));
+					$sectionmap[$section] = $section;
+					$results[$section] = joinlr($both[0], $both[1], $join, $results);
+					break;
+				default:
+					$errors[] = "Error: Invalid section '$section'";
+					break;
+				}
+				break;
+			
