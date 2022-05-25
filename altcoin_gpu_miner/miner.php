@@ -1567,4 +1567,316 @@ function rigbutton($rig, $rigname, $when, $row)
  return "<td align=middle$class>$ri</td>";
 }
 #
-function showrigs(
+function showrigs($anss, $headname, $rigname)
+{
+ $dthead = array($headname => 1, 'STATUS' => 1, 'Description' => 1, 'When' => 1, 'API' => 1, 'CGMiner' => 1);
+ showhead('', $dthead);
+
+ foreach ($anss as $rig => $ans)
+ {
+	if ($ans == null)
+		continue;
+
+	newrow();
+
+	$when = 0;
+	if (isset($ans['STATUS']['When']))
+		$when = $ans['STATUS']['When'];
+
+	foreach ($ans as $item => $row)
+	{
+		if ($item != 'STATUS' && $item != 'VERSION')
+			continue;
+
+		foreach ($dthead as $name => $x)
+		{
+			if ($item == 'STATUS' && $name == $headname)
+				echo rigbutton($rig, $rigname.$rig, $when, null);
+			else
+			{
+				if (isset($row[$name]))
+				{
+					list($showvalue, $class) = fmt('STATUS', $name, $row[$name], $when, null);
+					echo "<td$class align=right>$showvalue</td>";
+				}
+			}
+		}
+	}
+	endrow();
+ }
+}
+#
+# $head is a hack but this is just a demo anyway :)
+function doforeach($cmd, $des, $sum, $head, $datetime)
+{
+ global $miner, $port;
+ global $error, $readonly, $notify, $rigs;
+ global $warnfont, $warnoff, $dfmt;
+ global $rigerror;
+
+ $when = 0;
+
+ $header = $head;
+ $anss = array();
+
+ $count = 0;
+ $preverr = count($rigerror);
+ foreach ($rigs as $num => $rig)
+ {
+	$anss[$num] = null;
+
+	if (isset($rigerror[$rig]))
+		continue;
+
+	$parts = explode(':', $rig, 3);
+	if (count($parts) >= 2)
+	{
+		$miner = $parts[0];
+		$port = $parts[1];
+
+		if (count($parts) > 2)
+			$name = $parts[2];
+		else
+			$name = $num;
+
+		$ans = api($name, $cmd);
+
+		if ($error != null)
+		{
+			$rw = "<td colspan=100>Error on rig $name getting ";
+			$rw .= "$des: $warnfont$error$warnoff</td>";
+			otherrow($rw);
+			$rigerror[$rig] = $error;
+			$error = null;
+		}
+		else
+		{
+			$anss[$num] = $ans;
+			$count++;
+		}
+	}
+ }
+
+ if ($count == 0)
+ {
+	$rw = '<td>Failed to access any rigs successfully';
+	if ($preverr > 0)
+		$rw .= ' (or rigs had previous errors)';
+	$rw .= '</td>';
+	otherrow($rw);
+	return;
+ }
+
+ if ($datetime)
+ {
+	showdatetime();
+	endtable();
+	newtable();
+	showrigs($anss, '', 'Rig ');
+	endtable();
+	otherrow('<td><br><br></td>');
+	newtable();
+
+	return;
+ }
+
+ $total = array();
+
+ foreach ($anss as $rig => $ans)
+ {
+	if ($ans == null)
+		continue;
+
+	foreach ($ans as $item => $row)
+	{
+		if ($item == 'STATUS')
+			continue;
+
+		if (count($row) > count($header))
+		{
+			$header = $head;
+			foreach ($row as $name => $value)
+				if (!isset($header[$name]))
+					$header[$name] = '';
+		}
+
+		if ($sum != null)
+			foreach ($sum as $name)
+			{
+				if (isset($row[$name]))
+				{
+					if (isset($total[$name]))
+						$total[$name] += $row[$name];
+					else
+						$total[$name] = $row[$name];
+				}
+			}
+	}
+ }
+
+ if ($sum != null)
+	$anss['total']['total'] = $total;
+
+ showhead('', $header);
+
+ foreach ($anss as $rig => $ans)
+ {
+	if ($ans == null)
+		continue;
+
+	$when = 0;
+	if (isset($ans['STATUS']['When']))
+		$when = $ans['STATUS']['When'];
+
+	foreach ($ans as $item => $row)
+	{
+		if ($item == 'STATUS')
+			continue;
+
+		newrow();
+
+		$section = preg_replace('/\d/', '', $item);
+
+		foreach ($header as $name => $x)
+		{
+			if ($name == '')
+			{
+				if ($rig === 'total')
+				{
+					list($ignore, $class) = fmt($rig, '', '', $when, $row);
+					echo "<td align=right$class>Total:</td>";
+				}
+				else
+					echo rigbutton($rig, "Rig $rig", $when, $row);
+			}
+			else
+			{
+				if (isset($row[$name]))
+					$value = $row[$name];
+				else
+					$value = null;
+
+				list($showvalue, $class) = fmt($section, $name, $value, $when, $row);
+				echo "<td$class align=right>$showvalue</td>";
+			}
+		}
+		endrow();
+	}
+ }
+}
+#
+function refreshbuttons()
+{
+ global $ignorerefresh, $changerefresh, $autorefresh;
+
+ if ($ignorerefresh == false && $changerefresh == true)
+ {
+	echo '&nbsp;&nbsp;&nbsp;&nbsp;';
+	echo "<input type=button value='Auto Refresh:' onclick='prr(true)'>";
+	echo "<input type=text name='refval' id='refval' size=2 value='$autorefresh'>";
+	echo "<input type=button value='Off' onclick='prr(false)'>";
+ }
+}
+#
+function pagebuttons($rig, $pg)
+{
+ global $readonly, $rigs, $userlist, $ses;
+ global $allowcustompages, $customsummarypages;
+
+ if ($rig === null)
+ {
+	$prev = null;
+	$next = null;
+
+	if ($pg === null)
+		$refresh = '';
+	else
+		$refresh = "&pg=$pg";
+ }
+ else
+ {
+	switch (count($rigs))
+	{
+	case 0:
+	case 1:
+		$prev = null;
+		$next = null;
+		break;
+	case 2:
+		$prev = null;
+		$next = ($rig + 1) % count($rigs);
+		break;
+	default:
+		$prev = ($rig - 1) % count($rigs);
+		$next = ($rig + 1) % count($rigs);
+		break;
+	}
+
+	$refresh = "&rig=$rig";
+ }
+
+ echo '<tr><td><table cellpadding=0 cellspacing=0 border=0><tr><td nowrap>';
+ if ($userlist === null || isset($_SESSION[$ses]))
+ {
+	if ($prev !== null)
+		echo riginput($prev, 'Prev').'&nbsp;';
+	echo "<input type=button value='Refresh' onclick='pr(\"$refresh\",null)'>&nbsp;";
+	if ($next !== null)
+		echo riginput($next, 'Next').'&nbsp;';
+	echo '&nbsp;';
+	if (count($rigs) > 1)
+		echo "<input type=button value='Summary' onclick='pr(\"\",null)'>&nbsp;";
+ }
+
+ if ($allowcustompages === true)
+ {
+	if ($userlist === null || isset($_SESSION[$ses]))
+		$list = $customsummarypages;
+	else
+	{
+		if ($userlist !== null && isset($userlist['def']))
+			$list = array_flip($userlist['def']);
+		else
+			$list = array();
+	}
+
+	foreach ($list as $pagename => $data)
+		echo "<input type=button value='$pagename' onclick='pr(\"&pg=$pagename\",null)'>&nbsp;";
+ }
+
+ echo '</td><td width=100%>&nbsp;</td><td nowrap>';
+ if ($rig !== null && $readonly === false)
+ {
+	$rg = '';
+	if (count($rigs) > 1)
+		$rg = " Rig $rig";
+	echo "<input type=button value='Restart' onclick='prc(\"restart&rig=$rig\",\"Restart CGMiner$rg\")'>";
+	echo "&nbsp;<input type=button value='Quit' onclick='prc(\"quit&rig=$rig\",\"Quit CGMiner$rg\")'>";
+ }
+ refreshbuttons();
+ if (isset($_SESSION[$ses]))
+	echo "&nbsp;<input type=button value='Logout' onclick='pr(\"&logout=1\",null)'>";
+ else
+	if ($userlist !== null)
+		echo "&nbsp;<input type=button value='Login' onclick='pr(\"&login=1\",null)'>";
+
+ echo "</td></tr></table></td></tr>";
+}
+#
+function doOne($rig, $preprocess)
+{
+ global $haderror, $readonly, $notify, $rigs;
+ global $placebuttons;
+
+ if ($placebuttons == 'top' || $placebuttons == 'both')
+	pagebuttons($rig, null);
+
+ if ($preprocess != null)
+	process(array($preprocess => $preprocess), $rig);
+
+ $cmds = array(	'devs'    => 'device list',
+		'summary' => 'summary information',
+		'pools'   => 'pool list');
+
+ if ($notify)
+	$cmds['notify'] = 'de
