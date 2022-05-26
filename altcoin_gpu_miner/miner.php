@@ -2145,4 +2145,336 @@ function joinsections($sections, $results, $errors)
 					break;
 				}
 				break;
-			
+			case 'POOL':
+				switch($both[1])
+				{
+				case 'STATS':
+					$join = array('L' => array(':POOL','POOL'), 'R' => array('ID'));
+					$sectionmap[$section] = $section;
+					$results[$section] = joinlr($both[0], $both[1], $join, $results);
+					break;
+				default:
+					$errors[] = "Error: Invalid section '$section'";
+					break;
+				}
+				break;
+			default:
+				$errors[] = "Error: Invalid section '$section'";
+				break;
+			}
+		}
+		else
+			$errors[] = "Error: Invalid section '$section'";
+	}
+
+ return array($results, $errors);
+}
+#
+function secmatch($section, $field)
+{
+ if ($section == $field)
+	return true;
+
+ if ($section == 'DEVS'
+ &&  ($field == 'GPU' || $field == 'PGA' || $field == 'ASC'))
+	return true;
+
+ return false;
+}
+#
+function customset($showfields, $sum, $section, $rig, $isbutton, $result, $total)
+{
+ foreach ($result as $sec => $row)
+ {
+	$secname = preg_replace('/\d/', '', $sec);
+
+	if ($sec != 'total')
+		if (!secmatch($section, $secname))
+			continue;
+
+	newrow();
+
+	$when = 0;
+	if (isset($result['STATUS']['When']))
+		$when = $result['STATUS']['When'];
+
+
+	if ($isbutton)
+		echo rigbutton($rig, $rig, $when, $row);
+	else
+	{
+		list($ignore, $class) = fmt('total', '', '', $when, $row);
+		echo "<td align=middle$class>$rig</td>";
+	}
+
+	foreach ($showfields as $name => $one)
+	{
+		if (isset($row[$name]))
+		{
+			$value = $row[$name];
+
+			if (isset($sum[$section][$name]))
+			{
+				if (isset($total[$name]))
+					$total[$name] += $value;
+				else
+					$total[$name] = $value;
+			}
+		}
+		else
+		{
+			if ($sec == 'total' && isset($total[$name]))
+				$value = $total[$name];
+			else
+				$value = null;
+		}
+
+		if (strpos($secname, '+') === false)
+			list($showvalue, $class) = fmt($secname, $name, $value, $when, $row);
+		else
+		{
+			$parts = explode('.', $name, 2);
+			list($showvalue, $class) = fmt($parts[0], $parts[1], $value, $when, $row);
+		}
+
+		echo "<td$class align=right>$showvalue</td>";
+	}
+	endrow();
+ }
+ return $total;
+}
+#
+function docalc($func, $data)
+{
+ switch ($func)
+ {
+ case 'sum':
+	$tot = 0;
+	foreach ($data as $val)
+		$tot += $val;
+	return $tot;
+ case 'avg':
+	$tot = 0;
+	foreach ($data as $val)
+		$tot += $val;
+	return ($tot / count($data));
+ case 'min':
+	$ans = null;
+	foreach ($data as $val)
+		if ($ans === null)
+			$ans = $val;
+		else
+			if ($val < $ans)
+				$ans = $val;
+	return $ans;
+ case 'max':
+	$ans = null;
+	foreach ($data as $val)
+		if ($ans === null)
+			$ans = $val;
+		else
+			if ($val > $ans)
+				$ans = $val;
+	return $ans;
+ case 'lo':
+	$ans = null;
+	foreach ($data as $val)
+		if ($ans === null)
+			$ans = $val;
+		else
+			if (strcasecmp($val, $ans) < 0)
+				$ans = $val;
+	return $ans;
+ case 'hi':
+	$ans = null;
+	foreach ($data as $val)
+		if ($ans === null)
+			$ans = $val;
+		else
+			if (strcasecmp($val, $ans) > 0)
+				$ans = $val;
+	return $ans;
+ case 'count':
+	return count($data);
+ case 'any':
+ default:
+	return $data[0];
+ }
+}
+#
+function docompare($row, $test)
+{
+ // invalid $test data means true
+ if (count($test) < 2)
+	return true;
+
+ if (isset($row[$test[0]]))
+	$val = $row[$test[0]];
+ else
+	$val = null;
+
+ if ($test[1] == 'set')
+	return ($val !== null);
+
+ if ($val === null || count($test) < 3)
+	return true;
+
+ switch($test[1])
+ {
+ case '=':
+	return ($val == $test[2]);
+ case '<':
+	return ($val < $test[2]);
+ case '<=':
+	return ($val <= $test[2]);
+ case '>':
+	return ($val > $test[2]);
+ case '>=':
+	return ($val >= $test[2]);
+ case 'eq':
+	return (strcasecmp($val, $test[2]) == 0);
+ case 'lt':
+	return (strcasecmp($val, $test[2]) < 0);
+ case 'le':
+	return (strcasecmp($val, $test[2]) <= 0);
+ case 'gt':
+	return (strcasecmp($val, $test[2]) > 0);
+ case 'ge':
+	return (strcasecmp($val, $test[2]) >= 0);
+ default:
+	return true;
+ }
+}
+#
+function processcompare($which, $ext, $section, $res)
+{
+ if (isset($ext[$section][$which]))
+ {
+	$proc = $ext[$section][$which];
+	if ($proc !== null)
+	{
+		$res2 = array();
+		foreach ($res as $rig => $result)
+			foreach ($result as $sec => $row)
+			{
+				$secname = preg_replace('/\d/', '', $sec);
+				if (!secmatch($section, $secname))
+					$res2[$rig][$sec] = $row;
+				else
+				{
+					$keep = true;
+					foreach ($proc as $test)
+						if (!docompare($row, $test))
+						{
+							$keep = false;
+							break;
+						}
+					if ($keep)
+						$res2[$rig][$sec] = $row;
+				}
+			}
+
+		$res = $res2;
+	}
+ }
+ return $res;
+}
+#
+function ss($a, $b)
+{
+ $la = strlen($a);
+ $lb = strlen($b);
+ if ($la != $lb)
+	return $lb - $la;
+ return strcmp($a, $b);
+}
+#
+function genfld($row, $calc)
+{
+ uksort($row, "ss");
+
+ foreach ($row as $name => $value)
+	if (strstr($calc, $name) !== FALSE)
+		$calc = str_replace($name, $value, $calc);
+
+ eval("\$val = $calc;");
+
+ return $val;
+}
+#
+function dogen($ext, $section, &$res, &$fields)
+{
+ $gen = $ext[$section]['gen'];
+
+ foreach ($gen as $fld => $calc)
+	$fields[] = "GEN.$fld";
+
+ foreach ($res as $rig => $result)
+	foreach ($result as $sec => $row)
+	{
+		$secname = preg_replace('/\d/', '', $sec);
+		if (secmatch($section, $secname))
+			foreach ($gen as $fld => $calc)
+			{
+				$name = "GEN.$fld";
+
+				$val = genfld($row, $calc);
+
+				$res[$rig][$sec][$name] = $val;
+			}
+	}
+}
+#
+function processext($ext, $section, $res, &$fields)
+{
+ global $allowgen;
+
+ $res = processcompare('where', $ext, $section, $res);
+
+ if (isset($ext[$section]['group']))
+ {
+	$grp = $ext[$section]['group'];
+	$calc = $ext[$section]['calc'];
+	if ($grp !== null)
+	{
+		$interim = array();
+		$res2 = array();
+		$cou = 0;
+		foreach ($res as $rig => $result)
+			foreach ($result as $sec => $row)
+			{
+				$secname = preg_replace('/\d/', '', $sec);
+				if (!secmatch($section, $secname))
+				{
+					// STATUS may be problematic ...
+					if (!isset($res2[$sec]))
+						$res2[$sec] = $row;
+				}
+				else
+				{
+					$grpkey = '';
+					$newrow = array();
+					foreach ($grp as $field)
+					{
+						if (isset($row[$field]))
+						{
+							$grpkey .= $row[$field].'.';
+							$newrow[$field] = $row[$field];
+						}
+						else
+							$grpkey .= '.';
+					}
+
+					if (!isset($interim[$grpkey]))
+					{
+						$interim[$grpkey]['grp'] = $newrow;
+						$interim[$grpkey]['sec'] = $secname.$cou;
+						$cou++;
+					}
+
+					if ($calc !== null)
+						foreach ($calc as $field => $func)
+						{
+							if (!isset($interim[$grpkey]['cal'][$field]))
+								$interim[$grpkey]['cal'][$field] = array();
+							$interim[$g
