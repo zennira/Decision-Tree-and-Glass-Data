@@ -2477,4 +2477,287 @@ function processext($ext, $section, $res, &$fields)
 						{
 							if (!isset($interim[$grpkey]['cal'][$field]))
 								$interim[$grpkey]['cal'][$field] = array();
-							$interim[$g
+							$interim[$grpkey]['cal'][$field][] = $row[$field];
+						}
+				}
+			}
+
+		// Build the rest of $res2 from $interim
+		foreach ($interim as $rowkey => $row)
+		{
+			$key = $row['sec'];
+			foreach ($row['grp'] as $field => $value)
+				$res2[$key][$field] = $value;
+			foreach ($row['cal'] as $field => $data)
+				$res2[$key][$field] = docalc($calc[$field], $data);
+		}
+
+		$res = array('' => $res2);
+	}
+ }
+
+ // Generated fields (functions of other fields)
+ if ($allowgen === true && isset($ext[$section]['gen']))
+	dogen($ext, $section, $res, $fields);
+
+ return processcompare('having', $ext, $section, $res);
+}
+#
+function processcustompage($pagename, $sections, $sum, $ext, $namemap)
+{
+ global $sectionmap;
+ global $miner, $port;
+ global $rigs, $error;
+ global $warnfont, $warnoff;
+ global $dfmt;
+ global $readonly, $showndate;
+
+ $cmds = array();
+ $errors = array();
+ foreach ($sections as $section => $fields)
+ {
+	$all = explode('+', $section);
+	foreach ($all as $section)
+	{
+		if (isset($sectionmap[$section]))
+		{
+			$cmd = $sectionmap[$section];
+			if (!isset($cmds[$cmd]))
+				$cmds[$cmd] = 1;
+		}
+		else
+			if ($section != 'DATE')
+				$errors[] = "Error: unknown section '$section' in custom summary page '$pagename'";
+	}
+ }
+
+ $results = array();
+ foreach ($rigs as $num => $rig)
+ {
+	$parts = explode(':', $rig, 3);
+	if (count($parts) >= 2)
+	{
+		$miner = $parts[0];
+		$port = $parts[1];
+
+		if (count($parts) > 2)
+			$name = $parts[2];
+		else
+			$name = $rig;
+
+		foreach ($cmds as $cmd => $one)
+		{
+			$process = api($name, $cmd);
+
+			if ($error != null)
+			{
+				$errors[] = "Error getting $cmd for $name $warnfont$error$warnoff";
+				break;
+			}
+			else
+				$results[$cmd][$num] = $process;
+		}
+	}
+	else
+		otherrow('<td class=bad>Bad "$rigs" array</td>');
+ }
+
+ $shownsomething = false;
+ if (count($results) > 0)
+ {
+	list($results, $errors) = joinsections($sections, $results, $errors);
+	$first = true;
+	foreach ($sections as $section => $fields)
+	{
+		if ($section === 'DATE')
+		{
+			if ($shownsomething)
+				otherrow('<td>&nbsp;</td>');
+
+			newtable();
+			showdatetime();
+			endtable();
+			// On top of the next table
+			$shownsomething = false;
+			continue;
+		}
+
+		if ($section === 'RIGS')
+		{
+			if ($shownsomething)
+				otherrow('<td>&nbsp;</td>');
+
+			newtable();
+			showrigs($results['version'], 'Rig', '');
+			endtable();
+			$shownsomething = true;
+			continue;
+		}
+
+		if (isset($results[$sectionmap[$section]]))
+		{
+			$rigresults = processext($ext, $section, $results[$sectionmap[$section]], $fields);
+
+			$showfields = array();
+			$showhead = array();
+			foreach ($fields as $field)
+				foreach ($rigresults as $result)
+					foreach ($result as $sec => $row)
+					{
+						$secname = preg_replace('/\d/', '', $sec);
+						if (secmatch($section, $secname))
+						{
+							if ($field === '*')
+							{
+								foreach ($row as $f => $v)
+								{
+									$showfields[$f] = 1;
+									$map = $section.'.'.$f;
+									if (isset($namemap[$map]))
+										$showhead[$namemap[$map]] = 1;
+									else
+										$showhead[$f] = 1;
+								}
+							}
+							elseif (isset($row[$field]))
+							{
+								$showfields[$field] = 1;
+								$map = $section.'.'.$field;
+								if (isset($namemap[$map]))
+									$showhead[$namemap[$map]] = 1;
+								else
+									$showhead[$field] = 1;
+							}
+						}
+					}
+
+			if (count($showfields) > 0)
+			{
+				if ($shownsomething)
+					otherrow('<td>&nbsp;</td>');
+
+				newtable();
+				if (count($rigresults) == 1 && isset($rigresults['']))
+					$ri = array('' => 1) + $showhead;
+				else
+					$ri = array('Rig' => 1) + $showhead;
+				showhead('', $ri, true);
+
+				$total = array();
+				$add = array('total' => array());
+
+				foreach ($rigresults as $num => $result)
+					$total = customset($showfields, $sum, $section, $num, true, $result, $total);
+
+				if (count($total) > 0)
+					customset($showfields, $sum, $section, '&Sigma;', false, $add, $total);
+
+				$first = false;
+
+				endtable();
+				$shownsomething = true;
+			}
+		}
+	}
+ }
+
+ if (count($errors) > 0)
+ {
+	if (count($results) > 0)
+		otherrow('<td>&nbsp;</td>');
+
+	foreach ($errors as $err)
+		otherrow("<td colspan=100>$err</td>");
+ }
+}
+#
+function showcustompage($pagename)
+{
+ global $customsummarypages;
+ global $placebuttons;
+
+ if ($placebuttons == 'top' || $placebuttons == 'both')
+	pagebuttons(null, $pagename);
+
+ if (!isset($customsummarypages[$pagename]))
+ {
+	otherrow("<td colspan=100 class=bad>Unknown custom summary page '$pagename'</td>");
+	return;
+ }
+
+ $c = count($customsummarypages[$pagename]);
+ if ($c < 2 || $c > 3)
+ {
+	$rw = "<td colspan=100 class=bad>Invalid custom summary page '$pagename' (";
+	$rw .= count($customsummarypages[$pagename]).')</td>';
+	otherrow($rw);
+	return;
+ }
+
+ $page = $customsummarypages[$pagename][0];
+ $namemap = array();
+ foreach ($page as $name => $fields)
+ {
+	if ($fields === null)
+		$page[$name] = array();
+	else
+		foreach ($fields as $num => $field)
+		{
+			$pos = strpos($field, '=');
+			if ($pos !== false)
+			{
+				$names = explode('=', $field, 2);
+				if (strlen($names[1]) > 0)
+					$namemap[$name.'.'.$names[0]] = $names[1];
+				$page[$name][$num] = $names[0];
+			}
+		}
+ }
+
+ $ext = null;
+ if (isset($customsummarypages[$pagename][2]))
+	$ext = $customsummarypages[$pagename][2];
+
+ $sum = $customsummarypages[$pagename][1];
+ if ($sum === null)
+	$sum = array();
+
+ // convert them to searchable via isset()
+ foreach ($sum as $section => $fields)
+ {
+	$newfields = array();
+	foreach ($fields as $field)
+		$newfields[$field] = 1;
+	$sum[$section] = $newfields;
+ }
+
+ if (count($page) <= 1)
+ {
+	otherrow("<td colspan=100 class=bad>Invalid custom summary page '$pagename' no content </td>");
+	return;
+ }
+
+ processcustompage($pagename, $page, $sum, $ext, $namemap);
+
+ if ($placebuttons == 'bot' || $placebuttons == 'both')
+	pagebuttons(null, $pagename);
+}
+#
+function onlylogin()
+{
+ global $here;
+
+ htmlhead('', false, null, null, true);
+
+?>
+<tr height=15%><td>&nbsp;</td></tr>
+<tr><td>
+ <center>
+  <table width=384 height=368 cellpadding=0 cellspacing=0 border=0>
+   <tr><td>
+    <table width=100% height=100% border=0 align=center cellpadding=5 cellspacing=0>
+     <tr><td><form action='<?php echo $here; ?>' method=post>
+      <table width=200 border=0 align=center cellpadding=5 cellspacing=0>
+       <tr><td height=120 colspan=2>&nbsp;</td></tr>
+       <tr><td colspan=2 align=center valign=middle>
+        <h2>LOGIN</h2></td></tr>
