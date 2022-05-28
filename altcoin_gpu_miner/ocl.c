@@ -431,3 +431,426 @@ _clState *initCl(unsigned int gpu, char *name, size_t nameSize)
 
 	/* For some reason 2 vectors is still better even if the card says
 	 * otherwise, and many cards lie about their max so use 256 as max
+	 * unless explicitly set on the command line. Tahiti prefers 1 */
+	if (strstr(name, "Tahiti"))
+		preferred_vwidth = 1;
+	else if (preferred_vwidth > 2)
+		preferred_vwidth = 2;
+
+	switch (clState->chosen_kernel) {
+		case KL_POCLBM:
+			strcpy(filename, POCLBM_KERNNAME".cl");
+			strcpy(binaryfilename, POCLBM_KERNNAME);
+			break;
+		case KL_PHATK:
+			strcpy(filename, PHATK_KERNNAME".cl");
+			strcpy(binaryfilename, PHATK_KERNNAME);
+			break;
+		case KL_DIAKGCN:
+			strcpy(filename, DIAKGCN_KERNNAME".cl");
+			strcpy(binaryfilename, DIAKGCN_KERNNAME);
+			break;
+		case KL_SCRYPT:
+			strcpy(filename, SCRYPT_KERNNAME".cl");
+			strcpy(binaryfilename, SCRYPT_KERNNAME);
+			/* Scrypt only supports vector 1 */
+			cgpu->vwidth = 1;
+			break;
+		case KL_NONE: /* Shouldn't happen */
+		case KL_DIABLO:
+			strcpy(filename, DIABLO_KERNNAME".cl");
+			strcpy(binaryfilename, DIABLO_KERNNAME);
+			break;
+	}
+
+	if (cgpu->vwidth)
+		clState->vwidth = cgpu->vwidth;
+	else {
+		clState->vwidth = preferred_vwidth;
+		cgpu->vwidth = preferred_vwidth;
+	}
+
+	if (((clState->chosen_kernel == KL_POCLBM || clState->chosen_kernel == KL_DIABLO || clState->chosen_kernel == KL_DIAKGCN) &&
+		clState->vwidth == 1 && clState->hasOpenCL11plus) || opt_scrypt)
+			clState->goffset = true;
+
+	if (cgpu->work_size && cgpu->work_size <= clState->max_work_size)
+		clState->wsize = cgpu->work_size;
+	else if (opt_scrypt)
+		clState->wsize = 256;
+	else if (strstr(name, "Tahiti"))
+		clState->wsize = 64;
+	else
+		clState->wsize = (clState->max_work_size <= 256 ? clState->max_work_size : 256) / clState->vwidth;
+	cgpu->work_size = clState->wsize;
+
+#ifdef USE_SCRYPT
+	if (opt_scrypt) {
+		if (!cgpu->opt_lg) {
+			applog(LOG_DEBUG, "GPU %d: selecting lookup gap of 2", gpu);
+			cgpu->lookup_gap = 2;
+		} else
+			cgpu->lookup_gap = cgpu->opt_lg;
+
+		unsigned int sixtyfours;
+		sixtyfours =  ((cgpu->max_alloc*cgpu->lookup_gap) / (2048*128) / 64 - 1);
+		applog(LOG_DEBUG,"----------> cgpu->max_alloc: %lu",cgpu->max_alloc);
+		applog(LOG_DEBUG,"----------> sixtyfours: %d",sixtyfours);
+		applog(LOG_DEBUG,"----------> cgpu->shaders: %zu",cgpu->shaders);
+		if (!cgpu->opt_tc) {
+			cgpu->thread_concurrency = sixtyfours * 64;
+			if (cgpu->shaders && cgpu->thread_concurrency > cgpu->shaders) {
+				cgpu->thread_concurrency -= cgpu->thread_concurrency % cgpu->shaders;
+				if (cgpu->thread_concurrency > cgpu->shaders * 11)
+					cgpu->thread_concurrency = cgpu->shaders * 11;
+			}
+			applog(LOG_INFO, "GPU %d: selecting thread concurrency of %d", gpu, (int)(cgpu->thread_concurrency));
+		} else {
+			cgpu->thread_concurrency = cgpu->opt_tc;
+		}
+
+		if (((cgpu->thread_concurrency * (2048*128)) / cgpu->lookup_gap) > cgpu->max_alloc) {
+			cgpu->thread_concurrency = sixtyfours * 64;
+			applog(LOG_INFO, "GPU %d: thread concurrency too high, set to %d", gpu, (int)(cgpu->thread_concurrency));
+		}
+	}
+#endif
+
+	FILE *binaryfile;
+	size_t *binary_sizes;
+	char **binaries;
+	int pl;
+	char *source = file_contents(filename, &pl);
+	size_t sourceSize[] = {(size_t)pl};
+	cl_uint slot, cpnd;
+
+	slot = cpnd = 0;
+
+	if (!source)
+		return NULL;
+
+	binary_sizes = calloc(sizeof(size_t) * MAX_GPUDEVICES * 4, 1);
+	if (unlikely(!binary_sizes)) {
+		applog(LOG_ERR, "Unable to calloc binary_sizes");
+		return NULL;
+	}
+	binaries = calloc(sizeof(char *) * MAX_GPUDEVICES * 4, 1);
+	if (unlikely(!binaries)) {
+		applog(LOG_ERR, "Unable to calloc binaries");
+		return NULL;
+	}
+
+	strcat(binaryfilename, name);
+	if (clState->goffset)
+		strcat(binaryfilename, "g");
+	if (opt_scrypt) {
+#ifdef USE_SCRYPT
+		sprintf(numbuf, "lg%utc%u", cgpu->lookup_gap, (unsigned int)cgpu->thread_concurrency);
+		strcat(binaryfilename, numbuf);
+#endif
+	} else {
+		sprintf(numbuf, "v%d", clState->vwidth);
+		strcat(binaryfilename, numbuf);
+	}
+	sprintf(numbuf, "w%d", (int)clState->wsize);
+	strcat(binaryfilename, numbuf);
+	sprintf(numbuf, "l%d", (int)sizeof(long));
+	strcat(binaryfilename, numbuf);
+	strcat(binaryfilename, ".bin");
+
+	binaryfile = fopen(binaryfilename, "rb");
+	if (!binaryfile) {
+		applog(LOG_DEBUG, "No binary found, generating from source");
+	} else {
+		struct stat binary_stat;
+
+		if (unlikely(stat(binaryfilename, &binary_stat))) {
+			applog(LOG_DEBUG, "Unable to stat binary, generating from source");
+			fclose(binaryfile);
+			goto build;
+		}
+		if (!binary_stat.st_size)
+			goto build;
+
+		binary_sizes[slot] = binary_stat.st_size;
+		binaries[slot] = (char *)calloc(binary_sizes[slot], 1);
+		if (unlikely(!binaries[slot])) {
+			applog(LOG_ERR, "Unable to calloc binaries");
+			fclose(binaryfile);
+			return NULL;
+		}
+
+		if (fread(binaries[slot], 1, binary_sizes[slot], binaryfile) != binary_sizes[slot]) {
+			applog(LOG_ERR, "Unable to fread binaries");
+			fclose(binaryfile);
+			free(binaries[slot]);
+			goto build;
+		}
+
+		clState->program = clCreateProgramWithBinary(clState->context, 1, &devices[gpu], &binary_sizes[slot], (const unsigned char **)binaries, &status, NULL);
+		if (status != CL_SUCCESS) {
+			applog(LOG_ERR, "Error %d: Loading Binary into cl_program (clCreateProgramWithBinary)", status);
+			fclose(binaryfile);
+			free(binaries[slot]);
+			goto build;
+		}
+
+		fclose(binaryfile);
+		applog(LOG_DEBUG, "Loaded binary image %s", binaryfilename);
+
+		goto built;
+	}
+
+	/////////////////////////////////////////////////////////////////
+	// Load CL file, build CL program object, create CL kernel object
+	/////////////////////////////////////////////////////////////////
+
+build:
+	clState->program = clCreateProgramWithSource(clState->context, 1, (const char **)&source, sourceSize, &status);
+	if (status != CL_SUCCESS) {
+		applog(LOG_ERR, "Error %d: Loading Binary into cl_program (clCreateProgramWithSource)", status);
+		return NULL;
+	}
+
+	/* create a cl program executable for all the devices specified */
+	char *CompilerOptions = calloc(1, 256);
+
+#ifdef USE_SCRYPT
+	if (opt_scrypt)
+		sprintf(CompilerOptions, "-D LOOKUP_GAP=%d -D CONCURRENT_THREADS=%d -D WORKSIZE=%d",
+			cgpu->lookup_gap, (unsigned int)cgpu->thread_concurrency, (int)clState->wsize);
+	else
+#endif
+	{
+		sprintf(CompilerOptions, "-D WORKSIZE=%d -D VECTORS%d -D WORKVEC=%d",
+			(int)clState->wsize, clState->vwidth, (int)clState->wsize * clState->vwidth);
+	}
+	applog(LOG_DEBUG, "Setting worksize to %d", (int)(clState->wsize));
+	if (clState->vwidth > 1)
+		applog(LOG_DEBUG, "Patched source to suit %d vectors", clState->vwidth);
+
+	if (clState->hasBitAlign) {
+		strcat(CompilerOptions, " -D BITALIGN");
+		applog(LOG_DEBUG, "cl_amd_media_ops found, setting BITALIGN");
+		if (!clState->hasOpenCL12plus &&
+		    (strstr(name, "Cedar") ||
+		     strstr(name, "Redwood") ||
+		     strstr(name, "Juniper") ||
+		     strstr(name, "Cypress" ) ||
+		     strstr(name, "Hemlock" ) ||
+		     strstr(name, "Caicos" ) ||
+		     strstr(name, "Turks" ) ||
+		     strstr(name, "Barts" ) ||
+		     strstr(name, "Cayman" ) ||
+		     strstr(name, "Antilles" ) ||
+		     strstr(name, "Wrestler" ) ||
+		     strstr(name, "Zacate" ) ||
+		     strstr(name, "WinterPark" )))
+			patchbfi = true;
+	} else
+		applog(LOG_DEBUG, "cl_amd_media_ops not found, will not set BITALIGN");
+
+	if (patchbfi) {
+		strcat(CompilerOptions, " -D BFI_INT");
+		applog(LOG_DEBUG, "BFI_INT patch requiring device found, patched source with BFI_INT");
+	} else
+		applog(LOG_DEBUG, "BFI_INT patch requiring device not found, will not BFI_INT patch");
+
+	if (clState->goffset)
+		strcat(CompilerOptions, " -D GOFFSET");
+
+	if (!clState->hasOpenCL11plus)
+		strcat(CompilerOptions, " -D OCL1");
+
+	applog(LOG_DEBUG, "CompilerOptions: %s", CompilerOptions);
+	status = clBuildProgram(clState->program, 1, &devices[gpu], CompilerOptions , NULL, NULL);
+	free(CompilerOptions);
+
+	if (status != CL_SUCCESS) {
+		applog(LOG_ERR, "Error %d: Building Program (clBuildProgram)", status);
+		size_t logSize;
+		status = clGetProgramBuildInfo(clState->program, devices[gpu], CL_PROGRAM_BUILD_LOG, 0, NULL, &logSize);
+
+		char *log = malloc(logSize);
+		status = clGetProgramBuildInfo(clState->program, devices[gpu], CL_PROGRAM_BUILD_LOG, logSize, log, NULL);
+		applog(LOG_ERR, "%s", log);
+		return NULL;
+	}
+
+	prog_built = true;
+
+#ifdef __APPLE__
+	/* OSX OpenCL breaks reading off binaries with >1 GPU so always build
+	 * from source. */
+	goto built;
+#endif
+
+	status = clGetProgramInfo(clState->program, CL_PROGRAM_NUM_DEVICES, sizeof(cl_uint), &cpnd, NULL);
+	if (unlikely(status != CL_SUCCESS)) {
+		applog(LOG_ERR, "Error %d: Getting program info CL_PROGRAM_NUM_DEVICES. (clGetProgramInfo)", status);
+		return NULL;
+	}
+
+	status = clGetProgramInfo(clState->program, CL_PROGRAM_BINARY_SIZES, sizeof(size_t)*cpnd, binary_sizes, NULL);
+	if (unlikely(status != CL_SUCCESS)) {
+		applog(LOG_ERR, "Error %d: Getting program info CL_PROGRAM_BINARY_SIZES. (clGetProgramInfo)", status);
+		return NULL;
+	}
+
+	/* The actual compiled binary ends up in a RANDOM slot! Grr, so we have
+	 * to iterate over all the binary slots and find where the real program
+	 * is. What the heck is this!? */
+	for (slot = 0; slot < cpnd; slot++)
+		if (binary_sizes[slot])
+			break;
+
+	/* copy over all of the generated binaries. */
+	applog(LOG_DEBUG, "Binary size for gpu %d found in binary slot %d: %d", gpu, slot, (int)(binary_sizes[slot]));
+	if (!binary_sizes[slot]) {
+		applog(LOG_ERR, "OpenCL compiler generated a zero sized binary, FAIL!");
+		return NULL;
+	}
+	binaries[slot] = calloc(sizeof(char) * binary_sizes[slot], 1);
+	status = clGetProgramInfo(clState->program, CL_PROGRAM_BINARIES, sizeof(char *) * cpnd, binaries, NULL );
+	if (unlikely(status != CL_SUCCESS)) {
+		applog(LOG_ERR, "Error %d: Getting program info. CL_PROGRAM_BINARIES (clGetProgramInfo)", status);
+		return NULL;
+	}
+
+	/* Patch the kernel if the hardware supports BFI_INT but it needs to
+	 * be hacked in */
+	if (patchbfi) {
+		unsigned remaining = binary_sizes[slot];
+		char *w = binaries[slot];
+		unsigned int start, length;
+
+		/* Find 2nd incidence of .text, and copy the program's
+		* position and length at a fixed offset from that. Then go
+		* back and find the 2nd incidence of \x7ELF (rewind by one
+		* from ELF) and then patch the opcocdes */
+		if (!advance(&w, &remaining, ".text"))
+			goto build;
+		w++; remaining--;
+		if (!advance(&w, &remaining, ".text")) {
+			/* 32 bit builds only one ELF */
+			w--; remaining++;
+		}
+		memcpy(&start, w + 285, 4);
+		memcpy(&length, w + 289, 4);
+		w = binaries[slot]; remaining = binary_sizes[slot];
+		if (!advance(&w, &remaining, "ELF"))
+			goto build;
+		w++; remaining--;
+		if (!advance(&w, &remaining, "ELF")) {
+			/* 32 bit builds only one ELF */
+			w--; remaining++;
+		}
+		w--; remaining++;
+		w += start; remaining -= start;
+		applog(LOG_DEBUG, "At %p (%u rem. bytes), to begin patching",
+			w, remaining);
+		patch_opcodes(w, length);
+
+		status = clReleaseProgram(clState->program);
+		if (status != CL_SUCCESS) {
+			applog(LOG_ERR, "Error %d: Releasing program. (clReleaseProgram)", status);
+			return NULL;
+		}
+
+		clState->program = clCreateProgramWithBinary(clState->context, 1, &devices[gpu], &binary_sizes[slot], (const unsigned char **)&binaries[slot], &status, NULL);
+		if (status != CL_SUCCESS) {
+			applog(LOG_ERR, "Error %d: Loading Binary into cl_program (clCreateProgramWithBinary)", status);
+			return NULL;
+		}
+
+		/* Program needs to be rebuilt */
+		prog_built = false;
+	}
+
+	free(source);
+
+	/* Save the binary to be loaded next time */
+	binaryfile = fopen(binaryfilename, "wb");
+	if (!binaryfile) {
+		/* Not a fatal problem, just means we build it again next time */
+		applog(LOG_DEBUG, "Unable to create file %s", binaryfilename);
+	} else {
+		if (unlikely(fwrite(binaries[slot], 1, binary_sizes[slot], binaryfile) != binary_sizes[slot])) {
+			applog(LOG_ERR, "Unable to fwrite to binaryfile");
+			return NULL;
+		}
+		fclose(binaryfile);
+	}
+built:
+	if (binaries[slot])
+		free(binaries[slot]);
+	free(binaries);
+	free(binary_sizes);
+
+	applog(LOG_INFO, "Initialising kernel %s with%s bitalign, %d vectors and worksize %d",
+	       filename, clState->hasBitAlign ? "" : "out", clState->vwidth, (int)(clState->wsize));
+
+	if (!prog_built) {
+		/* create a cl program executable for all the devices specified */
+		status = clBuildProgram(clState->program, 1, &devices[gpu], NULL, NULL, NULL);
+		if (status != CL_SUCCESS) {
+			applog(LOG_ERR, "Error %d: Building Program (clBuildProgram)", status);
+			size_t logSize;
+			status = clGetProgramBuildInfo(clState->program, devices[gpu], CL_PROGRAM_BUILD_LOG, 0, NULL, &logSize);
+
+			char *log = malloc(logSize);
+			status = clGetProgramBuildInfo(clState->program, devices[gpu], CL_PROGRAM_BUILD_LOG, logSize, log, NULL);
+			applog(LOG_ERR, "%s", log);
+			return NULL;
+		}
+	}
+
+	/* get a kernel object handle for a kernel with the given name */
+	clState->kernel = clCreateKernel(clState->program, "search", &status);
+	if (status != CL_SUCCESS) {
+		applog(LOG_ERR, "Error %d: Creating Kernel from program. (clCreateKernel)", status);
+		return NULL;
+	}
+
+#ifdef USE_SCRYPT
+	if (opt_scrypt) {
+		size_t ipt = (2048 / cgpu->lookup_gap + (2048 % cgpu->lookup_gap > 0));
+		size_t bufsize = 128 * ipt * cgpu->thread_concurrency;
+
+		/* Use the max alloc value which has been rounded to a power of
+		 * 2 greater >= required amount earlier */
+		if (bufsize > cgpu->max_alloc) {
+			applog(LOG_WARNING, "Maximum buffer memory device %d supports says %lu",
+						gpu, (long unsigned int)(cgpu->max_alloc));
+			applog(LOG_WARNING, "Your scrypt settings come to %d", (int)bufsize);
+		}
+		applog(LOG_DEBUG, "Creating scrypt buffer sized %d", (int)bufsize);
+		clState->padbufsize = bufsize;
+
+		/* This buffer is weird and might work to some degree even if
+		 * the create buffer call has apparently failed, so check if we
+		 * get anything back before we call it a failure. */
+		clState->padbuffer8 = NULL;
+		clState->padbuffer8 = clCreateBuffer(clState->context, CL_MEM_READ_WRITE, bufsize, NULL, &status);
+		if (status != CL_SUCCESS && !clState->padbuffer8) {
+			applog(LOG_ERR, "Error %d: clCreateBuffer (padbuffer8), decrease TC or increase LG", status);
+			return NULL;
+		}
+
+		clState->CLbuffer0 = clCreateBuffer(clState->context, CL_MEM_READ_ONLY, 128, NULL, &status);
+		if (status != CL_SUCCESS) {
+			applog(LOG_ERR, "Error %d: clCreateBuffer (CLbuffer0)", status);
+			return NULL;
+		}
+		clState->outputBuffer = clCreateBuffer(clState->context, CL_MEM_WRITE_ONLY, SCRYPT_BUFFERSIZE, NULL, &status);
+	} else
+#endif
+	clState->outputBuffer = clCreateBuffer(clState->context, CL_MEM_WRITE_ONLY, BUFFERSIZE, NULL, &status);
+	if (status != CL_SUCCESS) {
+		applog(LOG_ERR, "Error %d: clCreateBuffer (outputBuffer)", status);
+		return NULL;
+	}
+
+	return clState;
+}
+#endif /* HAVE_OPENCL */
