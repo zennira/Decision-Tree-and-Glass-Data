@@ -2761,3 +2761,260 @@ function onlylogin()
        <tr><td height=120 colspan=2>&nbsp;</td></tr>
        <tr><td colspan=2 align=center valign=middle>
         <h2>LOGIN</h2></td></tr>
+       <tr><td align=center valign=middle><div align=right>Username:</div></td>
+        <td height=33 align=center valign=middle>
+        <input type=text name=rut size=18></td></tr>
+       <tr><td align=center valign=middle><div align=right>Password:</div></td>
+        <td height=33 align=center valign=middle>
+        <input type=password name=roh size=18></td></tr>
+       <tr valign=top><td></td><td><input type=submit value=Login>
+        </td></tr>
+      </table></form></td></tr>
+    </table></td></tr>
+  </table></center>
+</td></tr>
+<?php
+}
+#
+function checklogin()
+{
+ global $allowcustompages, $customsummarypages;
+ global $readonly, $userlist, $ses;
+
+ $out = trim(getparam('logout', true));
+ if ($out !== null && $out !== '' && isset($_SESSION[$ses]))
+	unset($_SESSION[$ses]);
+
+ $login = trim(getparam('login', true));
+ if ($login !== null && $login !== '')
+ {
+	if (isset($_SESSION[$ses]))
+		unset($_SESSION[$ses]);
+
+	onlylogin();
+	return 'login';
+ }
+
+ if ($userlist === null)
+	return false;
+
+ $rut = trim(getparam('rut', true));
+ $roh = trim(getparam('roh', true));
+
+ if (($rut !== null && $rut !== '') || ($roh !== null && $roh !== ''))
+ {
+	if (isset($_SESSION[$ses]))
+		unset($_SESSION[$ses]);
+
+	if ($rut !== null && $rut !== '' && $roh !== null && $roh !== '')
+	{
+		if (isset($userlist['sys']) && isset($userlist['sys'][$rut])
+		&&  ($userlist['sys'][$rut] === $roh))
+		{
+			$_SESSION[$ses] = true;
+			return false;
+		}
+
+		if (isset($userlist['usr']) && isset($userlist['usr'][$rut])
+		&&  ($userlist['usr'][$rut] === $roh))
+		{
+			$_SESSION[$ses] = false;
+			$readonly = true;
+			return false;
+		}
+	}
+ }
+
+ if (isset($_SESSION[$ses]))
+ {
+	if ($_SESSION[$ses] == false)
+		$readonly = true;
+	return false;
+ }
+
+ if (isset($userlist['def']) && $allowcustompages === true)
+ {
+	// Ensure at least one exists
+	foreach ($userlist['def'] as $pg)
+		if (isset($customsummarypages[$pg]))
+			return true;
+ }
+
+ onlylogin();
+ return 'login';
+}
+#
+function display()
+{
+ global $miner, $port;
+ global $mcast, $mcastexpect;
+ global $readonly, $notify, $rigs;
+ global $ignorerefresh, $autorefresh;
+ global $allowcustompages, $customsummarypages;
+ global $placebuttons;
+ global $userlist, $ses;
+
+ $pagesonly = checklogin();
+
+ if ($pagesonly === 'login')
+	return;
+
+ $mcerr = '';
+
+ if ($rigs == null or count($rigs) == 0)
+ {
+	if ($mcast === true)
+		$action = 'found';
+	else
+		$action = 'defined';
+
+	minhead();
+	otherrow("<td class=bad>No rigs $action</td>");
+	return;
+ }
+ else
+ {
+	if ($mcast === true && count($rigs) < $mcastexpect)
+		$mcerr = othrow('<td class=bad>Found '.count($rigs)." rigs but expected at least $mcastexpect</td>");
+ }
+
+ if ($ignorerefresh == false)
+ {
+	$ref = trim(getparam('ref', true));
+	if ($ref != null && $ref != '')
+		$autorefresh = intval($ref);
+ }
+
+ if ($pagesonly !== true)
+ {
+	$rig = trim(getparam('rig', true));
+
+	$arg = trim(getparam('arg', true));
+	$preprocess = null;
+	if ($arg != null and $arg != '')
+	{
+		if ($rig != null and $rig != '' and $rig >= 0 and $rig < count($rigs))
+		{
+			$parts = explode(':', $rigs[$rig], 3);
+			if (count($parts) >= 2)
+			{
+				$miner = $parts[0];
+				$port = $parts[1];
+
+				if ($readonly !== true)
+					$preprocess = $arg;
+			}
+		}
+	}
+ }
+
+ if ($allowcustompages === true)
+ {
+	$pg = trim(getparam('pg', true));
+	if ($pagesonly === true)
+	{
+		if ($pg !== null && $pg !== '')
+		{
+			if ($userlist !== null && isset($userlist['def'])
+			&&  !in_array($pg, $userlist['def']))
+				$pg = null;
+		}
+		else
+		{
+			if ($userlist !== null && isset($userlist['def']))
+				foreach ($userlist['def'] as $pglook)
+					if (isset($customsummarypages[$pglook]))
+					{
+						$pg = $pglook;
+						break;
+					}
+		}
+	}
+
+	if ($pg !== null && $pg !== '')
+	{
+		htmlhead($mcerr, false, null, $pg);
+		showcustompage($pg, $mcerr);
+		return;
+	}
+ }
+
+ if ($pagesonly === true)
+ {
+	onlylogin();
+	return;
+ }
+
+ if (count($rigs) == 1)
+ {
+	$parts = explode(':', $rigs[0], 3);
+	if (count($parts) >= 2)
+	{
+		$miner = $parts[0];
+		$port = $parts[1];
+
+		htmlhead($mcerr, true, 0);
+		doOne(0, $preprocess);
+	}
+	else
+	{
+		minhead($mcerr);
+		otherrow('<td class=bad>Invalid "$rigs" array</td>');
+	}
+
+	return;
+ }
+
+ if ($rig != null and $rig != '' and $rig >= 0 and $rig < count($rigs))
+ {
+	$parts = explode(':', $rigs[$rig], 3);
+	if (count($parts) >= 2)
+	{
+		$miner = $parts[0];
+		$port = $parts[1];
+
+		htmlhead($mcerr, true, 0);
+		doOne($rig, $preprocess);
+	}
+	else
+	{
+		minhead($mcerr);
+		otherrow('<td class=bad>Invalid "$rigs" array</td>');
+	}
+
+	return;
+ }
+
+ htmlhead($mcerr, false, null);
+
+ if ($placebuttons == 'top' || $placebuttons == 'both')
+	pagebuttons(null, null);
+
+ if ($preprocess != null)
+	process(array($preprocess => $preprocess), $rig);
+
+ newtable();
+ doforeach('version', 'rig summary', array(), array(), true);
+ $sum = array('MHS av', 'Getworks', 'Found Blocks', 'Accepted', 'Rejected', 'Discarded', 'Stale', 'Utility', 'Local Work', 'Total MH', 'Work Utility', 'Diff1 Shares', 'Diff1 Work', 'Difficulty Accepted', 'Difficulty Rejected', 'Difficulty Stale');
+ doforeach('summary', 'summary information', $sum, array(), false);
+ endtable();
+ otherrow('<td><br><br></td>');
+ newtable();
+ doforeach('devs', 'device list', $sum, array(''=>'','ID'=>'','Name'=>''), false);
+ endtable();
+ otherrow('<td><br><br></td>');
+ newtable();
+ doforeach('pools', 'pool list', $sum, array(''=>''), false);
+ endtable();
+
+ if ($placebuttons == 'bot' || $placebuttons == 'both')
+	pagebuttons(null, null);
+}
+#
+if ($mcast === true)
+ getrigs();
+display();
+#
+?>
+</table></td></tr></table>
+</body></html>
