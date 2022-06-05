@@ -67,4 +67,112 @@ typedef unsigned char uint8_t;
 #define UTHASH_VERSION 1.9.8
 
 #ifndef uthash_fatal
-#define uthash_fatal(msg) e
+#define uthash_fatal(msg) exit(-1)        /* fatal error (out of memory,etc) */
+#endif
+#ifndef uthash_malloc
+#define uthash_malloc(sz) malloc(sz)      /* malloc fcn                      */
+#endif
+#ifndef uthash_free
+#define uthash_free(ptr,sz) free(ptr)     /* free fcn                        */
+#endif
+
+#ifndef uthash_noexpand_fyi
+#define uthash_noexpand_fyi(tbl)          /* can be defined to log noexpand  */
+#endif
+#ifndef uthash_expand_fyi
+#define uthash_expand_fyi(tbl)            /* can be defined to log expands   */
+#endif
+
+/* initial number of buckets */
+#define HASH_INITIAL_NUM_BUCKETS 32      /* initial number of buckets        */
+#define HASH_INITIAL_NUM_BUCKETS_LOG2 5  /* lg2 of initial number of buckets */
+#define HASH_BKT_CAPACITY_THRESH 10      /* expand when bucket count reaches */
+
+/* calculate the element whose hash handle address is hhe */
+#define ELMT_FROM_HH(tbl,hhp) ((void*)(((char*)(hhp)) - ((tbl)->hho)))
+
+#define HASH_FIND(hh,head,keyptr,keylen,out)                                     \
+do {                                                                             \
+  unsigned _hf_bkt,_hf_hashv;                                                    \
+  out=NULL;                                                                      \
+  if (head) {                                                                    \
+     HASH_FCN(keyptr,keylen, (head)->hh.tbl->num_buckets, _hf_hashv, _hf_bkt);   \
+     if (HASH_BLOOM_TEST((head)->hh.tbl, _hf_hashv)) {                           \
+       HASH_FIND_IN_BKT((head)->hh.tbl, hh, (head)->hh.tbl->buckets[ _hf_bkt ],  \
+                        keyptr,keylen,out);                                      \
+     }                                                                           \
+  }                                                                              \
+} while (0)
+
+#ifdef HASH_BLOOM
+#define HASH_BLOOM_BITLEN (1ULL << HASH_BLOOM)
+#define HASH_BLOOM_BYTELEN (HASH_BLOOM_BITLEN/8) + ((HASH_BLOOM_BITLEN%8) ? 1:0)
+#define HASH_BLOOM_MAKE(tbl)                                                     \
+do {                                                                             \
+  (tbl)->bloom_nbits = HASH_BLOOM;                                               \
+  (tbl)->bloom_bv = (uint8_t*)uthash_malloc(HASH_BLOOM_BYTELEN);                 \
+  if (!((tbl)->bloom_bv))  { uthash_fatal( "out of memory"); }                   \
+  memset((tbl)->bloom_bv, 0, HASH_BLOOM_BYTELEN);                                \
+  (tbl)->bloom_sig = HASH_BLOOM_SIGNATURE;                                       \
+} while (0) 
+
+#define HASH_BLOOM_FREE(tbl)                                                     \
+do {                                                                             \
+  uthash_free((tbl)->bloom_bv, HASH_BLOOM_BYTELEN);                              \
+} while (0) 
+
+#define HASH_BLOOM_BITSET(bv,idx) (bv[(idx)/8] |= (1U << ((idx)%8)))
+#define HASH_BLOOM_BITTEST(bv,idx) (bv[(idx)/8] & (1U << ((idx)%8)))
+
+#define HASH_BLOOM_ADD(tbl,hashv)                                                \
+  HASH_BLOOM_BITSET((tbl)->bloom_bv, (hashv & (uint32_t)((1ULL << (tbl)->bloom_nbits) - 1)))
+
+#define HASH_BLOOM_TEST(tbl,hashv)                                               \
+  HASH_BLOOM_BITTEST((tbl)->bloom_bv, (hashv & (uint32_t)((1ULL << (tbl)->bloom_nbits) - 1)))
+
+#else
+#define HASH_BLOOM_MAKE(tbl) 
+#define HASH_BLOOM_FREE(tbl) 
+#define HASH_BLOOM_ADD(tbl,hashv) 
+#define HASH_BLOOM_TEST(tbl,hashv) (1)
+#define HASH_BLOOM_BYTELEN 0
+#endif
+
+#define HASH_MAKE_TABLE(hh,head)                                                 \
+do {                                                                             \
+  (head)->hh.tbl = (UT_hash_table*)uthash_malloc(                                \
+                  sizeof(UT_hash_table));                                        \
+  if (!((head)->hh.tbl))  { uthash_fatal( "out of memory"); }                    \
+  memset((head)->hh.tbl, 0, sizeof(UT_hash_table));                              \
+  (head)->hh.tbl->tail = &((head)->hh);                                          \
+  (head)->hh.tbl->num_buckets = HASH_INITIAL_NUM_BUCKETS;                        \
+  (head)->hh.tbl->log2_num_buckets = HASH_INITIAL_NUM_BUCKETS_LOG2;              \
+  (head)->hh.tbl->hho = (char*)(&(head)->hh) - (char*)(head);                    \
+  (head)->hh.tbl->buckets = (UT_hash_bucket*)uthash_malloc(                      \
+          HASH_INITIAL_NUM_BUCKETS*sizeof(struct UT_hash_bucket));               \
+  if (! (head)->hh.tbl->buckets) { uthash_fatal( "out of memory"); }             \
+  memset((head)->hh.tbl->buckets, 0,                                             \
+          HASH_INITIAL_NUM_BUCKETS*sizeof(struct UT_hash_bucket));               \
+  HASH_BLOOM_MAKE((head)->hh.tbl);                                               \
+  (head)->hh.tbl->signature = HASH_SIGNATURE;                                    \
+} while(0)
+
+#define HASH_ADD(hh,head,fieldname,keylen_in,add)                                \
+        HASH_ADD_KEYPTR(hh,head,&((add)->fieldname),keylen_in,add)
+
+#define HASH_REPLACE(hh,head,fieldname,keylen_in,add,replaced)                   \
+do {                                                                             \
+  replaced=NULL;                                                                 \
+  HASH_FIND(hh,head,&((add)->fieldname),keylen_in,replaced);                     \
+  if (replaced!=NULL) {                                                          \
+     HASH_DELETE(hh,head,replaced);                                              \
+  };                                                                             \
+  HASH_ADD(hh,head,fieldname,keylen_in,add);                                     \
+} while(0)
+ 
+#define HASH_ADD_KEYPTR(hh,head,keyptr,keylen_in,add)                            \
+do {                                                                             \
+ unsigned _ha_bkt;                                                               \
+ (add)->hh.next = NULL;                                                          \
+ (add)->hh.key = (char*)(keyptr);                                                \
+ (add)->hh.keylen = (unsigned)(keylen_in);                   
