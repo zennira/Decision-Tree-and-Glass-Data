@@ -175,4 +175,94 @@ do {                                                                            
  unsigned _ha_bkt;                                                               \
  (add)->hh.next = NULL;                                                          \
  (add)->hh.key = (char*)(keyptr);                                                \
- (add)->hh.keylen = (unsigned)(keylen_in);                   
+ (add)->hh.keylen = (unsigned)(keylen_in);                                       \
+ if (!(head)) {                                                                  \
+    head = (add);                                                                \
+    (head)->hh.prev = NULL;                                                      \
+    HASH_MAKE_TABLE(hh,head);                                                    \
+ } else {                                                                        \
+    (head)->hh.tbl->tail->next = (add);                                          \
+    (add)->hh.prev = ELMT_FROM_HH((head)->hh.tbl, (head)->hh.tbl->tail);         \
+    (head)->hh.tbl->tail = &((add)->hh);                                         \
+ }                                                                               \
+ (head)->hh.tbl->num_items++;                                                    \
+ (add)->hh.tbl = (head)->hh.tbl;                                                 \
+ HASH_FCN(keyptr,keylen_in, (head)->hh.tbl->num_buckets,                         \
+         (add)->hh.hashv, _ha_bkt);                                              \
+ HASH_ADD_TO_BKT((head)->hh.tbl->buckets[_ha_bkt],&(add)->hh);                   \
+ HASH_BLOOM_ADD((head)->hh.tbl,(add)->hh.hashv);                                 \
+ HASH_EMIT_KEY(hh,head,keyptr,keylen_in);                                        \
+ HASH_FSCK(hh,head);                                                             \
+} while(0)
+
+#define HASH_TO_BKT( hashv, num_bkts, bkt )                                      \
+do {                                                                             \
+  bkt = ((hashv) & ((num_bkts) - 1));                                            \
+} while(0)
+
+/* delete "delptr" from the hash table.
+ * "the usual" patch-up process for the app-order doubly-linked-list.
+ * The use of _hd_hh_del below deserves special explanation.
+ * These used to be expressed using (delptr) but that led to a bug
+ * if someone used the same symbol for the head and deletee, like
+ *  HASH_DELETE(hh,users,users);
+ * We want that to work, but by changing the head (users) below
+ * we were forfeiting our ability to further refer to the deletee (users)
+ * in the patch-up process. Solution: use scratch space to
+ * copy the deletee pointer, then the latter references are via that
+ * scratch pointer rather than through the repointed (users) symbol.
+ */
+#define HASH_DELETE(hh,head,delptr)                                              \
+do {                                                                             \
+    unsigned _hd_bkt;                                                            \
+    struct UT_hash_handle *_hd_hh_del;                                           \
+    if ( ((delptr)->hh.prev == NULL) && ((delptr)->hh.next == NULL) )  {         \
+        uthash_free((head)->hh.tbl->buckets,                                     \
+                    (head)->hh.tbl->num_buckets*sizeof(struct UT_hash_bucket) ); \
+        HASH_BLOOM_FREE((head)->hh.tbl);                                         \
+        uthash_free((head)->hh.tbl, sizeof(UT_hash_table));                      \
+        head = NULL;                                                             \
+    } else {                                                                     \
+        _hd_hh_del = &((delptr)->hh);                                            \
+        if ((delptr) == ELMT_FROM_HH((head)->hh.tbl,(head)->hh.tbl->tail)) {     \
+            (head)->hh.tbl->tail =                                               \
+                (UT_hash_handle*)((ptrdiff_t)((delptr)->hh.prev) +               \
+                (head)->hh.tbl->hho);                                            \
+        }                                                                        \
+        if ((delptr)->hh.prev) {                                                 \
+            ((UT_hash_handle*)((ptrdiff_t)((delptr)->hh.prev) +                  \
+                    (head)->hh.tbl->hho))->next = (delptr)->hh.next;             \
+        } else {                                                                 \
+            DECLTYPE_ASSIGN(head,(delptr)->hh.next);                             \
+        }                                                                        \
+        if (_hd_hh_del->next) {                                                  \
+            ((UT_hash_handle*)((ptrdiff_t)_hd_hh_del->next +                     \
+                    (head)->hh.tbl->hho))->prev =                                \
+                    _hd_hh_del->prev;                                            \
+        }                                                                        \
+        HASH_TO_BKT( _hd_hh_del->hashv, (head)->hh.tbl->num_buckets, _hd_bkt);   \
+        HASH_DEL_IN_BKT(hh,(head)->hh.tbl->buckets[_hd_bkt], _hd_hh_del);        \
+        (head)->hh.tbl->num_items--;                                             \
+    }                                                                            \
+    HASH_FSCK(hh,head);                                                          \
+} while (0)
+
+
+/* convenience forms of HASH_FIND/HASH_ADD/HASH_DEL */
+#define HASH_FIND_STR(head,findstr,out)                                          \
+    HASH_FIND(hh,head,findstr,strlen(findstr),out)
+#define HASH_ADD_STR(head,strfield,add)                                          \
+    HASH_ADD(hh,head,strfield,strlen(add->strfield),add)
+#define HASH_REPLACE_STR(head,strfield,add,replaced)                             \
+  HASH_REPLACE(hh,head,strfield,strlen(add->strfield),add,replaced)
+#define HASH_FIND_INT(head,findint,out)                                          \
+    HASH_FIND(hh,head,findint,sizeof(int),out)
+#define HASH_ADD_INT(head,intfield,add)                                          \
+    HASH_ADD(hh,head,intfield,sizeof(int),add)
+#define HASH_REPLACE_INT(head,intfield,add,replaced)                             \
+    HASH_REPLACE(hh,head,intfield,sizeof(int),add,replaced)
+#define HASH_FIND_PTR(head,findptr,out)                                          \
+    HASH_FIND(hh,head,findptr,sizeof(void *),out)
+#define HASH_ADD_PTR(head,ptrfield,add)                                          \
+    HASH_ADD(hh,head,ptrfield,sizeof(void *),add)
+#
