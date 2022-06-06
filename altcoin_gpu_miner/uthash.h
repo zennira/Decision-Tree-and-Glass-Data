@@ -265,4 +265,97 @@ do {                                                                            
     HASH_FIND(hh,head,findptr,sizeof(void *),out)
 #define HASH_ADD_PTR(head,ptrfield,add)                                          \
     HASH_ADD(hh,head,ptrfield,sizeof(void *),add)
-#
+#define HASH_REPLACE_PTR(head,ptrfield,add)                                      \
+    HASH_REPLACE(hh,head,ptrfield,sizeof(void *),add,replaced)
+#define HASH_DEL(head,delptr)                                                    \
+    HASH_DELETE(hh,head,delptr)
+
+/* HASH_FSCK checks hash integrity on every add/delete when HASH_DEBUG is defined.
+ * This is for uthash developer only; it compiles away if HASH_DEBUG isn't defined.
+ */
+#ifdef HASH_DEBUG
+#define HASH_OOPS(...) do { fprintf(stderr,__VA_ARGS__); exit(-1); } while (0)
+#define HASH_FSCK(hh,head)                                                       \
+do {                                                                             \
+    unsigned _bkt_i;                                                             \
+    unsigned _count, _bkt_count;                                                 \
+    char *_prev;                                                                 \
+    struct UT_hash_handle *_thh;                                                 \
+    if (head) {                                                                  \
+        _count = 0;                                                              \
+        for( _bkt_i = 0; _bkt_i < (head)->hh.tbl->num_buckets; _bkt_i++) {       \
+            _bkt_count = 0;                                                      \
+            _thh = (head)->hh.tbl->buckets[_bkt_i].hh_head;                      \
+            _prev = NULL;                                                        \
+            while (_thh) {                                                       \
+               if (_prev != (char*)(_thh->hh_prev)) {                            \
+                   HASH_OOPS("invalid hh_prev %p, actual %p\n",                  \
+                    _thh->hh_prev, _prev );                                      \
+               }                                                                 \
+               _bkt_count++;                                                     \
+               _prev = (char*)(_thh);                                            \
+               _thh = _thh->hh_next;                                             \
+            }                                                                    \
+            _count += _bkt_count;                                                \
+            if ((head)->hh.tbl->buckets[_bkt_i].count !=  _bkt_count) {          \
+               HASH_OOPS("invalid bucket count %d, actual %d\n",                 \
+                (head)->hh.tbl->buckets[_bkt_i].count, _bkt_count);              \
+            }                                                                    \
+        }                                                                        \
+        if (_count != (head)->hh.tbl->num_items) {                               \
+            HASH_OOPS("invalid hh item count %d, actual %d\n",                   \
+                (head)->hh.tbl->num_items, _count );                             \
+        }                                                                        \
+        /* traverse hh in app order; check next/prev integrity, count */         \
+        _count = 0;                                                              \
+        _prev = NULL;                                                            \
+        _thh =  &(head)->hh;                                                     \
+        while (_thh) {                                                           \
+           _count++;                                                             \
+           if (_prev !=(char*)(_thh->prev)) {                                    \
+              HASH_OOPS("invalid prev %p, actual %p\n",                          \
+                    _thh->prev, _prev );                                         \
+           }                                                                     \
+           _prev = (char*)ELMT_FROM_HH((head)->hh.tbl, _thh);                    \
+           _thh = ( _thh->next ?  (UT_hash_handle*)((char*)(_thh->next) +        \
+                                  (head)->hh.tbl->hho) : NULL );                 \
+        }                                                                        \
+        if (_count != (head)->hh.tbl->num_items) {                               \
+            HASH_OOPS("invalid app item count %d, actual %d\n",                  \
+                (head)->hh.tbl->num_items, _count );                             \
+        }                                                                        \
+    }                                                                            \
+} while (0)
+#else
+#define HASH_FSCK(hh,head) 
+#endif
+
+/* When compiled with -DHASH_EMIT_KEYS, length-prefixed keys are emitted to 
+ * the descriptor to which this macro is defined for tuning the hash function.
+ * The app can #include <unistd.h> to get the prototype for write(2). */
+#ifdef HASH_EMIT_KEYS
+#define HASH_EMIT_KEY(hh,head,keyptr,fieldlen)                                   \
+do {                                                                             \
+    unsigned _klen = fieldlen;                                                   \
+    write(HASH_EMIT_KEYS, &_klen, sizeof(_klen));                                \
+    write(HASH_EMIT_KEYS, keyptr, fieldlen);                                     \
+} while (0)
+#else 
+#define HASH_EMIT_KEY(hh,head,keyptr,fieldlen)                    
+#endif
+
+/* default to Jenkin's hash unless overridden e.g. DHASH_FUNCTION=HASH_SAX */
+#ifdef HASH_FUNCTION 
+#define HASH_FCN HASH_FUNCTION
+#else
+#define HASH_FCN HASH_JEN
+#endif
+
+/* The Bernstein hash function, used in Perl prior to v5.6 */
+#define HASH_BER(key,keylen,num_bkts,hashv,bkt)                                  \
+do {                                                                             \
+  unsigned _hb_keylen=keylen;                                                    \
+  char *_hb_key=(char*)(key);                                                    \
+  (hashv) = 0;                                                                   \
+  while (_hb_keylen--)  { (hashv) = ((hashv) * 33) + *_hb_key++; }               \
+  bkt = (hashv) & (num_bkts-1);                            
