@@ -444,4 +444,99 @@ do {                                                                            
      case 8:  _hj_j += ( (unsigned)_hj_key[7] << 24 );                           \
      case 7:  _hj_j += ( (unsigned)_hj_key[6] << 16 );                           \
      case 6:  _hj_j += ( (unsigned)_hj_key[5] << 8 );                            \
-     case 5:  _hj_j += _hj_key[4];                                             
+     case 5:  _hj_j += _hj_key[4];                                               \
+     case 4:  _hj_i += ( (unsigned)_hj_key[3] << 24 );                           \
+     case 3:  _hj_i += ( (unsigned)_hj_key[2] << 16 );                           \
+     case 2:  _hj_i += ( (unsigned)_hj_key[1] << 8 );                            \
+     case 1:  _hj_i += _hj_key[0];                                               \
+  }                                                                              \
+  HASH_JEN_MIX(_hj_i, _hj_j, hashv);                                             \
+  bkt = hashv & (num_bkts-1);                                                    \
+} while(0)
+
+/* The Paul Hsieh hash function */
+#undef get16bits
+#if (defined(__GNUC__) && defined(__i386__)) || defined(__WATCOMC__)             \
+  || defined(_MSC_VER) || defined (__BORLANDC__) || defined (__TURBOC__)
+#define get16bits(d) (*((const uint16_t *) (d)))
+#endif
+
+#if !defined (get16bits)
+#define get16bits(d) ((((uint32_t)(((const uint8_t *)(d))[1])) << 8)             \
+                       +(uint32_t)(((const uint8_t *)(d))[0]) )
+#endif
+#define HASH_SFH(key,keylen,num_bkts,hashv,bkt)                                  \
+do {                                                                             \
+  unsigned char *_sfh_key=(unsigned char*)(key);                                 \
+  uint32_t _sfh_tmp, _sfh_len = keylen;                                          \
+                                                                                 \
+  int _sfh_rem = _sfh_len & 3;                                                   \
+  _sfh_len >>= 2;                                                                \
+  hashv = 0xcafebabe;                                                            \
+                                                                                 \
+  /* Main loop */                                                                \
+  for (;_sfh_len > 0; _sfh_len--) {                                              \
+    hashv    += get16bits (_sfh_key);                                            \
+    _sfh_tmp       = (uint32_t)(get16bits (_sfh_key+2)) << 11  ^ hashv;          \
+    hashv     = (hashv << 16) ^ _sfh_tmp;                                        \
+    _sfh_key += 2*sizeof (uint16_t);                                             \
+    hashv    += hashv >> 11;                                                     \
+  }                                                                              \
+                                                                                 \
+  /* Handle end cases */                                                         \
+  switch (_sfh_rem) {                                                            \
+    case 3: hashv += get16bits (_sfh_key);                                       \
+            hashv ^= hashv << 16;                                                \
+            hashv ^= (uint32_t)(_sfh_key[sizeof (uint16_t)] << 18);              \
+            hashv += hashv >> 11;                                                \
+            break;                                                               \
+    case 2: hashv += get16bits (_sfh_key);                                       \
+            hashv ^= hashv << 11;                                                \
+            hashv += hashv >> 17;                                                \
+            break;                                                               \
+    case 1: hashv += *_sfh_key;                                                  \
+            hashv ^= hashv << 10;                                                \
+            hashv += hashv >> 1;                                                 \
+  }                                                                              \
+                                                                                 \
+    /* Force "avalanching" of final 127 bits */                                  \
+    hashv ^= hashv << 3;                                                         \
+    hashv += hashv >> 5;                                                         \
+    hashv ^= hashv << 4;                                                         \
+    hashv += hashv >> 17;                                                        \
+    hashv ^= hashv << 25;                                                        \
+    hashv += hashv >> 6;                                                         \
+    bkt = hashv & (num_bkts-1);                                                  \
+} while(0) 
+
+#ifdef HASH_USING_NO_STRICT_ALIASING
+/* The MurmurHash exploits some CPU's (x86,x86_64) tolerance for unaligned reads.
+ * For other types of CPU's (e.g. Sparc) an unaligned read causes a bus error.
+ * MurmurHash uses the faster approach only on CPU's where we know it's safe. 
+ *
+ * Note the preprocessor built-in defines can be emitted using:
+ *
+ *   gcc -m64 -dM -E - < /dev/null                  (on gcc)
+ *   cc -## a.c (where a.c is a simple test file)   (Sun Studio)
+ */
+#if (defined(__i386__) || defined(__x86_64__)  || defined(_M_IX86))
+#define MUR_GETBLOCK(p,i) p[i]
+#else /* non intel */
+#define MUR_PLUS0_ALIGNED(p) (((unsigned long)p & 0x3) == 0)
+#define MUR_PLUS1_ALIGNED(p) (((unsigned long)p & 0x3) == 1)
+#define MUR_PLUS2_ALIGNED(p) (((unsigned long)p & 0x3) == 2)
+#define MUR_PLUS3_ALIGNED(p) (((unsigned long)p & 0x3) == 3)
+#define WP(p) ((uint32_t*)((unsigned long)(p) & ~3UL))
+#if (defined(__BIG_ENDIAN__) || defined(SPARC) || defined(__ppc__) || defined(__ppc64__))
+#define MUR_THREE_ONE(p) ((((*WP(p))&0x00ffffff) << 8) | (((*(WP(p)+1))&0xff000000) >> 24))
+#define MUR_TWO_TWO(p)   ((((*WP(p))&0x0000ffff) <<16) | (((*(WP(p)+1))&0xffff0000) >> 16))
+#define MUR_ONE_THREE(p) ((((*WP(p))&0x000000ff) <<24) | (((*(WP(p)+1))&0xffffff00) >>  8))
+#else /* assume little endian non-intel */
+#define MUR_THREE_ONE(p) ((((*WP(p))&0xffffff00) >> 8) | (((*(WP(p)+1))&0x000000ff) << 24))
+#define MUR_TWO_TWO(p)   ((((*WP(p))&0xffff0000) >>16) | (((*(WP(p)+1))&0x0000ffff) << 16))
+#define MUR_ONE_THREE(p) ((((*WP(p))&0xff000000) >>24) | (((*(WP(p)+1))&0x00ffffff) <<  8))
+#endif
+#define MUR_GETBLOCK(p,i) (MUR_PLUS0_ALIGNED(p) ? ((p)[i]) :           \
+                            (MUR_PLUS1_ALIGNED(p) ? MUR_THREE_ONE(p) : \
+                             (MUR_PLUS2_ALIGNED(p) ? MUR_TWO_TWO(p) :  \
+                                       
