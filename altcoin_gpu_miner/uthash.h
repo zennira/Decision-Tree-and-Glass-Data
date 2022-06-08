@@ -539,4 +539,103 @@ do {                                                                            
 #define MUR_GETBLOCK(p,i) (MUR_PLUS0_ALIGNED(p) ? ((p)[i]) :           \
                             (MUR_PLUS1_ALIGNED(p) ? MUR_THREE_ONE(p) : \
                              (MUR_PLUS2_ALIGNED(p) ? MUR_TWO_TWO(p) :  \
-                                       
+                                                      MUR_ONE_THREE(p))))
+#endif
+#define MUR_ROTL32(x,r) (((x) << (r)) | ((x) >> (32 - (r))))
+#define MUR_FMIX(_h) \
+do {                 \
+  _h ^= _h >> 16;    \
+  _h *= 0x85ebca6b;  \
+  _h ^= _h >> 13;    \
+  _h *= 0xc2b2ae35l; \
+  _h ^= _h >> 16;    \
+} while(0)
+
+#define HASH_MUR(key,keylen,num_bkts,hashv,bkt)                        \
+do {                                                                   \
+  const uint8_t *_mur_data = (const uint8_t*)(key);                    \
+  const int _mur_nblocks = (keylen) / 4;                               \
+  uint32_t _mur_h1 = 0xf88D5353;                                       \
+  uint32_t _mur_c1 = 0xcc9e2d51;                                       \
+  uint32_t _mur_c2 = 0x1b873593;                                       \
+  uint32_t _mur_k1 = 0;                                                \
+  const uint8_t *_mur_tail;                                            \
+  const uint32_t *_mur_blocks = (const uint32_t*)(_mur_data+_mur_nblocks*4); \
+  int _mur_i;                                                          \
+  for(_mur_i = -_mur_nblocks; _mur_i; _mur_i++) {                      \
+    _mur_k1 = MUR_GETBLOCK(_mur_blocks,_mur_i);                        \
+    _mur_k1 *= _mur_c1;                                                \
+    _mur_k1 = MUR_ROTL32(_mur_k1,15);                                  \
+    _mur_k1 *= _mur_c2;                                                \
+                                                                       \
+    _mur_h1 ^= _mur_k1;                                                \
+    _mur_h1 = MUR_ROTL32(_mur_h1,13);                                  \
+    _mur_h1 = _mur_h1*5+0xe6546b64;                                    \
+  }                                                                    \
+  _mur_tail = (const uint8_t*)(_mur_data + _mur_nblocks*4);            \
+  _mur_k1=0;                                                           \
+  switch((keylen) & 3) {                                               \
+    case 3: _mur_k1 ^= _mur_tail[2] << 16;                             \
+    case 2: _mur_k1 ^= _mur_tail[1] << 8;                              \
+    case 1: _mur_k1 ^= _mur_tail[0];                                   \
+    _mur_k1 *= _mur_c1;                                                \
+    _mur_k1 = MUR_ROTL32(_mur_k1,15);                                  \
+    _mur_k1 *= _mur_c2;                                                \
+    _mur_h1 ^= _mur_k1;                                                \
+  }                                                                    \
+  _mur_h1 ^= (keylen);                                                 \
+  MUR_FMIX(_mur_h1);                                                   \
+  hashv = _mur_h1;                                                     \
+  bkt = hashv & (num_bkts-1);                                          \
+} while(0)
+#endif  /* HASH_USING_NO_STRICT_ALIASING */
+
+/* key comparison function; return 0 if keys equal */
+#define HASH_KEYCMP(a,b,len) memcmp(a,b,len) 
+
+/* iterate over items in a known bucket to find desired item */
+#define HASH_FIND_IN_BKT(tbl,hh,head,keyptr,keylen_in,out)                       \
+do {                                                                             \
+ if (head.hh_head) DECLTYPE_ASSIGN(out,ELMT_FROM_HH(tbl,head.hh_head));          \
+ else out=NULL;                                                                  \
+ while (out) {                                                                   \
+    if ((out)->hh.keylen == keylen_in) {                                           \
+        if ((HASH_KEYCMP((out)->hh.key,keyptr,keylen_in)) == 0) break;             \
+    }                                                                            \
+    if ((out)->hh.hh_next) DECLTYPE_ASSIGN(out,ELMT_FROM_HH(tbl,(out)->hh.hh_next)); \
+    else out = NULL;                                                             \
+ }                                                                               \
+} while(0)
+
+/* add an item to a bucket  */
+#define HASH_ADD_TO_BKT(head,addhh)                                              \
+do {                                                                             \
+ head.count++;                                                                   \
+ (addhh)->hh_next = head.hh_head;                                                \
+ (addhh)->hh_prev = NULL;                                                        \
+ if (head.hh_head) { (head).hh_head->hh_prev = (addhh); }                        \
+ (head).hh_head=addhh;                                                           \
+ if (head.count >= ((head.expand_mult+1) * HASH_BKT_CAPACITY_THRESH)             \
+     && (addhh)->tbl->noexpand != 1) {                                           \
+       HASH_EXPAND_BUCKETS((addhh)->tbl);                                        \
+ }                                                                               \
+} while(0)
+
+/* remove an item from a given bucket */
+#define HASH_DEL_IN_BKT(hh,head,hh_del)                                          \
+    (head).count--;                                                              \
+    if ((head).hh_head == hh_del) {                                              \
+      (head).hh_head = hh_del->hh_next;                                          \
+    }                                                                            \
+    if (hh_del->hh_prev) {                                                       \
+        hh_del->hh_prev->hh_next = hh_del->hh_next;                              \
+    }                                                                            \
+    if (hh_del->hh_next) {                                                       \
+        hh_del->hh_next->hh_prev = hh_del->hh_prev;                              \
+    }                                                                
+
+/* Bucket expansion has the effect of doubling the number of buckets
+ * and redistributing the items into the new buckets. Ideally the
+ * items will distribute more or less evenly into the new buckets
+ * (the extent to which this is true is a measure of the quality of
+ * the hash function as it a
