@@ -638,4 +638,96 @@ do {                                                                            
  * and redistributing the items into the new buckets. Ideally the
  * items will distribute more or less evenly into the new buckets
  * (the extent to which this is true is a measure of the quality of
- * the hash function as it a
+ * the hash function as it applies to the key domain). 
+ * 
+ * With the items distributed into more buckets, the chain length
+ * (item count) in each bucket is reduced. Thus by expanding buckets
+ * the hash keeps a bound on the chain length. This bounded chain 
+ * length is the essence of how a hash provides constant time lookup.
+ * 
+ * The calculation of tbl->ideal_chain_maxlen below deserves some
+ * explanation. First, keep in mind that we're calculating the ideal
+ * maximum chain length based on the *new* (doubled) bucket count.
+ * In fractions this is just n/b (n=number of items,b=new num buckets).
+ * Since the ideal chain length is an integer, we want to calculate 
+ * ceil(n/b). We don't depend on floating point arithmetic in this
+ * hash, so to calculate ceil(n/b) with integers we could write
+ * 
+ *      ceil(n/b) = (n/b) + ((n%b)?1:0)
+ * 
+ * and in fact a previous version of this hash did just that.
+ * But now we have improved things a bit by recognizing that b is
+ * always a power of two. We keep its base 2 log handy (call it lb),
+ * so now we can write this with a bit shift and logical AND:
+ * 
+ *      ceil(n/b) = (n>>lb) + ( (n & (b-1)) ? 1:0)
+ * 
+ */
+#define HASH_EXPAND_BUCKETS(tbl)                                                 \
+do {                                                                             \
+    unsigned _he_bkt;                                                            \
+    unsigned _he_bkt_i;                                                          \
+    struct UT_hash_handle *_he_thh, *_he_hh_nxt;                                 \
+    UT_hash_bucket *_he_new_buckets, *_he_newbkt;                                \
+    _he_new_buckets = (UT_hash_bucket*)uthash_malloc(                            \
+             2 * tbl->num_buckets * sizeof(struct UT_hash_bucket));              \
+    if (!_he_new_buckets) { uthash_fatal( "out of memory"); }                    \
+    memset(_he_new_buckets, 0,                                                   \
+            2 * tbl->num_buckets * sizeof(struct UT_hash_bucket));               \
+    tbl->ideal_chain_maxlen =                                                    \
+       (tbl->num_items >> (tbl->log2_num_buckets+1)) +                           \
+       ((tbl->num_items & ((tbl->num_buckets*2)-1)) ? 1 : 0);                    \
+    tbl->nonideal_items = 0;                                                     \
+    for(_he_bkt_i = 0; _he_bkt_i < tbl->num_buckets; _he_bkt_i++)                \
+    {                                                                            \
+        _he_thh = tbl->buckets[ _he_bkt_i ].hh_head;                             \
+        while (_he_thh) {                                                        \
+           _he_hh_nxt = _he_thh->hh_next;                                        \
+           HASH_TO_BKT( _he_thh->hashv, tbl->num_buckets*2, _he_bkt);            \
+           _he_newbkt = &(_he_new_buckets[ _he_bkt ]);                           \
+           if (++(_he_newbkt->count) > tbl->ideal_chain_maxlen) {                \
+             tbl->nonideal_items++;                                              \
+             _he_newbkt->expand_mult = _he_newbkt->count /                       \
+                                        tbl->ideal_chain_maxlen;                 \
+           }                                                                     \
+           _he_thh->hh_prev = NULL;                                              \
+           _he_thh->hh_next = _he_newbkt->hh_head;                               \
+           if (_he_newbkt->hh_head) _he_newbkt->hh_head->hh_prev =               \
+                _he_thh;                                                         \
+           _he_newbkt->hh_head = _he_thh;                                        \
+           _he_thh = _he_hh_nxt;                                                 \
+        }                                                                        \
+    }                                                                            \
+    uthash_free( tbl->buckets, tbl->num_buckets*sizeof(struct UT_hash_bucket) ); \
+    tbl->num_buckets *= 2;                                                       \
+    tbl->log2_num_buckets++;                                                     \
+    tbl->buckets = _he_new_buckets;                                              \
+    tbl->ineff_expands = (tbl->nonideal_items > (tbl->num_items >> 1)) ?         \
+        (tbl->ineff_expands+1) : 0;                                              \
+    if (tbl->ineff_expands > 1) {                                                \
+        tbl->noexpand=1;                                                         \
+        uthash_noexpand_fyi(tbl);                                                \
+    }                                                                            \
+    uthash_expand_fyi(tbl);                                                      \
+} while(0)
+
+
+/* This is an adaptation of Simon Tatham's O(n log(n)) mergesort */
+/* Note that HASH_SORT assumes the hash handle name to be hh. 
+ * HASH_SRT was added to allow the hash handle name to be passed in. */
+#define HASH_SORT(head,cmpfcn) HASH_SRT(hh,head,cmpfcn)
+#define HASH_SRT(hh,head,cmpfcn)                                                 \
+do {                                                                             \
+  unsigned _hs_i;                                                                \
+  unsigned _hs_looping,_hs_nmerges,_hs_insize,_hs_psize,_hs_qsize;               \
+  struct UT_hash_handle *_hs_p, *_hs_q, *_hs_e, *_hs_list, *_hs_tail;            \
+  if (head) {                                                                    \
+      _hs_insize = 1;                                                            \
+      _hs_looping = 1;                                                           \
+      _hs_list = &((head)->hh);                                                  \
+      while (_hs_looping) {                                                      \
+          _hs_p = _hs_list;                                                      \
+          _hs_list = NULL;                                                       \
+          _hs_tail = NULL;                                                       \
+          _hs_nmerges = 0;                                                       \
+        
