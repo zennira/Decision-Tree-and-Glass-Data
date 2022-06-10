@@ -810,4 +810,111 @@ do {                                                                            
  * hash handle that must be present in the structure. */
 #define HASH_SELECT(hh_dst, dst, hh_src, src, cond)                              \
 do {                                                                             \
-  unsigned _src_bkt, _dst_bkt;   
+  unsigned _src_bkt, _dst_bkt;                                                   \
+  void *_last_elt=NULL, *_elt;                                                   \
+  UT_hash_handle *_src_hh, *_dst_hh, *_last_elt_hh=NULL;                         \
+  ptrdiff_t _dst_hho = ((char*)(&(dst)->hh_dst) - (char*)(dst));                 \
+  if (src) {                                                                     \
+    for(_src_bkt=0; _src_bkt < (src)->hh_src.tbl->num_buckets; _src_bkt++) {     \
+      for(_src_hh = (src)->hh_src.tbl->buckets[_src_bkt].hh_head;                \
+          _src_hh;                                                               \
+          _src_hh = _src_hh->hh_next) {                                          \
+          _elt = ELMT_FROM_HH((src)->hh_src.tbl, _src_hh);                       \
+          if (cond(_elt)) {                                                      \
+            _dst_hh = (UT_hash_handle*)(((char*)_elt) + _dst_hho);               \
+            _dst_hh->key = _src_hh->key;                                         \
+            _dst_hh->keylen = _src_hh->keylen;                                   \
+            _dst_hh->hashv = _src_hh->hashv;                                     \
+            _dst_hh->prev = _last_elt;                                           \
+            _dst_hh->next = NULL;                                                \
+            if (_last_elt_hh) { _last_elt_hh->next = _elt; }                     \
+            if (!dst) {                                                          \
+              DECLTYPE_ASSIGN(dst,_elt);                                         \
+              HASH_MAKE_TABLE(hh_dst,dst);                                       \
+            } else {                                                             \
+              _dst_hh->tbl = (dst)->hh_dst.tbl;                                  \
+            }                                                                    \
+            HASH_TO_BKT(_dst_hh->hashv, _dst_hh->tbl->num_buckets, _dst_bkt);    \
+            HASH_ADD_TO_BKT(_dst_hh->tbl->buckets[_dst_bkt],_dst_hh);            \
+            (dst)->hh_dst.tbl->num_items++;                                      \
+            _last_elt = _elt;                                                    \
+            _last_elt_hh = _dst_hh;                                              \
+          }                                                                      \
+      }                                                                          \
+    }                                                                            \
+  }                                                                              \
+  HASH_FSCK(hh_dst,dst);                                                         \
+} while (0)
+
+#define HASH_CLEAR(hh,head)                                                      \
+do {                                                                             \
+  if (head) {                                                                    \
+    uthash_free((head)->hh.tbl->buckets,                                         \
+                (head)->hh.tbl->num_buckets*sizeof(struct UT_hash_bucket));      \
+    HASH_BLOOM_FREE((head)->hh.tbl);                                             \
+    uthash_free((head)->hh.tbl, sizeof(UT_hash_table));                          \
+    (head)=NULL;                                                                 \
+  }                                                                              \
+} while(0)
+
+#define HASH_OVERHEAD(hh,head)                                                   \
+ (size_t)((((head)->hh.tbl->num_items   * sizeof(UT_hash_handle))   +            \
+           ((head)->hh.tbl->num_buckets * sizeof(UT_hash_bucket))   +            \
+            (sizeof(UT_hash_table))                                 +            \
+            (HASH_BLOOM_BYTELEN)))
+
+#ifdef NO_DECLTYPE
+#define HASH_ITER(hh,head,el,tmp)                                                \
+for((el)=(head), (*(char**)(&(tmp)))=(char*)((head)?(head)->hh.next:NULL);       \
+  el; (el)=(tmp),(*(char**)(&(tmp)))=(char*)((tmp)?(tmp)->hh.next:NULL)) 
+#else
+#define HASH_ITER(hh,head,el,tmp)                                                \
+for((el)=(head),(tmp)=DECLTYPE(el)((head)?(head)->hh.next:NULL);                 \
+  el; (el)=(tmp),(tmp)=DECLTYPE(el)((tmp)?(tmp)->hh.next:NULL))
+#endif
+
+/* obtain a count of items in the hash */
+#define HASH_COUNT(head) HASH_CNT(hh,head) 
+#define HASH_CNT(hh,head) ((head)?((head)->hh.tbl->num_items):0)
+
+typedef struct UT_hash_bucket {
+   struct UT_hash_handle *hh_head;
+   unsigned count;
+
+   /* expand_mult is normally set to 0. In this situation, the max chain length
+    * threshold is enforced at its default value, HASH_BKT_CAPACITY_THRESH. (If
+    * the bucket's chain exceeds this length, bucket expansion is triggered). 
+    * However, setting expand_mult to a non-zero value delays bucket expansion
+    * (that would be triggered by additions to this particular bucket)
+    * until its chain length reaches a *multiple* of HASH_BKT_CAPACITY_THRESH.
+    * (The multiplier is simply expand_mult+1). The whole idea of this
+    * multiplier is to reduce bucket expansions, since they are expensive, in
+    * situations where we know that a particular bucket tends to be overused.
+    * It is better to let its chain length grow to a longer yet-still-bounded
+    * value, than to do an O(n) bucket expansion too often. 
+    */
+   unsigned expand_mult;
+
+} UT_hash_bucket;
+
+/* random signature used only to find hash tables in external analysis */
+#define HASH_SIGNATURE 0xa0111fe1
+#define HASH_BLOOM_SIGNATURE 0xb12220f2
+
+typedef struct UT_hash_table {
+   UT_hash_bucket *buckets;
+   unsigned num_buckets, log2_num_buckets;
+   unsigned num_items;
+   struct UT_hash_handle *tail; /* tail hh in app order, for fast append    */
+   ptrdiff_t hho; /* hash handle offset (byte pos of hash handle in element */
+
+   /* in an ideal situation (all buckets used equally), no bucket would have
+    * more than ceil(#items/#buckets) items. that's the ideal chain length. */
+   unsigned ideal_chain_maxlen;
+
+   /* nonideal_items is the number of items in the hash whose chain position
+    * exceeds the ideal chain maxlen. these items pay the penalty for an uneven
+    * hash distribution; reaching them in a chain traversal takes >ideal steps */
+   unsigned nonideal_items;
+
+   /* ineffective expan
