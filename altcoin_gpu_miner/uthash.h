@@ -730,4 +730,84 @@ do {                                                                            
           _hs_list = NULL;                                                       \
           _hs_tail = NULL;                                                       \
           _hs_nmerges = 0;                                                       \
-        
+          while (_hs_p) {                                                        \
+              _hs_nmerges++;                                                     \
+              _hs_q = _hs_p;                                                     \
+              _hs_psize = 0;                                                     \
+              for ( _hs_i = 0; _hs_i  < _hs_insize; _hs_i++ ) {                  \
+                  _hs_psize++;                                                   \
+                  _hs_q = (UT_hash_handle*)((_hs_q->next) ?                      \
+                          ((void*)((char*)(_hs_q->next) +                        \
+                          (head)->hh.tbl->hho)) : NULL);                         \
+                  if (! (_hs_q) ) break;                                         \
+              }                                                                  \
+              _hs_qsize = _hs_insize;                                            \
+              while ((_hs_psize > 0) || ((_hs_qsize > 0) && _hs_q )) {           \
+                  if (_hs_psize == 0) {                                          \
+                      _hs_e = _hs_q;                                             \
+                      _hs_q = (UT_hash_handle*)((_hs_q->next) ?                  \
+                              ((void*)((char*)(_hs_q->next) +                    \
+                              (head)->hh.tbl->hho)) : NULL);                     \
+                      _hs_qsize--;                                               \
+                  } else if ( (_hs_qsize == 0) || !(_hs_q) ) {                   \
+                      _hs_e = _hs_p;                                             \
+                      if (_hs_p){                                                \
+                        _hs_p = (UT_hash_handle*)((_hs_p->next) ?                \
+                                ((void*)((char*)(_hs_p->next) +                  \
+                                (head)->hh.tbl->hho)) : NULL);                   \
+                       }                                                         \
+                      _hs_psize--;                                               \
+                  } else if ((                                                   \
+                      cmpfcn(DECLTYPE(head)(ELMT_FROM_HH((head)->hh.tbl,_hs_p)), \
+                             DECLTYPE(head)(ELMT_FROM_HH((head)->hh.tbl,_hs_q))) \
+                             ) <= 0) {                                           \
+                      _hs_e = _hs_p;                                             \
+                      if (_hs_p){                                                \
+                        _hs_p = (UT_hash_handle*)((_hs_p->next) ?                \
+                               ((void*)((char*)(_hs_p->next) +                   \
+                               (head)->hh.tbl->hho)) : NULL);                    \
+                       }                                                         \
+                      _hs_psize--;                                               \
+                  } else {                                                       \
+                      _hs_e = _hs_q;                                             \
+                      _hs_q = (UT_hash_handle*)((_hs_q->next) ?                  \
+                              ((void*)((char*)(_hs_q->next) +                    \
+                              (head)->hh.tbl->hho)) : NULL);                     \
+                      _hs_qsize--;                                               \
+                  }                                                              \
+                  if ( _hs_tail ) {                                              \
+                      _hs_tail->next = ((_hs_e) ?                                \
+                            ELMT_FROM_HH((head)->hh.tbl,_hs_e) : NULL);          \
+                  } else {                                                       \
+                      _hs_list = _hs_e;                                          \
+                  }                                                              \
+                  if (_hs_e) {                                                   \
+                  _hs_e->prev = ((_hs_tail) ?                                    \
+                     ELMT_FROM_HH((head)->hh.tbl,_hs_tail) : NULL);              \
+                  }                                                              \
+                  _hs_tail = _hs_e;                                              \
+              }                                                                  \
+              _hs_p = _hs_q;                                                     \
+          }                                                                      \
+          if (_hs_tail){                                                         \
+            _hs_tail->next = NULL;                                               \
+          }                                                                      \
+          if ( _hs_nmerges <= 1 ) {                                              \
+              _hs_looping=0;                                                     \
+              (head)->hh.tbl->tail = _hs_tail;                                   \
+              DECLTYPE_ASSIGN(head,ELMT_FROM_HH((head)->hh.tbl, _hs_list));      \
+          }                                                                      \
+          _hs_insize *= 2;                                                       \
+      }                                                                          \
+      HASH_FSCK(hh,head);                                                        \
+ }                                                                               \
+} while (0)
+
+/* This function selects items from one hash into another hash. 
+ * The end result is that the selected items have dual presence 
+ * in both hashes. There is no copy of the items made; rather 
+ * they are added into the new hash through a secondary hash 
+ * hash handle that must be present in the structure. */
+#define HASH_SELECT(hh_dst, dst, hh_src, src, cond)                              \
+do {                                                                             \
+  unsigned _src_bkt, _dst_bkt;   
