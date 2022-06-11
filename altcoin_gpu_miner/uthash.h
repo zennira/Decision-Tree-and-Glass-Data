@@ -917,4 +917,32 @@ typedef struct UT_hash_table {
     * hash distribution; reaching them in a chain traversal takes >ideal steps */
    unsigned nonideal_items;
 
-   /* ineffective expan
+   /* ineffective expands occur when a bucket doubling was performed, but 
+    * afterward, more than half the items in the hash had nonideal chain
+    * positions. If this happens on two consecutive expansions we inhibit any
+    * further expansion, as it's not helping; this happens when the hash
+    * function isn't a good fit for the key domain. When expansion is inhibited
+    * the hash will still work, albeit no longer in constant time. */
+   unsigned ineff_expands, noexpand;
+
+   uint32_t signature; /* used only to find hash tables in external analysis */
+#ifdef HASH_BLOOM
+   uint32_t bloom_sig; /* used only to test bloom exists in external analysis */
+   uint8_t *bloom_bv;
+   char bloom_nbits;
+#endif
+
+} UT_hash_table;
+
+typedef struct UT_hash_handle {
+   struct UT_hash_table *tbl;
+   void *prev;                       /* prev element in app order      */
+   void *next;                       /* next element in app order      */
+   struct UT_hash_handle *hh_prev;   /* previous hh in bucket order    */
+   struct UT_hash_handle *hh_next;   /* next hh in bucket order        */
+   void *key;                        /* ptr to enclosing struct's key  */
+   unsigned keylen;                  /* enclosing struct's key len     */
+   unsigned hashv;                   /* result of hash-fcn(key)        */
+} UT_hash_handle;
+
+#endif /* UTHASH_H */
