@@ -438,4 +438,260 @@ json_t *json_rpc_call(CURL *curl, const char *url,
 		} else
 			pool->hdr_path = NULL;
 		if (hi.stratum_url) {
-			pool->stratum_url = hi.str
+			pool->stratum_url = hi.stratum_url;
+			hi.stratum_url = NULL;
+		}
+	} else {
+		if (hi.lp_path) {
+			free(hi.lp_path);
+			hi.lp_path = NULL;
+		}
+		if (hi.stratum_url) {
+			free(hi.stratum_url);
+			hi.stratum_url = NULL;
+		}
+	}
+
+	*rolltime = hi.rolltime;
+	pool->cgminer_pool_stats.rolltime = hi.rolltime;
+	pool->cgminer_pool_stats.hadrolltime = hi.hadrolltime;
+	pool->cgminer_pool_stats.canroll = hi.canroll;
+	pool->cgminer_pool_stats.hadexpire = hi.hadexpire;
+
+	val = JSON_LOADS(all_data.buf, &err);
+	if (!val) {
+		applog(LOG_INFO, "JSON decode failed(%d): %s", err.line, err.text);
+
+		if (opt_protocol)
+			applog(LOG_DEBUG, "JSON protocol response:\n%s", (char *)(all_data.buf));
+
+		goto err_out;
+	}
+
+	if (opt_protocol) {
+		char *s = json_dumps(val, JSON_INDENT(3));
+
+		applog(LOG_DEBUG, "JSON protocol response:\n%s", s);
+		free(s);
+	}
+
+	/* JSON-RPC valid response returns a non-null 'result',
+	 * and a null 'error'.
+	 */
+	res_val = json_object_get(val, "result");
+	err_val = json_object_get(val, "error");
+
+	if (!res_val ||(err_val && !json_is_null(err_val))) {
+		char *s;
+
+		if (err_val)
+			s = json_dumps(err_val, JSON_INDENT(3));
+		else
+			s = strdup("(unknown reason)");
+
+		applog(LOG_INFO, "JSON-RPC call failed: %s", s);
+
+		free(s);
+
+		goto err_out;
+	}
+
+	if (hi.reason) {
+		json_object_set_new(val, "reject-reason", json_string(hi.reason));
+		free(hi.reason);
+		hi.reason = NULL;
+	}
+	successful_connect = true;
+	databuf_free(&all_data);
+	curl_slist_free_all(headers);
+	curl_easy_reset(curl);
+	return val;
+
+err_out:
+	databuf_free(&all_data);
+	curl_slist_free_all(headers);
+	curl_easy_reset(curl);
+	if (!successful_connect)
+		applog(LOG_DEBUG, "Failed to connect in json_rpc_call");
+	curl_easy_setopt(curl, CURLOPT_FRESH_CONNECT, 1);
+	return NULL;
+}
+#define PROXY_HTTP	CURLPROXY_HTTP
+#define PROXY_HTTP_1_0	CURLPROXY_HTTP_1_0
+#define PROXY_SOCKS4	CURLPROXY_SOCKS4
+#define PROXY_SOCKS5	CURLPROXY_SOCKS5
+#define PROXY_SOCKS4A	CURLPROXY_SOCKS4A
+#define PROXY_SOCKS5H	CURLPROXY_SOCKS5_HOSTNAME
+#else /* HAVE_LIBCURL */
+#define PROXY_HTTP	0
+#define PROXY_HTTP_1_0	1
+#define PROXY_SOCKS4	2
+#define PROXY_SOCKS5	3
+#define PROXY_SOCKS4A	4
+#define PROXY_SOCKS5H	5
+#endif /* HAVE_LIBCURL */
+
+static struct {
+	const char *name;
+	proxytypes_t proxytype;
+} proxynames[] = {
+	{ "http:",	PROXY_HTTP },
+	{ "http0:",	PROXY_HTTP_1_0 },
+	{ "socks4:",	PROXY_SOCKS4 },
+	{ "socks5:",	PROXY_SOCKS5 },
+	{ "socks4a:",	PROXY_SOCKS4A },
+	{ "socks5h:",	PROXY_SOCKS5H },
+	{ NULL,	0 }
+};
+
+const char *proxytype(proxytypes_t proxytype)
+{
+	int i;
+
+	for (i = 0; proxynames[i].name; i++)
+		if (proxynames[i].proxytype == proxytype)
+			return proxynames[i].name;
+
+	return "invalid";
+}
+
+char *get_proxy(char *url, struct pool *pool)
+{
+	pool->rpc_proxy = NULL;
+
+	char *split;
+	int plen, len, i;
+
+	for (i = 0; proxynames[i].name; i++) {
+		plen = strlen(proxynames[i].name);
+		if (strncmp(url, proxynames[i].name, plen) == 0) {
+			if (!(split = strchr(url, '|')))
+				return url;
+
+			*split = '\0';
+			len = split - url;
+			pool->rpc_proxy = malloc(1 + len - plen);
+			if (!(pool->rpc_proxy))
+				quithere(1, "Failed to malloc rpc_proxy");
+
+			strcpy(pool->rpc_proxy, url + plen);
+			extract_sockaddr(pool->rpc_proxy, &pool->sockaddr_proxy_url, &pool->sockaddr_proxy_port);
+			pool->rpc_proxytype = proxynames[i].proxytype;
+			url = split + 1;
+			break;
+		}
+	}
+	return url;
+}
+
+/* Adequate size s==len*2 + 1 must be alloced to use this variant */
+void __bin2hex(char *s, const unsigned char *p, size_t len)
+{
+	int i;
+	static const char hex[16] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+
+	for (i = 0; i < (int)len; i++) {
+		*s++ = hex[p[i] >> 4];
+		*s++ = hex[p[i] & 0xF];
+	}
+	*s++ = '\0';
+}
+
+/* Returns a malloced array string of a binary value of arbitrary length. The
+ * array is rounded up to a 4 byte size to appease architectures that need
+ * aligned array  sizes */
+char *bin2hex(const unsigned char *p, size_t len)
+{
+	ssize_t slen;
+	char *s;
+
+	slen = len * 2 + 1;
+	if (slen % 4)
+		slen += 4 - (slen % 4);
+	s = calloc(slen, 1);
+	if (unlikely(!s))
+		quithere(1, "Failed to calloc");
+
+	__bin2hex(s, p, len);
+
+	return s;
+}
+
+/* Does the reverse of bin2hex but does not allocate any ram */
+static const int hex2bin_tbl[256] = {
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+	 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, -1, -1, -1, -1, -1, -1,
+	-1, 10, 11, 12, 13, 14, 15, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+	-1, 10, 11, 12, 13, 14, 15, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+};
+bool hex2bin(unsigned char *p, const char *hexstr, size_t len)
+{
+	int nibble1, nibble2;
+	unsigned char idx;
+	bool ret = false;
+
+	while (*hexstr && len) {
+		if (unlikely(!hexstr[1])) {
+			applog(LOG_ERR, "hex2bin str truncated");
+			return ret;
+		}
+
+		idx = *hexstr++;
+		nibble1 = hex2bin_tbl[idx];
+		idx = *hexstr++;
+		nibble2 = hex2bin_tbl[idx];
+
+		if (unlikely((nibble1 < 0) || (nibble2 < 0))) {
+			applog(LOG_ERR, "hex2bin scan failed");
+			return ret;
+		}
+
+		*p++ = (((unsigned char)nibble1) << 4) | ((unsigned char)nibble2);
+		--len;
+	}
+
+	if (likely(len == 0 && *hexstr == 0))
+		ret = true;
+	return ret;
+}
+
+bool fulltest(const unsigned char *hash, const unsigned char *target)
+{
+	uint32_t *hash32 = (uint32_t *)hash;
+	uint32_t *target32 = (uint32_t *)target;
+	bool rc = true;
+	int i;
+
+	for (i = 28 / 4; i >= 0; i--) {
+		uint32_t h32tmp = le32toh(hash32[i]);
+		uint32_t t32tmp = le32toh(target32[i]);
+
+		if (h32tmp > t32tmp) {
+			rc = false;
+			break;
+		}
+		if (h32tmp < t32tmp) {
+			rc = true;
+			break;
+		}
+	}
+
+	if (opt_debug) {
+		unsigned char hash_swap[32], target_swap[32];
+		char *hash_str, *target_str;
+
+		swab256(hash_swap, hash);
+		swab256(target_swap, target);
+		hash_str = bin2hex(hash_swap,
