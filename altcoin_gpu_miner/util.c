@@ -1009,4 +1009,265 @@ void cgsleep_ms_r(cgtimer_t *ts_start, int ms)
 {
 	struct timespec ts_end;
 
-	ms_to_timespec(&ts_end,
+	ms_to_timespec(&ts_end, ms);
+	timeraddspec(&ts_end, ts_start);
+	nanosleep_abstime(&ts_end);
+}
+
+void cgsleep_us_r(cgtimer_t *ts_start, int64_t us)
+{
+	struct timespec ts_end;
+
+	us_to_timespec(&ts_end, us);
+	timeraddspec(&ts_end, ts_start);
+	nanosleep_abstime(&ts_end);
+}
+#else /* CLOCK_MONOTONIC */
+#ifdef __MACH__
+#include <mach/clock.h>
+#include <mach/mach.h>
+void cgtimer_time(cgtimer_t *ts_start)
+{
+	clock_serv_t cclock;
+	mach_timespec_t mts;
+
+	host_get_clock_service(mach_host_self(), SYSTEM_CLOCK, &cclock);
+	clock_get_time(cclock, &mts);
+	mach_port_deallocate(mach_task_self(), cclock);
+	ts_start->tv_sec = mts.tv_sec;
+	ts_start->tv_nsec = mts.tv_nsec;
+}
+#elif !defined(WIN32) /* __MACH__ - Everything not linux/macosx/win32 */
+void cgtimer_time(cgtimer_t *ts_start)
+{
+	struct timeval tv;
+
+	cgtime(&tv);
+	ts_start->tv_sec = tv->tv_sec;
+	ts_start->tv_nsec = tv->tv_usec * 1000;
+}
+#endif /* __MACH__ */
+
+#ifdef WIN32
+/* For windows we use the SystemTime stored as a LARGE_INTEGER as the cgtimer_t
+ * typedef, allowing us to have sub-microsecond resolution for times, do simple
+ * arithmetic for timer calculations, and use windows' own hTimers to get
+ * accurate absolute timeouts. */
+int cgtimer_to_ms(cgtimer_t *cgt)
+{
+	return (int)(cgt->QuadPart / 10000LL);
+}
+
+/* Subtracts b from a and stores it in res. */
+void cgtimer_sub(cgtimer_t *a, cgtimer_t *b, cgtimer_t *res)
+{
+	res->QuadPart = a->QuadPart - b->QuadPart;
+}
+
+/* Note that cgtimer time is NOT offset by the unix epoch since we use absolute
+ * timeouts with hTimers. */
+void cgtimer_time(cgtimer_t *ts_start)
+{
+	FILETIME ft;
+
+	GetSystemTimeAsFileTime(&ft);
+	ts_start->LowPart = ft.dwLowDateTime;
+	ts_start->HighPart = ft.dwHighDateTime;
+}
+
+static void liSleep(LARGE_INTEGER *li, int timeout)
+{
+	HANDLE hTimer;
+	DWORD ret;
+
+	if (unlikely(timeout <= 0))
+		return;
+
+	hTimer = CreateWaitableTimer(NULL, TRUE, NULL);
+	if (unlikely(!hTimer))
+		quit(1, "Failed to create hTimer in liSleep");
+	ret = SetWaitableTimer(hTimer, li, 0, NULL, NULL, 0);
+	if (unlikely(!ret))
+		quit(1, "Failed to SetWaitableTimer in liSleep");
+	/* We still use a timeout as a sanity check in case the system time
+	 * is changed while we're running */
+	ret = WaitForSingleObject(hTimer, timeout);
+	if (unlikely(ret != WAIT_OBJECT_0 && ret != WAIT_TIMEOUT))
+		quit(1, "Failed to WaitForSingleObject in liSleep");
+	CloseHandle(hTimer);
+}
+
+void cgsleep_ms_r(cgtimer_t *ts_start, int ms)
+{
+	LARGE_INTEGER li;
+
+	li.QuadPart = ts_start->QuadPart + (int64_t)ms * 10000LL;
+	liSleep(&li, ms);
+}
+
+void cgsleep_us_r(cgtimer_t *ts_start, int64_t us)
+{
+	LARGE_INTEGER li;
+	int ms;
+
+	li.QuadPart = ts_start->QuadPart + us * 10LL;
+	ms = us / 1000;
+	if (!ms)
+		ms = 1;
+	liSleep(&li, ms);
+}
+#else /* WIN32 */
+static void cgsleep_spec(struct timespec *ts_diff, const struct timespec *ts_start)
+{
+	struct timespec now;
+
+	timeraddspec(ts_diff, ts_start);
+	cgtimer_time(&now);
+	timersubspec(ts_diff, &now);
+	if (unlikely(ts_diff->tv_sec < 0))
+		return;
+	nanosleep(ts_diff, NULL);
+}
+
+void cgsleep_ms_r(cgtimer_t *ts_start, int ms)
+{
+	struct timespec ts_diff;
+
+	ms_to_timespec(&ts_diff, ms);
+	cgsleep_spec(&ts_diff, ts_start);
+}
+
+void cgsleep_us_r(cgtimer_t *ts_start, int64_t us)
+{
+	struct timespec ts_diff;
+
+	us_to_timespec(&ts_diff, us);
+	cgsleep_spec(&ts_diff, ts_start);
+}
+#endif /* WIN32 */
+#endif /* CLOCK_MONOTONIC */
+
+void cgsleep_ms(int ms)
+{
+	cgtimer_t ts_start;
+
+	cgsleep_prepare_r(&ts_start);
+	cgsleep_ms_r(&ts_start, ms);
+}
+
+void cgsleep_us(int64_t us)
+{
+	cgtimer_t ts_start;
+
+	cgsleep_prepare_r(&ts_start);
+	cgsleep_us_r(&ts_start, us);
+}
+
+/* Returns the microseconds difference between end and start times as a double */
+double us_tdiff(struct timeval *end, struct timeval *start)
+{
+	/* Sanity check. We should only be using this for small differences so
+	 * limit the max to 60 seconds. */
+	if (unlikely(end->tv_sec - start->tv_sec > 60))
+		return 60000000;
+	return (end->tv_sec - start->tv_sec) * 1000000 + (end->tv_usec - start->tv_usec);
+}
+
+/* Returns the milliseconds difference between end and start times */
+int ms_tdiff(struct timeval *end, struct timeval *start)
+{
+	/* Like us_tdiff, limit to 1 hour. */
+	if (unlikely(end->tv_sec - start->tv_sec > 3600))
+		return 3600000;
+	return (end->tv_sec - start->tv_sec) * 1000 + (end->tv_usec - start->tv_usec) / 1000;
+}
+
+/* Returns the seconds difference between end and start times as a double */
+double tdiff(struct timeval *end, struct timeval *start)
+{
+	return end->tv_sec - start->tv_sec + (end->tv_usec - start->tv_usec) / 1000000.0;
+}
+
+bool extract_sockaddr(char *url, char **sockaddr_url, char **sockaddr_port)
+{
+	char *url_begin, *url_end, *ipv6_begin, *ipv6_end, *port_start = NULL;
+	char url_address[256], port[6];
+	int url_len, port_len = 0;
+
+	*sockaddr_url = url;
+	url_begin = strstr(url, "//");
+	if (!url_begin)
+		url_begin = url;
+	else
+		url_begin += 2;
+
+	/* Look for numeric ipv6 entries */
+	ipv6_begin = strstr(url_begin, "[");
+	ipv6_end = strstr(url_begin, "]");
+	if (ipv6_begin && ipv6_end && ipv6_end > ipv6_begin)
+		url_end = strstr(ipv6_end, ":");
+	else
+		url_end = strstr(url_begin, ":");
+	if (url_end) {
+		url_len = url_end - url_begin;
+		port_len = strlen(url_begin) - url_len - 1;
+		if (port_len < 1)
+			return false;
+		port_start = url_end + 1;
+	} else
+		url_len = strlen(url_begin);
+
+	if (url_len < 1)
+		return false;
+
+	sprintf(url_address, "%.*s", url_len, url_begin);
+
+	if (port_len) {
+		char *slash;
+
+		snprintf(port, 6, "%.*s", port_len, port_start);
+		slash = strchr(port, '/');
+		if (slash)
+			*slash = '\0';
+	} else
+		strcpy(port, "80");
+
+	*sockaddr_port = strdup(port);
+	*sockaddr_url = strdup(url_address);
+
+	return true;
+}
+
+enum send_ret {
+	SEND_OK,
+	SEND_SELECTFAIL,
+	SEND_SENDFAIL,
+	SEND_INACTIVE
+};
+
+/* Send a single command across a socket, appending \n to it. This should all
+ * be done under stratum lock except when first establishing the socket */
+static enum send_ret __stratum_send(struct pool *pool, char *s, ssize_t len)
+{
+	SOCKETTYPE sock = pool->sock;
+	ssize_t ssent = 0;
+
+	strcat(s, "\n");
+	len++;
+
+	while (len > 0 ) {
+		struct timeval timeout = {1, 0};
+		ssize_t sent;
+		fd_set wd;
+
+		FD_ZERO(&wd);
+		FD_SET(sock, &wd);
+		if (select(sock + 1, NULL, &wd, NULL, &timeout) < 1)
+			return SEND_SELECTFAIL;
+#ifdef __APPLE__
+		sent = send(pool->sock, s + ssent, len, SO_NOSIGPIPE);
+#elif WIN32
+		sent = send(pool->sock, s + ssent, len, 0);
+#else
+		sent = send(pool->sock, s + ssent, len, MSG_NOSIGNAL);
+#endi
