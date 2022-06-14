@@ -694,4 +694,319 @@ bool fulltest(const unsigned char *hash, const unsigned char *target)
 
 		swab256(hash_swap, hash);
 		swab256(target_swap, target);
-		hash_str = bin2hex(hash_swap,
+		hash_str = bin2hex(hash_swap, 32);
+		target_str = bin2hex(target_swap, 32);
+
+		applog(LOG_DEBUG, " Proof: %s\nTarget: %s\nTrgVal? %s",
+			hash_str,
+			target_str,
+			rc ? "YES (hash <= target)" :
+			     "no (false positive; hash > target)");
+
+		free(hash_str);
+		free(target_str);
+	}
+
+	return rc;
+}
+
+struct thread_q *tq_new(void)
+{
+	struct thread_q *tq;
+
+	tq = calloc(1, sizeof(*tq));
+	if (!tq)
+		return NULL;
+
+	INIT_LIST_HEAD(&tq->q);
+	pthread_mutex_init(&tq->mutex, NULL);
+	pthread_cond_init(&tq->cond, NULL);
+
+	return tq;
+}
+
+void tq_free(struct thread_q *tq)
+{
+	struct tq_ent *ent, *iter;
+
+	if (!tq)
+		return;
+
+	list_for_each_entry_safe(ent, iter, &tq->q, q_node) {
+		list_del(&ent->q_node);
+		free(ent);
+	}
+
+	pthread_cond_destroy(&tq->cond);
+	pthread_mutex_destroy(&tq->mutex);
+
+	memset(tq, 0, sizeof(*tq));	/* poison */
+	free(tq);
+}
+
+static void tq_freezethaw(struct thread_q *tq, bool frozen)
+{
+	mutex_lock(&tq->mutex);
+	tq->frozen = frozen;
+	pthread_cond_signal(&tq->cond);
+	mutex_unlock(&tq->mutex);
+}
+
+void tq_freeze(struct thread_q *tq)
+{
+	tq_freezethaw(tq, true);
+}
+
+void tq_thaw(struct thread_q *tq)
+{
+	tq_freezethaw(tq, false);
+}
+
+bool tq_push(struct thread_q *tq, void *data)
+{
+	struct tq_ent *ent;
+	bool rc = true;
+
+	ent = calloc(1, sizeof(*ent));
+	if (!ent)
+		return false;
+
+	ent->data = data;
+	INIT_LIST_HEAD(&ent->q_node);
+
+	mutex_lock(&tq->mutex);
+	if (!tq->frozen) {
+		list_add_tail(&ent->q_node, &tq->q);
+	} else {
+		free(ent);
+		rc = false;
+	}
+	pthread_cond_signal(&tq->cond);
+	mutex_unlock(&tq->mutex);
+
+	return rc;
+}
+
+void *tq_pop(struct thread_q *tq, const struct timespec *abstime)
+{
+	struct tq_ent *ent;
+	void *rval = NULL;
+	int rc;
+
+	mutex_lock(&tq->mutex);
+	if (!list_empty(&tq->q))
+		goto pop;
+
+	if (abstime)
+		rc = pthread_cond_timedwait(&tq->cond, &tq->mutex, abstime);
+	else
+		rc = pthread_cond_wait(&tq->cond, &tq->mutex);
+	if (rc)
+		goto out;
+	if (list_empty(&tq->q))
+		goto out;
+pop:
+	ent = list_entry(tq->q.next, struct tq_ent, q_node);
+	rval = ent->data;
+
+	list_del(&ent->q_node);
+	free(ent);
+out:
+	mutex_unlock(&tq->mutex);
+
+	return rval;
+}
+
+int thr_info_create(struct thr_info *thr, pthread_attr_t *attr, void *(*start) (void *), void *arg)
+{
+	cgsem_init(&thr->sem);
+
+	return pthread_create(&thr->pth, attr, start, arg);
+}
+
+void thr_info_cancel(struct thr_info *thr)
+{
+	if (!thr)
+		return;
+
+	if (PTH(thr) != 0L) {
+		pthread_cancel(thr->pth);
+		PTH(thr) = 0L;
+	}
+	cgsem_destroy(&thr->sem);
+}
+
+void subtime(struct timeval *a, struct timeval *b)
+{
+	timersub(a, b, b);
+}
+
+void addtime(struct timeval *a, struct timeval *b)
+{
+	timeradd(a, b, b);
+}
+
+bool time_more(struct timeval *a, struct timeval *b)
+{
+	return timercmp(a, b, >);
+}
+
+bool time_less(struct timeval *a, struct timeval *b)
+{
+	return timercmp(a, b, <);
+}
+
+void copy_time(struct timeval *dest, const struct timeval *src)
+{
+	memcpy(dest, src, sizeof(struct timeval));
+}
+
+void timespec_to_val(struct timeval *val, const struct timespec *spec)
+{
+	val->tv_sec = spec->tv_sec;
+	val->tv_usec = spec->tv_nsec / 1000;
+}
+
+void timeval_to_spec(struct timespec *spec, const struct timeval *val)
+{
+	spec->tv_sec = val->tv_sec;
+	spec->tv_nsec = val->tv_usec * 1000;
+}
+
+void us_to_timeval(struct timeval *val, int64_t us)
+{
+	lldiv_t tvdiv = lldiv(us, 1000000);
+
+	val->tv_sec = tvdiv.quot;
+	val->tv_usec = tvdiv.rem;
+}
+
+void us_to_timespec(struct timespec *spec, int64_t us)
+{
+	lldiv_t tvdiv = lldiv(us, 1000000);
+
+	spec->tv_sec = tvdiv.quot;
+	spec->tv_nsec = tvdiv.rem * 1000;
+}
+
+void ms_to_timespec(struct timespec *spec, int64_t ms)
+{
+	lldiv_t tvdiv = lldiv(ms, 1000);
+
+	spec->tv_sec = tvdiv.quot;
+	spec->tv_nsec = tvdiv.rem * 1000000;
+}
+
+void ms_to_timeval(struct timeval *val, int64_t ms)
+{
+	lldiv_t tvdiv = lldiv(ms, 1000);
+
+	val->tv_sec = tvdiv.quot;
+	val->tv_usec = tvdiv.rem * 1000;
+}
+
+void timeraddspec(struct timespec *a, const struct timespec *b)
+{
+	a->tv_sec += b->tv_sec;
+	a->tv_nsec += b->tv_nsec;
+	if (a->tv_nsec >= 1000000000) {
+		a->tv_nsec -= 1000000000;
+		a->tv_sec++;
+	}
+}
+
+static int __maybe_unused timespec_to_ms(struct timespec *ts)
+{
+	return ts->tv_sec * 1000 + ts->tv_nsec / 1000000;
+}
+
+/* Subtract b from a */
+static void __maybe_unused timersubspec(struct timespec *a, const struct timespec *b)
+{
+	a->tv_sec -= b->tv_sec;
+	a->tv_nsec -= b->tv_nsec;
+	if (a->tv_nsec < 0) {
+		a->tv_nsec += 1000000000;
+		a->tv_sec--;
+	}
+}
+
+/* These are cgminer specific sleep functions that use an absolute nanosecond
+ * resolution timer to avoid poor usleep accuracy and overruns. */
+#ifdef WIN32
+/* Windows start time is since 1601 LOL so convert it to unix epoch 1970. */
+#define EPOCHFILETIME (116444736000000000LL)
+
+/* Return the system time as an lldiv_t in decimicroseconds. */
+static void decius_time(lldiv_t *lidiv)
+{
+	FILETIME ft;
+	LARGE_INTEGER li;
+
+	GetSystemTimeAsFileTime(&ft);
+	li.LowPart  = ft.dwLowDateTime;
+	li.HighPart = ft.dwHighDateTime;
+	li.QuadPart -= EPOCHFILETIME;
+
+	/* SystemTime is in decimicroseconds so divide by an unusual number */
+	*lidiv = lldiv(li.QuadPart, 10000000);
+}
+
+/* This is a cgminer gettimeofday wrapper. Since we always call gettimeofday
+ * with tz set to NULL, and windows' default resolution is only 15ms, this
+ * gives us higher resolution times on windows. */
+void cgtime(struct timeval *tv)
+{
+	lldiv_t lidiv;
+
+	decius_time(&lidiv);
+	tv->tv_sec = lidiv.quot;
+	tv->tv_usec = lidiv.rem / 10;
+}
+
+#else /* WIN32 */
+void cgtime(struct timeval *tv)
+{
+	gettimeofday(tv, NULL);
+}
+
+int cgtimer_to_ms(cgtimer_t *cgt)
+{
+	return timespec_to_ms(cgt);
+}
+
+/* Subtracts b from a and stores it in res. */
+void cgtimer_sub(cgtimer_t *a, cgtimer_t *b, cgtimer_t *res)
+{
+	res->tv_sec = a->tv_sec - b->tv_sec;
+	res->tv_nsec = a->tv_nsec - b->tv_nsec;
+	if (res->tv_nsec < 0) {
+		res->tv_nsec += 1000000000;
+		res->tv_sec--;
+	}
+}
+#endif /* WIN32 */
+
+#ifdef CLOCK_MONOTONIC /* Essentially just linux */
+void cgtimer_time(cgtimer_t *ts_start)
+{
+	clock_gettime(CLOCK_MONOTONIC, ts_start);
+}
+
+static void nanosleep_abstime(struct timespec *ts_end)
+{
+	int ret;
+
+	do {
+		ret = clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, ts_end, NULL);
+	} while (ret == EINTR);
+}
+
+/* Reentrant version of cgsleep functions allow start time to be set separately
+ * from the beginning of the actual sleep, allowing scheduling delays to be
+ * counted in the sleep. */
+void cgsleep_ms_r(cgtimer_t *ts_start, int ms)
+{
+	struct timespec ts_end;
+
+	ms_to_timespec(&ts_end,
