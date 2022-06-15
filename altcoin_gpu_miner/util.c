@@ -1270,4 +1270,270 @@ static enum send_ret __stratum_send(struct pool *pool, char *s, ssize_t len)
 		sent = send(pool->sock, s + ssent, len, 0);
 #else
 		sent = send(pool->sock, s + ssent, len, MSG_NOSIGNAL);
-#endi
+#endif
+		if (sent < 0) {
+			if (!sock_blocks())
+				return SEND_SENDFAIL;
+			sent = 0;
+		}
+		ssent += sent;
+		len -= sent;
+	}
+
+	pool->cgminer_pool_stats.times_sent++;
+	pool->cgminer_pool_stats.bytes_sent += ssent;
+	pool->cgminer_pool_stats.net_bytes_sent += ssent;
+	return SEND_OK;
+}
+
+bool stratum_send(struct pool *pool, char *s, ssize_t len)
+{
+	enum send_ret ret = SEND_INACTIVE;
+
+	if (opt_protocol)
+		applog(LOG_DEBUG, "SEND: %s", s);
+
+	mutex_lock(&pool->stratum_lock);
+	if (pool->stratum_active)
+		ret = __stratum_send(pool, s, len);
+	mutex_unlock(&pool->stratum_lock);
+
+	/* This is to avoid doing applog under stratum_lock */
+	switch (ret) {
+		default:
+		case SEND_OK:
+			break;
+		case SEND_SELECTFAIL:
+			applog(LOG_DEBUG, "Write select failed on pool %d sock", pool->pool_no);
+			suspend_stratum(pool);
+			break;
+		case SEND_SENDFAIL:
+			applog(LOG_DEBUG, "Failed to send in stratum_send");
+			suspend_stratum(pool);
+			break;
+		case SEND_INACTIVE:
+			applog(LOG_DEBUG, "Stratum send failed due to no pool stratum_active");
+			break;
+	}
+	return (ret == SEND_OK);
+}
+
+static bool socket_full(struct pool *pool, int wait)
+{
+	SOCKETTYPE sock = pool->sock;
+	struct timeval timeout;
+	fd_set rd;
+
+	if (unlikely(wait < 0))
+		wait = 0;
+	FD_ZERO(&rd);
+	FD_SET(sock, &rd);
+	timeout.tv_usec = 0;
+	timeout.tv_sec = wait;
+	if (select(sock + 1, &rd, NULL, NULL, &timeout) > 0)
+		return true;
+	return false;
+}
+
+/* Check to see if Santa's been good to you */
+bool sock_full(struct pool *pool)
+{
+	if (strlen(pool->sockbuf))
+		return true;
+
+	return (socket_full(pool, 0));
+}
+
+static void clear_sockbuf(struct pool *pool)
+{
+	strcpy(pool->sockbuf, "");
+}
+
+static void clear_sock(struct pool *pool)
+{
+	ssize_t n;
+
+	mutex_lock(&pool->stratum_lock);
+	do {
+		if (pool->sock)
+			n = recv(pool->sock, pool->sockbuf, RECVSIZE, 0);
+		else
+			n = 0;
+	} while (n > 0);
+	mutex_unlock(&pool->stratum_lock);
+
+	clear_sockbuf(pool);
+}
+
+/* Make sure the pool sockbuf is large enough to cope with any coinbase size
+ * by reallocing it to a large enough size rounded up to a multiple of RBUFSIZE
+ * and zeroing the new memory */
+static void recalloc_sock(struct pool *pool, size_t len)
+{
+	size_t old, new;
+
+	old = strlen(pool->sockbuf);
+	new = old + len + 1;
+	if (new < pool->sockbuf_size)
+		return;
+	new = new + (RBUFSIZE - (new % RBUFSIZE));
+	// Avoid potentially recursive locking
+	// applog(LOG_DEBUG, "Recallocing pool sockbuf to %d", new);
+	pool->sockbuf = realloc(pool->sockbuf, new);
+	if (!pool->sockbuf)
+		quithere(1, "Failed to realloc pool sockbuf");
+	memset(pool->sockbuf + old, 0, new - old);
+	pool->sockbuf_size = new;
+}
+
+/* Peeks at a socket to find the first end of line and then reads just that
+ * from the socket and returns that as a malloced char */
+char *recv_line(struct pool *pool)
+{
+	char *tok, *sret = NULL;
+	ssize_t len, buflen;
+	int waited = 0;
+
+	if (!strstr(pool->sockbuf, "\n")) {
+		struct timeval rstart, now;
+
+		cgtime(&rstart);
+		if (!socket_full(pool, DEFAULT_SOCKWAIT)) {
+			applog(LOG_DEBUG, "Timed out waiting for data on socket_full");
+			goto out;
+		}
+
+		do {
+			char s[RBUFSIZE];
+			size_t slen;
+			ssize_t n;
+
+			memset(s, 0, RBUFSIZE);
+			n = recv(pool->sock, s, RECVSIZE, 0);
+			if (!n) {
+				applog(LOG_DEBUG, "Socket closed waiting in recv_line");
+				suspend_stratum(pool);
+				break;
+			}
+			cgtime(&now);
+			waited = tdiff(&now, &rstart);
+			if (n < 0) {
+				if (!sock_blocks() || !socket_full(pool, DEFAULT_SOCKWAIT - waited)) {
+					applog(LOG_DEBUG, "Failed to recv sock in recv_line");
+					suspend_stratum(pool);
+					break;
+				}
+			} else {
+				slen = strlen(s);
+				recalloc_sock(pool, slen);
+				strcat(pool->sockbuf, s);
+			}
+		} while (waited < DEFAULT_SOCKWAIT && !strstr(pool->sockbuf, "\n"));
+	}
+
+	buflen = strlen(pool->sockbuf);
+	tok = strtok(pool->sockbuf, "\n");
+	if (!tok) {
+		applog(LOG_DEBUG, "Failed to parse a \\n terminated string in recv_line");
+		goto out;
+	}
+	sret = strdup(tok);
+	len = strlen(sret);
+
+	/* Copy what's left in the buffer after the \n, including the
+	 * terminating \0 */
+	if (buflen > len + 1)
+		memmove(pool->sockbuf, pool->sockbuf + len + 1, buflen - len + 1);
+	else
+		strcpy(pool->sockbuf, "");
+
+	pool->cgminer_pool_stats.times_received++;
+	pool->cgminer_pool_stats.bytes_received += len;
+	pool->cgminer_pool_stats.net_bytes_received += len;
+out:
+	if (!sret)
+		clear_sock(pool);
+	else if (opt_protocol)
+		applog(LOG_DEBUG, "RECVD: %s", sret);
+	return sret;
+}
+
+/* Extracts a string value from a json array with error checking. To be used
+ * when the value of the string returned is only examined and not to be stored.
+ * See json_array_string below */
+static char *__json_array_string(json_t *val, unsigned int entry)
+{
+	json_t *arr_entry;
+
+	if (json_is_null(val))
+		return NULL;
+	if (!json_is_array(val))
+		return NULL;
+	if (entry > json_array_size(val))
+		return NULL;
+	arr_entry = json_array_get(val, entry);
+	if (!json_is_string(arr_entry))
+		return NULL;
+
+	return (char *)json_string_value(arr_entry);
+}
+
+/* Creates a freshly malloced dup of __json_array_string */
+static char *json_array_string(json_t *val, unsigned int entry)
+{
+	char *buf = __json_array_string(val, entry);
+
+	if (buf)
+		return strdup(buf);
+	return NULL;
+}
+
+static char *blank_merkel = "0000000000000000000000000000000000000000000000000000000000000000";
+
+static bool parse_notify(struct pool *pool, json_t *val)
+{
+	char *job_id, *prev_hash, *coinbase1, *coinbase2, *bbversion, *nbit,
+	     *ntime, *header;
+	size_t cb1_len, cb2_len, alloc_len;
+	unsigned char *cb1, *cb2;
+	bool clean, ret = false;
+	int merkles, i;
+	json_t *arr;
+
+	arr = json_array_get(val, 4);
+	if (!arr || !json_is_array(arr))
+		goto out;
+
+	merkles = json_array_size(arr);
+
+	job_id = json_array_string(val, 0);
+	prev_hash = json_array_string(val, 1);
+	coinbase1 = json_array_string(val, 2);
+	coinbase2 = json_array_string(val, 3);
+	bbversion = json_array_string(val, 5);
+	nbit = json_array_string(val, 6);
+	ntime = json_array_string(val, 7);
+	clean = json_is_true(json_array_get(val, 8));
+
+	if (!job_id || !prev_hash || !coinbase1 || !coinbase2 || !bbversion || !nbit || !ntime) {
+		/* Annoying but we must not leak memory */
+		if (job_id)
+			free(job_id);
+		if (prev_hash)
+			free(prev_hash);
+		if (coinbase1)
+			free(coinbase1);
+		if (coinbase2)
+			free(coinbase2);
+		if (bbversion)
+			free(bbversion);
+		if (nbit)
+			free(nbit);
+		if (ntime)
+			free(ntime);
+		goto out;
+	}
+
+	cg_wlock(&pool->data_lock);
+	free(pool->swork.job_id);
+	free
