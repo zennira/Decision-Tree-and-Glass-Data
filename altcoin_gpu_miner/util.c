@@ -1536,4 +1536,249 @@ static bool parse_notify(struct pool *pool, json_t *val)
 
 	cg_wlock(&pool->data_lock);
 	free(pool->swork.job_id);
-	free
+	free(pool->swork.prev_hash);
+	free(pool->swork.bbversion);
+	free(pool->swork.nbit);
+	free(pool->swork.ntime);
+	pool->swork.job_id = job_id;
+	pool->swork.prev_hash = prev_hash;
+	cb1_len = strlen(coinbase1) / 2;
+	cb2_len = strlen(coinbase2) / 2;
+	pool->swork.bbversion = bbversion;
+	pool->swork.nbit = nbit;
+	pool->swork.ntime = ntime;
+	pool->swork.clean = clean;
+	alloc_len = pool->swork.cb_len = cb1_len + pool->n1_len + pool->n2size + cb2_len;
+	pool->nonce2_offset = cb1_len + pool->n1_len;
+
+	for (i = 0; i < pool->swork.merkles; i++)
+		free(pool->swork.merkle_bin[i]);
+	if (merkles) {
+		pool->swork.merkle_bin = realloc(pool->swork.merkle_bin,
+						 sizeof(char *) * merkles + 1);
+		for (i = 0; i < merkles; i++) {
+			char *merkle = json_array_string(arr, i);
+
+			pool->swork.merkle_bin[i] = malloc(32);
+			if (unlikely(!pool->swork.merkle_bin[i]))
+				quit(1, "Failed to malloc pool swork merkle_bin");
+			hex2bin(pool->swork.merkle_bin[i], merkle, 32);
+			free(merkle);
+		}
+	}
+	pool->swork.merkles = merkles;
+	if (clean)
+		pool->nonce2 = 0;
+	pool->merkle_offset = strlen(pool->swork.bbversion) +
+			      strlen(pool->swork.prev_hash);
+	pool->swork.header_len = pool->merkle_offset +
+	/* merkle_hash */	 32 +
+				 strlen(pool->swork.ntime) +
+				 strlen(pool->swork.nbit) +
+	/* nonce */		 8 +
+	/* workpadding */	 96;
+	pool->merkle_offset /= 2;
+	pool->swork.header_len = pool->swork.header_len * 2 + 1;
+	align_len(&pool->swork.header_len);
+	header = alloca(pool->swork.header_len);
+	snprintf(header, pool->swork.header_len,
+		"%s%s%s%s%s%s%s",
+		pool->swork.bbversion,
+		pool->swork.prev_hash,
+		blank_merkel,
+		pool->swork.ntime,
+		pool->swork.nbit,
+		"00000000", /* nonce */
+		workpadding);
+	if (unlikely(!hex2bin(pool->header_bin, header, 128)))
+		quit(1, "Failed to convert header to header_bin in parse_notify");
+
+	cb1 = calloc(cb1_len, 1);
+	if (unlikely(!cb1))
+		quithere(1, "Failed to calloc cb1 in parse_notify");
+	hex2bin(cb1, coinbase1, cb1_len);
+	cb2 = calloc(cb2_len, 1);
+	if (unlikely(!cb2))
+		quithere(1, "Failed to calloc cb2 in parse_notify");
+	hex2bin(cb2, coinbase2, cb2_len);
+	free(pool->coinbase);
+	align_len(&alloc_len);
+	pool->coinbase = calloc(alloc_len, 1);
+	if (unlikely(!pool->coinbase))
+		quit(1, "Failed to calloc pool coinbase in parse_notify");
+	memcpy(pool->coinbase, cb1, cb1_len);
+	memcpy(pool->coinbase + cb1_len, pool->nonce1bin, pool->n1_len);
+	memcpy(pool->coinbase + cb1_len + pool->n1_len + pool->n2size, cb2, cb2_len);
+	cg_wunlock(&pool->data_lock);
+
+	if (opt_protocol) {
+		applog(LOG_DEBUG, "job_id: %s", job_id);
+		applog(LOG_DEBUG, "prev_hash: %s", prev_hash);
+		applog(LOG_DEBUG, "coinbase1: %s", coinbase1);
+		applog(LOG_DEBUG, "coinbase2: %s", coinbase2);
+		applog(LOG_DEBUG, "bbversion: %s", bbversion);
+		applog(LOG_DEBUG, "nbit: %s", nbit);
+		applog(LOG_DEBUG, "ntime: %s", ntime);
+		applog(LOG_DEBUG, "clean: %s", clean ? "yes" : "no");
+	}
+	free(coinbase1);
+	free(coinbase2);
+	free(cb1);
+	free(cb2);
+
+	/* A notify message is the closest stratum gets to a getwork */
+	pool->getwork_requested++;
+	total_getworks++;
+	ret = true;
+	if (pool == current_pool())
+		opt_work_update = true;
+out:
+	return ret;
+}
+
+static bool parse_diff(struct pool *pool, json_t *val)
+{
+	double old_diff, diff;
+
+	diff = json_number_value(json_array_get(val, 0));
+	if (diff == 0)
+		return false;
+
+	cg_wlock(&pool->data_lock);
+	old_diff = pool->swork.diff;
+	pool->swork.diff = diff;
+	cg_wunlock(&pool->data_lock);
+
+	if (old_diff != diff) {
+		int idiff = diff;
+
+		if ((double)idiff == diff)
+			applog(LOG_NOTICE, "Pool %d difficulty changed to %d",
+			       pool->pool_no, idiff);
+		else
+			applog(LOG_NOTICE, "Pool %d difficulty changed to %f",
+			       pool->pool_no, diff);
+	} else
+		applog(LOG_DEBUG, "Pool %d difficulty set to %f", pool->pool_no,
+		       diff);
+
+	return true;
+}
+
+static void __suspend_stratum(struct pool *pool)
+{
+  clear_sockbuf(pool);
+  pool->stratum_active = pool->stratum_notify = false;
+  if (pool->sock)
+    CLOSESOCKET(pool->sock);
+  pool->sock = 0;
+}
+
+static bool parse_reconnect(struct pool *pool, json_t *val)
+{
+	char *sockaddr_url, *stratum_port, *tmp;
+	char *url, *port, address[256];
+
+	memset(address, 0, 255);
+	url = (char *)json_string_value(json_array_get(val, 0));
+	if (!url)
+		url = pool->sockaddr_url;
+
+	port = (char *)json_string_value(json_array_get(val, 1));
+	if (!port)
+		port = pool->stratum_port;
+
+	sprintf(address, "%s:%s", url, port);
+
+	if (!extract_sockaddr(address, &sockaddr_url, &stratum_port))
+		return false;
+
+	applog(LOG_NOTICE, "Reconnect requested from pool %d to %s", pool->pool_no, address);
+
+	mutex_lock(&pool->stratum_lock);
+	__suspend_stratum(pool);
+	tmp = pool->sockaddr_url;
+	pool->sockaddr_url = sockaddr_url;
+	pool->stratum_url = pool->sockaddr_url;
+	free(tmp);
+	tmp = pool->stratum_port;
+	pool->stratum_port = stratum_port;
+	free(tmp);
+	mutex_unlock(&pool->stratum_lock);
+
+	if (!restart_stratum(pool))
+		return false;
+
+	return true;
+}
+
+static bool send_version(struct pool *pool, json_t *val)
+{
+	char s[RBUFSIZE];
+	int id = json_integer_value(json_object_get(val, "id"));
+	
+	if (!id)
+		return false;
+
+	sprintf(s, "{\"id\": %d, \"result\": \""PACKAGE"/"VERSION"\", \"error\": null}", id);
+	if (!stratum_send(pool, s, strlen(s)))
+		return false;
+
+	return true;
+}
+
+static bool show_message(struct pool *pool, json_t *val)
+{
+	char *msg;
+
+	if (!json_is_array(val))
+		return false;
+	msg = (char *)json_string_value(json_array_get(val, 0));
+	if (!msg)
+		return false;
+	applog(LOG_NOTICE, "Pool %d message: %s", pool->pool_no, msg);
+	return true;
+}
+
+bool parse_method(struct pool *pool, char *s)
+{
+	json_t *val = NULL, *method, *err_val, *params;
+	json_error_t err;
+	bool ret = false;
+	char *buf;
+
+	if (!s)
+		return ret;
+
+	val = JSON_LOADS(s, &err);
+	if (!val) {
+		applog(LOG_INFO, "JSON decode failed(%d): %s", err.line, err.text);
+		return ret;
+	}
+
+	method = json_object_get(val, "method");
+	if (!method)
+		return ret;
+	err_val = json_object_get(val, "error");
+	params = json_object_get(val, "params");
+
+	if (err_val && !json_is_null(err_val)) {
+		char *ss;
+
+		if (err_val)
+			ss = json_dumps(err_val, JSON_INDENT(3));
+		else
+			ss = strdup("(unknown reason)");
+
+		applog(LOG_INFO, "JSON-RPC method decode failed: %s", ss);
+
+		free(ss);
+
+		return ret;
+	}
+
+	buf = (char *)json_string_value(method);
+	if (!buf)
+		return ret;
+
+	if (!strncasecmp(buf, "mining.notify", 13)) {
