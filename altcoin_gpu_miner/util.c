@@ -1782,3 +1782,246 @@ bool parse_method(struct pool *pool, char *s)
 		return ret;
 
 	if (!strncasecmp(buf, "mining.notify", 13)) {
+		if (parse_notify(pool, params))
+			pool->stratum_notify = ret = true;
+		else
+			pool->stratum_notify = ret = false;
+		return ret;
+	}
+
+	if (!strncasecmp(buf, "mining.set_difficulty", 21) && parse_diff(pool, params)) {
+		ret = true;
+		return ret;
+	}
+
+	if (!strncasecmp(buf, "client.reconnect", 16) && parse_reconnect(pool, params)) {
+		ret = true;
+		return ret;
+	}
+
+	if (!strncasecmp(buf, "client.get_version", 18) && send_version(pool, val)) {
+		ret = true;
+		return ret;
+	}
+
+	if (!strncasecmp(buf, "client.show_message", 19) && show_message(pool, params)) {
+		ret = true;
+		return ret;
+	}
+	return ret;
+}
+
+bool auth_stratum(struct pool *pool)
+{
+	json_t *val = NULL, *res_val, *err_val;
+	char s[RBUFSIZE], *sret = NULL;
+	json_error_t err;
+	bool ret = false;
+
+	sprintf(s, "{\"id\": %d, \"method\": \"mining.authorize\", \"params\": [\"%s\", \"%s\"]}",
+		swork_id++, pool->rpc_user, pool->rpc_pass);
+
+	if (!stratum_send(pool, s, strlen(s)))
+		return ret;
+
+	/* Parse all data in the queue and anything left should be auth */
+	while (42) {
+		sret = recv_line(pool);
+		if (!sret)
+			return ret;
+		if (parse_method(pool, sret))
+			free(sret);
+		else
+			break;
+	}
+
+	val = JSON_LOADS(sret, &err);
+	free(sret);
+	res_val = json_object_get(val, "result");
+	err_val = json_object_get(val, "error");
+
+	if (!res_val || json_is_false(res_val) || (err_val && !json_is_null(err_val)))  {
+		char *ss;
+
+		if (err_val)
+			ss = json_dumps(err_val, JSON_INDENT(3));
+		else
+			ss = strdup("(unknown reason)");
+		applog(LOG_WARNING, "pool %d JSON stratum auth failed: %s", pool->pool_no, ss);
+		free(ss);
+
+		return ret;
+	}
+
+	ret = true;
+	applog(LOG_INFO, "Stratum authorisation success for pool %d", pool->pool_no);
+	pool->probed = true;
+	successful_connect = true;
+	return ret;
+}
+
+static int recv_byte(int sockd)
+{
+	char c;
+
+	if (recv(sockd, &c, 1, 0) != -1)
+		return c;
+
+	return -1;
+}
+
+static bool http_negotiate(struct pool *pool, int sockd, bool http0)
+{
+	char buf[1024];
+	int i, len;
+
+	if (http0) {
+		snprintf(buf, 1024, "CONNECT %s:%s HTTP/1.0\r\n\r\n",
+			pool->sockaddr_url, pool->stratum_port);
+	} else {
+		snprintf(buf, 1024, "CONNECT %s:%s HTTP/1.1\r\nHost: %s:%s\r\n\r\n",
+			pool->sockaddr_url, pool->stratum_port, pool->sockaddr_url,
+			pool->stratum_port);
+	}
+	applog(LOG_DEBUG, "Sending proxy %s:%s - %s",
+		pool->sockaddr_proxy_url, pool->sockaddr_proxy_port, buf);
+	send(sockd, buf, strlen(buf), 0);
+	len = recv(sockd, buf, 12, 0);
+	if (len <= 0) {
+		applog(LOG_WARNING, "Couldn't read from proxy %s:%s after sending CONNECT",
+		       pool->sockaddr_proxy_url, pool->sockaddr_proxy_port);
+		return false;
+	}
+	buf[len] = '\0';
+	applog(LOG_DEBUG, "Received from proxy %s:%s - %s",
+	       pool->sockaddr_proxy_url, pool->sockaddr_proxy_port, buf);
+	if (strcmp(buf, "HTTP/1.1 200") && strcmp(buf, "HTTP/1.0 200")) {
+		applog(LOG_WARNING, "HTTP Error from proxy %s:%s - %s",
+		       pool->sockaddr_proxy_url, pool->sockaddr_proxy_port, buf);
+		return false;
+	}
+
+	/* Ignore unwanted headers till we get desired response */
+	for (i = 0; i < 4; i++) {
+		buf[i] = recv_byte(sockd);
+		if (buf[i] == (char)-1) {
+			applog(LOG_WARNING, "Couldn't read HTTP byte from proxy %s:%s",
+			pool->sockaddr_proxy_url, pool->sockaddr_proxy_port);
+			return false;
+		}
+	}
+	while (strncmp(buf, "\r\n\r\n", 4)) {
+		for (i = 0; i < 3; i++)
+			buf[i] = buf[i + 1];
+		buf[3] = recv_byte(sockd);
+		if (buf[3] == (char)-1) {
+			applog(LOG_WARNING, "Couldn't read HTTP byte from proxy %s:%s",
+			pool->sockaddr_proxy_url, pool->sockaddr_proxy_port);
+			return false;
+		}
+	}
+
+	applog(LOG_DEBUG, "Success negotiating with %s:%s HTTP proxy",
+	       pool->sockaddr_proxy_url, pool->sockaddr_proxy_port);
+	return true;
+}
+
+static bool socks5_negotiate(struct pool *pool, int sockd)
+{
+	unsigned char atyp, uclen;
+	unsigned short port;
+	char buf[515];
+	int i, len;
+
+	buf[0] = 0x05;
+	buf[1] = 0x01;
+	buf[2] = 0x00;
+	applog(LOG_DEBUG, "Attempting to negotiate with %s:%s SOCKS5 proxy",
+	       pool->sockaddr_proxy_url, pool->sockaddr_proxy_port );
+	send(sockd, buf, 3, 0);
+	if (recv_byte(sockd) != 0x05 || recv_byte(sockd) != buf[2]) {
+		applog(LOG_WARNING, "Bad response from %s:%s SOCKS5 server",
+		       pool->sockaddr_proxy_url, pool->sockaddr_proxy_port );
+		return false;
+	}
+
+	buf[0] = 0x05;
+	buf[1] = 0x01;
+	buf[2] = 0x00;
+	buf[3] = 0x03;
+	len = (strlen(pool->sockaddr_url));
+	if (len > 255)
+		len = 255;
+	uclen = len;
+	buf[4] = (uclen & 0xff);
+	memcpy(buf + 5, pool->sockaddr_url, len);
+	port = atoi(pool->stratum_port);
+	buf[5 + len] = (port >> 8);
+	buf[6 + len] = (port & 0xff);
+	send(sockd, buf, (7 + len), 0);
+	if (recv_byte(sockd) != 0x05 || recv_byte(sockd) != 0x00) {
+		applog(LOG_WARNING, "Bad response from %s:%s SOCKS5 server",
+			pool->sockaddr_proxy_url, pool->sockaddr_proxy_port );
+		return false;
+	}
+
+	recv_byte(sockd);
+	atyp = recv_byte(sockd);
+	if (atyp == 0x01) {
+		for (i = 0; i < 4; i++)
+			recv_byte(sockd);
+	} else if (atyp == 0x03) {
+		len = recv_byte(sockd);
+		for (i = 0; i < len; i++)
+			recv_byte(sockd);
+	} else {
+		applog(LOG_WARNING, "Bad response from %s:%s SOCKS5 server",
+			pool->sockaddr_proxy_url, pool->sockaddr_proxy_port );
+		return false;
+	}
+	for (i = 0; i < 2; i++)
+		recv_byte(sockd);
+
+	applog(LOG_DEBUG, "Success negotiating with %s:%s SOCKS5 proxy",
+	       pool->sockaddr_proxy_url, pool->sockaddr_proxy_port);
+	return true;
+}
+
+static bool socks4_negotiate(struct pool *pool, int sockd, bool socks4a)
+{
+	unsigned short port;
+	in_addr_t inp;
+	char buf[515];
+	int i, len;
+
+	buf[0] = 0x04;
+	buf[1] = 0x01;
+	port = atoi(pool->stratum_port);
+	buf[2] = port >> 8;
+	buf[3] = port & 0xff;
+	sprintf(&buf[8], "CGMINER");
+
+	/* See if we've been given an IP address directly to avoid needing to
+	 * resolve it. */
+	inp = inet_addr(pool->sockaddr_url);
+	inp = ntohl(inp);
+	if ((int)inp != -1)
+		socks4a = false;
+	else {
+		/* Try to extract the IP address ourselves first */
+		struct addrinfo servinfobase, *servinfo, hints;
+
+		servinfo = &servinfobase;
+		memset(&hints, 0, sizeof(struct addrinfo));
+		hints.ai_family = AF_INET; /* IPV4 only */
+		if (!getaddrinfo(pool->sockaddr_url, NULL, &hints, &servinfo)) {
+			struct sockaddr_in *saddr_in = (struct sockaddr_in *)servinfo->ai_addr;
+
+			inp = ntohl(saddr_in->sin_addr.s_addr);
+			socks4a = false;
+			freeaddrinfo(servinfo);
+		}
+	}
+
+	if (!socks4a) {
+		if 
