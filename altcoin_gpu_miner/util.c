@@ -2024,4 +2024,270 @@ static bool socks4_negotiate(struct pool *pool, int sockd, bool socks4a)
 	}
 
 	if (!socks4a) {
-		if 
+		if ((int)inp == -1) {
+			applog(LOG_WARNING, "Invalid IP address specified for socks4 proxy: %s",
+			       pool->sockaddr_url);
+			return false;
+		}
+		buf[4] = (inp >> 24) & 0xFF;
+		buf[5] = (inp >> 16) & 0xFF;
+		buf[6] = (inp >>  8) & 0xFF;
+		buf[7] = (inp >>  0) & 0xFF;
+		send(sockd, buf, 16, 0);
+	} else {
+		/* This appears to not be working but hopefully most will be
+		 * able to resolve IP addresses themselves. */
+		buf[4] = 0;
+		buf[5] = 0;
+		buf[6] = 0;
+		buf[7] = 1;
+		len = strlen(pool->sockaddr_url);
+		if (len > 255)
+			len = 255;
+		memcpy(&buf[16], pool->sockaddr_url, len);
+		len += 16;
+		buf[len++] = '\0';
+		send(sockd, buf, len, 0);
+	}
+
+	if (recv_byte(sockd) != 0x00 || recv_byte(sockd) != 0x5a) {
+		applog(LOG_WARNING, "Bad response from %s:%s SOCKS4 server",
+		       pool->sockaddr_proxy_url, pool->sockaddr_proxy_port);
+		return false;
+	}
+
+	for (i = 0; i < 6; i++)
+		recv_byte(sockd);
+
+	return true;
+}
+
+static void noblock_socket(SOCKETTYPE fd)
+{
+#ifndef WIN32
+	int flags = fcntl(fd, F_GETFL, 0);
+
+	fcntl(fd, F_SETFL, O_NONBLOCK | flags);
+#else
+	u_long flags = 1;
+
+	ioctlsocket(fd, FIONBIO, &flags);
+#endif
+}
+
+static void block_socket(SOCKETTYPE fd)
+{
+#ifndef WIN32
+	int flags = fcntl(fd, F_GETFL, 0);
+
+	fcntl(fd, F_SETFL, flags & ~O_NONBLOCK);
+#else
+	u_long flags = 0;
+
+	ioctlsocket(fd, FIONBIO, &flags);
+#endif
+}
+
+static bool sock_connecting(void)
+{
+#ifndef WIN32
+	return errno == EINPROGRESS;
+#else
+	return WSAGetLastError() == WSAEWOULDBLOCK;
+#endif
+}
+static bool setup_stratum_socket(struct pool *pool)
+{
+	struct addrinfo servinfobase, *servinfo, *hints, *p;
+	char *sockaddr_url, *sockaddr_port;
+	int sockd;
+
+	mutex_lock(&pool->stratum_lock);
+	pool->stratum_active = false;
+	if (pool->sock)
+		CLOSESOCKET(pool->sock);
+	pool->sock = 0;
+	mutex_unlock(&pool->stratum_lock);
+
+	hints = &pool->stratum_hints;
+	memset(hints, 0, sizeof(struct addrinfo));
+	hints->ai_family = AF_UNSPEC;
+	hints->ai_socktype = SOCK_STREAM;
+	servinfo = &servinfobase;
+
+	if (!pool->rpc_proxy && opt_socks_proxy) {
+		pool->rpc_proxy = opt_socks_proxy;
+		extract_sockaddr(pool->rpc_proxy, &pool->sockaddr_proxy_url, &pool->sockaddr_proxy_port);
+		pool->rpc_proxytype = PROXY_SOCKS5;
+	}
+
+	if (pool->rpc_proxy) {
+		sockaddr_url = pool->sockaddr_proxy_url;
+		sockaddr_port = pool->sockaddr_proxy_port;
+	} else {
+		sockaddr_url = pool->sockaddr_url;
+		sockaddr_port = pool->stratum_port;
+	}
+	if (getaddrinfo(sockaddr_url, sockaddr_port, hints, &servinfo) != 0) {
+		if (!pool->probed) {
+			applog(LOG_WARNING, "Failed to resolve (?wrong URL) %s:%s",
+			       sockaddr_url, sockaddr_port);
+			pool->probed = true;
+		} else {
+			applog(LOG_INFO, "Failed to getaddrinfo for %s:%s",
+			       sockaddr_url, sockaddr_port);
+		}
+		return false;
+	}
+
+	for (p = servinfo; p != NULL; p = p->ai_next) {
+		sockd = socket(p->ai_family, p->ai_socktype, p->ai_protocol);
+		if (sockd == -1) {
+			applog(LOG_DEBUG, "Failed socket");
+			continue;
+		}
+
+		/* Iterate non blocking over entries returned by getaddrinfo
+		 * to cope with round robin DNS entries, finding the first one
+		 * we can connect to quickly. */
+		noblock_socket(sockd);
+		if (connect(sockd, p->ai_addr, p->ai_addrlen) == -1) {
+			struct timeval tv_timeout = {1, 0};
+			int selret;
+			fd_set rw;
+
+			if (!sock_connecting()) {
+				CLOSESOCKET(sockd);
+				applog(LOG_DEBUG, "Failed sock connect");
+				continue;
+			}
+			FD_ZERO(&rw);
+			FD_SET(sockd, &rw);
+			selret = select(sockd + 1, NULL, &rw, NULL, &tv_timeout);
+			if  (selret > 0 && FD_ISSET(sockd, &rw)) {
+				socklen_t len;
+				int err, n;
+
+				len = sizeof(err);
+				n = getsockopt(sockd, SOL_SOCKET, SO_ERROR, (void *)&err, &len);
+				if (!n && !err) {
+					applog(LOG_DEBUG, "Succeeded delayed connect");
+					block_socket(sockd);
+					break;
+				}
+			}
+			CLOSESOCKET(sockd);
+			applog(LOG_DEBUG, "Select timeout/failed connect");
+			continue;
+		}
+		applog(LOG_WARNING, "Succeeded immediate connect");
+		block_socket(sockd);
+
+		break;
+	}
+	if (p == NULL) {
+		applog(LOG_INFO, "Failed to connect to stratum on %s:%s",
+		       sockaddr_url, sockaddr_port);
+		freeaddrinfo(servinfo);
+		return false;
+	}
+	freeaddrinfo(servinfo);
+
+	if (pool->rpc_proxy) {
+		switch (pool->rpc_proxytype) {
+			case PROXY_HTTP_1_0:
+				if (!http_negotiate(pool, sockd, true))
+					return false;
+				break;
+			case PROXY_HTTP:
+				if (!http_negotiate(pool, sockd, false))
+					return false;
+				break;
+			case PROXY_SOCKS5:
+			case PROXY_SOCKS5H:
+				if (!socks5_negotiate(pool, sockd))
+					return false;
+				break;
+			case PROXY_SOCKS4:
+				if (!socks4_negotiate(pool, sockd, false))
+					return false;
+				break;
+			case PROXY_SOCKS4A:
+				if (!socks4_negotiate(pool, sockd, true))
+					return false;
+				break;
+			default:
+				applog(LOG_WARNING, "Unsupported proxy type for %s:%s",
+				       pool->sockaddr_proxy_url, pool->sockaddr_proxy_port);
+				return false;
+				break;
+		}
+	}
+
+	if (!pool->sockbuf) {
+		pool->sockbuf = calloc(RBUFSIZE, 1);
+		if (!pool->sockbuf)
+			quithere(1, "Failed to calloc pool sockbuf");
+		pool->sockbuf_size = RBUFSIZE;
+	}
+
+	pool->sock = sockd;
+	keep_sockalive(sockd);
+	return true;
+}
+
+static char *get_sessionid(json_t *val)
+{
+	char *ret = NULL;
+	json_t *arr_val;
+	int arrsize, i;
+
+	arr_val = json_array_get(val, 0);
+	if (!arr_val || !json_is_array(arr_val))
+		goto out;
+	arrsize = json_array_size(arr_val);
+	for (i = 0; i < arrsize; i++) {
+		json_t *arr = json_array_get(arr_val, i);
+		char *notify;
+
+		if (!arr | !json_is_array(arr))
+			break;
+		notify = __json_array_string(arr, 0);
+		if (!notify)
+			continue;
+		if (!strncasecmp(notify, "mining.notify", 13)) {
+			ret = json_array_string(arr, 1);
+			break;
+		}
+	}
+out:
+	return ret;
+}
+
+void suspend_stratum(struct pool *pool)
+{
+	applog(LOG_INFO, "Closing socket for stratum pool %d", pool->pool_no);
+
+	mutex_lock(&pool->stratum_lock);
+	__suspend_stratum(pool);
+	mutex_unlock(&pool->stratum_lock);
+}
+
+bool initiate_stratum(struct pool *pool)
+{
+	bool ret = false, recvd = false, noresume = false, sockd = false;
+	char s[RBUFSIZE], *sret = NULL, *nonce1, *sessionid;
+	json_t *val = NULL, *res_val, *err_val;
+	json_error_t err;
+	int n2size;
+
+resend:
+	if (!setup_stratum_socket(pool)) {
+		sockd = false;
+		goto out;
+	}
+
+	sockd = true;
+
+	if (recvd) {
+		/* Get rid of any crap lying around if we're r
