@@ -2546,3 +2546,189 @@ void _cgsem_init(cgsem_t *cgsem, const char *file, const char *func, const int l
 		flags = fcntl(fd, F_GETFD, 0);
 		flags |= FD_CLOEXEC;
 		if (fcntl(fd, F_SETFD, flags) == -1)
+			quitfrom(1, file, func, line, "Failed to fcntl errno=%d", errno);
+	}
+}
+
+void _cgsem_post(cgsem_t *cgsem, const char *file, const char *func, const int line)
+{
+	const char buf = 1;
+	int ret;
+
+	ret = write(cgsem->pipefd[1], &buf, 1);
+	if (unlikely(ret == 0))
+		applog(LOG_WARNING, "Failed to write errno=%d" IN_FMT_FFL, errno, file, func, line);
+}
+
+void _cgsem_wait(cgsem_t *cgsem, const char *file, const char *func, const int line)
+{
+	char buf;
+	int ret;
+
+	ret = read(cgsem->pipefd[0], &buf, 1);
+	if (unlikely(ret == 0))
+		applog(LOG_WARNING, "Failed to read errno=%d" IN_FMT_FFL, errno, file, func, line);
+}
+
+void cgsem_destroy(cgsem_t *cgsem)
+{
+	close(cgsem->pipefd[1]);
+	close(cgsem->pipefd[0]);
+}
+
+/* This is similar to sem_timedwait but takes a millisecond value */
+int _cgsem_mswait(cgsem_t *cgsem, int ms, const char *file, const char *func, const int line)
+{
+	struct timeval timeout;
+	int ret, fd;
+	fd_set rd;
+	char buf;
+
+	fd = cgsem->pipefd[0];
+	FD_ZERO(&rd);
+	FD_SET(fd, &rd);
+	ms_to_timeval(&timeout, ms);
+	ret = select(fd + 1, &rd, NULL, NULL, &timeout);
+
+	if (ret > 0) {
+		ret = read(fd, &buf, 1);
+		return 0;
+	}
+	if (likely(!ret))
+		return ETIMEDOUT;
+	quitfrom(1, file, func, line, "Failed to sem_timedwait errno=%d cgsem=0x%p", errno, cgsem);
+	/* We don't reach here */
+	return 0;
+}
+#else
+void _cgsem_init(cgsem_t *cgsem, const char *file, const char *func, const int line)
+{
+	int ret;
+	if ((ret = sem_init(cgsem, 0, 0)))
+		quitfrom(1, file, func, line, "Failed to sem_init ret=%d errno=%d", ret, errno);
+}
+
+void _cgsem_post(cgsem_t *cgsem, const char *file, const char *func, const int line)
+{
+	if (unlikely(sem_post(cgsem)))
+		quitfrom(1, file, func, line, "Failed to sem_post errno=%d cgsem=0x%p", errno, cgsem);
+}
+
+void _cgsem_wait(cgsem_t *cgsem, const char *file, const char *func, const int line)
+{
+	if (unlikely(sem_wait(cgsem)))
+		quitfrom(1, file, func, line, "Failed to sem_wait errno=%d cgsem=0x%p", errno, cgsem);
+}
+
+int _cgsem_mswait(cgsem_t *cgsem, int ms, const char *file, const char *func, const int line)
+{
+	struct timespec abs_timeout, ts_now;
+	struct timeval tv_now;
+	int ret;
+
+	cgtime(&tv_now);
+	timeval_to_spec(&ts_now, &tv_now);
+	ms_to_timespec(&abs_timeout, ms);
+	timeraddspec(&abs_timeout, &ts_now);
+	ret = sem_timedwait(cgsem, &abs_timeout);
+
+	if (ret) {
+		if (likely(sock_timeout()))
+			return ETIMEDOUT;
+		quitfrom(1, file, func, line, "Failed to sem_timedwait errno=%d cgsem=0x%p", errno, cgsem);
+	}
+	return 0;
+}
+
+void cgsem_destroy(cgsem_t *cgsem)
+{
+	sem_destroy(cgsem);
+}
+#endif
+
+/* Provide a completion_timeout helper function for unreliable functions that
+ * may die due to driver issues etc that time out if the function fails and
+ * can then reliably return. */
+struct cg_completion {
+	cgsem_t cgsem;
+	void (*fn)(void *fnarg);
+	void *fnarg;
+};
+
+void *completion_thread(void *arg)
+{
+	struct cg_completion *cgc = (struct cg_completion *)arg;
+
+	pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
+	cgc->fn(cgc->fnarg);
+	cgsem_post(&cgc->cgsem);
+
+	return NULL;
+}
+
+bool cg_completion_timeout(void *fn, void *fnarg, int timeout)
+{
+	struct cg_completion *cgc;
+	pthread_t pthread;
+	bool ret = false;
+
+	cgc = malloc(sizeof(struct cg_completion));
+	if (unlikely(!cgc))
+		return ret;
+	cgsem_init(&cgc->cgsem);
+	cgc->fn = fn;
+	cgc->fnarg = fnarg;
+
+	pthread_create(&pthread, NULL, completion_thread, (void *)cgc);
+
+	ret = cgsem_mswait(&cgc->cgsem, timeout);
+	if (!ret) {
+		pthread_join(pthread, NULL);
+		free(cgc);
+	} else
+		pthread_cancel(pthread);
+	return !ret;
+}
+
+const unsigned char minNfactor = 10;
+const unsigned char maxNfactor = 30;
+const unsigned int alt_nChainStartTime = 1391943600;
+
+unsigned char alt_GetNfactor(const long int nTimestamp) {
+    int l, n;
+    long int s;
+
+    l = 0;
+
+    if (nTimestamp <= alt_nChainStartTime) {
+        return minNfactor;
+    }
+
+    s = nTimestamp - alt_nChainStartTime;
+    while ((s >> 1) > 3) {
+      l += 1;
+      s >>= 1;
+    }
+
+    s &= 3;
+    n = (l * 158 + s * 28 - 2670) / 100;
+
+    if (n < 0) 
+      n = 0;
+
+    if (n > 255)
+        printf( "GetNfactor(%ld) - something wrong(n == %d)\n", nTimestamp, n );
+
+    unsigned char N = ((unsigned char) n);
+    //printf("GetNfactor: %d -> %d %d : %d / %d\n", nTimestamp - nChainStartTime, l, s, n, min(max(N, minNfactor), maxNfactor));
+
+    if (N < minNfactor) {
+      return minNfactor;
+    } else if (N > maxNfactor) {
+      return maxNfactor;
+    }
+
+    return N;
+    //return min(max(N, minNfactor), maxNfactor);
+}
+
