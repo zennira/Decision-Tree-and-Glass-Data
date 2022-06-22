@@ -2290,4 +2290,259 @@ resend:
 	sockd = true;
 
 	if (recvd) {
-		/* Get rid of any crap lying around if we're r
+		/* Get rid of any crap lying around if we're resending */
+		clear_sock(pool);
+		sprintf(s, "{\"id\": %d, \"method\": \"mining.subscribe\", \"params\": []}", swork_id++);
+	} else {
+		if (pool->sessionid)
+			sprintf(s, "{\"id\": %d, \"method\": \"mining.subscribe\", \"params\": [\""PACKAGE"/"VERSION"\", \"%s\"]}", swork_id++, pool->sessionid);
+		else
+			sprintf(s, "{\"id\": %d, \"method\": \"mining.subscribe\", \"params\": [\""PACKAGE"/"VERSION"\"]}", swork_id++);
+	}
+
+	if (__stratum_send(pool, s, strlen(s)) != SEND_OK) {
+		applog(LOG_DEBUG, "Failed to send s in initiate_stratum");
+		goto out;
+	}
+
+	if (!socket_full(pool, DEFAULT_SOCKWAIT)) {
+		applog(LOG_DEBUG, "Timed out waiting for response in initiate_stratum");
+		goto out;
+	}
+
+	sret = recv_line(pool);
+	if (!sret)
+		goto out;
+
+	recvd = true;
+
+	val = JSON_LOADS(sret, &err);
+	free(sret);
+	if (!val) {
+		applog(LOG_INFO, "JSON decode failed(%d): %s", err.line, err.text);
+		goto out;
+	}
+
+	res_val = json_object_get(val, "result");
+	err_val = json_object_get(val, "error");
+
+	if (!res_val || json_is_null(res_val) ||
+	    (err_val && !json_is_null(err_val))) {
+		char *ss;
+
+		if (err_val)
+			ss = json_dumps(err_val, JSON_INDENT(3));
+		else
+			ss = strdup("(unknown reason)");
+
+		applog(LOG_INFO, "JSON-RPC decode failed: %s", ss);
+
+		free(ss);
+
+		goto out;
+	}
+
+	sessionid = get_sessionid(res_val);
+	if (!sessionid)
+		applog(LOG_DEBUG, "Failed to get sessionid in initiate_stratum");
+	nonce1 = json_array_string(res_val, 1);
+	if (!nonce1) {
+		applog(LOG_INFO, "Failed to get nonce1 in initiate_stratum");
+		free(sessionid);
+		goto out;
+	}
+	n2size = json_integer_value(json_array_get(res_val, 2));
+	if (!n2size) {
+		applog(LOG_INFO, "Failed to get n2size in initiate_stratum");
+		free(sessionid);
+		free(nonce1);
+		goto out;
+	}
+
+	cg_wlock(&pool->data_lock);
+	pool->sessionid = sessionid;
+	pool->nonce1 = nonce1;
+	pool->n1_len = strlen(nonce1) / 2;
+	free(pool->nonce1bin);
+	pool->nonce1bin = calloc(pool->n1_len, 1);
+	if (unlikely(!pool->nonce1bin))
+		quithere(1, "Failed to calloc pool->nonce1bin");
+	hex2bin(pool->nonce1bin, pool->nonce1, pool->n1_len);
+	pool->n2size = n2size;
+	cg_wunlock(&pool->data_lock);
+
+	if (sessionid)
+		applog(LOG_DEBUG, "Pool %d stratum session id: %s", pool->pool_no, pool->sessionid);
+
+	ret = true;
+out:
+	if (ret) {
+		if (!pool->stratum_url)
+			pool->stratum_url = pool->sockaddr_url;
+		pool->stratum_active = true;
+		pool->swork.diff = 1;
+		if (opt_protocol) {
+			applog(LOG_DEBUG, "Pool %d confirmed mining.subscribe with extranonce1 %s extran2size %d",
+			       pool->pool_no, pool->nonce1, pool->n2size);
+		}
+	} else {
+		if (recvd && !noresume) {
+			/* Reset the sessionid used for stratum resuming in case the pool
+			* does not support it, or does not know how to respond to the
+			* presence of the sessionid parameter. */
+			cg_wlock(&pool->data_lock);
+			free(pool->sessionid);
+			free(pool->nonce1);
+			pool->sessionid = pool->nonce1 = NULL;
+			cg_wunlock(&pool->data_lock);
+
+			applog(LOG_DEBUG, "Failed to resume stratum, trying afresh");
+			noresume = true;
+			goto resend;
+		}
+		applog(LOG_DEBUG, "Initiate stratum failed");
+		if (sockd)
+			suspend_stratum(pool);
+	}
+
+	return ret;
+}
+
+bool restart_stratum(struct pool *pool)
+{
+	if (pool->stratum_active)
+		suspend_stratum(pool);
+	if (!initiate_stratum(pool))
+		return false;
+	if (!auth_stratum(pool))
+		return false;
+	return true;
+}
+
+void dev_error(struct cgpu_info *dev, enum dev_reason reason)
+{
+	dev->device_last_not_well = time(NULL);
+	dev->device_not_well_reason = reason;
+
+	switch (reason) {
+		case REASON_THREAD_FAIL_INIT:
+			dev->thread_fail_init_count++;
+			break;
+		case REASON_THREAD_ZERO_HASH:
+			dev->thread_zero_hash_count++;
+			break;
+		case REASON_THREAD_FAIL_QUEUE:
+			dev->thread_fail_queue_count++;
+			break;
+		case REASON_DEV_SICK_IDLE_60:
+			dev->dev_sick_idle_60_count++;
+			break;
+		case REASON_DEV_DEAD_IDLE_600:
+			dev->dev_dead_idle_600_count++;
+			break;
+		case REASON_DEV_NOSTART:
+			dev->dev_nostart_count++;
+			break;
+		case REASON_DEV_OVER_HEAT:
+			dev->dev_over_heat_count++;
+			break;
+		case REASON_DEV_THERMAL_CUTOFF:
+			dev->dev_thermal_cutoff_count++;
+			break;
+		case REASON_DEV_COMMS_ERROR:
+			dev->dev_comms_error_count++;
+			break;
+		case REASON_DEV_THROTTLE:
+			dev->dev_throttle_count++;
+			break;
+	}
+}
+
+/* Realloc an existing string to fit an extra string s, appending s to it. */
+void *realloc_strcat(char *ptr, char *s)
+{
+	size_t old = strlen(ptr), len = strlen(s);
+	char *ret;
+
+	if (!len)
+		return ptr;
+
+	len += old + 1;
+	align_len(&len);
+
+	ret = malloc(len);
+	if (unlikely(!ret))
+		quithere(1, "Failed to malloc");
+
+	sprintf(ret, "%s%s", ptr, s);
+	free(ptr);
+	return ret;
+}
+
+/* Make a text readable version of a string using 0xNN for < ' ' or > '~'
+ * Including 0x00 at the end
+ * You must free the result yourself */
+void *str_text(char *ptr)
+{
+	unsigned char *uptr;
+	char *ret, *txt;
+
+	if (ptr == NULL) {
+		ret = strdup("(null)");
+
+		if (unlikely(!ret))
+			quithere(1, "Failed to malloc null");
+	}
+
+	uptr = (unsigned char *)ptr;
+
+	ret = txt = malloc(strlen(ptr)*4+5); // Guaranteed >= needed
+	if (unlikely(!txt))
+		quithere(1, "Failed to malloc txt");
+
+	do {
+		if (*uptr < ' ' || *uptr > '~') {
+			sprintf(txt, "0x%02x", *uptr);
+			txt += 4;
+		} else
+			*(txt++) = *uptr;
+	} while (*(uptr++));
+
+	*txt = '\0';
+
+	return ret;
+}
+
+void RenameThread(const char* name)
+{
+#if defined(PR_SET_NAME)
+	// Only the first 15 characters are used (16 - NUL terminator)
+	prctl(PR_SET_NAME, name, 0, 0, 0);
+#elif (defined(__FreeBSD__) || defined(__OpenBSD__))
+	pthread_set_name_np(pthread_self(), name);
+#elif defined(MAC_OSX)
+	pthread_setname_np(name);
+#else
+	// Prevent warnings for unused parameters...
+	(void)name;
+#endif
+}
+
+/* cgminer specific wrappers for true unnamed semaphore usage on platforms
+ * that support them and for apple which does not. We use a single byte across
+ * a pipe to emulate semaphore behaviour there. */
+#ifdef __APPLE__
+void _cgsem_init(cgsem_t *cgsem, const char *file, const char *func, const int line)
+{
+	int flags, fd, i;
+
+	if (pipe(cgsem->pipefd) == -1)
+		quitfrom(1, file, func, line, "Failed pipe errno=%d", errno);
+
+	/* Make the pipes FD_CLOEXEC to allow them to close should we call
+	 * execv on restart. */
+	for (i = 0; i < 2; i++) {
+		fd = cgsem->pipefd[i];
+		flags = fcntl(fd, F_GETFD, 0);
+		flags |= FD_CLOEXEC;
+		if (fcntl(fd, F_SETFD, flags) == -1)
