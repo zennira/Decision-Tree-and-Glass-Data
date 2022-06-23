@@ -18,4 +18,103 @@ If you think that this documentation was helpful and you wish to donate, you can
 do so at the following address. 12KaKtrK52iQjPdtsJq7fJ7smC32tXWbWr
 
 **************************************************************************************
-* A tip that might help you along the way                                 
+* A tip that might help you along the way                                            *
+**************************************************************************************
+Enable "QuickEdit Mode" in your Command Prompt Window or MinGW Command Prompt
+Window (No need to go into the context menu to choose edit-mark/copy/paste):
+Right-click on the title bar and click Properties. Under the Options tab, check
+the box for "QuickEdit Mode". Alternately, if you want this change to be
+permanent on all of your Command Prompt Windows; you can click Defaults instead
+of Properties as described above. Now you can drag and select text you want to
+copy, right-click to copy the text to the clipboard and right-click once again to
+paste it at the desired location. You could for example, copy some text from this
+document to the clipboard and right click in your Command Prompt Window to paste
+what you copied.
+
+**************************************************************************************
+* Install mingw32                                                                    *
+**************************************************************************************
+Go to this url ==> http://www.mingw.org/wiki/Getting_Started
+Click the link that says "Download and run the latest mingw-get-inst version."
+Download and run the latest file. Install MinGW in the default directory.
+(I downloaded the one labeled "mingw-get-inst-20120426" - note that this could
+be a different version later.)
+Make sure to check the option for "Download latest repository catalogs".
+I just selected all the check boxes (excluding "Fortran Compiler") so that everything
+was installed.
+
+**************************************************************************************
+* Run the MSYS shell for the first time to create your user directory                *
+**************************************************************************************
+(Start Icon/keyboard key ==> All Programs ==> MinGW ==> MinGW Shell).
+This will create your user directory for you.
+
+**************************************************************************************
+* Install libpdcurses                                                                *
+**************************************************************************************
+Type the lines below to install libpdcurses.
+mingw-get install mingw32-libpdcurses
+mingw-get install mingw32-pdcurses
+Ctrl-D or typing "logout" and pressing the enter key should get you out of the
+window.
+
+**************************************************************************************
+* Copy CGMiner source to your MSYS working directory                                 *
+**************************************************************************************
+Copy CGMiner source code directory into:
+\MinGW\msys\1.0\home\(folder with your user name)
+
+**************************************************************************************
+* Install AMD APP SDK, latest version (only if you want GPU mining)                  *
+**************************************************************************************
+Note: You do not need to install the AMD APP SDK if you are only using Nvidia GPU's
+Go to this url for the latest AMD APP SDK:
+ http://developer.amd.com/tools/heterogeneous-computing/amd-accelerated-parallel-processing-app-sdk/downloads/
+Go to this url for legacy AMD APP SDK's:
+ http://developer.amd.com/tools/heterogeneous-computing/amd-accelerated-parallel-processing-app-sdk/downloads/download-archive/
+Download and install whichever version you like best.
+Copy the folders in \Program Files (x86)\AMD APP\include to \MinGW\include
+Copy \Program Files (x86)\AMD APP\lib\x86\libOpenCL.a to \MinGW\lib
+Note: If you are on a 32 bit version of windows "Program Files (x86)" will be
+"Program Files".
+Note2: If you update your APP SDK later you might want to recopy the above files
+
+**************************************************************************************
+* Install AMD ADL SDK, latest version (only if you want GPU monitoring)              *
+**************************************************************************************
+Note: You do not need to install the AMD ADL SDK if you are only using Nvidia GPU's
+Go to this url ==> http://developer.amd.com/tools/graphics-development/display-library-adl-sdk/
+Download and unzip the file you downloaded.
+Pull adl_defines.h, adl_sdk.h, and adl_structures.h out of the include folder
+Put those files into the ADL_SDK folder in your source tree as shown below.
+\MinGW\msys\1.0\home\(folder with your user name)\cgminer-x.x.x\ADL_SDK
+
+**************************************************************************************
+* Install GTK-WIN, required for Pkg-config in the next step                          *
+**************************************************************************************
+Go to this url ==> http://sourceforge.net/projects/gtk-win/
+Download the file.
+After you have downloaded the file Double click/run it and this will install GTK+
+I chose all the selection boxes when I installed.
+Copy libglib-2.0-0.dll and intl.dll from \Program Files (x86)\gtk2-runtime\bin to
+\MinGW\bin
+Note: If you are on a 32 bit version of windows "Program Files (x86)" will be
+"Program Files".
+
+**************************************************************************************
+* Install pkg-config                                                                 *
+**************************************************************************************
+Go to this url ==> http://www.gtk.org/download/win32.php
+Scroll down to where it shows pkg-cfg.
+Download the file from the tool link. Extract "pkg-config.exe" from bin and place in
+your  \MinGW\bin directory.
+Download the file from the "Dev" link. Extract "pkg.m4" from share\aclocal and place
+in your \MingW\share\aclocal directory.
+
+**************************************************************************************
+* Install libcurl                                                                    *
+**************************************************************************************
+Go to this url ==> http://curl.haxx.se/download.html#Win32
+At the section where it says "Win32 - Generic", Click on the link that indicates
+Win32 2000.XP 7.27.0 libcurl SSL and download it.
+The one I downloaded may not be current for you. Choos
