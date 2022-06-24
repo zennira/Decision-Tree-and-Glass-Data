@@ -127,4 +127,167 @@ altcoin (0.4.0-1) unstable; urgency=low
     + Add irc URL to Upstream-Contact.
     + Add comment on Altcoin Developers to catch-all Files section.
     + Add Files sections for newly readded src/cryptopp/* (new custom
-      BSD-like license), a
+      BSD-like license), and newly added doc/build-osx.txt and
+      src/makefile.osx (Expat).
+  * Bump debhelper compatibility level to 7.
+  * Suppress binary icns and gpg files.
+  * Enable regression tests:
+    + Build-depend on libboost-test-dev.
+    + Extend patch 1003 to also dynamically link test binary.
+    + Build and invoke test binary unless tests are disabled.
+  * Tighten build-dependency on cdbs: Recent version needed to support
+    debhelper 7.
+  * Relax build-depend unversioned on debhelper: needed version
+    satisfied even in oldstable.
+  * Stop suppress optional build-dependencies: Satisfied in stable.
+    Build-depend on devscripts (enabling copyright-check).
+
+ -- Jonas Smedegaard <dr@jones.dk>  Wed, 05 Oct 2011 01:48:53 +0200
+
+altcoin (0.3.24~dfsg-1) unstable; urgency=low
+
+  * New upstream release.
+
+  [ Jonas Smedegaard ]
+  * Improve various usage hints:
+    + Explicitly mention in long description that altcoind contains
+      daemon and command-line interface.
+    + Extend README.Debian with section on lack of GUI, and add primary
+      headline.
+    + Avoid installing upstream README: contains no parts relevant for
+      Debian usage.
+    Thanks to richard for suggestions (see bug#629443).
+  * Favor final releases over prereleases in rules and watch file.
+    Thanks to Jan Dittberner.
+  * Track -src (not -linux) tarballs in rules and watch file.
+    Thanks to Jan Dittberner.
+  * Drop patches 1004 and 1005 (integrated upstream) and simplify
+    CXXFLAGS in rules file.
+  * Stop stripping no longer included source-less binaries from upstream
+    tarballs.
+
+  [ Jan Dittberner ]
+  * refresh debian/patches/1000_use_system_crypto++.patch
+
+ -- Jonas Smedegaard <dr@jones.dk>  Tue, 19 Jul 2011 15:08:54 +0200
+
+altcoin (0.3.21~dfsg-2) unstable; urgency=low
+
+  * Enable UPNP support:
+    + Drop patch 1006.
+    + Build-depend on libminiupnpc-dev.
+    Thanks to Matt Corallo.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Sat, 28 May 2011 15:52:44 +0200
+
+altcoin (0.3.21~dfsg-1) unstable; urgency=low
+
+  * New upstream release.
+  * Refresh patches.
+  * Drop patch 1002: no longer needed, as upstream use pkgconfig now.
+  * Add patch 1006 to really unset USE_UPNP as aparently intended.
+  * Adjust cleanup rule to preserve .gitignore files.
+  * Update copyright file:
+    + Bump format to draft 174 of DEP-5.
+    + Shorten comments.
+  * Bump policy compliance to standards-version 3.9.2.
+  * Shorten Vcs-Browser paragraph in control file.
+  * Fix mention daemon (not CLI tools) in short description.
+  * Stop conflicting with or replace altcoin-cli: Only transitional, no
+    longer needed.
+  * Link against unversioned berkeleydb. Update NEWS and README.Debian
+    accordingly (and improve wording while at it).
+    Closes: Bug#621425. Thanks to Ondřej Surý.
+  * This release also implicitly updates linkage against libcrypto++,
+    which closes: bug#626953, #627024.
+  * Disable linkage against not yet Debian packaged MiniUPnP.
+  * Silence seemingly harmless noise about unused variables.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Tue, 17 May 2011 15:31:24 +0200
+
+altcoin (0.3.20.2~dfsg-2) unstable; urgency=medium
+
+  * Fix have wrapper script execute real binary (not loop executing
+    itself).
+    Closes: bug#617290. Thanks to Philippe Gauthier and Etienne Laurin.
+  * Set urgency=medium as the only (user-exposed) binary is useless
+    without this fix and has been for some time.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Wed, 16 Mar 2011 09:11:06 +0100
+
+altcoin (0.3.20.2~dfsg-1) unstable; urgency=low
+
+  * New upstream release.
+  * Fix provide and replace former package name altcoin-cli.
+    Closes: bug#618439. Thanks to Shane Wegner.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Tue, 15 Mar 2011 11:41:43 +0100
+
+altcoin (0.3.20.01~dfsg-1) unstable; urgency=low
+
+  * New upstream release.
+
+  [ Micah Anderson ]
+  * Add myself as uploader.
+
+  [ Jonas Smedegaard ]
+  * Add wrapper for altcoind to ease initial startup.
+  * Update patches:
+    + Drop patch 2002: Applied upstream.
+    + Add patch 1005 to add phtread linker option.
+      Closes: bug#615619. Thanks to Shane Wegner.
+    + Refresh patches.
+  * Extend copyright years in rules file header.
+  * Rewrite copyright file using draft svn166 of DEP5 format.
+  * Rename binary package to altcoind (from bincoin-cli).
+    Closes: bug#614025. Thanks to Luke-Jr.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Tue, 01 Mar 2011 15:55:04 +0100
+
+altcoin (0.3.19~dfsg-6) unstable; urgency=low
+
+  * Fix override agressive optimizations.
+  * Fix tighten build-dependencies to really fit backporting to Lenny:
+    + Add fallback build-dependency on libdb4.6++-dev.
+    + Tighten unversioned Boost build-dependencies to recent versions,
+      To force use of versioned Boost when backporting to Lenny.
+    ...needs more love, though: actual build fails.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Mon, 17 Jan 2011 19:48:35 +0100
+
+altcoin (0.3.19~dfsg-5) unstable; urgency=low
+
+  * Fix lower Boost fallback-build-dependencies to 1.35, really
+    available in Lenny.
+  * Correct comment in rules file regarding reason for versioned Boost
+    fallback-build-dependency.
+  * Add patch 2002 adding -mt decoration to Boost flags, to ease
+    backporting to Lenny.
+  * Respect DEB_BUILD_OPTIONS, and suppress arch-specific optimizations:
+    + Add patch 1004 to allow overriding optimization flags.
+    + Set optimization flags conditionally at build time.
+    + Drop patch 2002 unconditionally suppressing arch-optimizations.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Mon, 17 Jan 2011 16:04:48 +0100
+
+altcoin (0.3.19~dfsg-4) unstable; urgency=low
+
+  [ Micah Anderson ]
+  * Provide example altcoin.conf.
+  * Add altcoind(1) and altcoin.conf(5) man pages.
+
+  [ Jonas Smedegaard ]
+  * Ease backporting:
+    + Suppress optional build-dependencies.
+    + Add fallback build-dependencies on the most recent Boost libs
+    available in Lenny (where unversioned Boost libs are missing).
+  * Add Micah as copyright holder for manpages, licensed as GPL-3+.
+  * Bump copyright format to Subversion candidate draft 162 of DEP5.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Mon, 17 Jan 2011 14:00:48 +0100
+
+altcoin (0.3.19~dfsg-3) unstable; urgency=low
+
+  * Document in copyright file files excluded from repackaged source.
+  * Update copyright file:
+    + Bump DEP5 format hint to Subversion draft rev
