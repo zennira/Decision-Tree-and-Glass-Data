@@ -234,4 +234,25 @@ Click on the file and download it. I downloaded libusbx-1.0.12-win.7z.
 Extract the the following from the file and place in where directed.
 Copy libusb.h from include\libusbx-1.0 to \MinGW\include\libusb-1.0\libusb.h
 Copy contents of MinGW32\static \MinGW\lib
-Copy contents of MinGW32
+Copy contents of MinGW32\dll to \MinGW\lib
+You will have to copy "libusb-1.0.dll" to your working cgminer binary directory.
+
+**************************************************************************************
+* Some ./configure options                                                           *
+**************************************************************************************
+--enable-cpumining      Build with cpu mining support(default disabled)
+--disable-opencl        Override detection and disable building with opencl
+--disable-adl           Override detection and disable building with adl
+--enable-bitforce       Compile support for BitForce FPGAs(default disabled)
+--enable-icarus         Compile support for Icarus Board(default disabled)
+--enable-modminer       Compile support for ModMiner FPGAs(default disabled)
+--enable-ztex           Compile support for Ztex Board(default disabled)
+--enable-scrypt         Compile support for scrypt litecoin mining (default disabled)
+--without-curses        Compile support for curses TUI (default enabled)
+--without-libudev       Autodetect FPGAs using libudev (default enabled)
+
+######################################################################################
+#                                                                                    #
+#       Native WIN32 setup and build instructions (on mingw32/Windows) complete      #
+#                                                                                    #
+######################################################################################

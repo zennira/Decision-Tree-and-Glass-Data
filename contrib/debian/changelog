@@ -1,0 +1,130 @@
+altcoin (0.6.3-natty1) natty; urgency=low
+
+  * New upstream release.
+
+ -- Matt Corallo <matt@bluematt.me>  Mon, 25 Jun 2012 23:47:00 +0200
+
+altcoin (0.6.2-natty1) natty; urgency=low
+
+  * Update package description and launch scripts.
+
+ -- Matt Corallo <matt@bluematt.me>  Sat, 2 Jun 2012 16:41:00 +0200
+
+altcoin (0.6.2-natty0) natty; urgency=low
+
+  * New upstream release.
+
+ -- Matt Corallo <matt@bluematt.me>  Tue, 8 May 2012 16:27:00 -0500
+
+altcoin (0.6.1-natty0) natty; urgency=low
+
+  * New upstream release.
+
+ -- Matt Corallo <matt@bluematt.me>  Sun, 6 May 2012 20:09:00 -0500
+
+altcoin (0.6.0-natty0) natty; urgency=low
+
+  * New upstream release.
+  * Add GNOME/KDE support for altcoin-qt's altcoin: URI support.
+    Thanks to luke-jr for the KDE .protocol file.
+
+ -- Matt Corallo <matt@bluematt.me>  Sat, 31 Mar 2012 15:35:00 -0500
+
+altcoin (0.5.3-natty1) natty; urgency=low
+
+  * Mark for upload to PPA.
+
+ -- Matt Corallo <matt@bluematt.me>  Wed, 14 Mar 2012 23:06:00 -0400
+
+altcoin (0.5.3-natty0) natty; urgency=low
+
+  * New upstream release.
+
+ -- Luke Dashjr <luke+altcoin+deb@dashjr.org>  Tue, 10 Jan 2012 15:57:00 -0500
+
+altcoin (0.5.2-natty1) natty; urgency=low
+
+  * Remove mentions on anonymity in package descriptions and manpage.
+    These should never have been there, altcoin isnt anonymous without
+    a ton of work that virtually no users will ever be willing and
+    capable of doing
+
+ -- Matt Corallo <matt@bluematt.me>  Sat, 7 Jan 2012 13:37:00 -0500
+
+altcoin (0.5.2-natty0) natty; urgency=low
+
+  * New upstream release.
+
+ -- Luke Dashjr <luke+altcoin+deb@dashjr.org>  Fri, 16 Dec 2011 17:57:00 -0500
+
+altcoin (0.5.1-natty0) natty; urgency=low
+
+  * New upstream release.
+
+ -- Matt Corallo <matt@bluematt.me>  Fri, 16 Dec 2011 13:27:00 -0500
+
+altcoin (0.5.0-natty0) natty; urgency=low
+
+  * New upstream release.
+
+ -- Matt Corallo <matt@bluematt.me>  Mon, 21 Nov 2011 11:32:00 -0500
+
+altcoin (0.5.0~rc7-natty0) natty; urgency=low
+
+  * New upstream release candidate.
+
+ -- Matt Corallo <matt@bluematt.me>  Sun, 20 Nov 2011 17:08:00 -0500
+
+altcoin (0.5.0~rc3-natty0) natty; urgency=low
+
+  * New upstream release candidate.
+  * Don't set rpcpassword for altcoin-qt.
+
+ -- Matt Corallo <matt@bluematt.me>  Tue, 8 Nov 2011 11:56:00 -0400
+
+altcoin (0.5.0~rc1-natty1) natty; urgency=low
+
+  * Add test_altcoin to build test
+  * Fix clean
+  * Remove uneccessary build-dependancies
+
+ -- Matt Corallo <matt@bluematt.me>  Wed, 26 Oct 2011 14:37:18 -0400
+
+altcoin (0.5.0~rc1-natty0) natty; urgency=low
+
+  * Mark for natty
+  * Fix broken build
+  * Fix copyright listing
+  * Remove altcoin: URL handler until altcoin actually has support for it (Oops)
+
+ -- Matt Corallo <matt@bluematt.me>  Wed, 26 Oct 2011 14:37:18 -0400
+
+altcoin (0.5.0~rc1-2) experimental; urgency=low
+
+  * Add altcoin-qt
+
+ -- Matt Corallo <matt@bluematt.me>  Tue, 25 Oct 2011 15:24:18 -0400
+
+altcoin (0.5.0~rc1-1) experimental; urgency=low
+
+  * New upstream prerelease.
+  * Add Github as alternate upstream source in watch file.
+  * Stop build-depending on libcrypto++-dev, and drop patch 1000:
+    Upstream no longer use crypto++.
+  * Drop patch 1003: Upstream builds dynamic by default now.
+  * Update copyright file: Drop notes on longer included sources.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Fri, 14 Oct 2011 00:16:18 +0200
+
+altcoin (0.4.0-1) unstable; urgency=low
+
+  * New upstream release.
+  * Stop repackaging source tarballs: No DFSG-violating stripping left.
+  * Update copyright file:
+    + Add Github URL to Source.
+  * Drop dpkg-source local-options hint: Declared options are default
+    since dpkg-source 1.16.1.
+    + Add irc URL to Upstream-Contact.
+    + Add comment on Altcoin Developers to catch-all Files section.
+    + Add Files sections for newly readded src/cryptopp/* (new custom
+      BSD-like license), a
