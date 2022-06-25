@@ -290,4 +290,36 @@ altcoin (0.3.19~dfsg-3) unstable; urgency=low
 
   * Document in copyright file files excluded from repackaged source.
   * Update copyright file:
-    + Bump DEP5 format hint to Subversion draft rev
+    + Bump DEP5 format hint to Subversion draft rev. 153.
+    + Consistently wrap at 72 chars.
+    + Refer to GPL-2 file (not GPL symlink).
+  * Link against Berkeley DB 4.8 (not 4.7):
+    + Build-depend on libdb4.8++-dev (and on on libdb4.7++-dev).
+    + Suggest libdb4.8-util and db4.7-util.
+    + Add README.Debian note on (untested) upgrade routine.
+    + Add NEWS entry on changed db version, referring to README.Debian.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Fri, 07 Jan 2011 22:50:57 +0100
+
+altcoin (0.3.19~dfsg-2) unstable; urgency=low
+
+  * Adjust build options to use optimized miner only for amd64. Fixes
+    FTBFS on i386 (and other archs, if compiling anywhere else at all).
+  * Avoid static linking.
+  * Adjust patch 2001 to avoid only arch-specific optimizations (keep
+    -O3).
+  * Extend long description to mention disk consumption and initial use
+    of IRC.
+  All of above changes thanks to Helmuth Grohne.
+  * Add lintian override regarding OpenSSL and GPL: Linked code is Expat
+    - only Debian packaging is GPL-2+.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Wed, 29 Dec 2010 00:27:54 +0100
+
+altcoin (0.3.19~dfsg-1) unstable; urgency=low
+
+  [ Jonas Smedegaard ]
+  * Initial release.
+    Closes: bug#578157.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Tue, 28 Dec 2010 15:49:22 +0100
