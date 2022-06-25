@@ -1,0 +1,84 @@
+.TH ALTCOIND "1" "January 2011" "altcoind 3.19" 
+.SH NAME
+altcoind \- peer-to-peer network based digital currency
+.SH SYNOPSIS
+altcoin [options] <command> [params]  
+.TP
+altcoin [options] help <command> - Get help for a command
+.SH DESCRIPTION
+This  manual page documents the altcoind program. Altcoin is a peer-to-peer digital currency. Peer-to-peer (P2P) means that there is no central authority to issue new money or keep track of transactions. Instead, these tasks are managed collectively by the nodes of the network. Advantages:
+
+Altcoins can be sent easily through the Internet, without having to trust middlemen. Transactions are designed to be irreversible. Be safe from instability caused by fractional reserve banking and central banks. The limited inflation of the Altcoin system’s money supply is distributed evenly (by CPU power) throughout the network, not monopolized by banks.
+
+.SH OPTIONS
+.TP
+\fB\-conf=\fR<file>
+Specify configuration file (default: altcoin.conf)
+.TP
+\fB\-gen\fR
+Generate coins
+.TP
+\fB\-gen\fR=\fI0\fR
+Don't generate coins
+.TP
+\fB\-min\fR
+Start minimized
+.TP
+\fB\-datadir=\fR<dir>
+Specify data directory
+.TP
+\fB\-proxy=\fR<ip:port>
+Connect through socks4 proxy
+.TP
+\fB\-addnode=\fR<ip>
+Add a node to connect to
+.TP
+\fB\-connect=\fR<ip>
+Connect only to the specified node
+.TP
+\fB\-paytxfee=\fR<amt>
+Fee per KB to add to transactions you send
+.TP
+\fB\-server\fR
+Accept command line and JSON\-RPC commands
+.TP
+\fB\-daemon\fR
+Run in the background as a daemon and accept commands
+.TP
+\fB\-testnet\fR
+Use the test network
+.TP
+\fB\-rpcuser=\fR<user>
+Username for JSON\-RPC connections
+.TP
+\fB\-rpcpassword=\fR<pw>
+Password for JSON\-RPC connections
+.TP
+\fB\-rpcport=\fR<port>
+Listen for JSON\-RPC connections on <port>
+.TP
+\fB\-rpcallowip=\fR<ip>
+Allow JSON\-RPC connections from specified IP address
+.TP
+\fB\-rpcconnect=\fR<ip>
+Send commands to node running on <ip>
+.PP
+SSL options: (see the Altcoin Wiki for SSL setup instructions)
+.TP
+\fB\-rpcssl\fR=\fI1\fR
+Use OpenSSL (https) for JSON\-RPC connections
+.TP
+\fB\-rpcsslcertificatchainfile=\fR<file.cert>
+Server certificate file (default: server.cert)
+.TP
+\fB\-rpcsslprivatekeyfile=\fR<file.pem>
+Server private key (default: server.pem)
+.TP
+\fB\-rpcsslciphers=\fR<ciphers>
+Acceptable ciphers (default: TLSv1+HIGH:!SSLv2:!aNULL:!eNULL:!AH:!3DES:@STRENGTH)
+.TP
+\-?
+This help message
+.SH COMMANDS
+.TP
+\fBbackupwallet 'destinatio
