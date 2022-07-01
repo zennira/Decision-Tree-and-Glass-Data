@@ -172,4 +172,164 @@ class DeploymentInfo(object):
         
         if self.qtPath is not None:
             pluginPath = os.path.join(self.qtPath, "plugins")
-            if os.path.exi
+            if os.path.exists(pluginPath):
+                self.pluginPath = pluginPath
+    
+    def usesFramework(self, name):
+        nameDot = "%s." % name
+        libNameDot = "lib%s." % name
+        for framework in self.deployedFrameworks:
+            if framework.endswith(".framework"):
+                if framework.startswith(nameDot):
+                    return True
+            elif framework.endswith(".dylib"):
+                if framework.startswith(libNameDot):
+                    return True
+        return False
+
+def getFrameworks(binaryPath, verbose):
+    if verbose >= 3:
+        print "Inspecting with otool: " + binaryPath
+    otool = subprocess.Popen(["otool", "-L", binaryPath], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    o_stdout, o_stderr = otool.communicate()
+    if otool.returncode != 0:
+        if verbose >= 1:
+            sys.stderr.write(o_stderr)
+            sys.stderr.flush()
+            raise RuntimeError("otool failed with return code %d" % otool.returncode)
+    
+    otoolLines = o_stdout.split("\n")
+    otoolLines.pop(0) # First line is the inspected binary
+    if ".framework" in binaryPath or binaryPath.endswith(".dylib"):
+        otoolLines.pop(0) # Frameworks and dylibs list themselves as a dependency.
+    
+    libraries = []
+    for line in otoolLines:
+        info = FrameworkInfo.fromOtoolLibraryLine(line.strip())
+        if info is not None:
+            if verbose >= 3:
+                print "Found framework:"
+                print info
+            libraries.append(info)
+    
+    return libraries
+
+def runInstallNameTool(action, *args):
+    subprocess.check_call(["install_name_tool", "-"+action] + list(args))
+
+def changeInstallName(oldName, newName, binaryPath, verbose):
+    if verbose >= 3:
+        print "Using install_name_tool:"
+        print " in", binaryPath
+        print " change reference", oldName
+        print " to", newName
+    runInstallNameTool("change", oldName, newName, binaryPath)
+
+def changeIdentification(id, binaryPath, verbose):
+    if verbose >= 3:
+        print "Using install_name_tool:"
+        print " change identification in", binaryPath
+        print " to", id
+    runInstallNameTool("id", id, binaryPath)
+
+def runStrip(binaryPath, verbose):
+    if verbose >= 3:
+        print "Using strip:"
+        print " stripped", binaryPath
+    subprocess.check_call(["strip", "-x", binaryPath])
+
+def copyFramework(framework, path, verbose):
+    fromPath = framework.sourceFilePath
+    toDir = os.path.join(path, framework.destinationDirectory)
+    toPath = os.path.join(toDir, framework.binaryName)
+    
+    if not os.path.exists(fromPath):
+        raise RuntimeError("No file at " + fromPath)
+    
+    if os.path.exists(toPath):
+        return None # Already there
+    
+    if not os.path.exists(toDir):
+        os.makedirs(toDir)
+    
+    shutil.copy2(fromPath, toPath)
+    if verbose >= 3:
+        print "Copied:", fromPath
+        print " to:", toPath
+
+    permissions = os.stat(toPath)
+    if not permissions.st_mode & stat.S_IWRITE:
+      os.chmod(toPath, permissions.st_mode | stat.S_IWRITE)
+
+    if not framework.isDylib(): # Copy resources for real frameworks
+        fromResourcesDir = framework.sourceResourcesDirectory
+        if os.path.exists(fromResourcesDir):
+            toResourcesDir = os.path.join(path, framework.destinationResourcesDirectory)
+            shutil.copytree(fromResourcesDir, toResourcesDir)
+            if verbose >= 3:
+                print "Copied resources:", fromResourcesDir
+                print " to:", toResourcesDir
+    elif framework.frameworkName.startswith("libQtGui"): # Copy qt_menu.nib (applies to non-framework layout)
+        qtMenuNibSourcePath = os.path.join(framework.frameworkDirectory, "Resources", "qt_menu.nib")
+        qtMenuNibDestinationPath = os.path.join(path, "Contents", "Resources", "qt_menu.nib")
+        if os.path.exists(qtMenuNibSourcePath) and not os.path.exists(qtMenuNibDestinationPath):
+            shutil.copytree(qtMenuNibSourcePath, qtMenuNibDestinationPath)
+            if verbose >= 3:
+                print "Copied for libQtGui:", qtMenuNibSourcePath
+                print " to:", qtMenuNibDestinationPath
+    
+    return toPath
+
+def deployFrameworks(frameworks, bundlePath, binaryPath, strip, verbose, deploymentInfo=None):
+    if deploymentInfo is None:
+        deploymentInfo = DeploymentInfo()
+    
+    while len(frameworks) > 0:
+        framework = frameworks.pop(0)
+        deploymentInfo.deployedFrameworks.append(framework.frameworkName)
+        
+        if verbose >= 2:
+            print "Processing", framework.frameworkName, "..."
+        
+        # Get the Qt path from one of the Qt frameworks
+        if deploymentInfo.qtPath is None and framework.isQtFramework():
+            deploymentInfo.detectQtPath(framework.frameworkDirectory)
+        
+        if framework.installName.startswith("@executable_path"):
+            if verbose >= 2:
+                print framework.frameworkName, "already deployed, skipping."
+            continue
+        
+        # install_name_tool the new id into the binary
+        changeInstallName(framework.installName, framework.deployedInstallName, binaryPath, verbose)
+        
+        # Copy farmework to app bundle.
+        deployedBinaryPath = copyFramework(framework, bundlePath, verbose)
+        # Skip the rest if already was deployed.
+        if deployedBinaryPath is None:
+            continue
+        
+        if strip:
+            runStrip(deployedBinaryPath, verbose)
+        
+        # install_name_tool it a new id.
+        changeIdentification(framework.deployedInstallName, deployedBinaryPath, verbose)
+        # Check for framework dependencies
+        dependencies = getFrameworks(deployedBinaryPath, verbose)
+        
+        for dependency in dependencies:
+            changeInstallName(dependency.installName, dependency.deployedInstallName, deployedBinaryPath, verbose)
+            
+            # Deploy framework if necessary.
+            if dependency.frameworkName not in deploymentInfo.deployedFrameworks and dependency not in frameworks:
+                frameworks.append(dependency)
+    
+    return deploymentInfo
+
+def deployFrameworksForAppBundle(applicationBundle, strip, verbose):
+    frameworks = getFrameworks(applicationBundle.binaryPath, verbose)
+    if len(frameworks) == 0 and verbose >= 1:
+        print "Warning: Could not find any external frameworks to deploy in %s." % (applicationBundle.path)
+        return DeploymentInfo()
+    else:
+    
