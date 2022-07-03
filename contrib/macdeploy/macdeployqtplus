@@ -653,4 +653,95 @@ if config.dmg is not None:
             print "+ Preparing .dmg disk image +"
     
     if config.dmg != "":
-  
+        dmg_name = config.dmg
+    else:
+        spl = app_bundle_name.split(" ")
+        dmg_name = spl[0] + "".join(p.capitalize() for p in spl[1:])
+    
+    if fancy is None:
+        try:
+            runHDIUtil("create", dmg_name, srcfolder="dist", format="UDBZ", volname=app_bundle_name, ov=True)
+        except subprocess.CalledProcessError as e:
+            sys.exit(e.returncode)
+    else:
+        if verbose >= 3:
+            print "Determining size of \"dist\"..."
+        size = 0
+        for path, dirs, files in os.walk("dist"):
+            for file in files:
+                size += os.path.getsize(os.path.join(path, file))
+        size += int(size * 0.1)
+        
+        if verbose >= 3:
+            print "Creating temp image for modification..."
+        try:
+            runHDIUtil("create", dmg_name + ".temp", srcfolder="dist", format="UDRW", size=size, volname=app_bundle_name, ov=True)
+        except subprocess.CalledProcessError as e:
+            sys.exit(e.returncode)
+        
+        if verbose >= 3:
+            print "Attaching temp image..."
+        try:
+            output = runHDIUtil("attach", dmg_name + ".temp", readwrite=True, noverify=True, noautoopen=True, capture_stdout=True)
+        except subprocess.CalledProcessError as e:
+            sys.exit(e.returncode)
+        
+        m = re.search("/Volumes/(.+$)", output)
+        disk_root = m.group(0)
+        disk_name = m.group(1)
+        
+        if verbose >= 2:
+            print "+ Applying fancy settings +"
+        
+        if fancy.has_key("background_picture"):
+            bg_path = os.path.join(disk_root, os.path.basename(fancy["background_picture"]))
+            if verbose >= 3:
+                print fancy["background_picture"], "->", bg_path
+            shutil.copy2(fancy["background_picture"], bg_path)
+        else:
+            bg_path = None
+        
+        if fancy.get("applications_symlink", False):
+            os.symlink("/Applications", os.path.join(disk_root, "Applications"))
+        
+        finder = appscript.app("Finder")
+        disk = finder.disks[disk_name]
+        disk.open()
+        window = disk.container_window
+        window.current_view.set(appscript.k.icon_view)
+        window.toolbar_visible.set(False)
+        window.statusbar_visible.set(False)
+        if fancy.has_key("window_bounds"):
+            window.bounds.set(fancy["window_bounds"])
+        view_options = window.icon_view_options
+        view_options.arrangement.set(appscript.k.not_arranged)
+        if fancy.has_key("icon_size"):
+            view_options.icon_size.set(fancy["icon_size"])
+        if bg_path is not None:
+            view_options.background_picture.set(disk.files[os.path.basename(bg_path)])
+        if fancy.has_key("items_position"):
+            for name, position in fancy["items_position"].iteritems():
+                window.items[name].position.set(position)
+        disk.close()
+        if bg_path is not None:
+            subprocess.call(["SetFile", "-a", "V", bg_path])
+        disk.update(registering_applications=False)
+        sleep(2)
+        disk.eject()
+        
+        if verbose >= 2:
+            print "+ Finalizing .dmg disk image +"
+        
+        try:
+            runHDIUtil("convert", dmg_name + ".temp", format="UDBZ", o=dmg_name + ".dmg", ov=True)
+        except subprocess.CalledProcessError as e:
+            sys.exit(e.returncode)
+        
+        os.unlink(dmg_name + ".temp.dmg")
+
+# ------------------------------------------------
+
+if verbose >= 2:
+    print "+ Done +"
+
+sys.exit(0)
