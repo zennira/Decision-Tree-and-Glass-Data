@@ -318,4 +318,218 @@ void CDBEnv::Flush(bool fShutdown)
 {
     int64 nStart = GetTimeMillis();
     // Flush log data to the actual data file
-  
+    //  on all files that are not in use
+    printf("Flush(%s)%s\n", fShutdown ? "true" : "false", fDbEnvInit ? "" : " db not started");
+    if (!fDbEnvInit)
+        return;
+    {
+        LOCK(cs_db);
+        map<string, int>::iterator mi = mapFileUseCount.begin();
+        while (mi != mapFileUseCount.end())
+        {
+            string strFile = (*mi).first;
+            int nRefCount = (*mi).second;
+            printf("%s refcount=%d\n", strFile.c_str(), nRefCount);
+            if (nRefCount == 0)
+            {
+                // Move log data to the dat file
+                CloseDb(strFile);
+                printf("%s checkpoint\n", strFile.c_str());
+                dbenv.txn_checkpoint(0, 0, 0);
+                if (!IsChainFile(strFile) || fDetachDB) {
+                    printf("%s detach\n", strFile.c_str());
+                    dbenv.lsn_reset(strFile.c_str(), 0);
+                }
+                printf("%s closed\n", strFile.c_str());
+                mapFileUseCount.erase(mi++);
+            }
+            else
+                mi++;
+        }
+        printf("DBFlush(%s)%s ended %15"PRI64d"ms\n", fShutdown ? "true" : "false", fDbEnvInit ? "" : " db not started", GetTimeMillis() - nStart);
+        if (fShutdown)
+        {
+            char** listp;
+            if (mapFileUseCount.empty())
+            {
+                dbenv.log_archive(&listp, DB_ARCH_REMOVE);
+                Close();
+            }
+        }
+    }
+}
+
+
+
+
+
+
+//
+// CTxDB
+//
+
+bool CTxDB::ReadTxIndex(uint256 hash, CTxIndex& txindex)
+{
+    assert(!fClient);
+    txindex.SetNull();
+    return Read(make_pair(string("tx"), hash), txindex);
+}
+
+bool CTxDB::UpdateTxIndex(uint256 hash, const CTxIndex& txindex)
+{
+    assert(!fClient);
+    return Write(make_pair(string("tx"), hash), txindex);
+}
+
+bool CTxDB::AddTxIndex(const CTransaction& tx, const CDiskTxPos& pos, int nHeight)
+{
+    assert(!fClient);
+
+    // Add to tx index
+    uint256 hash = tx.GetHash();
+    CTxIndex txindex(pos, tx.vout.size());
+    return Write(make_pair(string("tx"), hash), txindex);
+}
+
+bool CTxDB::EraseTxIndex(const CTransaction& tx)
+{
+    assert(!fClient);
+    uint256 hash = tx.GetHash();
+
+    return Erase(make_pair(string("tx"), hash));
+}
+
+bool CTxDB::ContainsTx(uint256 hash)
+{
+    assert(!fClient);
+    return Exists(make_pair(string("tx"), hash));
+}
+
+bool CTxDB::ReadDiskTx(uint256 hash, CTransaction& tx, CTxIndex& txindex)
+{
+    assert(!fClient);
+    tx.SetNull();
+    if (!ReadTxIndex(hash, txindex))
+        return false;
+    return (tx.ReadFromDisk(txindex.pos));
+}
+
+bool CTxDB::ReadDiskTx(uint256 hash, CTransaction& tx)
+{
+    CTxIndex txindex;
+    return ReadDiskTx(hash, tx, txindex);
+}
+
+bool CTxDB::ReadDiskTx(COutPoint outpoint, CTransaction& tx, CTxIndex& txindex)
+{
+    return ReadDiskTx(outpoint.hash, tx, txindex);
+}
+
+bool CTxDB::ReadDiskTx(COutPoint outpoint, CTransaction& tx)
+{
+    CTxIndex txindex;
+    return ReadDiskTx(outpoint.hash, tx, txindex);
+}
+
+bool CTxDB::WriteBlockIndex(const CDiskBlockIndex& blockindex)
+{
+    return Write(make_pair(string("blockindex"), blockindex.GetBlockHash()), blockindex);
+}
+
+bool CTxDB::ReadHashBestChain(uint256& hashBestChain)
+{
+    return Read(string("hashBestChain"), hashBestChain);
+}
+
+bool CTxDB::WriteHashBestChain(uint256 hashBestChain)
+{
+    return Write(string("hashBestChain"), hashBestChain);
+}
+
+bool CTxDB::ReadBestInvalidWork(CBigNum& bnBestInvalidWork)
+{
+    return Read(string("bnBestInvalidWork"), bnBestInvalidWork);
+}
+
+bool CTxDB::WriteBestInvalidWork(CBigNum bnBestInvalidWork)
+{
+    return Write(string("bnBestInvalidWork"), bnBestInvalidWork);
+}
+
+CBlockIndex static * InsertBlockIndex(uint256 hash)
+{
+    if (hash == 0)
+        return NULL;
+
+    // Return existing
+    map<uint256, CBlockIndex*>::iterator mi = mapBlockIndex.find(hash);
+    if (mi != mapBlockIndex.end())
+        return (*mi).second;
+
+    // Create new
+    CBlockIndex* pindexNew = new CBlockIndex();
+    if (!pindexNew)
+        throw runtime_error("LoadBlockIndex() : new CBlockIndex failed");
+    mi = mapBlockIndex.insert(make_pair(hash, pindexNew)).first;
+    pindexNew->phashBlock = &((*mi).first);
+
+    return pindexNew;
+}
+
+bool CTxDB::LoadBlockIndex()
+{
+    if (!LoadBlockIndexGuts())
+        return false;
+
+    if (fRequestShutdown)
+        return true;
+
+    // Calculate bnChainWork
+    vector<pair<int, CBlockIndex*> > vSortedByHeight;
+    vSortedByHeight.reserve(mapBlockIndex.size());
+    BOOST_FOREACH(const PAIRTYPE(uint256, CBlockIndex*)& item, mapBlockIndex)
+    {
+        CBlockIndex* pindex = item.second;
+        vSortedByHeight.push_back(make_pair(pindex->nHeight, pindex));
+    }
+    sort(vSortedByHeight.begin(), vSortedByHeight.end());
+    BOOST_FOREACH(const PAIRTYPE(int, CBlockIndex*)& item, vSortedByHeight)
+    {
+        CBlockIndex* pindex = item.second;
+        pindex->bnChainWork = (pindex->pprev ? pindex->pprev->bnChainWork : 0) + pindex->GetBlockWork();
+    }
+
+    // Load hashBestChain pointer to end of best chain
+    if (!ReadHashBestChain(hashBestChain))
+    {
+        if (pindexGenesisBlock == NULL)
+            return true;
+        return error("CTxDB::LoadBlockIndex() : hashBestChain not loaded");
+    }
+    if (!mapBlockIndex.count(hashBestChain))
+        return error("CTxDB::LoadBlockIndex() : hashBestChain not found in the block index");
+    pindexBest = mapBlockIndex[hashBestChain];
+    nBestHeight = pindexBest->nHeight;
+    bnBestChainWork = pindexBest->bnChainWork;
+    printf("LoadBlockIndex(): hashBestChain=%s  height=%d  date=%s\n",
+      hashBestChain.ToString().substr(0,20).c_str(), nBestHeight,
+      DateTimeStrFormat("%x %H:%M:%S", pindexBest->GetBlockTime()).c_str());
+
+    // Load bnBestInvalidWork, OK if it doesn't exist
+    ReadBestInvalidWork(bnBestInvalidWork);
+
+    // Verify blocks in the best chain
+    int nCheckLevel = GetArg("-checklevel", 1);
+    int nCheckDepth = GetArg( "-checkblocks", 2500);
+    if (nCheckDepth == 0)
+        nCheckDepth = 1000000000; // suffices until the year 19000
+    if (nCheckDepth > nBestHeight)
+        nCheckDepth = nBestHeight;
+    printf("Verifying last %i blocks at level %i\n", nCheckDepth, nCheckLevel);
+    CBlockIndex* pindexFork = NULL;
+    map<pair<unsigned int, unsigned int>, CBlockIndex*> mapBlockPos;
+    for (CBlockIndex* pindex = pindexBest; pindex && pindex->pprev; pindex = pindex->pprev)
+    {
+        if (fRequestShutdown || pindex->nHeight < nBestHeight-nCheckDepth)
+            break;
+       
