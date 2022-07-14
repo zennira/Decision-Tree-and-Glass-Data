@@ -662,4 +662,157 @@ bool CTxDB::LoadBlockIndexGuts()
         // Read next record
         CDataStream ssKey(SER_DISK, CLIENT_VERSION);
         if (fFlags == DB_SET_RANGE)
-            ssKey << 
+            ssKey << make_pair(string("blockindex"), uint256(0));
+        CDataStream ssValue(SER_DISK, CLIENT_VERSION);
+        int ret = ReadAtCursor(pcursor, ssKey, ssValue, fFlags);
+        fFlags = DB_NEXT;
+        if (ret == DB_NOTFOUND)
+            break;
+        else if (ret != 0)
+            return false;
+
+        // Unserialize
+
+        try {
+        string strType;
+        ssKey >> strType;
+        if (strType == "blockindex" && !fRequestShutdown)
+        {
+            CDiskBlockIndex diskindex;
+            ssValue >> diskindex;
+
+            // Construct block index object
+            CBlockIndex* pindexNew = InsertBlockIndex(diskindex.GetBlockHash());
+            pindexNew->pprev          = InsertBlockIndex(diskindex.hashPrev);
+            pindexNew->pnext          = InsertBlockIndex(diskindex.hashNext);
+            pindexNew->nFile          = diskindex.nFile;
+            pindexNew->nBlockPos      = diskindex.nBlockPos;
+            pindexNew->nHeight        = diskindex.nHeight;
+            pindexNew->nVersion       = diskindex.nVersion;
+            pindexNew->hashMerkleRoot = diskindex.hashMerkleRoot;
+            pindexNew->nTime          = diskindex.nTime;
+            pindexNew->nBits          = diskindex.nBits;
+            pindexNew->nNonce         = diskindex.nNonce;
+
+            // Watch for genesis block
+            if (pindexGenesisBlock == NULL && diskindex.GetBlockHash() == hashGenesisBlock)
+                pindexGenesisBlock = pindexNew;
+
+            if (!pindexNew->CheckIndex())
+                return error("LoadBlockIndex() : CheckIndex failed at %d", pindexNew->nHeight);
+        }
+        else
+        {
+            break; // if shutdown requested or finished loading block index
+        }
+        }    // try
+        catch (std::exception &e) {
+            return error("%s() : deserialize error", __PRETTY_FUNCTION__);
+        }
+    }
+    pcursor->close();
+
+    return true;
+}
+
+
+
+
+
+//
+// CAddrDB
+//
+
+
+CAddrDB::CAddrDB()
+{
+    pathAddr = GetDataDir() / "peers.dat";
+}
+
+bool CAddrDB::Write(const CAddrMan& addr)
+{
+    // Generate random temporary filename
+    unsigned short randv = 0;
+    RAND_bytes((unsigned char *)&randv, sizeof(randv));
+    std::string tmpfn = strprintf("peers.dat.%04x", randv);
+
+    // serialize addresses, checksum data up to that point, then append csum
+    CDataStream ssPeers(SER_DISK, CLIENT_VERSION);
+    ssPeers << FLATDATA(pchMessageStart);
+    ssPeers << addr;
+    uint256 hash = Hash(ssPeers.begin(), ssPeers.end());
+    ssPeers << hash;
+
+    // open temp output file, and associate with CAutoFile
+    boost::filesystem::path pathTmp = GetDataDir() / tmpfn;
+    FILE *file = fopen(pathTmp.string().c_str(), "wb");
+    CAutoFile fileout = CAutoFile(file, SER_DISK, CLIENT_VERSION);
+    if (!fileout)
+        return error("CAddrman::Write() : open failed");
+
+    // Write and commit header, data
+    try {
+        fileout << ssPeers;
+    }
+    catch (std::exception &e) {
+        return error("CAddrman::Write() : I/O error");
+    }
+    FileCommit(fileout);
+    fileout.fclose();
+
+    // replace existing peers.dat, if any, with new peers.dat.XXXX
+    if (!RenameOver(pathTmp, pathAddr))
+        return error("CAddrman::Write() : Rename-into-place failed");
+
+    return true;
+}
+
+bool CAddrDB::Read(CAddrMan& addr)
+{
+    // open input file, and associate with CAutoFile
+    FILE *file = fopen(pathAddr.string().c_str(), "rb");
+    CAutoFile filein = CAutoFile(file, SER_DISK, CLIENT_VERSION);
+    if (!filein)
+        return error("CAddrman::Read() : open failed");
+
+    // use file size to size memory buffer
+    int fileSize = GetFilesize(filein);
+    int dataSize = fileSize - sizeof(uint256);
+    vector<unsigned char> vchData;
+    vchData.resize(dataSize);
+    uint256 hashIn;
+
+    // read data and checksum from file
+    try {
+        filein.read((char *)&vchData[0], dataSize);
+        filein >> hashIn;
+    }
+    catch (std::exception &e) {
+        return error("CAddrman::Read() 2 : I/O error or stream data corrupted");
+    }
+    filein.fclose();
+
+    CDataStream ssPeers(vchData, SER_DISK, CLIENT_VERSION);
+
+    // verify stored checksum matches input data
+    uint256 hashTmp = Hash(ssPeers.begin(), ssPeers.end());
+    if (hashIn != hashTmp)
+        return error("CAddrman::Read() : checksum mismatch; data corrupted");
+
+    // de-serialize address data
+    unsigned char pchMsgTmp[4];
+    try {
+        ssPeers >> FLATDATA(pchMsgTmp);
+        ssPeers >> addr;
+    }
+    catch (std::exception &e) {
+        return error("CAddrman::Read() : I/O error or stream data corrupted");
+    }
+
+    // finally, verify the network matches ours
+    if (memcmp(pchMsgTmp, pchMessageStart, sizeof(pchMsgTmp)))
+        return error("CAddrman::Read() : invalid network magic number");
+
+    return true;
+}
+
