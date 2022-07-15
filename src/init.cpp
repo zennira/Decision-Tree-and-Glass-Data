@@ -355,4 +355,185 @@ bool AppInit2()
     }
 
     if (!GetBoolArg("-listen", true)) {
-        // do not map ports or try to retrieve public IP wh
+        // do not map ports or try to retrieve public IP when not listening (pointless)
+        SoftSetBoolArg("-upnp", false);
+        SoftSetBoolArg("-discover", false);
+    }
+
+    if (mapArgs.count("-externalip")) {
+        // if an explicit public IP is specified, do not try to find others
+        SoftSetBoolArg("-discover", false);
+    }
+
+    // ********************************************************* Step 3: parameter-to-internal-flags
+
+    fDebug = GetBoolArg("-debug");
+
+    // -debug implies fDebug*
+    if (fDebug)
+        fDebugNet = true;
+    else
+        fDebugNet = GetBoolArg("-debugnet");
+
+    bitdb.SetDetach(GetBoolArg("-detachdb", false));
+
+#if !defined(WIN32) && !defined(QT_GUI)
+    fDaemon = GetBoolArg("-daemon");
+#else
+    fDaemon = false;
+#endif
+
+    if (fDaemon)
+        fServer = true;
+    else
+        fServer = GetBoolArg("-server");
+
+    /* force fServer when running without GUI */
+#if !defined(QT_GUI)
+    fServer = true;
+#endif
+    fPrintToConsole = GetBoolArg("-printtoconsole");
+    fPrintToDebugger = GetBoolArg("-printtodebugger");
+    fLogTimestamps = GetBoolArg("-logtimestamps");
+
+    if (mapArgs.count("-timeout"))
+    {
+        int nNewTimeout = GetArg("-timeout", 5000);
+        if (nNewTimeout > 0 && nNewTimeout < 600000)
+            nConnectTimeout = nNewTimeout;
+    }
+
+    // Continue to put "/P2SH/" in the coinbase to monitor
+    // BIP16 support.
+    // This can be removed eventually...
+    const char* pszP2SH = "/P2SH/";
+    COINBASE_FLAGS << std::vector<unsigned char>(pszP2SH, pszP2SH+strlen(pszP2SH));
+
+
+    if (mapArgs.count("-paytxfee"))
+    {
+        if (!ParseMoney(mapArgs["-paytxfee"], nTransactionFee))
+            return InitError(strprintf(_("Invalid amount for -paytxfee=<amount>: '%s'"), mapArgs["-paytxfee"].c_str()));
+        if (nTransactionFee > 0.25 * COIN)
+            InitWarning(_("Warning: -paytxfee is set very high. This is the transaction fee you will pay if you send a transaction."));
+    }
+
+    if (mapArgs.count("-mininput"))
+    {
+        if (!ParseMoney(mapArgs["-mininput"], nMinimumInputValue))
+            return InitError(strprintf(_("Invalid amount for -mininput=<amount>: '%s'"), mapArgs["-mininput"].c_str()));
+    }
+
+    // ********************************************************* Step 4: application initialization: dir lock, daemonize, pidfile, debug log
+
+    // Make sure only a single Altcoin process is using the data directory.
+    boost::filesystem::path pathLockFile = GetDataDir() / ".lock";
+    FILE* file = fopen(pathLockFile.string().c_str(), "a"); // empty lock file; created if it doesn't exist.
+    if (file) fclose(file);
+    static boost::interprocess::file_lock lock(pathLockFile.string().c_str());
+    if (!lock.try_lock())
+        return InitError(strprintf(_("Cannot obtain a lock on data directory %s.  Altcoin is probably already running."), GetDataDir().string().c_str()));
+
+#if !defined(WIN32) && !defined(QT_GUI)
+    if (fDaemon)
+    {
+        // Daemonize
+        pid_t pid = fork();
+        if (pid < 0)
+        {
+            fprintf(stderr, "Error: fork() returned %d errno %d\n", pid, errno);
+            return false;
+        }
+        if (pid > 0)
+        {
+            CreatePidFile(GetPidFile(), pid);
+            return true;
+        }
+
+        pid_t sid = setsid();
+        if (sid < 0)
+            fprintf(stderr, "Error: setsid() returned %d errno %d\n", sid, errno);
+    }
+#endif
+
+    if (!fDebug)
+        ShrinkDebugFile();
+    printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+    printf("Altcoin version %s (%s)\n", FormatFullVersion().c_str(), CLIENT_DATE.c_str());
+    printf("Startup time: %s\n", DateTimeStrFormat("%x %H:%M:%S", GetTime()).c_str());
+    printf("Default data directory %s\n", GetDefaultDataDir().string().c_str());
+    printf("Used data directory %s\n", GetDataDir().string().c_str());
+    std::ostringstream strErrors;
+
+    if (fDaemon)
+        fprintf(stdout, "Altcoin server starting\n");
+
+    int64 nStart;
+
+    // ********************************************************* Step 5: network initialization
+
+    int nSocksVersion = GetArg("-socks", 5);
+
+    if (nSocksVersion != 4 && nSocksVersion != 5)
+        return InitError(strprintf(_("Unknown -socks proxy version requested: %i"), nSocksVersion));
+
+    if (mapArgs.count("-onlynet")) {
+        std::set<enum Network> nets;
+        BOOST_FOREACH(std::string snet, mapMultiArgs["-onlynet"]) {
+            enum Network net = ParseNetwork(snet);
+            if (net == NET_UNROUTABLE)
+                return InitError(strprintf(_("Unknown network specified in -onlynet: '%s'"), snet.c_str()));
+            nets.insert(net);
+        }
+        for (int n = 0; n < NET_MAX; n++) {
+            enum Network net = (enum Network)n;
+            if (!nets.count(net))
+                SetLimited(net);
+        }
+    }
+
+    CService addrProxy;
+    bool fProxy = false;
+    if (mapArgs.count("-proxy")) {
+        addrProxy = CService(mapArgs["-proxy"], 9050);
+        if (!addrProxy.IsValid())
+            return InitError(strprintf(_("Invalid -proxy address: '%s'"), mapArgs["-proxy"].c_str()));
+
+        if (!IsLimited(NET_IPV4))
+            SetProxy(NET_IPV4, addrProxy, nSocksVersion);
+        if (nSocksVersion > 4) {
+#ifdef USE_IPV6
+            if (!IsLimited(NET_IPV6))
+                SetProxy(NET_IPV6, addrProxy, nSocksVersion);
+#endif
+            SetNameProxy(addrProxy, nSocksVersion);
+        }
+        fProxy = true;
+    }
+
+    // -tor can override normal proxy, -notor disables tor entirely
+    if (!(mapArgs.count("-tor") && mapArgs["-tor"] == "0") && (fProxy || mapArgs.count("-tor"))) {
+        CService addrOnion;
+        if (!mapArgs.count("-tor"))
+            addrOnion = addrProxy;
+        else
+            addrOnion = CService(mapArgs["-tor"], 9050);
+        if (!addrOnion.IsValid())
+            return InitError(strprintf(_("Invalid -tor address: '%s'"), mapArgs["-tor"].c_str()));
+        SetProxy(NET_TOR, addrOnion, 5);
+        SetReachable(NET_TOR);
+    }
+
+    // see Step 2: parameter interactions for more information about these
+    fNoListen = !GetBoolArg("-listen", true);
+    fDiscover = GetBoolArg("-discover", true);
+    fNameLookup = GetBoolArg("-dns", true);
+#ifdef USE_UPNP
+    fUseUPnP = GetBoolArg("-upnp", USE_UPNP);
+#endif
+
+    bool fBound = false;
+    if (!fNoListen)
+    {
+        std::string strError;
+        if (mapArgs.count("-bind"
