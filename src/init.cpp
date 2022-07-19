@@ -536,4 +536,171 @@ bool AppInit2()
     if (!fNoListen)
     {
         std::string strError;
-        if (mapArgs.count("-bind"
+        if (mapArgs.count("-bind")) {
+            BOOST_FOREACH(std::string strBind, mapMultiArgs["-bind"]) {
+                CService addrBind;
+                if (!Lookup(strBind.c_str(), addrBind, GetListenPort(), false))
+                    return InitError(strprintf(_("Cannot resolve -bind address: '%s'"), strBind.c_str()));
+                fBound |= Bind(addrBind);
+            }
+        } else {
+            struct in_addr inaddr_any;
+            inaddr_any.s_addr = INADDR_ANY;
+#ifdef USE_IPV6
+            if (!IsLimited(NET_IPV6))
+                fBound |= Bind(CService(in6addr_any, GetListenPort()), false);
+#endif
+            if (!IsLimited(NET_IPV4))
+                fBound |= Bind(CService(inaddr_any, GetListenPort()), !fBound);
+        }
+        if (!fBound)
+            return InitError(_("Failed to listen on any port. Use -listen=0 if you want this."));
+    }
+
+    if (mapArgs.count("-externalip"))
+    {
+        BOOST_FOREACH(string strAddr, mapMultiArgs["-externalip"]) {
+            CService addrLocal(strAddr, GetListenPort(), fNameLookup);
+            if (!addrLocal.IsValid())
+                return InitError(strprintf(_("Cannot resolve -externalip address: '%s'"), strAddr.c_str()));
+            AddLocal(CService(strAddr, GetListenPort(), fNameLookup), LOCAL_MANUAL);
+        }
+    }
+
+    BOOST_FOREACH(string strDest, mapMultiArgs["-seednode"])
+        AddOneShot(strDest);
+
+    // ********************************************************* Step 6: load blockchain
+
+    if (GetBoolArg("-loadblockindextest"))
+    {
+        CTxDB txdb("r");
+        txdb.LoadBlockIndex();
+        PrintBlockTree();
+        return false;
+    }
+
+    uiInterface.InitMessage(_("Loading block index..."));
+    printf("Loading block index...\n");
+    nStart = GetTimeMillis();
+    if (!LoadBlockIndex())
+        strErrors << _("Error loading blkindex.dat") << "\n";
+
+    // as LoadBlockIndex can take several minutes, it's possible the user
+    // requested to kill altcoin-qt during the last operation. If so, exit.
+    // As the program has not fully started yet, Shutdown() is possibly overkill.
+    if (fRequestShutdown)
+    {
+        printf("Shutdown requested. Exiting.\n");
+        return false;
+    }
+    printf(" block index %15"PRI64d"ms\n", GetTimeMillis() - nStart);
+
+    if (GetBoolArg("-printblockindex") || GetBoolArg("-printblocktree"))
+    {
+        PrintBlockTree();
+        return false;
+    }
+
+    if (mapArgs.count("-printblock"))
+    {
+        string strMatch = mapArgs["-printblock"];
+        int nFound = 0;
+        for (map<uint256, CBlockIndex*>::iterator mi = mapBlockIndex.begin(); mi != mapBlockIndex.end(); ++mi)
+        {
+            uint256 hash = (*mi).first;
+            if (strncmp(hash.ToString().c_str(), strMatch.c_str(), strMatch.size()) == 0)
+            {
+                CBlockIndex* pindex = (*mi).second;
+                CBlock block;
+                block.ReadFromDisk(pindex);
+                block.BuildMerkleTree();
+                block.print();
+                printf("\n");
+                nFound++;
+            }
+        }
+        if (nFound == 0)
+            printf("No blocks matching %s were found\n", strMatch.c_str());
+        return false;
+    }
+
+    // ********************************************************* Step 7: load wallet
+
+    uiInterface.InitMessage(_("Loading wallet..."));
+    printf("Loading wallet...\n");
+    nStart = GetTimeMillis();
+    bool fFirstRun;
+    pwalletMain = new CWallet("wallet.dat");
+    int nLoadWalletRet = pwalletMain->LoadWallet(fFirstRun);
+    if (nLoadWalletRet != DB_LOAD_OK)
+    {
+        if (nLoadWalletRet == DB_CORRUPT)
+            strErrors << _("Error loading wallet.dat: Wallet corrupted") << "\n";
+        else if (nLoadWalletRet == DB_TOO_NEW)
+            strErrors << _("Error loading wallet.dat: Wallet requires newer version of Altcoin") << "\n";
+        else if (nLoadWalletRet == DB_NEED_REWRITE)
+        {
+            strErrors << _("Wallet needed to be rewritten: restart Altcoin to complete") << "\n";
+            printf("%s", strErrors.str().c_str());
+            return InitError(strErrors.str());
+        }
+        else
+            strErrors << _("Error loading wallet.dat") << "\n";
+    }
+
+    if (GetBoolArg("-upgradewallet", fFirstRun))
+    {
+        int nMaxVersion = GetArg("-upgradewallet", 0);
+        if (nMaxVersion == 0) // the -upgradewallet without argument case
+        {
+            printf("Performing wallet upgrade to %i\n", FEATURE_LATEST);
+            nMaxVersion = CLIENT_VERSION;
+            pwalletMain->SetMinVersion(FEATURE_LATEST); // permanently upgrade the wallet immediately
+        }
+        else
+            printf("Allowing wallet upgrade up to %i\n", nMaxVersion);
+        if (nMaxVersion < pwalletMain->GetVersion())
+            strErrors << _("Cannot downgrade wallet") << "\n";
+        pwalletMain->SetMaxVersion(nMaxVersion);
+    }
+
+    if (fFirstRun)
+    {
+        // Create new keyUser and set as default key
+        RandAddSeedPerfmon();
+
+        CPubKey newDefaultKey;
+        if (!pwalletMain->GetKeyFromPool(newDefaultKey, false))
+            strErrors << _("Cannot initialize keypool") << "\n";
+        pwalletMain->SetDefaultKey(newDefaultKey);
+        if (!pwalletMain->SetAddressBookName(pwalletMain->vchDefaultKey.GetID(), ""))
+            strErrors << _("Cannot write default address") << "\n";
+    }
+
+    printf("%s", strErrors.str().c_str());
+    printf(" wallet      %15"PRI64d"ms\n", GetTimeMillis() - nStart);
+
+    RegisterWallet(pwalletMain);
+
+    CBlockIndex *pindexRescan = pindexBest;
+    if (GetBoolArg("-rescan"))
+        pindexRescan = pindexGenesisBlock;
+    else
+    {
+        CWalletDB walletdb("wallet.dat");
+        CBlockLocator locator;
+        if (walletdb.ReadBestBlock(locator))
+            pindexRescan = locator.GetBlockIndex();
+    }
+    if (pindexBest != pindexRescan)
+    {
+        uiInterface.InitMessage(_("Rescanning..."));
+        printf("Rescanning last %i blocks (from block %i)...\n", pindexBest->nHeight - pindexRescan->nHeight, pindexRescan->nHeight);
+        nStart = GetTimeMillis();
+        pwalletMain->ScanForWalletTransactions(pindexRescan, true);
+        printf(" rescan      %15"PRI64d"ms\n", GetTimeMillis() - nStart);
+    }
+
+    // ********************************************************* Step 8: import blocks
+
