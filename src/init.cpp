@@ -704,3 +704,69 @@ bool AppInit2()
 
     // ********************************************************* Step 8: import blocks
 
+    if (mapArgs.count("-loadblock"))
+    {
+        BOOST_FOREACH(string strFile, mapMultiArgs["-loadblock"])
+        {
+            FILE *file = fopen(strFile.c_str(), "rb");
+            if (file)
+                LoadExternalBlockFile(file);
+        }
+    }
+
+    // ********************************************************* Step 9: load peers
+
+    uiInterface.InitMessage(_("Loading addresses..."));
+    printf("Loading addresses...\n");
+    nStart = GetTimeMillis();
+
+    {
+        CAddrDB adb;
+        if (!adb.Read(addrman))
+            printf("Invalid or missing peers.dat; recreating\n");
+    }
+
+    printf("Loaded %i addresses from peers.dat  %"PRI64d"ms\n",
+           addrman.size(), GetTimeMillis() - nStart);
+
+    // ********************************************************* Step 10: start node
+
+    if (!CheckDiskSpace())
+        return false;
+
+    RandAddSeedPerfmon();
+
+    //// debug print
+    printf("mapBlockIndex.size() = %d\n",   mapBlockIndex.size());
+    printf("nBestHeight = %d\n",            nBestHeight);
+    printf("setKeyPool.size() = %d\n",      pwalletMain->setKeyPool.size());
+    printf("mapWallet.size() = %d\n",       pwalletMain->mapWallet.size());
+    printf("mapAddressBook.size() = %d\n",  pwalletMain->mapAddressBook.size());
+
+    if (!CreateThread(StartNode, NULL))
+        InitError(_("Error: could not start node"));
+
+    if (fServer)
+        CreateThread(ThreadRPCServer, NULL);
+
+    // ********************************************************* Step 11: finished
+
+    uiInterface.InitMessage(_("Done loading"));
+    printf("Done loading\n");
+
+    if (!strErrors.str().empty())
+        return InitError(strErrors.str());
+
+     // Add wallet transactions that aren't already in a block to mapTransactions
+    pwalletMain->ReacceptWalletTransactions();
+
+#if !defined(QT_GUI)
+    // Loop until process is exit()ed from shutdown() function,
+    // called from ThreadRPCServer thread when a "stop" command is received.
+    while (1)
+        Sleep(5000);
+#endif
+
+    return true;
+}
+
