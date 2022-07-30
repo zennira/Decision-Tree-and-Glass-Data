@@ -456,4 +456,188 @@ public:
         if (vin.size() != old.vin.size())
             return false;
         for (unsigned int i = 0; i < vin.size(); i++)
-            if (vin[i].prevout != old.vin[i].p
+            if (vin[i].prevout != old.vin[i].prevout)
+                return false;
+
+        bool fNewer = false;
+        unsigned int nLowest = std::numeric_limits<unsigned int>::max();
+        for (unsigned int i = 0; i < vin.size(); i++)
+        {
+            if (vin[i].nSequence != old.vin[i].nSequence)
+            {
+                if (vin[i].nSequence <= nLowest)
+                {
+                    fNewer = false;
+                    nLowest = vin[i].nSequence;
+                }
+                if (old.vin[i].nSequence < nLowest)
+                {
+                    fNewer = true;
+                    nLowest = old.vin[i].nSequence;
+                }
+            }
+        }
+        return fNewer;
+    }
+
+    bool IsCoinBase() const
+    {
+        return (vin.size() == 1 && vin[0].prevout.IsNull());
+    }
+
+    /** Check for standard transaction types
+        @return True if all outputs (scriptPubKeys) use only standard transaction forms
+    */
+    bool IsStandard() const;
+
+    /** Check for standard transaction types
+        @param[in] mapInputs	Map of previous transactions that have outputs we're spending
+        @return True if all inputs (scriptSigs) use only standard transaction forms
+        @see CTransaction::FetchInputs
+    */
+    bool AreInputsStandard(const MapPrevTx& mapInputs) const;
+
+    /** Count ECDSA signature operations the old-fashioned (pre-0.6) way
+        @return number of sigops this transaction's outputs will produce when spent
+        @see CTransaction::FetchInputs
+    */
+    unsigned int GetLegacySigOpCount() const;
+
+    /** Count ECDSA signature operations in pay-to-script-hash inputs.
+
+        @param[in] mapInputs	Map of previous transactions that have outputs we're spending
+        @return maximum number of sigops required to validate this transaction's inputs
+        @see CTransaction::FetchInputs
+     */
+    unsigned int GetP2SHSigOpCount(const MapPrevTx& mapInputs) const;
+
+    /** Amount of altcoins spent by this transaction.
+        @return sum of all outputs (note: does not include fees)
+     */
+    int64 GetValueOut() const
+    {
+        int64 nValueOut = 0;
+        BOOST_FOREACH(const CTxOut& txout, vout)
+        {
+            nValueOut += txout.nValue;
+            if (!MoneyRange(txout.nValue) || !MoneyRange(nValueOut))
+                throw std::runtime_error("CTransaction::GetValueOut() : value out of range");
+        }
+        return nValueOut;
+    }
+
+    /** Amount of altcoins coming in to this transaction
+        Note that lightweight clients may not know anything besides the hash of previous transactions,
+        so may not be able to calculate this.
+
+        @param[in] mapInputs	Map of previous transactions that have outputs we're spending
+        @return	Sum of value of all inputs (scriptSigs)
+        @see CTransaction::FetchInputs
+     */
+    int64 GetValueIn(const MapPrevTx& mapInputs) const;
+
+    static bool AllowFree(double dPriority)
+    {
+        // Large (in bytes) low-priority (new, small-coin) transactions
+        // need a fee.
+        return dPriority > COIN * 576 / 250; // Altcoin: 576 blocks found a day. Priority cutoff is 1 altcoin day / 250 bytes.
+    }
+
+    int64 GetMinFee(unsigned int nBlockSize=1, bool fAllowFree=true, enum GetMinFee_mode mode=GMF_BLOCK) const
+    {
+        // Base fee is either MIN_TX_FEE or MIN_RELAY_TX_FEE
+        int64 nBaseFee = (mode == GMF_RELAY) ? MIN_RELAY_TX_FEE : MIN_TX_FEE;
+
+        unsigned int nBytes = ::GetSerializeSize(*this, SER_NETWORK, PROTOCOL_VERSION);
+        unsigned int nNewBlockSize = nBlockSize + nBytes;
+        int64 nMinFee = (1 + (int64)nBytes / 1000) * nBaseFee;
+
+        if (fAllowFree)
+        {
+            if (nBlockSize == 1)
+            {
+                // Transactions under 10K are free
+                // (about 4500bc if made of 50bc inputs)
+                if (nBytes < 10000)
+                    nMinFee = 0;
+            }
+            else
+            {
+                // Free transaction area
+                if (nNewBlockSize < 27000)
+                    nMinFee = 0;
+            }
+        }
+
+        // To limit dust spam, add MIN_TX_FEE/MIN_RELAY_TX_FEE for any output that is less than 0.01
+        BOOST_FOREACH(const CTxOut& txout, vout)
+            if (txout.nValue < CENT)
+                nMinFee += nBaseFee;
+
+        // Raise the price as the block approaches full
+        if (nBlockSize != 1 && nNewBlockSize >= MAX_BLOCK_SIZE_GEN/2)
+        {
+            if (nNewBlockSize >= MAX_BLOCK_SIZE_GEN)
+                return MAX_MONEY;
+            nMinFee *= MAX_BLOCK_SIZE_GEN / (MAX_BLOCK_SIZE_GEN - nNewBlockSize);
+        }
+
+        if (!MoneyRange(nMinFee))
+            nMinFee = MAX_MONEY;
+        return nMinFee;
+    }
+
+
+    bool ReadFromDisk(CDiskTxPos pos, FILE** pfileRet=NULL)
+    {
+        CAutoFile filein = CAutoFile(OpenBlockFile(pos.nFile, 0, pfileRet ? "rb+" : "rb"), SER_DISK, CLIENT_VERSION);
+        if (!filein)
+            return error("CTransaction::ReadFromDisk() : OpenBlockFile failed");
+
+        // Read transaction
+        if (fseek(filein, pos.nTxPos, SEEK_SET) != 0)
+            return error("CTransaction::ReadFromDisk() : fseek failed");
+
+        try {
+            filein >> *this;
+        }
+        catch (std::exception &e) {
+            return error("%s() : deserialize or I/O error", __PRETTY_FUNCTION__);
+        }
+
+        // Return file pointer
+        if (pfileRet)
+        {
+            if (fseek(filein, pos.nTxPos, SEEK_SET) != 0)
+                return error("CTransaction::ReadFromDisk() : second fseek failed");
+            *pfileRet = filein.release();
+        }
+        return true;
+    }
+
+    friend bool operator==(const CTransaction& a, const CTransaction& b)
+    {
+        return (a.nVersion  == b.nVersion &&
+                a.vin       == b.vin &&
+                a.vout      == b.vout &&
+                a.nLockTime == b.nLockTime);
+    }
+
+    friend bool operator!=(const CTransaction& a, const CTransaction& b)
+    {
+        return !(a == b);
+    }
+
+
+    std::string ToString() const
+    {
+        std::string str;
+        str += strprintf("CTransaction(hash=%s, ver=%d, vin.size=%d, vout.size=%d, nLockTime=%d)\n",
+            GetHash().ToString().substr(0,10).c_str(),
+            nVersion,
+            vin.size(),
+            vout.size(),
+            nLockTime);
+        for (unsigned int i = 0; i < vin.size(); i++)
+            str += "    " + vin[i].ToString() + "\n";
+        for (unsi
