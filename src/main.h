@@ -640,4 +640,233 @@ public:
             nLockTime);
         for (unsigned int i = 0; i < vin.size(); i++)
             str += "    " + vin[i].ToString() + "\n";
-        for (unsi
+        for (unsigned int i = 0; i < vout.size(); i++)
+            str += "    " + vout[i].ToString() + "\n";
+        return str;
+    }
+
+    void print() const
+    {
+        printf("%s", ToString().c_str());
+    }
+
+
+    bool ReadFromDisk(CTxDB& txdb, COutPoint prevout, CTxIndex& txindexRet);
+    bool ReadFromDisk(CTxDB& txdb, COutPoint prevout);
+    bool ReadFromDisk(COutPoint prevout);
+    bool DisconnectInputs(CTxDB& txdb);
+
+    /** Fetch from memory and/or disk. inputsRet keys are transaction hashes.
+
+     @param[in] txdb	Transaction database
+     @param[in] mapTestPool	List of pending changes to the transaction index database
+     @param[in] fBlock	True if being called to add a new best-block to the chain
+     @param[in] fMiner	True if being called by CreateNewBlock
+     @param[out] inputsRet	Pointers to this transaction's inputs
+     @param[out] fInvalid	returns true if transaction is invalid
+     @return	Returns true if all inputs are in txdb or mapTestPool
+     */
+    bool FetchInputs(CTxDB& txdb, const std::map<uint256, CTxIndex>& mapTestPool,
+                     bool fBlock, bool fMiner, MapPrevTx& inputsRet, bool& fInvalid);
+
+    /** Sanity check previous transactions, then, if all checks succeed,
+        mark them as spent by this transaction.
+
+        @param[in] inputs	Previous transactions (from FetchInputs)
+        @param[out] mapTestPool	Keeps track of inputs that need to be updated on disk
+        @param[in] posThisTx	Position of this transaction on disk
+        @param[in] pindexBlock
+        @param[in] fBlock	true if called from ConnectBlock
+        @param[in] fMiner	true if called from CreateNewBlock
+        @param[in] fStrictPayToScriptHash	true if fully validating p2sh transactions
+        @return Returns true if all checks succeed
+     */
+    bool ConnectInputs(MapPrevTx inputs,
+                       std::map<uint256, CTxIndex>& mapTestPool, const CDiskTxPos& posThisTx,
+                       const CBlockIndex* pindexBlock, bool fBlock, bool fMiner, bool fStrictPayToScriptHash=true);
+    bool ClientConnectInputs();
+    bool CheckTransaction() const;
+    bool AcceptToMemoryPool(CTxDB& txdb, bool fCheckInputs=true, bool* pfMissingInputs=NULL);
+
+protected:
+    const CTxOut& GetOutputFor(const CTxIn& input, const MapPrevTx& inputs) const;
+};
+
+
+
+
+
+/** A transaction with a merkle branch linking it to the block chain. */
+class CMerkleTx : public CTransaction
+{
+public:
+    uint256 hashBlock;
+    std::vector<uint256> vMerkleBranch;
+    int nIndex;
+
+    // memory only
+    mutable bool fMerkleVerified;
+
+
+    CMerkleTx()
+    {
+        Init();
+    }
+
+    CMerkleTx(const CTransaction& txIn) : CTransaction(txIn)
+    {
+        Init();
+    }
+
+    void Init()
+    {
+        hashBlock = 0;
+        nIndex = -1;
+        fMerkleVerified = false;
+    }
+
+
+    IMPLEMENT_SERIALIZE
+    (
+        nSerSize += SerReadWrite(s, *(CTransaction*)this, nType, nVersion, ser_action);
+        nVersion = this->nVersion;
+        READWRITE(hashBlock);
+        READWRITE(vMerkleBranch);
+        READWRITE(nIndex);
+    )
+
+
+    int SetMerkleBranch(const CBlock* pblock=NULL);
+    int GetDepthInMainChain(CBlockIndex* &pindexRet) const;
+    int GetDepthInMainChain() const { CBlockIndex *pindexRet; return GetDepthInMainChain(pindexRet); }
+    bool IsInMainChain() const { return GetDepthInMainChain() > 0; }
+    int GetBlocksToMaturity() const;
+    bool AcceptToMemoryPool(CTxDB& txdb, bool fCheckInputs=true);
+    bool AcceptToMemoryPool();
+};
+
+
+
+
+/**  A txdb record that contains the disk location of a transaction and the
+ * locations of transactions that spend its outputs.  vSpent is really only
+ * used as a flag, but having the location is very helpful for debugging.
+ */
+class CTxIndex
+{
+public:
+    CDiskTxPos pos;
+    std::vector<CDiskTxPos> vSpent;
+
+    CTxIndex()
+    {
+        SetNull();
+    }
+
+    CTxIndex(const CDiskTxPos& posIn, unsigned int nOutputs)
+    {
+        pos = posIn;
+        vSpent.resize(nOutputs);
+    }
+
+    IMPLEMENT_SERIALIZE
+    (
+        if (!(nType & SER_GETHASH))
+            READWRITE(nVersion);
+        READWRITE(pos);
+        READWRITE(vSpent);
+    )
+
+    void SetNull()
+    {
+        pos.SetNull();
+        vSpent.clear();
+    }
+
+    bool IsNull()
+    {
+        return pos.IsNull();
+    }
+
+    friend bool operator==(const CTxIndex& a, const CTxIndex& b)
+    {
+        return (a.pos    == b.pos &&
+                a.vSpent == b.vSpent);
+    }
+
+    friend bool operator!=(const CTxIndex& a, const CTxIndex& b)
+    {
+        return !(a == b);
+    }
+    int GetDepthInMainChain() const;
+ 
+};
+
+
+
+
+
+/** Nodes collect new transactions into a block, hash them into a hash tree,
+ * and scan through nonce values to make the block's hash satisfy proof-of-work
+ * requirements.  When they solve the proof-of-work, they broadcast the block
+ * to everyone and the block is added to the block chain.  The first transaction
+ * in the block is a special one that creates a new coin owned by the creator
+ * of the block.
+ *
+ * Blocks are appended to blk0001.dat files on disk.  Their location on disk
+ * is indexed by CBlockIndex objects in memory.
+ */
+class CBlock
+{
+public:
+    // header
+    static const int CURRENT_VERSION=1;
+    int nVersion;
+    uint256 hashPrevBlock;
+    uint256 hashMerkleRoot;
+    unsigned int nTime;
+    unsigned int nBits;
+    unsigned int nNonce;
+
+    // network and disk
+    std::vector<CTransaction> vtx;
+
+    // memory only
+    mutable std::vector<uint256> vMerkleTree;
+
+    // Denial-of-service detection:
+    mutable int nDoS;
+    bool DoS(int nDoSIn, bool fIn) const { nDoS += nDoSIn; return fIn; }
+
+    CBlock()
+    {
+        SetNull();
+    }
+
+    IMPLEMENT_SERIALIZE
+    (
+        READWRITE(this->nVersion);
+        nVersion = this->nVersion;
+        READWRITE(hashPrevBlock);
+        READWRITE(hashMerkleRoot);
+        READWRITE(nTime);
+        READWRITE(nBits);
+        READWRITE(nNonce);
+
+        // ConnectBlock depends on vtx being last so it can calculate offset
+        if (!(nType & (SER_GETHASH|SER_BLOCKHEADERONLY)))
+            READWRITE(vtx);
+        else if (fRead)
+            const_cast<CBlock*>(this)->vtx.clear();
+    )
+
+    void SetNull()
+    {
+        nVersion = CBlock::CURRENT_VERSION;
+        hashPrevBlock = 0;
+        hashMerkleRoot = 0;
+        nTime = 0;
+        nBits = 0;
+        nNonce = 0;
+        vtx.clear();
+  
