@@ -869,4 +869,220 @@ public:
         nBits = 0;
         nNonce = 0;
         vtx.clear();
-  
+        vMerkleTree.clear();
+        nDoS = 0;
+    }
+
+    bool IsNull() const
+    {
+        return (nBits == 0);
+    }
+
+    uint256 GetHash() const
+    {
+        return Hash(BEGIN(nVersion), END(nNonce));
+    }
+
+    uint256 GetPoWHash() const
+    {
+        uint256 thash;
+        scrypt_N_1_1_256(BEGIN(nVersion), BEGIN(thash),GetNfactor(nTime));
+        return thash;
+    }
+
+    int64 GetBlockTime() const
+    {
+        return (int64)nTime;
+    }
+
+    void UpdateTime(const CBlockIndex* pindexPrev);
+
+
+    uint256 BuildMerkleTree() const
+    {
+        vMerkleTree.clear();
+        BOOST_FOREACH(const CTransaction& tx, vtx)
+            vMerkleTree.push_back(tx.GetHash());
+        int j = 0;
+        for (int nSize = vtx.size(); nSize > 1; nSize = (nSize + 1) / 2)
+        {
+            for (int i = 0; i < nSize; i += 2)
+            {
+                int i2 = std::min(i+1, nSize-1);
+                vMerkleTree.push_back(Hash(BEGIN(vMerkleTree[j+i]),  END(vMerkleTree[j+i]),
+                                           BEGIN(vMerkleTree[j+i2]), END(vMerkleTree[j+i2])));
+            }
+            j += nSize;
+        }
+        return (vMerkleTree.empty() ? 0 : vMerkleTree.back());
+    }
+
+    std::vector<uint256> GetMerkleBranch(int nIndex) const
+    {
+        if (vMerkleTree.empty())
+            BuildMerkleTree();
+        std::vector<uint256> vMerkleBranch;
+        int j = 0;
+        for (int nSize = vtx.size(); nSize > 1; nSize = (nSize + 1) / 2)
+        {
+            int i = std::min(nIndex^1, nSize-1);
+            vMerkleBranch.push_back(vMerkleTree[j+i]);
+            nIndex >>= 1;
+            j += nSize;
+        }
+        return vMerkleBranch;
+    }
+
+    static uint256 CheckMerkleBranch(uint256 hash, const std::vector<uint256>& vMerkleBranch, int nIndex)
+    {
+        if (nIndex == -1)
+            return 0;
+        BOOST_FOREACH(const uint256& otherside, vMerkleBranch)
+        {
+            if (nIndex & 1)
+                hash = Hash(BEGIN(otherside), END(otherside), BEGIN(hash), END(hash));
+            else
+                hash = Hash(BEGIN(hash), END(hash), BEGIN(otherside), END(otherside));
+            nIndex >>= 1;
+        }
+        return hash;
+    }
+
+
+    bool WriteToDisk(unsigned int& nFileRet, unsigned int& nBlockPosRet)
+    {
+        // Open history file to append
+        CAutoFile fileout = CAutoFile(AppendBlockFile(nFileRet), SER_DISK, CLIENT_VERSION);
+        if (!fileout)
+            return error("CBlock::WriteToDisk() : AppendBlockFile failed");
+
+        // Write index header
+        unsigned int nSize = fileout.GetSerializeSize(*this);
+        fileout << FLATDATA(pchMessageStart) << nSize;
+
+        // Write block
+        long fileOutPos = ftell(fileout);
+        if (fileOutPos < 0)
+            return error("CBlock::WriteToDisk() : ftell failed");
+        nBlockPosRet = fileOutPos;
+        fileout << *this;
+
+        // Flush stdio buffers and commit to disk before returning
+        fflush(fileout);
+        if (!IsInitialBlockDownload() || (nBestHeight+1) % 500 == 0)
+            FileCommit(fileout);
+
+        return true;
+    }
+
+    bool ReadFromDisk(unsigned int nFile, unsigned int nBlockPos, bool fReadTransactions=true)
+    {
+        SetNull();
+
+        // Open history file to read
+        CAutoFile filein = CAutoFile(OpenBlockFile(nFile, nBlockPos, "rb"), SER_DISK, CLIENT_VERSION);
+        if (!filein)
+            return error("CBlock::ReadFromDisk() : OpenBlockFile failed");
+        if (!fReadTransactions)
+            filein.nType |= SER_BLOCKHEADERONLY;
+
+        // Read block
+        try {
+            filein >> *this;
+        }
+        catch (std::exception &e) {
+            return error("%s() : deserialize or I/O error", __PRETTY_FUNCTION__);
+        }
+
+        // Check the header
+        if (!CheckProofOfWork(GetPoWHash(), nBits))
+            return error("CBlock::ReadFromDisk() : errors in block header");
+
+        return true;
+    }
+
+
+
+    void print() const
+    {
+        printf("CBlock(hash=%s, PoW=%s, ver=%d, hashPrevBlock=%s, hashMerkleRoot=%s, nTime=%u, nBits=%08x, nNonce=%u, vtx=%d)\n",
+            GetHash().ToString().substr(0,20).c_str(),
+            GetPoWHash().ToString().substr(0,20).c_str(),
+            nVersion,
+            hashPrevBlock.ToString().substr(0,20).c_str(),
+            hashMerkleRoot.ToString().substr(0,10).c_str(),
+            nTime, nBits, nNonce,
+            vtx.size());
+        for (unsigned int i = 0; i < vtx.size(); i++)
+        {
+            printf("  ");
+            vtx[i].print();
+        }
+        printf("  vMerkleTree: ");
+        for (unsigned int i = 0; i < vMerkleTree.size(); i++)
+            printf("%s ", vMerkleTree[i].ToString().substr(0,10).c_str());
+        printf("\n");
+    }
+
+
+    bool DisconnectBlock(CTxDB& txdb, CBlockIndex* pindex);
+    bool ConnectBlock(CTxDB& txdb, CBlockIndex* pindex);
+    bool ReadFromDisk(const CBlockIndex* pindex, bool fReadTransactions=true);
+    bool SetBestChain(CTxDB& txdb, CBlockIndex* pindexNew);
+    bool AddToBlockIndex(unsigned int nFile, unsigned int nBlockPos);
+    bool CheckBlock() const;
+    bool AcceptBlock();
+
+private:
+    bool SetBestChainInner(CTxDB& txdb, CBlockIndex *pindexNew);
+};
+
+
+
+
+
+
+/** The block chain is a tree shaped structure starting with the
+ * genesis block at the root, with each block potentially having multiple
+ * candidates to be the next block.  pprev and pnext link a path through the
+ * main/longest chain.  A blockindex may have multiple pprev pointing back
+ * to it, but pnext will only point forward to the longest branch, or will
+ * be null if the block is not part of the longest chain.
+ */
+class CBlockIndex
+{
+public:
+    const uint256* phashBlock;
+    CBlockIndex* pprev;
+    CBlockIndex* pnext;
+    unsigned int nFile;
+    unsigned int nBlockPos;
+    int nHeight;
+    CBigNum bnChainWork;
+
+    // block header
+    int nVersion;
+    uint256 hashMerkleRoot;
+    unsigned int nTime;
+    unsigned int nBits;
+    unsigned int nNonce;
+
+
+    CBlockIndex()
+    {
+        phashBlock = NULL;
+        pprev = NULL;
+        pnext = NULL;
+        nFile = 0;
+        nBlockPos = 0;
+        nHeight = 0;
+        bnChainWork = 0;
+
+        nVersion       = 0;
+        hashMerkleRoot = 0;
+        nTime          = 0;
+        nBits          = 0;
+        nNonce         = 0;
+    }
+
+    C
