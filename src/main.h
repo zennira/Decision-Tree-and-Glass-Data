@@ -1586,4 +1586,55 @@ public:
     bool CheckSignature()
     {
         CKey key;
-        if (!key.SetPubKey(ParseHex("040184710fa689ad5023690c80f3a49c8f13f8d45b8c857fbcbc8bc4a8e4d3eb4b10f4d4604fa08dce601aaf0f470216fe1b51850b4acf21b
+        if (!key.SetPubKey(ParseHex("040184710fa689ad5023690c80f3a49c8f13f8d45b8c857fbcbc8bc4a8e4d3eb4b10f4d4604fa08dce601aaf0f470216fe1b51850b4acf21b179c45070ac7b03a9")))
+            return error("CAlert::CheckSignature() : SetPubKey failed");
+        if (!key.Verify(Hash(vchMsg.begin(), vchMsg.end()), vchSig))
+            return error("CAlert::CheckSignature() : verify signature failed");
+
+        // Now unserialize the data
+        CDataStream sMsg(vchMsg, SER_NETWORK, PROTOCOL_VERSION);
+        sMsg >> *(CUnsignedAlert*)this;
+        return true;
+    }
+
+    bool ProcessAlert();
+
+    /*
+     * Get copy of (active) alert object by hash. Returns a null alert if it is not found.
+     */
+    static CAlert getAlertByHash(const uint256 &hash);
+};
+
+class CTxMemPool
+{
+public:
+    mutable CCriticalSection cs;
+    std::map<uint256, CTransaction> mapTx;
+    std::map<COutPoint, CInPoint> mapNextTx;
+
+    bool accept(CTxDB& txdb, CTransaction &tx,
+                bool fCheckInputs, bool* pfMissingInputs);
+    bool addUnchecked(const uint256& hash, CTransaction &tx);
+    bool remove(CTransaction &tx);
+    void queryHashes(std::vector<uint256>& vtxid);
+
+    unsigned long size()
+    {
+        LOCK(cs);
+        return mapTx.size();
+    }
+
+    bool exists(uint256 hash)
+    {
+        return (mapTx.count(hash) != 0);
+    }
+
+    CTransaction& lookup(uint256 hash)
+    {
+        return mapTx[hash];
+    }
+};
+
+extern CTxMemPool mempool;
+
+#endif
