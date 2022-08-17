@@ -38,4 +38,8 @@ private:
 
 private slots:
     void textChanged();
-    bool event(QEven
+    bool event(QEvent *event);
+    bool eventFilter(QObject *, QEvent *event);
+};
+
+#endif // ASKPASSPHRASEDIALOG_H
