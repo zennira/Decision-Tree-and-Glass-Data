@@ -308,3 +308,168 @@ Are you sure you wish to encrypt your wallet?</source>
         <location filename="../altcoingui.cpp" line="192"/>
         <source>Browse transaction history</source>
         <translation>Cerca a l&apos;historial de transaccions</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="197"/>
+        <source>&amp;Address Book</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="198"/>
+        <source>Edit the list of stored addresses and labels</source>
+        <translation>Edita la llista d&apos;adreces emmagatzemada i etiquetes</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="203"/>
+        <source>&amp;Receive coins</source>
+        <translation>&amp;Rebre monedes</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="204"/>
+        <source>Show the list of addresses for receiving payments</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="209"/>
+        <source>&amp;Send coins</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="216"/>
+        <source>Prove you control an address</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="235"/>
+        <source>E&amp;xit</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="236"/>
+        <source>Quit application</source>
+        <translation>Sortir de l&apos;aplicació</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="239"/>
+        <source>&amp;About %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="240"/>
+        <source>Show information about Altcoin</source>
+        <translation>Mostra informació sobre Altcoin</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="242"/>
+        <source>About &amp;Qt</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="243"/>
+        <source>Show information about Qt</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="245"/>
+        <source>&amp;Options...</source>
+        <translation>&amp;Opcions ...</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="252"/>
+        <source>&amp;Encrypt Wallet...</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="255"/>
+        <source>&amp;Backup Wallet...</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="257"/>
+        <source>&amp;Change Passphrase...</source>
+        <translation type="unfinished"/>
+    </message>
+    <message numerus="yes">
+        <location filename="../altcoingui.cpp" line="517"/>
+        <source>~%n block(s) remaining</source>
+        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="528"/>
+        <source>Downloaded %1 of %2 blocks of transaction history (%3% done).</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="250"/>
+        <source>&amp;Export...</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="210"/>
+        <source>Send coins to a Altcoin address</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="246"/>
+        <source>Modify configuration options for Altcoin</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="249"/>
+        <source>Show or hide the Altcoin window</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="251"/>
+        <source>Export the data in the current tab to a file</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="253"/>
+        <source>Encrypt or decrypt wallet</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="256"/>
+        <source>Backup wallet to another location</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="258"/>
+        <source>Change the passphrase used for wallet encryption</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="259"/>
+        <source>&amp;Debug window</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="260"/>
+        <source>Open debugging and diagnostic console</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="261"/>
+        <source>&amp;Verify message...</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="262"/>
+        <source>Verify a message signature</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="286"/>
+        <source>&amp;File</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="296"/>
+        <source>&amp;Settings</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="302"/>
+        <source>&amp;Help</source>
+        <translation>&amp;Ajuda</translat
