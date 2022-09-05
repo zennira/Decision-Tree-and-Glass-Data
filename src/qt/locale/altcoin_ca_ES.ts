@@ -958,4 +958,173 @@ Address: %4
     <message>
         <location filename="../optionsdialog.cpp" line="357"/>
         <source>Proxy &amp;IP:</source>
-        <translation type="unfinished
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="366"/>
+        <source>&amp;Port:</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="363"/>
+        <source>IP address of the proxy (e.g. 127.0.0.1)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="372"/>
+        <source>Port of the proxy (e.g. 1234)</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>OptionsDialog</name>
+    <message>
+        <location filename="../optionsdialog.cpp" line="135"/>
+        <source>Options</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <location filename="../forms/overviewpage.ui" line="14"/>
+        <source>Form</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/overviewpage.ui" line="47"/>
+        <location filename="../forms/overviewpage.ui" line="204"/>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Altcoin network after a connection is established, but this process has not completed yet.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/overviewpage.ui" line="89"/>
+        <source>Balance:</source>
+        <translation>Balanç:</translation>
+    </message>
+    <message>
+        <location filename="../forms/overviewpage.ui" line="147"/>
+        <source>Number of transactions:</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/overviewpage.ui" line="118"/>
+        <source>Unconfirmed:</source>
+        <translation>Sense confirmar:</translation>
+    </message>
+    <message>
+        <location filename="../forms/overviewpage.ui" line="40"/>
+        <source>Wallet</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/overviewpage.ui" line="197"/>
+        <source>&lt;b&gt;Recent transactions&lt;/b&gt;</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/overviewpage.ui" line="105"/>
+        <source>Your current balance</source>
+        <translation>El seu balanç actual</translation>
+    </message>
+    <message>
+        <location filename="../forms/overviewpage.ui" line="134"/>
+        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the current balance</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/overviewpage.ui" line="154"/>
+        <source>Total number of transactions in wallet</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../overviewpage.cpp" line="110"/>
+        <location filename="../overviewpage.cpp" line="111"/>
+        <source>out of sync</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>QRCodeDialog</name>
+    <message>
+        <location filename="../forms/qrcodedialog.ui" line="14"/>
+        <source>QR Code Dialog</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/qrcodedialog.ui" line="32"/>
+        <source>QR Code</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/qrcodedialog.ui" line="55"/>
+        <source>Request Payment</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/qrcodedialog.ui" line="70"/>
+        <source>Amount:</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/qrcodedialog.ui" line="105"/>
+        <source>BTC</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/qrcodedialog.ui" line="121"/>
+        <source>Label:</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/qrcodedialog.ui" line="144"/>
+        <source>Message:</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/qrcodedialog.ui" line="186"/>
+        <source>&amp;Save As...</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../qrcodedialog.cpp" line="45"/>
+        <source>Error encoding URI into QR Code.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../qrcodedialog.cpp" line="63"/>
+        <source>Resulting URI too long, try to reduce the text for label / message.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../qrcodedialog.cpp" line="120"/>
+        <source>Save QR Code</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../qrcodedialog.cpp" line="120"/>
+        <source>PNG Images (*.png)</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>RPCConsole</name>
+    <message>
+        <location filename="../forms/rpcconsole.ui" line="14"/>
+        <source>Altcoin debug window</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/rpcconsole.ui" line="46"/>
+        <source>Client name</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/rpcconsole.ui" line="56"/>
+        <location filename="../forms/rpcconsole.ui" line="79"/>
+        <location filename="../forms/rpcconsole.ui" line="102"/>
+        <location filename="../forms/rpcconsole.ui" line="125"/>
+        <location filename="../forms/rpcconsole.ui" line="161"/>
+        <location filename="../forms/rpcconsole.ui" line="214"/>
+        <location filename="../forms/rpcconsole.ui" line="237"/>
+   
