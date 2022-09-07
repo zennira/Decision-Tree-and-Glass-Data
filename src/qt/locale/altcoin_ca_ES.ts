@@ -1452,4 +1452,163 @@ Address: %4
     <message>
         <location filename="../transactiondesc.cpp" line="60"/>
         <source>, broadcast through %1 nodes</source>
-        <translation type="un
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="64"/>
+        <source>&lt;b&gt;Date:&lt;/b&gt; </source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="71"/>
+        <source>&lt;b&gt;Source:&lt;/b&gt; Generated&lt;br&gt;</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="77"/>
+        <location filename="../transactiondesc.cpp" line="94"/>
+        <source>&lt;b&gt;From:&lt;/b&gt; </source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="94"/>
+        <source>unknown</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="95"/>
+        <location filename="../transactiondesc.cpp" line="118"/>
+        <location filename="../transactiondesc.cpp" line="178"/>
+        <source>&lt;b&gt;To:&lt;/b&gt; </source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="98"/>
+        <source> (yours, label: </source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="100"/>
+        <source> (yours)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="136"/>
+        <location filename="../transactiondesc.cpp" line="150"/>
+        <location filename="../transactiondesc.cpp" line="195"/>
+        <location filename="../transactiondesc.cpp" line="212"/>
+        <source>&lt;b&gt;Credit:&lt;/b&gt; </source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="138"/>
+        <source>(%1 matures in %2 more blocks)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="142"/>
+        <source>(not accepted)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="186"/>
+        <location filename="../transactiondesc.cpp" line="194"/>
+        <location filename="../transactiondesc.cpp" line="209"/>
+        <source>&lt;b&gt;Debit:&lt;/b&gt; </source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="200"/>
+        <source>&lt;b&gt;Transaction fee:&lt;/b&gt; </source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="216"/>
+        <source>&lt;b&gt;Net amount:&lt;/b&gt; </source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="222"/>
+        <source>Message:</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="224"/>
+        <source>Comment:</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="226"/>
+        <source>Transaction ID:</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="229"/>
+        <source>Generated coins must wait 120 blocks before they can be spent.  When you generated this block, it was broadcast to the network to be added to the block chain.  If it fails to get into the chain, it will change to &quot;not accepted&quot; and not be spendable.  This may occasionally happen if another node generates a block within a few seconds of yours.</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>TransactionDescDialog</name>
+    <message>
+        <location filename="../forms/transactiondescdialog.ui" line="14"/>
+        <source>Transaction details</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/transactiondescdialog.ui" line="20"/>
+        <source>This pane shows a detailed description of the transaction</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>TransactionTableModel</name>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="226"/>
+        <source>Date</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="226"/>
+        <source>Type</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="226"/>
+        <source>Address</source>
+        <translation>Direcció</translation>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="226"/>
+        <source>Amount</source>
+        <translation type="unfinished"/>
+    </message>
+    <message numerus="yes">
+        <location filename="../transactiontablemodel.cpp" line="281"/>
+        <source>Open for %n block(s)</source>
+        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="284"/>
+        <source>Open until %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="287"/>
+        <source>Offline (%1 confirmations)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="290"/>
+        <source>Unconfirmed (%1 of %2 confirmations)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="293"/>
+        <source>Confirmed (%1 confirmations)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message numerus="yes">
+        <location filename="../transactiontablemodel.cpp" line="301"/>
+        <source>Mined balance will be available in %n more blocks</source>
+        <translation type="unfinished"><numerusform></numerusform><
