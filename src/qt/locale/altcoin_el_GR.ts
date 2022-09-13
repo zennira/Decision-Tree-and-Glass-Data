@@ -1,17 +1,17 @@
 
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="da" version="2.0">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="el_GR" version="2.0">
 <defaultcodec>UTF-8</defaultcodec>
 <context>
     <name>AboutDialog</name>
     <message>
         <location filename="../forms/aboutdialog.ui" line="14"/>
         <source>About Altcoin</source>
-        <translation>Om Altcoin</translation>
+        <translation>Σχετικα:Altcoin</translation>
     </message>
     <message>
         <location filename="../forms/aboutdialog.ui" line="53"/>
         <source>&lt;b&gt;Altcoin&lt;/b&gt; version</source>
-        <translation>&lt;b&gt;Altcoin&lt;/b&gt; version</translation>
+        <translation>&lt;b&gt;Altcoin&lt;/b&gt;έκδοση</translation>
     </message>
     <message>
         <location filename="../forms/aboutdialog.ui" line="97"/>
@@ -22,7 +22,13 @@ This is experimental software.
 Distributed under the MIT/X11 software license, see the accompanying file license.txt or http://www.opensource.org/licenses/mit-license.php.
 
 This product includes software developed by the OpenSSL Project for use in the OpenSSL Toolkit (http://www.openssl.org/) and cryptographic software written by Eric Young (eay@cryptsoft.com) and UPnP software written by Thomas Bernard.</source>
-        <translation type="unfinished"/>
+        <translation>Copyright © 2009-2012 Προγραμματιστές του Altcoin
+
+Αυτό ειναι πειραματικο λογισμικο.
+
+Διανέμεται κατω από άδεια MIT/X11 , δες το συνοδεύων αρχειο license.txt ή http://www.opensource.org/licenses/mit-license.php.
+
+Αυτό προϊόν περιλαμβάνει λογισμικο ανεπτυγμενο από το OpenSSL Project για χρήση στο OpenSSL Toolkit (http://www.openssl.org/) και κρυπτογραφικο κωδικα γραμένο από τον by Eric Young (eay@cryptsoft.com) και  λογισμικο UPnP γραμένο από τον Thomas Bernard.</translation>
     </message>
 </context>
 <context>
@@ -30,27 +36,27 @@ This product includes software developed by the OpenSSL Project for use in the O
     <message>
         <location filename="../forms/addressbookpage.ui" line="14"/>
         <source>Address Book</source>
-        <translation>Adressebog</translation>
+        <translation>Βιβλίο Διευθύνσεων</translation>
     </message>
     <message>
         <location filename="../forms/addressbookpage.ui" line="20"/>
         <source>These are your Altcoin addresses for receiving payments.  You may want to give a different one to each sender so you can keep track of who is paying you.</source>
-        <translation>Dette er dine Altcoinadresser til at modtage betalinger med.  Du kan give en forskellig adresse til hver afsender, så du kan holde styr på hvem der betaler dig.</translation>
+        <translation>Αυτές είναι οι διευθύνσεις Altcoin για την παραλαβή πληρωμών. Μπορεί να θέλετε να δίνετε διαφορετική διεύθυνση σε κάθε αποστολέα έτσι ώστε να μπορείτε να παρακολουθείτε ποιος σας πληρώνει.</translation>
     </message>
     <message>
         <location filename="../forms/addressbookpage.ui" line="36"/>
         <source>Double-click to edit address or label</source>
-        <translation>Dobbeltklik for at redigere adresse eller mærkat</translation>
+        <translation>Διπλό-κλικ για επεξεργασία της διεύθυνσης ή της ετικέτας</translation>
     </message>
     <message>
         <location filename="../forms/addressbookpage.ui" line="63"/>
         <source>Create a new address</source>
-        <translation>Opret en ny adresse</translation>
+        <translation>Δημιούργησε νέα διεύθυνση</translation>
     </message>
     <message>
         <location filename="../forms/addressbookpage.ui" line="77"/>
         <source>Copy the currently selected address to the system clipboard</source>
-        <translation>Kopier den valgte adresse til systemets udklipsholder</translation>
+        <translation>Αντέγραψε την επιλεγμένη διεύθυνση στο πρόχειρο του συστήματος</translation>
     </message>
     <message>
         <location filename="../forms/addressbookpage.ui" line="66"/>
@@ -65,27 +71,27 @@ This product includes software developed by the OpenSSL Project for use in the O
     <message>
         <location filename="../forms/addressbookpage.ui" line="91"/>
         <source>Show &amp;QR Code</source>
-        <translation type="unfinished"/>
+        <translation>Δείξε &amp;QR κωδικα</translation>
     </message>
     <message>
         <location filename="../forms/addressbookpage.ui" line="102"/>
         <source>Sign a message to prove you own this address</source>
-        <translation type="unfinished"/>
+        <translation>Υπέγραψε ένα μήνυμα για να αποδείξεις ότι σου ανήκει η διεύθυνση</translation>
     </message>
     <message>
         <location filename="../forms/addressbookpage.ui" line="105"/>
         <source>&amp;Sign Message</source>
-        <translation type="unfinished"/>
+        <translation>&amp;Υπέγραψε το μήνυμα</translation>
     </message>
     <message>
         <location filename="../forms/addressbookpage.ui" line="116"/>
         <source>Delete the currently selected address from the list. Only sending addresses can be deleted.</source>
-        <translation>Slet den valgte adresse fra listen. Kun adresser brugt til afsendelse kan slettes.</translation>
+        <translation>Διέγραψε την επιλεγμένη διεύθυνση από την λίστα. Μόνο διευθύνσεις αποστολής μπορούν να διαγραφούν.</translation>
     </message>
     <message>
         <location filename="../forms/addressbookpage.ui" line="119"/>
         <source>&amp;Delete</source>
-        <translation>&amp;Slet</translation>
+        <translation>&amp;Διαγραφή</translation>
     </message>
     <message>
         <location filename="../addressbookpage.cpp" line="63"/>
@@ -100,22 +106,22 @@ This product includes software developed by the OpenSSL Project for use in the O
     <message>
         <location filename="../addressbookpage.cpp" line="292"/>
         <source>Export Address Book Data</source>
-        <translation>Eksporter Adressekartoteketsdata</translation>
+        <translation>Εξαγωγή Δεδομενων Βιβλίου Διευθύνσεων</translation>
     </message>
     <message>
         <location filename="../addressbookpage.cpp" line="293"/>
         <source>Comma separated file (*.csv)</source>
-        <translation>Kommasepareret fil (*. csv)</translation>
+        <translation>Αρχείο οριοθετημένο με κόμματα (*.csv)</translation>
     </message>
     <message>
         <location filename="../addressbookpage.cpp" line="306"/>
         <source>Error exporting</source>
-        <translation>Fejl under eksport</translation>
+        <translation>Εξαγωγή λαθών</translation>
     </message>
     <message>
         <location filename="../addressbookpage.cpp" line="306"/>
         <source>Could not write to file %1.</source>
-        <translation>Kunne ikke skrive til filen %1.</translation>
+        <translation>Δεν μπόρεσα να γράψω στο αρχείο %1.</translation>
     </message>
 </context>
 <context>
@@ -123,17 +129,17 @@ This product includes software developed by the OpenSSL Project for use in the O
     <message>
         <location filename="../addresstablemodel.cpp" line="142"/>
         <source>Label</source>
-        <translation>Etiket</translation>
+        <translation>Ετικέτα</translation>
     </message>
     <message>
         <location filename="../addresstablemodel.cpp" line="142"/>
         <source>Address</source>
-        <translation>Adresse</translation>
+        <translation>Διεύθυνση</translation>
     </message>
     <message>
         <location filename="../addresstablemodel.cpp" line="178"/>
         <source>(no label)</source>
-        <translation>(ingen etiket)</translation>
+        <translation>(χωρίς ετικέτα)</translation>
     </message>
 </context>
 <context>
@@ -146,86 +152,86 @@ This product includes software developed by the OpenSSL Project for use in the O
     <message>
         <location filename="../forms/askpassphrasedialog.ui" line="47"/>
         <source>Enter passphrase</source>
-        <translation>Indtast adgangskode</translation>
+        <translation>Βάλτε κωδικό πρόσβασης</translation>
     </message>
     <message>
         <location filename="../forms/askpassphrasedialog.ui" line="61"/>
         <source>New passphrase</source>
-        <translation>Ny adgangskode</translation>
+        <translation>Νέος κωδικός πρόσβασης</translation>
     </message>
     <message>
         <location filename="../forms/askpassphrasedialog.ui" line="75"/>
         <source>Repeat new passphrase</source>
-        <translation>Gentag ny adgangskode</translation>
+        <translation>Επανέλαβε τον νέο κωδικό πρόσβασης</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="33"/>
         <source>Enter the new passphrase to the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;10 or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
-        <translation>Indtast den nye adgangskode til tegnebogen.&lt;br/&gt;Brug venligst en adgangskode på &lt;b&gt;10 eller flere tilfældige tegn&lt;/b&gt;, eller &lt;b&gt;otte eller flere ord&lt;/b&gt;.</translation>
+        <translation>Εισάγετε τον νέο κωδικό πρόσβασης στον πορτοφόλι &lt;br/&gt; Παρακαλώ χρησιμοποιείστε ένα κωδικό με &lt;b&gt; 10 ή περισσότερους τυχαίους χαρακτήρες&lt;/b&gt; ή &lt;b&gt; οχτώ ή παραπάνω λέξεις&lt;/b&gt;.</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="34"/>
         <source>Encrypt wallet</source>
-        <translation>Krypter tegnebog</translation>
+        <translation>Κρυπτογράφησε το πορτοφόλι</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="37"/>
         <source>This operation needs your wallet passphrase to unlock the wallet.</source>
-        <translation>Denne funktion har brug for din tegnebogs kodeord for at låse tegnebogen op.</translation>
+        <translation>Αυτη η ενεργεία χρειάζεται τον κωδικό του πορτοφολιού  για να ξεκλειδώσει το πορτοφόλι.</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="42"/>
         <source>Unlock wallet</source>
-        <translation>Lås tegnebog op</translation>
+        <translation>Ξεκλειδωσε το πορτοφολι</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="45"/>
         <source>This operation needs your wallet passphrase to decrypt the wallet.</source>
-        <translation>Denne funktion har brug for din tegnebogs kodeord for at dekryptere tegnebogen.</translation>
+        <translation>Αυτη η ενεργεια χρειάζεται τον κωδικο του πορτοφολιου  για να αποκρυπτογραφησειι το πορτοφολι.</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="50"/>
         <source>Decrypt wallet</source>
-        <translation>Dekryptér tegnebog</translation>
+        <translation>Αποκρυπτογράφησε το πορτοφολι</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="53"/>
         <source>Change passphrase</source>
-        <translation>Skift adgangskode</translation>
+        <translation>Άλλαξε κωδικο πρόσβασης</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="54"/>
         <source>Enter the old and new passphrase to the wallet.</source>
-        <translation>Indtast den gamle og nye adgangskode til tegnebogen.</translation>
+        <translation>Εισάγετε τον παλιό και τον νεο κωδικο στο πορτοφολι.</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="100"/>
         <source>Confirm wallet encryption</source>
-        <translation>Bekræft tegnebogskryptering</translation>
+        <translation>Επιβεβαίωσε την κρυπτογραφηση του πορτοφολιού</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="101"/>
         <source>WARNING: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR ALTCOINS&lt;/b&gt;!
 Are you sure you wish to encrypt your wallet?</source>
-        <translation>ADVARSEL: Hvis du krypterer din tegnebog og mister dit kodeord vil du &lt;b&gt;miste alle dine ALTCOINS&lt;/b&gt;!
-Er du sikker på at du ønsker at kryptere din tegnebog?</translation>
+        <translation>Προσοχη: Εαν κρυπτογραφησεις το πορτοφολι σου και χάσεις τον κωδικο σου θα χάσεις &lt;b&gt; ΟΛΑ ΣΟΥ ΤΑ ALTCOINS&lt;/b&gt;!
+Είσαι σίγουρος ότι θέλεις να κρυπτογραφησεις το πορτοφολι;</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="110"/>
         <location filename="../askpassphrasedialog.cpp" line="159"/>
         <source>Wallet encrypted</source>
-        <translation>Tegnebog krypteret</translation>
+        <translation>Κρυπτογραφημενο πορτοφολι</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="111"/>
         <source>Altcoin will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your altcoins from being stolen by malware infecting your computer.</source>
-        <translation type="unfinished"/>
+        <translation>Το Altcoin θα κλεισει τώρα για να τελειώσει την διαδικασία κρυπτογραφησης. Θυμησου ότι κρυπτογραφώντας το πορτοφολι σου δεν μπορείς να προστατέψεις πλήρως τα altcoins σου από κλοπή στην περίπτωση όπου μολυνθεί ο υπολογιστής σου με κακόβουλο λογισμικο.</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="207"/>
         <location filename="../askpassphrasedialog.cpp" line="231"/>
         <source>Warning: The Caps Lock key is on.</source>
-        <translation type="unfinished"/>
+        <translation>Προσοχη: το πλήκτρο Caps Lock είναι ενεργο.</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="116"/>
@@ -233,40 +239,40 @@ Er du sikker på at du ønsker at kryptere din tegnebog?</translation>
         <location filename="../askpassphrasedialog.cpp" line="165"/>
         <location filename="../askpassphrasedialog.cpp" line="171"/>
         <source>Wallet encryption failed</source>
-        <translation>Tegnebogskryptering mislykkedes</translation>
+        <translation>Η κρυπτογραφηση του πορτοφολιού απέτυχε</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="117"/>
         <source>Wallet encryption failed due to an internal error. Your wallet was not encrypted.</source>
-        <translation>Tegnebogskryptering mislykkedes på grund af en intern fejl. Din tegnebog blev ikke krypteret.</translation>
+        <translation>Η κρυπτογράφηση του πορτοφολιού απέτυχε λογω εσωτερικού σφάλματος. Το πορτοφολι δεν κρυπτογραφηθηκε.</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="124"/>
         <location filename="../askpassphrasedialog.cpp" line="172"/>
         <source>The supplied passphrases do not match.</source>
-        <translation>De angivne kodeord stemmer ikke overens.</translation>
+        <translation>Οι εισαχθέντες κωδικοί δεν ταιριάζουν.</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="135"/>
         <source>Wallet unlock failed</source>
-        <translation>Tegnebogsoplåsning mislykkedes</translation>
+        <translation>το ξεκλείδωμα του πορτοφολιού απέτυχε</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="136"/>
         <location filename="../askpassphrasedialog.cpp" line="147"/>
         <location filename="../askpassphrasedialog.cpp" line="166"/>
         <source>The passphrase entered for the wallet decryption was incorrect.</source>
-        <translation>Det angivne kodeord for tegnebogsdekrypteringen er forkert.</translation>
+        <translation>Ο κωδικος που εισήχθη για την αποκρυπτογραφηση του πορτοφολιού ήταν λαθος.</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="146"/>
         <source>Wallet decryption failed</source>
-        <translation>Tegnebogsdekryptering mislykkedes</translation>
+        <translation>Η αποκρυπτογραφηση του πορτοφολιού απέτυχε</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="160"/>
         <source>Wallet passphrase was succesfully changed.</source>
-        <translation>Tegnebogskodeord blev ændret.</translation>
+        <translation>Ο κωδικος του πορτοφολιού άλλαξε με επιτυχία.</translation>
     </message>
 </context>
 <context>
@@ -274,7 +280,7 @@ Er du sikker på at du ønsker at kryptere din tegnebog?</translation>
     <message>
         <location filename="../altcoingui.cpp" line="73"/>
         <source>Altcoin Wallet</source>
-        <translation>Altcoin Tegnebog</translation>
+        <translation>Πορτοφολι Altcoin</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="215"/>
@@ -284,97 +290,97 @@ Er du sikker på at du ønsker at kryptere din tegnebog?</translation>
     <message>
         <location filename="../altcoingui.cpp" line="248"/>
         <source>Show/Hide &amp;Altcoin</source>
-        <translation type="unfinished"/>
+        <translation>Εμφάνισε/Κρύψε &amp;Altcoin</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="515"/>
         <source>Synchronizing with network...</source>
-        <translation>Synkroniserer med netværk ...</translation>
+        <translation>Συγχρονισμός με το δίκτυο...</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="185"/>
         <source>&amp;Overview</source>
-        <translation>&amp;Oversigt</translation>
+        <translation>&amp;Επισκόπηση</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="186"/>
         <source>Show general overview of wallet</source>
-        <translation>Vis generel oversigt over tegnebog</translation>
+        <translation>Εμφάνισε γενική εικονα του πορτοφολιού</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="191"/>
         <source>&amp;Transactions</source>
-        <translation>&amp;Transaktioner</translation>
+        <translation>&amp;Συναλλαγές</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="192"/>
         <source>Browse transaction history</source>
-        <translation>Gennemse transaktionshistorik</translation>
+        <translation>Περιήγηση στο ιστορικο συνναλαγων</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="197"/>
         <source>&amp;Address Book</source>
-        <translation>&amp;Adressebog</translation>
+        <translation>&amp;Βιβλίο Διευθύνσεων</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="198"/>
         <source>Edit the list of stored addresses and labels</source>
-        <translation>Rediger listen over gemte adresser og etiketter</translation>
+        <translation>Εξεργασια της λιστας των αποθηκευμενων διευθύνσεων και ετικετων</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="203"/>
         <source>&amp;Receive coins</source>
-        <translation>&amp;Modtag coins</translation>
+        <translation>&amp;Παραλαβή νομισματων</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="204"/>
         <source>Show the list of addresses for receiving payments</source>
-        <translation>Vis listen over adresser for at modtage betalinger</translation>
+        <translation>Εμφάνισε την λίστα των διευθύνσεων για την παραλαβή πληρωμων</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="209"/>
         <source>&amp;Send coins</source>
-        <translation>&amp;Send coins</translation>
+        <translation>&amp;Αποστολη νομισματων</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="216"/>
         <source>Prove you control an address</source>
-        <translation type="unfinished"/>
+        <translation>Απέδειξε ότι ελέγχεις μια διεύθυνση</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="235"/>
         <source>E&amp;xit</source>
-        <translation>&amp;Luk</translation>
+        <translation>Έ&amp;ξοδος</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="236"/>
         <source>Quit application</source>
-        <translation>Afslut program</translation>
+        <translation>Εξοδος από την εφαρμογή</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="239"/>
         <source>&amp;About %1</source>
-        <translation>&amp;Om %1</translation>
+        <translation>&amp;Περί %1</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="240"/>
         <source>Show information about Altcoin</source>
-        <translation>Vis oplysninger om Altcoin</translation>
+        <translation>Εμφάνισε πληροφορίες σχετικά με το Altcoin</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="242"/>
         <source>About &amp;Qt</source>
-        <translation type="unfinished"/>
+        <translation>Σχετικά με &amp;Qt</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="243"/>
         <source>Show information about Qt</source>
-        <translation type="unfinished"/>
+        <translation>Εμφάνισε πληροφορίες σχετικά με Qt</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="245"/>
         <source>&amp;Options...</source>
-        <translation>&amp;Indstillinger ...</translation>
+        <translation>&amp;Επιλογές...</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="252"/>
@@ -394,17 +400,17 @@ Er du sikker på at du ønsker at kryptere din tegnebog?</translation>
     <message numerus="yes">
         <location filename="../altcoingui.cpp" line="517"/>
         <source>~%n block(s) remaining</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>~%n μπλοκ απέμεινε</numerusform><numerusform>~%n μπλοκ απέμειναν</numerusform></translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="528"/>
         <source>Downloaded %1 of %2 blocks of transaction history (%3% done).</source>
-        <translation type="unfinished"/>
+        <translation>Κατέβηκαν %1 από %2 μπλοκ του ιστορικού συναλλαγών (%3% ολοκληρώθηκαν)</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="250"/>
         <source>&amp;Export...</source>
-        <translation>&amp;Eksporter...</translation>
+        <translation>&amp;Εξαγωγή</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="210"/>
@@ -419,27 +425,27 @@ Er du sikker på at du ønsker at kryptere din tegnebog?</translation>
     <message>
         <location filename="../altcoingui.cpp" line="249"/>
         <source>Show or hide the Altcoin window</source>
-        <translation type="unfinished"/>
+        <translation>Εμφάνισε ή κρύψε το παράθυρο Altcoin</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="251"/>
         <source>Export the data in the current tab to a file</source>
-        <translation type="unfinished"/>
+        <translation>Εξαγωγή δεδομένων καρτέλας σε αρχείο</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="253"/>
         <source>Encrypt or decrypt wallet</source>
-        <translation>Kryptér eller dekryptér tegnebog</translation>
+        <translation>Κρυπτογράφηση ή αποκρυπτογράφηση πορτοφολιού</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="256"/>
         <source>Backup wallet to another location</source>
-        <translation type="unfinished"/>
+        <translation>Δημιουργία αντιγράφου ασφαλείας πορτοφολιού σε άλλη τοποθεσία</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="258"/>
         <source>Change the passphrase used for wallet encryption</source>
-        <translation>Skift kodeord anvendt til tegnebogskryptering</translation>
+        <translation>Αλλαγή του κωδικού κρυπτογράφησης του πορτοφολιού</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="259"/>
@@ -464,27 +470,27 @@ Er du sikker på at du ønsker at kryptere din tegnebog?</translation>
     <message>
         <location filename="../altcoingui.cpp" line="286"/>
         <source>&amp;File</source>
-        <translation>&amp;Fil</translation>
+        <translation>&amp;Αρχείο</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="296"/>
         <source>&amp;Settings</source>
-        <translation>&amp;Indstillinger</translation>
+        <translation>&amp;Ρυθμίσεις</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="302"/>
         <source>&amp;Help</source>
-        <translation>&amp;Hjælp</translation>
+        <translation>&amp;Βοήθεια</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="311"/>
         <source>Tabs toolbar</source>
-        <translation>Faneværktøjslinje</translation>
+        <translation>Εργαλειοθήκη καρτελών</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="322"/>
         <source>Actions toolbar</source>
-        <translation>Handlingsværktøjslinje</translation>
+        <translation>Εργαλειοθήκη ενεργειών</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="334"/>
@@ -496,57 +502,59 @@ Er du sikker på at du ønsker at kryptere din tegnebog?</translation>
         <location filename="../altcoingui.cpp" line="343"/>
         <location filename="../altcoingui.cpp" line="399"/>
         <source>Altcoin client</source>
-        <translation type="unfinished"/>
+        <translation>Πελάτης Altcoin</translation>
     </message>
     <message numerus="yes">
         <location filename="../altcoingui.cpp" line="492"/>
         <source>%n active connection(s) to Altcoin network</source>
-        <translation><numerusform>%n aktiv(e) forbindelse(r) til Altcoinnetværket</numerusform><numerusform>%n aktiv(e) forbindelse(r) til Altcoinnetværket</numerusform></translation>
+        <translation><numerusform>%n ενεργή σύνδεση στο δίκτυο Altcoin</numerusform><numerusform>%n ενεργές συνδέσεις στο δίκτυο Βitcoin</numerusform></translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="540"/>
         <source>Downloaded %1 blocks of transaction history.</source>
-        <translation>Downloadet %1 blokke af transaktionshistorie.</translation>
+        <translation>Έγινε λήψη %1 μπλοκ ιστορικού συναλλαγών</translation>
     </message>
     <message numerus="yes">
         <location filename="../altcoingui.cpp" line="555"/>
         <source>%n second(s) ago</source>
-        <translation><numerusform>%n sekund(er) siden</numerusform><numerusform>%n sekund(er) siden</numerusform></translation>
+        <translation><numerusform>%n δευτερόλεπτο πριν</numerusform><numerusform>%n δευτερόλεπτα πριν</numerusform></translation>
     </message>
     <message numerus="yes">
         <location filename="../altcoingui.cpp" line="559"/>
         <source>%n minute(s) ago</source>
-        <translation><numerusform>%n minut(ter) siden</numerusform><numerusform>%n minut(ter) siden</numerusform></translation>
+        <translation><numerusform>%n λεπτό πριν</numerusform><numerusform>%n λεπτά πριν</numerusform></translation>
     </message>
     <message numerus="yes">
         <location filename="../altcoingui.cpp" line="563"/>
         <source>%n hour(s) ago</source>
-        <translation><numerusform>%n time(r) siden</numerusform><numerusform>%n time(r) siden</numerusform></translation>
+        <translation><numerusform>%n ώρα πριν</numerusform><numerusform>%n ώρες πριν</numerusform></translation>
     </message>
     <message numerus="yes">
         <location filename="../altcoingui.cpp" line="567"/>
         <source>%n day(s) ago</source>
-        <translation><numerusform>%n dag(e) siden</numerusform><numerusform>%n dag(e) siden</numerusform></translation>
+        <translation><numerusform>%n ημέρα πριν</numerusform><numerusform>%n ημέρες πριν</numerusform></translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="573"/>
         <source>Up to date</source>
-        <translation>Opdateret</translation>
+        <translation>Ενημερωμένο</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="580"/>
         <source>Catching up...</source>
-        <translation>Indhenter...</translation>
+        <translation>Ενημέρωση...</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="590"/>
         <source>Last received block was generated %1.</source>
-        <translation>Sidst modtagne blok blev genereret %1.</translation>
+        <translation>Το τελευταίο μπλοκ που ελήφθη %1.</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="649"/>
         <source>This transaction is over the size limit.  You can still send it for a fee of %1, which goes to the nodes that process your transaction and helps to support the network.  Do you want to pay the fee?</source>
-        <translation>Denne transaktion er over størrelsesbegrænsningen.  Du kan stadig sende den for et gebyr på %1 som går til de noder der behandler din transaktion, og som hjælper med at støtte netværket.  Ønsker du at betale gebyret?</translation>
+        <translation>Η συναλλαγή ξεπερνάει το όριο.
+Μπορεί να ολοκληρωθεί με μια αμοιβή των %1, η οποία αποδίδεται στους κόμβους που επεξεργάζονται τις συναλλαγές και βοηθούν στην υποστήριξη του δικτύου.
+Θέλετε να συνεχίσετε;</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="654"/>
@@ -556,12 +564,12 @@ Er du sikker på at du ønsker at kryptere din tegnebog?</translation>
     <message>
         <location filename="../altcoingui.cpp" line="681"/>
         <source>Sent transaction</source>
-        <translation>Afsendt transaktion</translation>
+        <translation>Η συναλλαγή απεστάλη</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="682"/>
         <source>Incoming transaction</source>
-        <translation>Indgående transaktion</translation>
+        <translation>Εισερχόμενη συναλλαγή</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="683"/>
@@ -570,41 +578,41 @@ Amount: %2
 Type: %3
 Address: %4
 </source>
-        <translation>Dato: %1
-Beløb: %2
-Type: %3
-Adresse: %4
+        <translation>Ημερομηνία: %1
+Ποσό: %2
+Τύπος: %3
+Διεύθυνση: %4
 </translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="804"/>
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
-        <translation>Tegnebog er &lt;b&gt;krypteret&lt;/b&gt; og i øjeblikket &lt;b&gt;ulåst&lt;/b&gt;</translation>
+        <translation>Το πορτοφόλι είναι &lt;b&gt;κρυπτογραφημένο&lt;/b&gt; και &lt;b&gt;ξεκλείδωτο&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="812"/>
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
-        <translation>Tegnebog er &lt;b&gt;krypteret&lt;/b&gt; og i øjeblikket &lt;b&gt;låst&lt;/b&gt;</translation>
+        <translation>Το πορτοφόλι είναι &lt;b&gt;κρυπτογραφημένο&lt;/b&gt; και &lt;b&gt;κλειδωμένο&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="835"/>
         <source>Backup Wallet</source>
-        <translation type="unfinished"/>
+        <translation>Αντίγραφο ασφαλείας του πορτοφολιού</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="835"/>
         <source>Wallet Data (*.dat)</source>
-        <translation type="unfinished"/>
+        <translation>Αρχεία δεδομένων πορτοφολιού (*.dat)</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="838"/>
         <source>Backup Failed</source>
-        <translation type="unfinished"/>
+        <translation>Αποτυχία κατά τη δημιουργία αντιγράφου</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="838"/>
         <source>There was an error trying to save the wallet data to the new location.</source>
-        <translation type="unfinished"/>
+        <translation>Παρουσιάστηκε σφάλμα κατά την αποθήκευση των δεδομένων πορτοφολιού στη νέα τοποθεσία.</translation>
     </message>
     <message>
         <location filename="../altcoin.cpp" line="112"/>
@@ -625,7 +633,7 @@ Adresse: %4
     <message>
         <location filename="../optionsdialog.cpp" line="246"/>
         <source>Display</source>
-        <translation>Visning</translation>
+        <translation>Απεικόνισης</translation>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="257"/>
@@ -650,7 +658,7 @@ Adresse: %4
     <message>
         <location filename="../optionsdialog.cpp" line="277"/>
         <source>Choose the default subdivision unit to show in the interface, and when sending coins</source>
-        <translation>Vælg den standard underopdelingsenhed som skal vises i brugergrænsefladen, og når du sender coins</translation>
+        <translation>Επιλέξτε τη μονάδα υποδιαίρεσης που θα εμφανίζεται</translation>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="284"/>
@@ -678,52 +686,52 @@ Adresse: %4
     <message>
         <location filename="../forms/editaddressdialog.ui" line="14"/>
         <source>Edit Address</source>
-        <translation>Rediger Adresse</translation>
+        <translation>Επεξεργασία Διεύθυνσης</translation>
     </message>
     <message>
         <location filename="../forms/editaddressdialog.ui" line="25"/>
         <source>&amp;Label</source>
-        <translation>&amp;Etiket</translation>
+        <translation>&amp;Επιγραφή</translation>
     </message>
     <message>
         <location filename="../forms/editaddressdialog.ui" line="35"/>
         <source>The label associated with this address book entry</source>
-        <translation>Etiketten forbundet med denne post i adressekartoteket</translation>
+        <translation>Η επιγραφή που σχετίζεται με αυτή την καταχώρηση του βιβλίου διευθύνσεων</translation>
     </message>
     <message>
         <location filename="../forms/editaddressdialog.ui" line="42"/>
         <source>&amp;Address</source>
-        <translation>&amp;Adresse</translation>
+        <translation>&amp;Διεύθυνση</translation>
     </message>
     <message>
         <location filename="../forms/editaddressdialog.ui" line="52"/>
         <source>The address associated with this address book entry. This can only be modified for sending addresses.</source>
-        <translation>Adressen tilknyttet til denne post i adressekartoteket. Dette kan kun ændres for afsendelsesadresser.</translation>
+        <translation>Η διεύθυνση που σχετίζεται με αυτή την καταχώρηση του βιβλίου διευθύνσεων. Μπορεί να τροποποιηθεί μόνο για τις διευθύνσεις αποστολής.</translation>
     </message>
     <message>
         <location filename="../editaddressdialog.cpp" line="20"/>
         <source>New receiving address</source>
-        <translation>Ny modtagelsesadresse</translation>
+        <translation>Νέα διεύθυνση λήψης</translation>
     </message>
     <message>
         <location filename="../editaddressdialog.cpp" line="24"/>
         <source>New sending address</source>
-        <translation>Ny afsendelsesadresse</translation>
+        <translation>Νέα διεύθυνση αποστολής</translation>
     </message>
     <message>
         <location filename="../editaddressdialog.cpp" line="27"/>
         <source>Edit receiving address</source>
-        <translation>Rediger modtagelsesadresse</translation>
+        <translation>Επεξεργασία διεύθυνσης λήψης</translation>
     </message>
     <message>
         <location filename="../editaddressdialog.cpp" line="31"/>
         <source>Edit sending address</source>
-        <translation>Rediger afsendelsesadresse</translation>
+        <translation>Επεξεργασία διεύθυνσης αποστολής</translation>
     </message>
     <message>
         <location filename="../editaddressdialog.cpp" line="91"/>
         <source>The entered address &quot;%1&quot; is already in the address book.</source>
-        <translation>Den indtastede adresse &quot;%1&quot; er allerede i adressebogen.</translation>
+        <translation>Η διεύθυνση &quot;%1&quot; βρίσκεται ήδη στο βιβλίο διευθύνσεων.</translation>
     </message>
     <message>
         <location filename="../editaddressdialog.cpp" line="96"/>
@@ -733,12 +741,12 @@ Adresse: %4
     <message>
         <location filename="../editaddressdialog.cpp" line="101"/>
         <source>Could not unlock wallet.</source>
-        <translation>Kunne ikke låse tegnebog op.</translation>
+        <translation>Δεν είναι δυνατό το ξεκλείδωμα του πορτοφολιού.</translation>
     </message>
     <message>
         <location filename="../editaddressdialog.cpp" line="106"/>
         <source>New key generation failed.</source>
-        <translation>Ny nøglegenerering mislykkedes.</translation>
+        <translation>Η δημιουργία νέου κλειδιού απέτυχε.</translation>
     </message>
 </context>
 <context>
@@ -757,7 +765,7 @@ Adresse: %4
     <message>
         <location filename="../altcoin.cpp" line="135"/>
         <source>Usage:</source>
-        <translation>Anvendelse:</translation>
+        <translation>Χρήση:</translation>
     </message>
     <message>
         <location filename="../altcoin.cpp" line="136"/>
@@ -772,18 +780,17 @@ Adresse: %4
     <message>
         <location filename="../altcoin.cpp" line="139"/>
         <source>Set language, for example &quot;de_DE&quot; (default: system locale)</source>
-        <translation type="unfinished"/>
+        <translation>Όρισε γλώσσα, για παράδειγμα &quot;de_DE&quot;(προεπιλογή:τοπικές ρυθμίσεις)</translation>
     </message>
     <message>
         <location filename="../altcoin.cpp" line="140"/>
         <source>Start minimized</source>
-        <translation>Start minimeret
-</translation>
+        <translation>Έναρξη ελαχιστοποιημένο</translation>
     </message>
     <message>
         <location filename="../altcoin.cpp" line="141"/>
         <source>Show splash screen on startup (default: 1)</source>
-        <translation type="unfinished"/>
+        <translation>Εμφάνισε την οθόνη εκκίνησης κατά την εκκίνηση(προεπιλογή:1)</translation>
     </message>
 </context>
 <context>
@@ -796,17 +803,17 @@ Adresse: %4
     <message>
         <location filename="../optionsdialog.cpp" line="212"/>
         <source>Pay transaction &amp;fee</source>
-        <translation>Betal transaktions&amp;gebyr</translation>
+        <translation>Αμοιβή &amp;συναλλαγής</translation>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="204"/>
         <source>Main</source>
-        <translation>Generelt</translation>
+        <translation>Βασικές</translation>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="206"/>
         <source>Optional transaction fee per kB that helps make sure your transactions are processed quickly. Most transactions are 1 kB. Fee 0.01 recommended.</source>
-        <translation type="unfinished"/>
+        <translation>Η προαιρετική αμοιβή για κάθε kB επισπεύδει την επεξεργασία των συναλλαγών σας. Οι περισσότερες συναλλαγές είναι 1 kB. Προτείνεται αμοιβή 0.01.</translation>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="222"/>
@@ -834,17 +841,17 @@ Adresse: %4
     <message>
         <location filename="../forms/messagepage.ui" line="20"/>
         <source>You can sign messages with your addresses to prove you own them. Be careful not to sign anything vague, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
-        <translation type="unfinished"/>
+        <translation>Μπορείτε να υπογράφετε μηνύματα με τις διευθύνσεις σας, ώστε ν&apos; αποδεικνύετε πως αυτές σας ανήκουν. Αποφεύγετε να υπογράφετε κάτι αόριστο καθώς ενδέχεται να εξαπατηθείτε. Υπογράφετε μόνο πλήρης δηλώσεις με τις οποίες συμφωνείτε.</translation>
     </message>
     <message>
         <location filename="../forms/messagepage.ui" line="38"/>
         <source>The address to sign the message with  (e.g. 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L)</source>
-        <translation type="unfinished"/>
+        <translation>Η διεύθυνση που θα υπογραφεί μαζί με το μήνυμα (π.χ. 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L)</translation>
     </message>
     <message>
         <location filename="../forms/messagepage.ui" line="48"/>
         <source>Choose adress from address book</source>
-        <translation>Vælg adresse fra adressebog</translation>
+        <translation>Αντιγραφή διεύθυνσης από το βιβλίο διευθύνσεων</translation>
     </message>
     <message>
         <location filename="../forms/messagepage.ui" line="58"/>
@@ -854,7 +861,7 @@ Adresse: %4
     <message>
         <location filename="../forms/messagepage.ui" line="71"/>
         <source>Paste address from clipboard</source>
-        <translation>Indsæt adresse fra udklipsholderen</translation>
+        <translation>Επικόλληση διεύθυνσης από το βιβλίο διευθύνσεων</translation>
     </message>
     <message>
         <location filename="../forms/messagepage.ui" line="81"/>
@@ -864,7 +871,7 @@ Adresse: %4
     <message>
         <location filename="../forms/messagepage.ui" line="93"/>
         <source>Enter the message you want to sign here</source>
-        <translation type="unfinished"/>
+        <translation>Εισάγετε εδώ το μήνυμα που θέλετε να υπογράψετε</translation>
     </message>
     <message>
         <location filename="../forms/messagepage.ui" line="128"/>
@@ -889,22 +896,22 @@ Adresse: %4
     <message>
         <location filename="../messagepage.cpp" line="31"/>
         <source>Click &quot;Sign Message&quot; to get signature</source>
-        <translation type="unfinished"/>
+        <translation>Κάντε κλικ στο &quot;Υπογραφή Μηνύματος&quot; για να λάβετε την υπογραφή</translation>
     </message>
     <message>
         <location filename="../forms/messagepage.ui" line="114"/>
         <source>Sign a message to prove you own this address</source>
-        <translation type="unfinished"/>
+        <translation>Υπογράψτε ένα μήνυμα για να βεβαιώσετε πως είστε ο κάτοχος αυτής της διεύθυνσης</translation>
     </message>
     <message>
         <location filename="../forms/messagepage.ui" line="117"/>
         <source>&amp;Sign Message</source>
-        <translation type="unfinished"/>
+        <translation>&amp;Υπογραφή Μηνύματος</translation>
     </message>
     <message>
         <location filename="../messagepage.cpp" line="30"/>
         <source>Enter a Altcoin address (e.g. 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L)</source>
-        <translation>Indtast en Altcoinadresse (f.eks. 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L)</translation>
+        <translation>Εισάγετε μια διεύθυνση Altcoin (π.χ. 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L)</translation>
     </message>
     <message>
         <location filename="../messagepage.cpp" line="83"/>
@@ -912,12 +919,12 @@ Adresse: %4
         <location filename="../messagepage.cpp" line="105"/>
         <location filename="../messagepage.cpp" line="117"/>
         <source>Error signing</source>
-        <translation type="unfinished"/>
+        <translation>Σφάλμα υπογραφής</translation>
     </message>
     <message>
         <location filename="../messagepage.cpp" line="83"/>
         <source>%1 is not a valid address.</source>
-        <translation type="unfinished"/>
+        <translation>Η %1 δεν είναι έγκυρη διεύθυνση.</translation>
     </message>
     <message>
         <location filename="../messagepage.cpp" line="90"/>
@@ -927,12 +934,12 @@ Adresse: %4
     <message>
         <location filename="../messagepage.cpp" line="105"/>
         <source>Private key for %1 is not available.</source>
-        <translation type="unfinished"/>
+        <translation>Το προσωπικό κλειδί της %1 δεν είναι διαθέσιμο.</translation>
     </message>
     <message>
         <location filename="../messagepage.cpp" line="117"/>
         <source>Sign failed</source>
-        <translation type="unfinished"/>
+        <translation>Αποτυχία υπογραφής</translation>
     </message>
 </context>
 <context>
@@ -945,22 +952,22 @@ Adresse: %4
     <message>
         <location filename="../optionsdialog.cpp" line="347"/>
         <source>Map port using &amp;UPnP</source>
-        <translation>Konfigurer port vha. &amp;UPnP</translation>
+        <translation>Απόδοση θυρών με χρήστη &amp;UPnP</translation>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="348"/>
         <source>Automatically open the Altcoin client port on the router. This only works when your router supports UPnP and it is enabled.</source>
-        <translation>Åbn Altcoinklient-porten på routeren automatisk. Dette virker kun når din router understøtter UPnP og UPnP er aktiveret.</translation>
+        <translation>Αυτόματο άνοιγμα των θυρών Altcoin στον δρομολογητή. Λειτουργεί μόνο αν ο δρομολογητής σας υποστηρίζει τη λειτουργία UPnP.</translation>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="351"/>
         <source>&amp;Connect through SOCKS4 proxy:</source>
-        <translation>&amp;Forbind gennem SOCKS4 proxy:</translation>
+        <translation>&amp;Σύνδεση μέσω SOCKS4 διαμεσολαβητή</translation>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="352"/>
         <source>Connect to the Bitcon network through a SOCKS4 proxy (e.g. when connecting through Tor)</source>
-        <translation>Opret forbindelse til Bitconnetværket via en SOCKS4 proxy (f.eks. ved tilslutning gennem Tor)</translation>
+        <translation>Σύνδεση στο Altcoin δίκτυο μέσω διαμεσολαβητή SOCKS4 (π.χ. για σύνδεση μέσω Tor)</translation>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="357"/>
@@ -975,12 +982,12 @@ Adresse: %4
     <message>
         <location filename="../optionsdialog.cpp" line="363"/>
         <source>IP address of the proxy (e.g. 127.0.0.1)</source>
-        <translation>IP-adressen på proxyen (f.eks. 127.0.0.1)</translation>
+        <translation>Διεύθυνση IP του διαμεσολαβητή (π.χ. 127.0.0.1)</translation>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="372"/>
         <source>Port of the proxy (e.g. 1234)</source>
-        <translation>Porten på proxyen (f.eks. 1234)</translation>
+        <translation>Η θύρα του διαμεσολαβητή (π.χ. 1234)</translation>
     </message>
 </context>
 <context>
@@ -988,7 +995,7 @@ Adresse: %4
     <message>
         <location filename="../optionsdialog.cpp" line="135"/>
         <source>Options</source>
-        <translation>Indstillinger</translation>
+        <translation>Ρυθμίσεις</translation>
     </message>
 </context>
 <context>
@@ -996,7 +1003,7 @@ Adresse: %4
     <message>
         <location filename="../forms/overviewpage.ui" line="14"/>
         <source>Form</source>
-        <translation>Formular</translation>
+        <translation>Φόρμα</translation>
     </message>
     <message>
         <location filename="../forms/overviewpage.ui" line="47"/>
@@ -1007,17 +1014,17 @@ Adresse: %4
     <message>
         <location filename="../forms/overviewpage.ui" line="89"/>
         <source>Balance:</source>
-        <translation>Saldo:</translation>
+        <translation>Υπόλοιπο</translation>
     </message>
     <message>
         <location filename="../forms/overviewpage.ui" line="147"/>
         <source>Number of transactions:</source>
-        <translation>Antal transaktioner:</translation>
+        <translation>Αριθμός συναλλαγών</translation>
     </message>
     <message>
         <location filename="../forms/overviewpage.ui" line="118"/>
         <source>Unconfirmed:</source>
-        <translation>Ubekræftede:</translation>
+        <translation>Ανεπιβεβαίωτες</translation>
     </message>
     <message>
         <location filename="../forms/overviewpage.ui" line="40"/>
@@ -1027,22 +1034,22 @@ Adresse: %4
     <message>
         <location filename="../forms/overviewpage.ui" line="197"/>
         <source>&lt;b&gt;Recent transactions&lt;/b&gt;</source>
-        <translation>&lt;b&gt;Nyeste transaktioner&lt;/b&gt;</translation>
+        <translation>&lt;b&gt;Πρόσφατες συναλλαγές&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../forms/overviewpage.ui" line="105"/>
         <source>Your current balance</source>
-        <translation>Din nuværende saldo</translation>
+        <translation>Το τρέχον υπόλοιπο</translation>
     </message>
     <message>
         <location filename="../forms/overviewpage.ui" line="134"/>
         <source>Total of transactions that have yet to be confirmed, and do not yet count toward the current balance</source>
-        <translation>Summen af ​​transaktioner, der endnu ikke er bekræftet, og endnu ikke er inkluderet i den nuværende saldo</translation>
+        <translation>Το άθροισμα των συναλλαγών που δεν έχουν ακόμα επιβεβαιωθεί και δεν προσμετρώνται στο τρέχον υπόλοιπό σας</translation>
     </message>
     <message>
         <location filename="../forms/overviewpage.ui" line="154"/>
         <source>Total number of transactions in wallet</source>
-        <translation>Samlede antal transaktioner i tegnebogen</translation>
+        <translation>Σύνολο συναλλαγών στο πορτοφόλι</translation>
     </message>
     <message>
         <location filename="../overviewpage.cpp" line="110"/>
@@ -1061,37 +1068,37 @@ Adresse: %4
     <message>
         <location filename="../forms/qrcodedialog.ui" line="32"/>
         <source>QR Code</source>
-        <translation type="unfinished"/>
+        <translation>Κώδικας QR</translation>
     </message>
     <message>
         <location filename="../forms/qrcodedialog.ui" line="55"/>
         <source>Request Payment</source>
-        <translation type="unfinished"/>
+        <translation>Αίτηση πληρωμής</translation>
     </message>
     <message>
         <location filename="../forms/qrcodedialog.ui" line="70"/>
         <source>Amount:</source>
-        <translation type="unfinished"/>
+        <translation>Ποσό:</translation>
     </message>
     <message>
         <location filename="../forms/qrcodedialog.ui" line="105"/>
         <source>BTC</source>
-        <translation type="unfinished"/>
+        <translation>BTC</translation>
     </message>
     <message>
         <location filename="../forms/qrcodedialog.ui" line="121"/>
         <source>Label:</source>
-        <translation type="unfinished"/>
+        <translation>Επιγραφή:</translation>
     </message>
     <message>
         <location filename="../forms/qrcodedialog.ui" line="144"/>
         <source>Message:</source>
-        <translation>Besked:</translation>
+        <translation>Μήνυμα:</translation>
     </message>
     <message>
         <location filename="../forms/qrcodedialog.ui" line="186"/>
         <source>&amp;Save As...</source>
-        <translation type="unfinished"/>
+        <translation>&amp;Αποθήκευση ως...</translation>
     </message>
     <message>
         <location filename="../qrcodedialog.cpp" line="45"/>
@@ -1101,7 +1108,7 @@ Adresse: %4
     <message>
         <location filename="../qrcodedialog.cpp" line="63"/>
         <source>Resulting URI too long, try to reduce the text for label / message.</source>
-        <translation type="unfinished"/>
+        <translation>Το αποτέλεσμα της διεύθυνσης είναι πολύ μεγάλο. Μειώστε το μέγεθος για το κείμενο της ετικέτας/ μηνύματος.</translation>
     </message>
     <message>
         <location filename="../qrcodedialog.cpp" line="120"/>
@@ -1111,7 +1118,7 @@ Adresse: %4
     <message>
         <location filename="../qrcodedialog.cpp" line="120"/>
         <source>PNG Images (*.png)</source>
-        <translation type="unfinished"/>
+        <translation>Εικόνες PNG (*.png)</translation>
     </message>
 </context>
 <context>
@@ -1252,12 +1259,12 @@ Adresse: %4
         <location filename="../sendcoinsdialog.cpp" line="148"/>
         <location filename="../sendcoinsdialog.cpp" line="153"/>
         <source>Send Coins</source>
-        <translation>Send Coins</translation>
+        <translation>Αποστολή νομισμάτων</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsdialog.ui" line="64"/>
         <source>Send to multiple recipients at once</source>
-        <translation>Send til flere modtagere på én gang</translation>
+        <translation>Αποστολή σε πολλούς αποδέκτες ταυτόχρονα</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsdialog.ui" line="67"/>
@@ -1267,7 +1274,7 @@ Adresse: %4
     <message>
         <location filename="../forms/sendcoinsdialog.ui" line="84"/>
         <source>Remove all transaction fields</source>
-        <translation type="unfinished"/>
+        <translation>Διαγραφή όλων των πεδίων συναλλαγής</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsdialog.ui" line="87"/>
@@ -1277,52 +1284,52 @@ Adresse: %4
     <message>
         <location filename="../forms/sendcoinsdialog.ui" line="106"/>
         <source>Balance:</source>
-        <translation>Saldo:</translation>
+        <translation>Υπόλοιπο:</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsdialog.ui" line="113"/>
         <source>123.456 BTC</source>
-        <translation>123.456 BTC</translation>
+        <translation>123,456 BTC</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsdialog.ui" line="144"/>
         <source>Confirm the send action</source>
-        <translation>Bekræft afsendelsen</translation>
+        <translation>Επιβεβαίωση αποστολής</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsdialog.ui" line="147"/>
         <source>&amp;Send</source>
-        <translation>&amp;Afsend</translation>
+        <translation>&amp;Αποστολή</translation>
     </message>
     <message>
         <location filename="../sendcoinsdialog.cpp" line="94"/>
         <source>&lt;b&gt;%1&lt;/b&gt; to %2 (%3)</source>
-        <translation>&lt;b&gt;%1&lt;/b&gt; til %2 (%3)</translation>
+        <translation>&lt;b&gt;%1&lt;/b&gt; σε %2 (%3)</translation>
     </message>
     <message>
         <location filename="../sendcoinsdialog.cpp" line="99"/>
         <source>Confirm send coins</source>
-        <translation>Bekræft afsendelse af coins</translation>
+        <translation>Επιβεβαίωση αποστολής νομισμάτων</translation>
     </message>
     <message>
         <location filename="../sendcoinsdialog.cpp" line="100"/>
         <source>Are you sure you want to send %1?</source>
-        <translation>Er du sikker på at du vil sende %1?</translation>
+        <translation>Είστε βέβαιοι για την αποστολή %1;</translation>
     </message>
     <message>
         <location filename="../sendcoinsdialog.cpp" line="100"/>
         <source> and </source>
-        <translation> og </translation>
+        <translation>και</translation>
     </message>
     <message>
         <location filename="../sendcoinsdialog.cpp" line="123"/>
         <source>The recepient address is not valid, please recheck.</source>
-        <translation>Modtagerens adresse er ikke gyldig. Tjek venligst adressen igen.</translation>
+        <translation>Η διεύθυνση του αποδέκτη δεν είναι σωστή. Παρακαλώ ελέγξτε ξανά.</translation>
     </message>
     <message>
         <location filename="../sendcoinsdialog.cpp" line="128"/>
         <source>The amount to pay must be larger than 0.</source>
-        <translation>Beløbet til betaling skal være større end 0.</translation>
+        <translation>Το ποσό πληρωμής πρέπει να είναι μεγαλύτερο από 0.</translation>
     </message>
     <message>
         <location filename="../sendcoinsdialog.cpp" line="133"/>
@@ -1355,38 +1362,39 @@ Adresse: %4
     <message>
         <location filename="../forms/sendcoinsentry.ui" line="14"/>
         <source>Form</source>
-        <translation>Formular</translation>
+        <translation>Φόρμα</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsentry.ui" line="29"/>
         <source>A&amp;mount:</source>
-        <translation>B&amp;eløb:</translation>
+        <translation>&amp;Ποσό:</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsentry.ui" line="42"/>
         <source>Pay &amp;To:</source>
-        <translation>Betal &amp;Til:</translation>
+        <translation>Πληρωμή &amp;σε:</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsentry.ui" line="66"/>
         <location filename="../sendcoinsentry.cpp" line="25"/>
         <source>Enter a label for this address to add it to your address book</source>
-        <translation>Indtast en etiket for denne adresse for at føje den til din adressebog</translation>
+        <translation>Εισάγετε μια επιγραφή για αυτή τη διεύθυνση ώστε να καταχωρηθεί στο βιβλίο διευθύνσεων</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsentry.ui" line="75"/>
         <source>&amp;Label:</source>
-        <translation>&amp;Etiket:</translation>
+        <translation>&amp;Επιγραφή</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsentry.ui" line="93"/>
         <source>The address to send the payment to  (e.g. 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L)</source>
-        <translation>Adresse som betalingen skal sendes til  (f.eks. 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L)</translation>
+        <translation>Η διεύθυνση γι&apos; αποστολή πληρωμής
+(π.χ. 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L)</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsentry.ui" line="103"/>
         <source>Choose address from address book</source>
-        <translation>Vælg adresse fra adressebog</translation>
+        <translation>Επιλογή διεύθυνσης από το βιβλίο διευθύνσεων</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsentry.ui" line="113"/>
@@ -1396,7 +1404,7 @@ Adresse: %4
     <message>
         <location filename="../forms/sendcoinsentry.ui" line="120"/>
         <source>Paste address from clipboard</source>
-        <translation>Indsæt adresse fra udklipsholderen</translation>
+        <translation>Επικόλληση διεύθυνσης από το πρόχειρο</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsentry.ui" line="130"/>
@@ -1406,12 +1414,12 @@ Adresse: %4
     <message>
         <location filename="../forms/sendcoinsentry.ui" line="137"/>
         <source>Remove this recipient</source>
-        <translation>Fjern denne modtager</translation>
+        <translation>Αφαίρεση αποδέκτη</translation>
     </message>
     <message>
         <location filename="../sendcoinsentry.cpp" line="26"/>
         <source>Enter a Altcoin address (e.g. 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L)</source>
-        <translation>Indtast en Altcoinadresse (f.eks. 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L)</translation>
+        <translation>Εισάγετε μια διεύθυνση Altcoin (π.χ. 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L)</translation>
     </message>
 </context>
 <context>
@@ -1419,85 +1427,85 @@ Adresse: %4
     <message>
         <location filename="../transactiondesc.cpp" line="21"/>
         <source>Open for %1 blocks</source>
-        <translation>Åben for %1 blokke</translation>
+        <translation>Ανοιχτό για %1 μπλοκ</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="23"/>
         <source>Open until %1</source>
-        <translation>Åben indtil %1</translation>
+        <translation>Ανοιχτό μέχρι %1</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="29"/>
         <source>%1/offline?</source>
-        <translation>%1/offline?</translation>
+        <translation>%1/χωρίς σύνδεση;</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="31"/>
         <source>%1/unconfirmed</source>
-        <translation>%1/ubekræftet</translation>
+        <translation>%1/χωρίς επιβεβαίωση</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="33"/>
         <source>%1 confirmations</source>
-        <translation>%1 bekræftelser</translation>
+        <translation>%1 επιβεβαιώσεις</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="51"/>
         <source>&lt;b&gt;Status:&lt;/b&gt; </source>
-        <translation>&lt;b&gt;Status:&lt;/b&gt; </translation>
+        <translation>&lt;b&gt;Κατάσταση:&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="56"/>
         <source>, has not been successfully broadcast yet</source>
-        <translation>, er ikke blevet transmitteret endnu</translation>
+        <translation>, δεν έχει ακόμα μεταδοθεί μ&apos; επιτυχία</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="58"/>
         <source>, broadcast through %1 node</source>
-        <translation>, transmitteret via %1 node</translation>
+        <translation>, έχει μεταδοθεί μέσω %1 κόμβου</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="60"/>
         <source>, broadcast through %1 nodes</source>
-        <translation>, transmitteret via %1 noder</translation>
+        <translation>, έχει μεταδοθεί μέσω %1 κόμβων</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="64"/>
         <source>&lt;b&gt;Date:&lt;/b&gt; </source>
-        <translation>&lt;b&gt;Dato:&lt;/b&gt; </translation>
+        <translation>&lt;b&gt;Ημερομηνία:&lt;/b&gt; </translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="71"/>
         <source>&lt;b&gt;Source:&lt;/b&gt; Generated&lt;br&gt;</source>
-        <translation>&lt;b&gt;Kilde:&lt;/b&gt; Genereret&lt;br&gt;</translation>
+        <translation>&lt;b&gt;Προέλευση:&lt;/b&gt; Δημιουργία&lt;br&gt;</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="77"/>
         <location filename="../transactiondesc.cpp" line="94"/>
         <source>&lt;b&gt;From:&lt;/b&gt; </source>
-        <translation>&lt;b&gt;Fra:&lt;/b&gt;</translation>
+        <translation>&lt;b&gt;Από:&lt;/b&gt; </translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="94"/>
         <source>unknown</source>
-        <translation>ukendt</translation>
+        <translation>άγνωστο</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="95"/>
         <location filename="../transactiondesc.cpp" line="118"/>
         <location filename="../transactiondesc.cpp" line="178"/>
         <source>&lt;b&gt;To:&lt;/b&gt; </source>
-        <translation>&lt;b&gt;Til:&lt;/b&gt;</translation>
+        <translation>&lt;b&gt;Προς:&lt;/b&gt; </translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="98"/>
         <source> (yours, label: </source>
-        <translation> (din, etiket:</translation>
+        <translation> (δικές σας, επιγραφή: </translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="100"/>
         <source> (yours)</source>
-        <translation> (din)</translation>
+        <translation> (δικές σας)</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="136"/>
@@ -1505,54 +1513,54 @@ Adresse: %4
         <location filename="../transactiondesc.cpp" line="195"/>
         <location filename="../transactiondesc.cpp" line="212"/>
         <source>&lt;b&gt;Credit:&lt;/b&gt; </source>
-        <translation>&lt;b&gt;Kredit:&lt;/b&gt; </translation>
+        <translation>&lt;b&gt;Πίστωση:&lt;/b&gt; </translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="138"/>
         <source>(%1 matures in %2 more blocks)</source>
-        <translation>(%1 modnes i %2 blokke mere)</translation>
+        <translation>(%1 ωρίμανση σε %2 επιπλέον μπλοκ)</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="142"/>
         <source>(not accepted)</source>
-        <translation>(ikke accepteret)</translation>
+        <translation>(μη αποδεκτό)</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="186"/>
         <location filename="../transactiondesc.cpp" line="194"/>
         <location filename="../transactiondesc.cpp" line="209"/>
         <source>&lt;b&gt;Debit:&lt;/b&gt; </source>
-        <translation>&lt;b&gt;Debet:&lt;/b&gt;</translation>
+        <translation>&lt;b&gt;Χρέωση:&lt;/b&gt; </translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="200"/>
         <source>&lt;b&gt;Transaction fee:&lt;/b&gt; </source>
-        <translation>&lt;b&gt;Transaktionsgebyr:&lt;/b&gt;</translation>
+        <translation>&lt;b&gt;Αμοιβή συναλλαγής:&lt;/b&gt; </translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="216"/>
         <source>&lt;b&gt;Net amount:&lt;/b&gt; </source>
-        <translation>&lt;b&gt;Nettobeløb:&lt;/b&gt;</translation>
+        <translation>&lt;b&gt;Καθαρό ποσό:&lt;/b&gt; </translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="222"/>
         <source>Message:</source>
-        <translation>Besked:</translation>
+        <translation>Μήνυμα:</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="224"/>
         <source>Comment:</source>
-        <translation>Kommentar:</translation>
+        <translation>Σχόλιο:</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="226"/>
         <source>Transaction ID:</source>
-        <translation type="unfinished"/>
+        <translation>ID Συναλλαγής:</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="229"/>
         <source>Generated coins must wait 120 blocks before they can be spent.  When you generated this block, it was broadcast to the network to be added to the block chain.  If it fails to get into the chain, it will change to &quot;not accepted&quot; and not be spendable.  This may occasionally happen if another node generates a block within a few seconds of yours.</source>
-        <translation>Genererede coins skal vente 120 blokke, før de kan blive brugt.  Da du  genererede denne blok blev det transmitteret til netværket, for at blive føjet til blokkæden.  Hvis det mislykkes at komme ind i kæden, vil den skifte til &quot;ikke godkendt&quot;, og ikke blive kunne bruges.  Dette kan lejlighedsvis ske, hvis en anden node genererer en blok inden for få sekunder af din.</translation>
+        <translation>Πρέπει να περιμένετε 120 μπλοκ πριν μπορέσετε να χρησιμοποιήσετε τα νομίσματα που έχετε δημιουργήσει. Το μπλοκ που δημιουργήσατε μεταδόθηκε στο δίκτυο για να συμπεριληφθεί στην αλυσίδα των μπλοκ. Αν δεν μπει σε αυτή θα μετατραπεί σε &quot;μη αποδεκτό&quot; και δε θα μπορεί να καταναλωθεί. Αυτό συμβαίνει σπάνια όταν κάποιος άλλος κόμβος δημιουργήσει ένα μπλοκ λίγα δευτερόλεπτα πριν από εσάς.</translation>
     </message>
 </context>
 <context>
@@ -1560,12 +1568,12 @@ Adresse: %4
     <message>
         <location filename="../forms/transactiondescdialog.ui" line="14"/>
         <source>Transaction details</source>
-        <translation>Transaktionsdetaljer</translation>
+        <translation>Λεπτομέρειες συναλλαγής</translation>
     </message>
     <message>
         <location filename="../forms/transactiondescdialog.ui" line="20"/>
         <source>This pane shows a detailed description of the transaction</source>
-        <translation>Denne rude viser en detaljeret beskrivelse af transaktionen</translation>
+        <translation>Αυτό το παράθυρο δείχνει μια λεπτομερή περιγραφή της συναλλαγής</translation>
     </message>
 </context>
 <context>
@@ -1573,961 +1581,113 @@ Adresse: %4
     <message>
         <location filename="../transactiontablemodel.cpp" line="226"/>
         <source>Date</source>
-        <translation>Dato</translation>
+        <translation>Ημερομηνία</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="226"/>
         <source>Type</source>
-        <translation>Type</translation>
+        <translation>Τύπος</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="226"/>
         <source>Address</source>
-        <translation>Adresse</translation>
+        <translation>Διεύθυνση</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="226"/>
         <source>Amount</source>
-        <translation>Beløb</translation>
+        <translation>Ποσό</translation>
     </message>
     <message numerus="yes">
         <location filename="../transactiontablemodel.cpp" line="281"/>
         <source>Open for %n block(s)</source>
-        <translation><numerusform>Åben for %n blok(ke)</numerusform><numerusform>Åben for %n blok(ke)</numerusform></translation>
+        <translation><numerusform>Ανοιχτό για %n μπλοκ</numerusform><numerusform>Ανοιχτό για %n μπλοκ</numerusform></translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="284"/>
         <source>Open until %1</source>
-        <translation>Åben indtil %1</translation>
+        <translation>Ανοιχτό μέχρι %1</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="287"/>
         <source>Offline (%1 confirmations)</source>
-        <translation>Offline (%1 bekræftelser)</translation>
+        <translation>Χωρίς σύνδεση (%1 επικυρώσεις)</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="290"/>
         <source>Unconfirmed (%1 of %2 confirmations)</source>
-        <translation>Ubekræftet (%1 af %2 bekræftelser)</translation>
+        <translation>Χωρίς επιβεβαίωση (%1 από %2 επικυρώσεις)</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="293"/>
         <source>Confirmed (%1 confirmations)</source>
-        <translation>Bekræftet (%1 bekræftelser)</translation>
+        <translation>Επικυρωμένη (%1 επικυρώσεις)</translation>
     </message>
     <message numerus="yes">
         <location filename="../transactiontablemodel.cpp" line="301"/>
         <source>Mined balance will be available in %n more blocks</source>
-        <translation><numerusform>Minerede balance vil være tilgængelig om %n blok(ke)</numerusform><numerusform>Minerede balance vil være tilgængelig om %n blok(ke)</numerusform></translation>
+        <translation><numerusform>Το υπόλοιπο από την εξόρυξη θα είναι διαθέσιμο μετά από %n μπλοκ</numerusform><numerusform>Το υπόλοιπο από την εξόρυξη θα είναι διαθέσιμο μετά από %n μπλοκ</numerusform></translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="307"/>
         <source>This block was not received by any other nodes and will probably not be accepted!</source>
-        <translation>Denne blok blev ikke modtaget af nogen andre noder, og vil formentlig ikke blive accepteret!</translation>
+        <translation>Αυτό το μπλοκ δεν έχει παραληφθεί από κανέναν άλλο κόμβο και κατά πάσα πιθανότητα θα απορριφθεί!</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="310"/>
         <source>Generated but not accepted</source>
-        <translation>Genereret, men ikke accepteret</translation>
+        <translation>Δημιουργήθηκε αλλά απορρίφθηκε</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="353"/>
         <source>Received with</source>
-        <translation>Modtaget med</translation>
+        <translation>Παραλαβή με</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="355"/>
         <source>Received from</source>
-        <translation type="unfinished"/>
+        <translation>Ελήφθη από</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="358"/>
         <source>Sent to</source>
-        <translation>Sendt til</translation>
+        <translation>Αποστολή προς</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="360"/>
         <source>Payment to yourself</source>
-        <translation>Betaling til dig selv</translation>
+        <translation>Πληρωμή προς εσάς</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="362"/>
         <source>Mined</source>
-        <translation>Minerede</translation>
+        <translation>Εξόρυξη</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="400"/>
         <source>(n/a)</source>
-        <translation>(n/a)</translation>
+        <translation>(δ/α)</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="599"/>
         <source>Transaction status. Hover over this field to show number of confirmations.</source>
-        <translation>Transactionsstatus. Hold musen over dette felt for at vise antallet af bekræftelser.</translation>
+        <translation>Κατάσταση συναλλαγής. Πηγαίνετε το ποντίκι πάνω από αυτό το πεδίο για να δείτε τον αριθμό των επικυρώσεων</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="601"/>
         <source>Date and time that the transaction was received.</source>
-        <translation>Dato og tid for at transaktionen blev modtaget.</translation>
+        <translation>Ημερομηνία κι ώρα λήψης της συναλλαγής.</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="603"/>
         <source>Type of transaction.</source>
-        <translation>Type af transaktion.</translation>
+        <translation>Είδος συναλλαγής.</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="605"/>
         <source>Destination address of transaction.</source>
-        <translation>Destinationsadresse for transaktion.</translation>
+        <translation>Διεύθυνση αποστολής της συναλλαγής.</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="607"/>
         <source>Amount removed from or added to balance.</source>
-        <translation>Beløb fjernet eller tilføjet balance.</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionView</name>
-    <message>
-        <location filename="../transactionview.cpp" line="55"/>
-        <location filename="../transactionview.cpp" line="71"/>
-        <source>All</source>
-        <translation>Alle</translation>
-    </message>
-    <message>
-        <location filename="../transactionview.cpp" line="56"/>
-        <source>Today</source>
-        <translation>I dag</translation>
-    </message>
-    <message>
-        <location filename="../transactionview.cpp" line="57"/>
-        <source>This week</source>
-        <translation>Denne uge</translation>
-    </message>
-    <message>
-        <location filename="../transactionview.cpp" line="58"/>
-        <source>This month</source>
-        <translation>Denne måned</translation>
-    </message>
-    <message>
-        <location filename="../transactionview.cpp" line="59"/>
-        <source>Last month</source>
-        <translation>Sidste måned</translation>
-    </message>
-    <message>
-        <location filename="../transactionview.cpp" line="60"/>
-        <source>This year</source>
-        <translation>Dette år</translation>
-    </message>
-    <message>
-        <location filename="../transactionview.cpp" line="61"/>
-        <source>Range...</source>
-        <translation>Interval...</translation>
-    </message>
-    <message>
-        <location filename="../transactionview.cpp" line="72"/>
-        <source>Received with</source>
-        <translation>Modtaget med</translation>
-    </message>
-    <message>
-        <location filename="../transactionview.cpp" line="74"/>
-        <source>Sent to</source>
-        <translation>Sendt til</translation>
-    </message>
-    <message>
-        <location filename="../transactionview.cpp" line="76"/>
-        <source>To yourself</source>
-        <translation>Til dig selv</translation>
-    </message>
-    <message>
-        <location filename="../transactionview.cpp" line="77"/>
-        <source>Mined</source>
-        <translation>Minerede</translation>
-    </message>
-    <message>
-        <location filename="../transactionview.cpp" line="78"/>
-        <source>Other</source>
-        <translation>Andet</translation>
-    </message>
-    <message>
-        <location filename="../transactionview.cpp" line="85"/>
-        <source>Enter address or label to search</source>
-        <translation>Indtast adresse eller etiket for at søge</translation>
-    </message>
-    <message>
-        <location filename="../transactionview.cpp" line="92"/>
-        <source>Min amount</source>
-        <translation>Min. beløb</translation>
-    </message>
-    <message>
-        <location filename="../transactionview.cpp" line="126"/>
-        <source>Copy address</source>
-        <translation>Kopier adresse</translation>
-    </message>
-    <message>
-        <location filename="../transactionview.cpp" line="127"/>
-        <source>Copy label</source>
-        <translation>Kopier etiket</translation>
-    </message>
-    <message>
-        <location filename="../transactionview.cpp" line="128"/>
-        <source>Copy amount</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../transactionview.cpp" line="129"/>
-        <source>Edit label</source>
-        <translation>Rediger etiket</translation>
-    </message>
-    <message>
-        <location filename="../transactionview.cpp" line="130"/>
-        <source>Show transaction details</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../transactionview.cpp" line="270"/>
-        <source>Export Transaction Data</source>
-        <translation>Eksportér Transaktionsdata</translation>
-    </message>
-    <message>
-        <location filename="../transactionview.cpp" line="271"/>
-        <source>Comma separated file (*.csv)</source>
-        <translation>Kommasepareret fil (*.csv)</translation>
-    </message>
-    <message>
-        <location filename="../transactionview.cpp" line="279"/>
-        <source>Confirmed</source>
-        <translation>Bekræftet</translation>
-    </message>
-    <message>
-        <location filename="../transactionview.cpp" line="280"/>
-        <source>Date</source>
-        <translation>Dato</translation>
-    </message>
-    <message>
-        <location filename="../transactionview.cpp" line="281"/>
-        <source>Type</source>
-        <translation>Type</translation>
-    </message>
-    <message>
-        <location filename="../transactionview.cpp" line="282"/>
-        <source>Label</source>
-        <translation>Etiket</translation>
-    </message>
-    <message>
-        <location filename="../transactionview.cpp" line="283"/>
-        <source>Address</source>
-        <translation>Adresse</translation>
-    </message>
-    <message>
-        <location filename="../transactionview.cpp" line="284"/>
-        <source>Amount</source>
-        <translation>Beløb</translation>
-    </message>
-    <message>
-        <location filename="../transactionview.cpp" line="285"/>
-        <source>ID</source>
-        <translation>ID</translation>
-    </message>
-    <message>
-        <location filename="../transactionview.cpp" line="289"/>
-        <source>Error exporting</source>
-        <translation>Fejl under eksport</translation>
-    </message>
-    <message>
-        <location filename="../transactionview.cpp" line="289"/>
-        <source>Could not write to file %1.</source>
-        <translation>Kunne ikke skrive til filen %1.</translation>
-    </message>
-    <message>
-        <location filename="../transactionview.cpp" line="384"/>
-        <source>Range:</source>
-        <translation>Interval:</translation>
-    </message>
-    <message>
-        <location filename="../transactionview.cpp" line="392"/>
-        <source>to</source>
-        <translation>til</translation>
-    </message>
-</context>
-<context>
-    <name>VerifyMessageDialog</name>
-    <message>
-        <location filename="../forms/verifymessagedialog.ui" line="14"/>
-        <source>Verify Signed Message</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../forms/verifymessagedialog.ui" line="20"/>
-        <source>Enter the message and signature below (be careful to correctly copy newlines, spaces, tabs and other invisible characters) to obtain the Altcoin address used to sign the message.</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../forms/verifymessagedialog.ui" line="62"/>
-        <source>Verify a message and obtain the Altcoin address used to sign the message</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../forms/verifymessagedialog.ui" line="65"/>
-        <source>&amp;Verify Message</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../forms/verifymessagedialog.ui" line="79"/>
-        <source>Copy the currently selected address to the system clipboard</source>
-        <translation>Kopier den valgte adresse til systemets udklipsholder</translation>
-    </message>
-    <message>
-        <location filename="../forms/verifymessagedialog.ui" line="82"/>
-        <source>&amp;Copy Address</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../forms/verifymessagedialog.ui" line="93"/>
-        <source>Reset all verify message fields</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../forms/verifymessagedialog.ui" line="96"/>
-        <source>Clear &amp;All</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../verifymessagedialog.cpp" line="28"/>
-        <source>Enter Altcoin signature</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../verifymessagedialog.cpp" line="29"/>
-        <source>Click &quot;Verify Message&quot; to obtain address</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../verifymessagedialog.cpp" line="55"/>
-        <location filename="../verifymessagedialog.cpp" line="62"/>
-        <source>Invalid Signature</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../verifymessagedialog.cpp" line="55"/>
-        <source>The signature could not be decoded. Please check the signature and try again.</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../verifymessagedialog.cpp" line="62"/>
-        <source>The signature did not match the message digest. Please check the signature and try again.</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../verifymessagedialog.cpp" line="72"/>
-        <source>Address not found in address book.</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../verifymessagedialog.cpp" line="72"/>
-        <source>Address found in address book: %1</source>
-        <translation type="unfinished"/>
-    </message>
-</context>
-<context>
-    <name>WalletModel</name>
-    <message>
-        <location filename="../walletmodel.cpp" line="158"/>
-        <source>Sending...</source>
-        <translation>Sender...</translation>
-    </message>
-</context>
-<context>
-    <name>WindowOptionsPage</name>
-    <message>
-        <location filename="../optionsdialog.cpp" line="313"/>
-        <source>Window</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../optionsdialog.cpp" line="316"/>
-        <source>&amp;Minimize to the tray instead of the taskbar</source>
-        <translation>&amp;Minimer til systembakken i stedet for proceslinjen</translation>
-    </message>
-    <message>
-        <location filename="../optionsdialog.cpp" line="317"/>
-        <source>Show only a tray icon after minimizing the window</source>
-        <translation>Vis kun et systembakkeikon efter minimering af vinduet</translation>
-    </message>
-    <message>
-        <location filename="../optionsdialog.cpp" line="320"/>
-        <source>M&amp;inimize on close</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../optionsdialog.cpp" line="321"/>
-        <source>Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Quit in the menu.</source>
-        <translation>Minimer i stedet for at afslutte programmet når vinduet lukkes. Når denne indstilling er valgt vil programmet kun blive lukket når du har valgt Afslut i menuen.</translation>
-    </message>
-</context>
-<context>
-    <name>altcoin-core</name>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="43"/>
-        <source>Altcoin version</source>
-        <translation>Altcoinversion</translation>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="44"/>
-        <source>Usage:</source>
-        <translation>Anvendelse:</translation>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="45"/>
-        <source>Send command to -server or altcoind</source>
-        <translation>Send kommando til -server eller altcoind
-</translation>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="46"/>
-        <source>List commands</source>
-        <translation>Liste over kommandoer
-</translation>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="47"/>
-        <source>Get help for a command</source>
-        <translation>Få hjælp til en kommando
-</translation>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="49"/>
-        <source>Options:</source>
-        <translation>Indstillinger:
-</translation>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="50"/>
-        <source>Specify configuration file (default: altcoin.conf)</source>
-        <translation>Angiv konfigurationsfil (standard: altcoin.conf)
-</translation>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="51"/>
-        <source>Specify pid file (default: altcoind.pid)</source>
-        <translation>Angiv pid-fil (default: altcoind.pid)
-</translation>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="52"/>
-        <source>Generate coins</source>
-        <translation>Generér coins
-</translation>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="53"/>
-        <source>Don&apos;t generate coins</source>
-        <translation>Generér ikke coins
-</translation>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="54"/>
-        <source>Specify data directory</source>
-        <translation>Angiv databibliotek
-</translation>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="55"/>
-        <source>Set database cache size in megabytes (default: 25)</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="56"/>
-        <source>Set database disk log size in megabytes (default: 100)</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="57"/>
-        <source>Specify connection timeout (in milliseconds)</source>
-        <translation>Angiv tilslutningstimeout (i millisekunder)
-</translation>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="63"/>
-        <source>Listen for connections on &lt;port&gt; (default: 8333 or testnet: 18333)</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="64"/>
-        <source>Maintain at most &lt;n&gt; connections to peers (default: 125)</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="66"/>
-        <source>Connect only to the specified node</source>
-        <translation>Tilslut kun til den angivne node
-</translation>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="67"/>
-        <source>Connect to a node to retrieve peer addresses, and disconnect</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="68"/>
-        <source>Specify your own public address</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="69"/>
-        <source>Only connect to nodes in network &lt;net&gt; (IPv4 or IPv6)</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="70"/>
-        <source>Try to discover public IP address (default: 1)</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="73"/>
-        <source>Bind to given address. Use [host]:port notation for IPv6</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="75"/>
-        <source>Threshold for disconnecting misbehaving peers (default: 100)</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="76"/>
-        <source>Number of seconds to keep misbehaving peers from reconnecting (default: 86400)</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="79"/>
-        <source>Maximum per-connection receive buffer, &lt;n&gt;*1000 bytes (default: 10000)</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="80"/>
-        <source>Maximum per-connection send buffer, &lt;n&gt;*1000 bytes (default: 10000)</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="83"/>
-        <source>Detach block and address databases. Increases shutdown time (default: 0)</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="86"/>
-        <source>Accept command line and JSON-RPC commands</source>
-        <translation>Accepter kommandolinje- og JSON-RPC-kommandoer
-</translation>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="87"/>
-        <source>Run in the background as a daemon and accept commands</source>
-        <translation>Kør i baggrunden som en service, og acceptér kommandoer
-</translation>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="88"/>
-        <source>Use the test network</source>
-        <translation>Brug test-netværket
-</translation>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="89"/>
-        <source>Output extra debugging information</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="90"/>
-        <source>Prepend debug output with timestamp</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="91"/>
-        <source>Send trace/debug info to console instead of debug.log file</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="92"/>
-        <source>Send trace/debug info to debugger</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="93"/>
-        <source>Username for JSON-RPC connections</source>
-        <translation>Brugernavn til JSON-RPC-forbindelser
-</translation>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="94"/>
-        <source>Password for JSON-RPC connections</source>
-        <translation>Password til JSON-RPC-forbindelser
-</translation>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="95"/>
-        <source>Listen for JSON-RPC connections on &lt;port&gt; (default: 8332)</source>
-        <translation>Lyt til JSON-RPC-forbindelser på &lt;port&gt; (standard: 8332)
-</translation>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="96"/>
-        <source>Allow JSON-RPC connections from specified IP address</source>
-        <translation>Tillad JSON-RPC-forbindelser fra bestemt IP-adresse
-</translation>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="97"/>
-        <source>Send commands to node running on &lt;ip&gt; (default: 127.0.0.1)</source>
-        <translation>Send kommandoer til node, der kører på &lt;ip&gt; (standard: 127.0.0.1)
-</translation>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="98"/>
-        <source>Execute command when the best block changes (%s in cmd is replaced by block hash)</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="101"/>
-        <source>Upgrade wallet to latest format</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="102"/>
-        <source>Set key pool size to &lt;n&gt; (default: 100)</source>
-        <translation>Sæt nøglepoolstørrelse til &lt;n&gt; (standard: 100)
-</translation>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="103"/>
-        <source>Rescan the block chain for missing wallet transactions</source>
-        <translation>Gennemsøg blokkæden for manglende tegnebogstransaktioner
-</translation>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="104"/>
-        <source>How many blocks to check at startup (default: 2500, 0 = all)</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="105"/>
-        <source>How thorough the block verification is (0-6, default: 1)</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="106"/>
-        <source>Imports blocks from external blk000?.dat file</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="108"/>
-        <source>
-SSL options: (see the Altcoin Wiki for SSL setup instructions)</source>
-        <translation>
-SSL-indstillinger: (se Altcoin Wiki for SSL opsætningsinstruktioner)</translation>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="111"/>
-        <source>Use OpenSSL (https) for JSON-RPC connections</source>
-        <translation>Brug OpenSSL (https) for JSON-RPC-forbindelser
-</translation>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="112"/>
-        <source>Server certificate file (default: server.cert)</source>
-        <translation>Servercertifikat-fil (standard: server.cert)
-</translation>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="113"/>
-        <source>Server private key (default: server.pem)</source>
-        <translation>Server private nøgle (standard: server.pem)
-</translation>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="114"/>
-        <source>Acceptable ciphers (default: TLSv1+HIGH:!SSLv2:!aNULL:!eNULL:!AH:!3DES:@STRENGTH)</source>
-        <translation>Acceptabele ciphers (standard: TLSv1+HIGH:!SSLv2:!aNULL:!eNULL:!AH:!3DES:@STRENGTH)
-</translation>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="145"/>
-        <source>Warning: Disk space is low</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="107"/>
-        <source>This help message</source>
-        <translation>Denne hjælpebesked
-</translation>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="121"/>
-        <source>Cannot obtain a lock on data directory %s.  Altcoin is probably already running.</source>
-        <translation>Kan låse data-biblioteket %s.  Altcoin kører sikkert allerede.</translation>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="48"/>
-        <source>Altcoin</source>
-        <translation>Altcoin</translation>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="30"/>
-        <source>Unable to bind to %s on this computer (bind returned error %d, %s)</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="58"/>
-        <source>Connect through socks proxy</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="59"/>
-        <source>Select the version of socks proxy to use (4 or 5, 5 is default)</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="60"/>
-        <source>Do not use proxy for connections to network &lt;net&gt; (IPv4 or IPv6)</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="61"/>
-        <source>Allow DNS lookups for -addnode, -seednode and -connect</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="62"/>
-        <source>Pass DNS requests to (SOCKS5) proxy</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="142"/>
-        <source>Loading addresses...</source>
-        <translation>Indlæser adresser...</translation>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="132"/>
-        <source>Error loading blkindex.dat</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="134"/>
-        <source>Error loading wallet.dat: Wallet corrupted</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="135"/>
-        <source>Error loading wallet.dat: Wallet requires newer version of Altcoin</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="136"/>
-        <source>Wallet needed to be rewritten: restart Altcoin to complete</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="137"/>
-        <source>Error loading wallet.dat</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="124"/>
-        <source>Invalid -proxy address: &apos;%s&apos;</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="125"/>
-        <source>Unknown network specified in -noproxy: &apos;%s&apos;</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="127"/>
-        <source>Unknown network specified in -onlynet: &apos;%s&apos;</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="126"/>
-        <source>Unknown -socks proxy version requested: %i</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="128"/>
-        <source>Cannot resolve -bind address: &apos;%s&apos;</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="129"/>
-        <source>Not listening on any port</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="130"/>
-        <source>Cannot resolve -externalip address: &apos;%s&apos;</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="117"/>
-        <source>Invalid amount for -paytxfee=&lt;amount&gt;: &apos;%s&apos;</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="143"/>
-        <source>Error: could not start node</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="31"/>
-        <source>Error: Wallet locked, unable to create transaction  </source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="32"/>
-        <source>Error: This transaction requires a transaction fee of at least %s because of its amount, complexity, or use of recently received funds  </source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="35"/>
-        <source>Error: Transaction creation failed  </source>
-        <translation>Fejl: Oprettelse af transaktionen mislykkedes  </translation>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="36"/>
-        <source>Sending...</source>
-        <translation>Sender...</translation>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="37"/>
-        <source>Error: The transaction was rejected.  This might happen if some of the coins in your wallet were already spent, such as if you used a copy of wallet.dat and coins were spent in the copy but not marked as spent here.</source>
-        <translation>Fejl: Transaktionen blev afvist. Dette kan ske hvis nogle af dine coins i din tegnebog allerede var brugt, som hvis du brugte en kopi af wallet.dat og dine coins er blevet brugt i kopien, men ikke er markeret som brugt her.</translation>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="41"/>
-        <source>Invalid amount</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="42"/>
-        <source>Insufficient funds</source>
-        <translation>Du har ikke penge nok</translation>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="131"/>
-        <source>Loading block index...</source>
-        <translation>Indlæser blok-indeks...</translation>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="65"/>
-        <source>Add a node to connect to and attempt to keep the connection open</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="28"/>
-        <source>Unable to bind to %s on this computer. Altcoin is probably already running.</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="71"/>
-        <source>Find peers using internet relay chat (default: 0)</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="72"/>
-        <source>Accept connections from outside (default: 1)</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="74"/>
-        <source>Find peers using DNS lookup (default: 1)</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="81"/>
-        <source>Use Universal Plug and Play to map the listening port (default: 1)</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="82"/>
-        <source>Use Universal Plug and Play to map the listening port (default: 0)</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="85"/>
-        <source>Fee per KB to add to transactions you send</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="118"/>
-        <source>Warning: -paytxfee is set very high. This is the transaction fee you will pay if you send a transaction.</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="133"/>
-        <source>Loading wallet...</source>
-        <translation>Indlæser tegnebog...</translation>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="138"/>
-        <source>Cannot downgrade wallet</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="139"/>
-        <source>Cannot initialize keypool</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="140"/>
-        <source>Cannot write default address</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="141"/>
-        <source>Rescanning...</source>
-        <translation>Genindlæser...</translation>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="144"/>
-        <source>Done loading</source>
-        <translation>Indlæsning gennemført</translation>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="8"/>
-        <source>To use the %s option</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="9"/>
-        <source>%s, you must set a rpcpassword in the configuration file:
- %s
-It is recommended you use the following random password:
-rpcuser=altcoinrpc
-rpcpassword=%s
-(you do not need to remember this password)
-If the file does not exist, create it with owner-readable-only file permissions.
-</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="18"/>
-        <source>Error</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="19"/>
-        <source>An error occured while setting up the RPC port %i for listening: %s</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="20"/>
-        <source>You must set rpcpassword=&lt;password&gt; in the configuration file:
-%s
-If the file does not exist, create it with owner-readable-only file permissions.</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../altcoinstrings.cpp" line="25"/>
-        <source>Warning: Please check that your computer&apos;s date and time are correct.  If your clock is wrong Altcoin will not work properly.</source>
-        <translation>Advarsel: Undersøg venligst at din computers dato og klokkeslet er korrekt indstillet.   Hvis der er fejl i disse vil Altcoin ikke fungere korrekt.</translation>
-    </message>
-</context>
-</TS>
