@@ -99,4 +99,135 @@ Este producto include software desarrollado por el proyecto OpenSSL para ser usa
     </message>
     <message>
         <location filename="../addressbookpage.cpp" line="65"/>
-        
+        <source>&amp;Edit</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../addressbookpage.cpp" line="292"/>
+        <source>Export Address Book Data</source>
+        <translation>Exporta datos de la guia de direcciones</translation>
+    </message>
+    <message>
+        <location filename="../addressbookpage.cpp" line="293"/>
+        <source>Comma separated file (*.csv)</source>
+        <translation>Archivos separados por coma (*.csv)</translation>
+    </message>
+    <message>
+        <location filename="../addressbookpage.cpp" line="306"/>
+        <source>Error exporting</source>
+        <translation>Exportar errores</translation>
+    </message>
+    <message>
+        <location filename="../addressbookpage.cpp" line="306"/>
+        <source>Could not write to file %1.</source>
+        <translation>No se pudo escribir al archivo %1.</translation>
+    </message>
+</context>
+<context>
+    <name>AddressTableModel</name>
+    <message>
+        <location filename="../addresstablemodel.cpp" line="142"/>
+        <source>Label</source>
+        <translation>Etiqueta</translation>
+    </message>
+    <message>
+        <location filename="../addresstablemodel.cpp" line="142"/>
+        <source>Address</source>
+        <translation>Dirección</translation>
+    </message>
+    <message>
+        <location filename="../addresstablemodel.cpp" line="178"/>
+        <source>(no label)</source>
+        <translation>(sin etiqueta)</translation>
+    </message>
+</context>
+<context>
+    <name>AskPassphraseDialog</name>
+    <message>
+        <location filename="../forms/askpassphrasedialog.ui" line="26"/>
+        <source>Passphrase Dialog</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/askpassphrasedialog.ui" line="47"/>
+        <source>Enter passphrase</source>
+        <translation>Introduce contraseña actual      </translation>
+    </message>
+    <message>
+        <location filename="../forms/askpassphrasedialog.ui" line="61"/>
+        <source>New passphrase</source>
+        <translation>Nueva contraseña</translation>
+    </message>
+    <message>
+        <location filename="../forms/askpassphrasedialog.ui" line="75"/>
+        <source>Repeat new passphrase</source>
+        <translation>Repite nueva contraseña:</translation>
+    </message>
+    <message>
+        <location filename="../askpassphrasedialog.cpp" line="33"/>
+        <source>Enter the new passphrase to the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;10 or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
+        <translation>Introduce la nueva contraseña para la billetera.&lt;br/&gt;Por favor utiliza un contraseña &lt;b&gt;de 10 o mas caracteres aleatorios&lt;/b&gt;, u &lt;b&gt;ocho o mas palabras&lt;/b&gt;.</translation>
+    </message>
+    <message>
+        <location filename="../askpassphrasedialog.cpp" line="34"/>
+        <source>Encrypt wallet</source>
+        <translation>Codificar billetera</translation>
+    </message>
+    <message>
+        <location filename="../askpassphrasedialog.cpp" line="37"/>
+        <source>This operation needs your wallet passphrase to unlock the wallet.</source>
+        <translation>Esta operación necesita la contraseña para desbloquear la billetera.</translation>
+    </message>
+    <message>
+        <location filename="../askpassphrasedialog.cpp" line="42"/>
+        <source>Unlock wallet</source>
+        <translation>Desbloquea billetera</translation>
+    </message>
+    <message>
+        <location filename="../askpassphrasedialog.cpp" line="45"/>
+        <source>This operation needs your wallet passphrase to decrypt the wallet.</source>
+        <translation>Esta operación necesita la contraseña para decodificar la billetara.</translation>
+    </message>
+    <message>
+        <location filename="../askpassphrasedialog.cpp" line="50"/>
+        <source>Decrypt wallet</source>
+        <translation>Decodificar cartera</translation>
+    </message>
+    <message>
+        <location filename="../askpassphrasedialog.cpp" line="53"/>
+        <source>Change passphrase</source>
+        <translation>Cambia contraseña</translation>
+    </message>
+    <message>
+        <location filename="../askpassphrasedialog.cpp" line="54"/>
+        <source>Enter the old and new passphrase to the wallet.</source>
+        <translation>Introduce la contraseña anterior y la nueva de cartera</translation>
+    </message>
+    <message>
+        <location filename="../askpassphrasedialog.cpp" line="100"/>
+        <source>Confirm wallet encryption</source>
+        <translation>Confirma la codificación de cartera</translation>
+    </message>
+    <message>
+        <location filename="../askpassphrasedialog.cpp" line="101"/>
+        <source>WARNING: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR ALTCOINS&lt;/b&gt;!
+Are you sure you wish to encrypt your wallet?</source>
+        <translation>ATENCIÓN: ¡Si codificas tu billetera y pierdes la contraseña perderás &lt;b&gt;TODOS TUS ALTCOINS&lt;/b&gt;!&quot;
+¿Seguro que quieres seguir codificando la billetera?</translation>
+    </message>
+    <message>
+        <location filename="../askpassphrasedialog.cpp" line="110"/>
+        <location filename="../askpassphrasedialog.cpp" line="159"/>
+        <source>Wallet encrypted</source>
+        <translation>Billetera codificada</translation>
+    </message>
+    <message>
+        <location filename="../askpassphrasedialog.cpp" line="111"/>
+        <source>Altcoin will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your altcoins from being stolen by malware infecting your computer.</source>
+        <translation>Altcoin se cerrará para finalizar el proceso de encriptación. Recuerde que encriptar su billetera no protegera completatamente sus altcoins de ser robados por malware que infecte su computador</translation>
+    </message>
+    <message>
+        <location filename="../askpassphrasedialog.cpp" line="207"/>
+        <location filename="../askpassphrasedialog.cpp" line="231"/>
+        <source>Warning: The Caps Lock key is on.</source>
+ 
