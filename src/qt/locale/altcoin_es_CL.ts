@@ -1448,4 +1448,147 @@ Dirección: %4</translation>
     <message>
         <location filename="../transactiondesc.cpp" line="51"/>
         <source>&lt;b&gt;Status:&lt;/b&gt; </source>
-        <translation>&lt;b&gt;Estado:&lt;/b&gt; </tra
+        <translation>&lt;b&gt;Estado:&lt;/b&gt; </translation>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="56"/>
+        <source>, has not been successfully broadcast yet</source>
+        <translation>, no ha sido emitido satisfactoriamente todavía</translation>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="58"/>
+        <source>, broadcast through %1 node</source>
+        <translation>, emitido mediante %1 nodo</translation>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="60"/>
+        <source>, broadcast through %1 nodes</source>
+        <translation>, emitido mediante %1 nodos</translation>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="64"/>
+        <source>&lt;b&gt;Date:&lt;/b&gt; </source>
+        <translation>&lt;b&gt;Fecha:&lt;/b&gt; </translation>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="71"/>
+        <source>&lt;b&gt;Source:&lt;/b&gt; Generated&lt;br&gt;</source>
+        <translation>&lt;b&gt;Fuente:&lt;/b&gt; Generado&lt;br&gt;</translation>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="77"/>
+        <location filename="../transactiondesc.cpp" line="94"/>
+        <source>&lt;b&gt;From:&lt;/b&gt; </source>
+        <translation>&lt;b&gt;De:&lt;/b&gt; </translation>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="94"/>
+        <source>unknown</source>
+        <translation>desconocido</translation>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="95"/>
+        <location filename="../transactiondesc.cpp" line="118"/>
+        <location filename="../transactiondesc.cpp" line="178"/>
+        <source>&lt;b&gt;To:&lt;/b&gt; </source>
+        <translation>&lt;b&gt;Para:&lt;/b&gt; </translation>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="98"/>
+        <source> (yours, label: </source>
+        <translation>(tuya, etiqueta: </translation>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="100"/>
+        <source> (yours)</source>
+        <translation> (tuya)</translation>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="136"/>
+        <location filename="../transactiondesc.cpp" line="150"/>
+        <location filename="../transactiondesc.cpp" line="195"/>
+        <location filename="../transactiondesc.cpp" line="212"/>
+        <source>&lt;b&gt;Credit:&lt;/b&gt; </source>
+        <translation>&lt;b&gt;Crédito:&lt;/b&gt; </translation>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="138"/>
+        <source>(%1 matures in %2 more blocks)</source>
+        <translation>(%1 madura en %2 bloques mas)</translation>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="142"/>
+        <source>(not accepted)</source>
+        <translation>(no aceptada)</translation>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="186"/>
+        <location filename="../transactiondesc.cpp" line="194"/>
+        <location filename="../transactiondesc.cpp" line="209"/>
+        <source>&lt;b&gt;Debit:&lt;/b&gt; </source>
+        <translation>&lt;b&gt;Débito:&lt;/b&gt; </translation>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="200"/>
+        <source>&lt;b&gt;Transaction fee:&lt;/b&gt; </source>
+        <translation>&lt;b&gt;Comisión transacción:&lt;/b&gt; </translation>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="216"/>
+        <source>&lt;b&gt;Net amount:&lt;/b&gt; </source>
+        <translation>&lt;b&gt;Cantidad total:&lt;/b&gt; </translation>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="222"/>
+        <source>Message:</source>
+        <translation>Mensaje:</translation>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="224"/>
+        <source>Comment:</source>
+        <translation>Comentario:</translation>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="226"/>
+        <source>Transaction ID:</source>
+        <translation>ID de Transacción:</translation>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="229"/>
+        <source>Generated coins must wait 120 blocks before they can be spent.  When you generated this block, it was broadcast to the network to be added to the block chain.  If it fails to get into the chain, it will change to &quot;not accepted&quot; and not be spendable.  This may occasionally happen if another node generates a block within a few seconds of yours.</source>
+        <translation>Las monedas generadas deben esperar 120 bloques antes de ser gastadas. Cuando has generado este bloque se emitió a la red para ser agregado en la cadena de bloques. Si falla al incluirse en la cadena, cambiará a &quot;no aceptado&quot; y las monedas no se podrán gastar. Esto puede ocurrir ocasionalmente si otro nodo genera un bloque casi al mismo tiempo que el tuyo.</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDescDialog</name>
+    <message>
+        <location filename="../forms/transactiondescdialog.ui" line="14"/>
+        <source>Transaction details</source>
+        <translation>Detalles de transacción</translation>
+    </message>
+    <message>
+        <location filename="../forms/transactiondescdialog.ui" line="20"/>
+        <source>This pane shows a detailed description of the transaction</source>
+        <translation>Esta ventana muestra información detallada sobre la transacción</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionTableModel</name>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="226"/>
+        <source>Date</source>
+        <translation>Fecha</translation>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="226"/>
+        <source>Type</source>
+        <translation>Tipo</translation>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="226"/>
+        <source>Address</source>
+        <translation>Dirección</translation>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="226"/>
+   
