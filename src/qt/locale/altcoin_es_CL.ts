@@ -1740,4 +1740,173 @@ Dirección: %4</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="76"/>
-        <source>To yourself<
+        <source>To yourself</source>
+        <translation>A ti mismo</translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="77"/>
+        <source>Mined</source>
+        <translation>Minado</translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="78"/>
+        <source>Other</source>
+        <translation>Otra</translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="85"/>
+        <source>Enter address or label to search</source>
+        <translation>Introduce una dirección o etiqueta para  buscar</translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="92"/>
+        <source>Min amount</source>
+        <translation>Cantidad minima</translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="126"/>
+        <source>Copy address</source>
+        <translation>Copia dirección</translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="127"/>
+        <source>Copy label</source>
+        <translation>Copia etiqueta</translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="128"/>
+        <source>Copy amount</source>
+        <translation>Copiar Cantidad</translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="129"/>
+        <source>Edit label</source>
+        <translation>Edita etiqueta</translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="130"/>
+        <source>Show transaction details</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="270"/>
+        <source>Export Transaction Data</source>
+        <translation>Exportar datos de transacción</translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="271"/>
+        <source>Comma separated file (*.csv)</source>
+        <translation>Archivos separados por coma (*.csv)</translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="279"/>
+        <source>Confirmed</source>
+        <translation>Confirmado</translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="280"/>
+        <source>Date</source>
+        <translation>Fecha</translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="281"/>
+        <source>Type</source>
+        <translation>Tipo</translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="282"/>
+        <source>Label</source>
+        <translation>Etiqueta</translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="283"/>
+        <source>Address</source>
+        <translation>Dirección</translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="284"/>
+        <source>Amount</source>
+        <translation>Cantidad</translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="285"/>
+        <source>ID</source>
+        <translation>ID</translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="289"/>
+        <source>Error exporting</source>
+        <translation>Error exportando</translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="289"/>
+        <source>Could not write to file %1.</source>
+        <translation>No se pudo escribir en el archivo %1.</translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="384"/>
+        <source>Range:</source>
+        <translation>Rango:</translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="392"/>
+        <source>to</source>
+        <translation>para</translation>
+    </message>
+</context>
+<context>
+    <name>VerifyMessageDialog</name>
+    <message>
+        <location filename="../forms/verifymessagedialog.ui" line="14"/>
+        <source>Verify Signed Message</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/verifymessagedialog.ui" line="20"/>
+        <source>Enter the message and signature below (be careful to correctly copy newlines, spaces, tabs and other invisible characters) to obtain the Altcoin address used to sign the message.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/verifymessagedialog.ui" line="62"/>
+        <source>Verify a message and obtain the Altcoin address used to sign the message</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/verifymessagedialog.ui" line="65"/>
+        <source>&amp;Verify Message</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/verifymessagedialog.ui" line="79"/>
+        <source>Copy the currently selected address to the system clipboard</source>
+        <translation>Copiar la dirección seleccionada al portapapeles</translation>
+    </message>
+    <message>
+        <location filename="../forms/verifymessagedialog.ui" line="82"/>
+        <source>&amp;Copy Address</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/verifymessagedialog.ui" line="93"/>
+        <source>Reset all verify message fields</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/verifymessagedialog.ui" line="96"/>
+        <source>Clear &amp;All</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../verifymessagedialog.cpp" line="28"/>
+        <source>Enter Altcoin signature</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../verifymessagedialog.cpp" line="29"/>
+        <source>Click &quot;Verify Message&quot; to obtain address</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../verifymessagedialog.cpp" line="55"/>
+        <location filename="../verifymessagedialog.cpp" line="62"/>
+        <source>Invalid Signatu
