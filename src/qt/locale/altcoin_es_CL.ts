@@ -1909,4 +1909,163 @@ Dirección: %4</translation>
     <message>
         <location filename="../verifymessagedialog.cpp" line="55"/>
         <location filename="../verifymessagedialog.cpp" line="62"/>
-        <source>Invalid Signatu
+        <source>Invalid Signature</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../verifymessagedialog.cpp" line="55"/>
+        <source>The signature could not be decoded. Please check the signature and try again.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../verifymessagedialog.cpp" line="62"/>
+        <source>The signature did not match the message digest. Please check the signature and try again.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../verifymessagedialog.cpp" line="72"/>
+        <source>Address not found in address book.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../verifymessagedialog.cpp" line="72"/>
+        <source>Address found in address book: %1</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>WalletModel</name>
+    <message>
+        <location filename="../walletmodel.cpp" line="158"/>
+        <source>Sending...</source>
+        <translation>Enviando...</translation>
+    </message>
+</context>
+<context>
+    <name>WindowOptionsPage</name>
+    <message>
+        <location filename="../optionsdialog.cpp" line="313"/>
+        <source>Window</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="316"/>
+        <source>&amp;Minimize to the tray instead of the taskbar</source>
+        <translation>&amp;Minimiza a la bandeja en vez de la barra de tareas</translation>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="317"/>
+        <source>Show only a tray icon after minimizing the window</source>
+        <translation>Muestra solo un ícono en la bandeja después de minimizar la ventana</translation>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="320"/>
+        <source>M&amp;inimize on close</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="321"/>
+        <source>Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Quit in the menu.</source>
+        <translation>Minimiza la ventana en lugar de salir del programa cuando la ventana se cierra. Cuando esta opción esta activa el programa solo se puede cerrar seleccionando Salir desde el menu.</translation>
+    </message>
+</context>
+<context>
+    <name>altcoin-core</name>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="43"/>
+        <source>Altcoin version</source>
+        <translation>Versión Altcoin</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="44"/>
+        <source>Usage:</source>
+        <translation>Uso:</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="45"/>
+        <source>Send command to -server or altcoind</source>
+        <translation>Envia comando a altcoin lanzado con -server u altcoind
+</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="46"/>
+        <source>List commands</source>
+        <translation>Muestra comandos
+</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="47"/>
+        <source>Get help for a command</source>
+        <translation>Recibir ayuda para un comando
+</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="49"/>
+        <source>Options:</source>
+        <translation>Opciones:
+</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="50"/>
+        <source>Specify configuration file (default: altcoin.conf)</source>
+        <translation>Especifica archivo de configuración (predeterminado: altcoin.conf)
+</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="51"/>
+        <source>Specify pid file (default: altcoind.pid)</source>
+        <translation>Especifica archivo pid (predeterminado: altcoin.pid)
+</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="52"/>
+        <source>Generate coins</source>
+        <translation>Genera monedas
+</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="53"/>
+        <source>Don&apos;t generate coins</source>
+        <translation>No generar monedas
+</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="54"/>
+        <source>Specify data directory</source>
+        <translation>Especifica directorio para los datos
+</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="55"/>
+        <source>Set database cache size in megabytes (default: 25)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="56"/>
+        <source>Set database disk log size in megabytes (default: 100)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="57"/>
+        <source>Specify connection timeout (in milliseconds)</source>
+        <translation>Especifica tiempo de espera para conexion (en milisegundos)
+</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="63"/>
+        <source>Listen for connections on &lt;port&gt; (default: 8333 or testnet: 18333)</source>
+        <translation>Escuchar por conecciones en &lt;puerto&gt; (Por defecto: 8333 o red de prueba: 18333)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="64"/>
+        <source>Maintain at most &lt;n&gt; connections to peers (default: 125)</source>
+        <translation>Mantener al menos &lt;n&gt; conecciones por cliente (por defecto: 125) </translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="66"/>
+        <source>Connect only to the specified node</source>
+        <translation>Conecta solo al nodo especificado
+</translation>
+    </message>
+    <message>
+        <location filename="../altcoinst
