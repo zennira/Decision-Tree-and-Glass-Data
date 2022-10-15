@@ -2210,4 +2210,152 @@ Dirección: %4</translation>
     <message>
         <location filename="../altcoinstrings.cpp" line="104"/>
         <source>How many blocks to check at startup (default: 2500, 0 = all)</source>
-        <translation type="unfinish
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="105"/>
+        <source>How thorough the block verification is (0-6, default: 1)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="106"/>
+        <source>Imports blocks from external blk000?.dat file</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="108"/>
+        <source>
+SSL options: (see the Altcoin Wiki for SSL setup instructions)</source>
+        <translation>Opciones SSL: (ver la Altcoin Wiki para instrucciones de configuración SSL)
+</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="111"/>
+        <source>Use OpenSSL (https) for JSON-RPC connections</source>
+        <translation>Usa OpenSSL (https) para las conexiones JSON-RPC
+</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="112"/>
+        <source>Server certificate file (default: server.cert)</source>
+        <translation>Certificado del servidor (Predeterminado: server.cert)
+</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="113"/>
+        <source>Server private key (default: server.pem)</source>
+        <translation>Clave privada del servidor (Predeterminado: server.pem)
+</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="114"/>
+        <source>Acceptable ciphers (default: TLSv1+HIGH:!SSLv2:!aNULL:!eNULL:!AH:!3DES:@STRENGTH)</source>
+        <translation>Cifrados aceptados (Predeterminado: TLSv1+HIGH:!SSLv2:!aNULL:!eNULL:!AH:!3DES:@STRENGTH)
+</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="145"/>
+        <source>Warning: Disk space is low</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="107"/>
+        <source>This help message</source>
+        <translation>Este mensaje de ayuda
+</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="121"/>
+        <source>Cannot obtain a lock on data directory %s.  Altcoin is probably already running.</source>
+        <translation>No se puede obtener permiso de trabajo en la carpeta de datos %s. Probablemente Altcoin ya se está ejecutando.
+</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="48"/>
+        <source>Altcoin</source>
+        <translation>Altcoin</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="30"/>
+        <source>Unable to bind to %s on this computer (bind returned error %d, %s)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="58"/>
+        <source>Connect through socks proxy</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="59"/>
+        <source>Select the version of socks proxy to use (4 or 5, 5 is default)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="60"/>
+        <source>Do not use proxy for connections to network &lt;net&gt; (IPv4 or IPv6)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="61"/>
+        <source>Allow DNS lookups for -addnode, -seednode and -connect</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="62"/>
+        <source>Pass DNS requests to (SOCKS5) proxy</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="142"/>
+        <source>Loading addresses...</source>
+        <translation>Cargando direcciónes...</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="132"/>
+        <source>Error loading blkindex.dat</source>
+        <translation>Error cargando blkindex.dat</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="134"/>
+        <source>Error loading wallet.dat: Wallet corrupted</source>
+        <translation>Error cargando wallet.dat: Billetera corrupta</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="135"/>
+        <source>Error loading wallet.dat: Wallet requires newer version of Altcoin</source>
+        <translation>Error cargando wallet.dat: Billetera necesita una vercion reciente de Altcoin</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="136"/>
+        <source>Wallet needed to be rewritten: restart Altcoin to complete</source>
+        <translation>La billetera necesita ser reescrita: reinicie Altcoin para completar</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="137"/>
+        <source>Error loading wallet.dat</source>
+        <translation>Error cargando wallet.dat</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="124"/>
+        <source>Invalid -proxy address: &apos;%s&apos;</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="125"/>
+        <source>Unknown network specified in -noproxy: &apos;%s&apos;</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="127"/>
+        <source>Unknown network specified in -onlynet: &apos;%s&apos;</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="126"/>
+        <source>Unknown -socks proxy version requested: %i</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="128"/>
+        <source>Cannot resolve -bind address: &apos;%s&apos;</source>
+        <translation type="unfinished"/>
