@@ -47,4 +47,167 @@ This product includes software developed by the OpenSSL Project for use in the O
         <translation>Sortu helbide berria</translation>
     </message>
     <message>
-        <locati
+        <location filename="../forms/addressbookpage.ui" line="77"/>
+        <source>Copy the currently selected address to the system clipboard</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/addressbookpage.ui" line="66"/>
+        <source>&amp;New Address</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/addressbookpage.ui" line="80"/>
+        <source>&amp;Copy Address</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/addressbookpage.ui" line="91"/>
+        <source>Show &amp;QR Code</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/addressbookpage.ui" line="102"/>
+        <source>Sign a message to prove you own this address</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/addressbookpage.ui" line="105"/>
+        <source>&amp;Sign Message</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/addressbookpage.ui" line="116"/>
+        <source>Delete the currently selected address from the list. Only sending addresses can be deleted.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/addressbookpage.ui" line="119"/>
+        <source>&amp;Delete</source>
+        <translation>&amp;Ezabatu</translation>
+    </message>
+    <message>
+        <location filename="../addressbookpage.cpp" line="63"/>
+        <source>Copy &amp;Label</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../addressbookpage.cpp" line="65"/>
+        <source>&amp;Edit</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../addressbookpage.cpp" line="292"/>
+        <source>Export Address Book Data</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../addressbookpage.cpp" line="293"/>
+        <source>Comma separated file (*.csv)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../addressbookpage.cpp" line="306"/>
+        <source>Error exporting</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../addressbookpage.cpp" line="306"/>
+        <source>Could not write to file %1.</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>AddressTableModel</name>
+    <message>
+        <location filename="../addresstablemodel.cpp" line="142"/>
+        <source>Label</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../addresstablemodel.cpp" line="142"/>
+        <source>Address</source>
+        <translation>Helbidea</translation>
+    </message>
+    <message>
+        <location filename="../addresstablemodel.cpp" line="178"/>
+        <source>(no label)</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>AskPassphraseDialog</name>
+    <message>
+        <location filename="../forms/askpassphrasedialog.ui" line="26"/>
+        <source>Passphrase Dialog</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/askpassphrasedialog.ui" line="47"/>
+        <source>Enter passphrase</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/askpassphrasedialog.ui" line="61"/>
+        <source>New passphrase</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/askpassphrasedialog.ui" line="75"/>
+        <source>Repeat new passphrase</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../askpassphrasedialog.cpp" line="33"/>
+        <source>Enter the new passphrase to the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;10 or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../askpassphrasedialog.cpp" line="34"/>
+        <source>Encrypt wallet</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../askpassphrasedialog.cpp" line="37"/>
+        <source>This operation needs your wallet passphrase to unlock the wallet.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../askpassphrasedialog.cpp" line="42"/>
+        <source>Unlock wallet</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../askpassphrasedialog.cpp" line="45"/>
+        <source>This operation needs your wallet passphrase to decrypt the wallet.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../askpassphrasedialog.cpp" line="50"/>
+        <source>Decrypt wallet</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../askpassphrasedialog.cpp" line="53"/>
+        <source>Change passphrase</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../askpassphrasedialog.cpp" line="54"/>
+        <source>Enter the old and new passphrase to the wallet.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../askpassphrasedialog.cpp" line="100"/>
+        <source>Confirm wallet encryption</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../askpassphrasedialog.cpp" line="101"/>
+        <source>WARNING: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR ALTCOINS&lt;/b&gt;!
+Are you sure you wish to encrypt your wallet?</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../askpassphrasedialog.cpp" line="110"/>
+        <location filename="../askpassphrasedialog.cpp"
