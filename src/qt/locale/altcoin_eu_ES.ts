@@ -1356,4 +1356,169 @@ Address: %4
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../forms/sendcoinsentry.ui" line="42
+        <location filename="../forms/sendcoinsentry.ui" line="42"/>
+        <source>Pay &amp;To:</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/sendcoinsentry.ui" line="66"/>
+        <location filename="../sendcoinsentry.cpp" line="25"/>
+        <source>Enter a label for this address to add it to your address book</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/sendcoinsentry.ui" line="75"/>
+        <source>&amp;Label:</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/sendcoinsentry.ui" line="93"/>
+        <source>The address to send the payment to  (e.g. 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/sendcoinsentry.ui" line="103"/>
+        <source>Choose address from address book</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/sendcoinsentry.ui" line="113"/>
+        <source>Alt+A</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/sendcoinsentry.ui" line="120"/>
+        <source>Paste address from clipboard</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/sendcoinsentry.ui" line="130"/>
+        <source>Alt+P</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/sendcoinsentry.ui" line="137"/>
+        <source>Remove this recipient</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../sendcoinsentry.cpp" line="26"/>
+        <source>Enter a Altcoin address (e.g. 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L)</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <location filename="../transactiondesc.cpp" line="21"/>
+        <source>Open for %1 blocks</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="23"/>
+        <source>Open until %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="29"/>
+        <source>%1/offline?</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="31"/>
+        <source>%1/unconfirmed</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="33"/>
+        <source>%1 confirmations</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="51"/>
+        <source>&lt;b&gt;Status:&lt;/b&gt; </source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="56"/>
+        <source>, has not been successfully broadcast yet</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="58"/>
+        <source>, broadcast through %1 node</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="60"/>
+        <source>, broadcast through %1 nodes</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="64"/>
+        <source>&lt;b&gt;Date:&lt;/b&gt; </source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="71"/>
+        <source>&lt;b&gt;Source:&lt;/b&gt; Generated&lt;br&gt;</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="77"/>
+        <location filename="../transactiondesc.cpp" line="94"/>
+        <source>&lt;b&gt;From:&lt;/b&gt; </source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="94"/>
+        <source>unknown</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="95"/>
+        <location filename="../transactiondesc.cpp" line="118"/>
+        <location filename="../transactiondesc.cpp" line="178"/>
+        <source>&lt;b&gt;To:&lt;/b&gt; </source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="98"/>
+        <source> (yours, label: </source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="100"/>
+        <source> (yours)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="136"/>
+        <location filename="../transactiondesc.cpp" line="150"/>
+        <location filename="../transactiondesc.cpp" line="195"/>
+        <location filename="../transactiondesc.cpp" line="212"/>
+        <source>&lt;b&gt;Credit:&lt;/b&gt; </source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="138"/>
+        <source>(%1 matures in %2 more blocks)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="142"/>
+        <source>(not accepted)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="186"/>
+        <location filename="../transactiondesc.cpp" line="194"/>
+        <location filename="../transactiondesc.cpp" line="209"/>
+        <source>&lt;b&gt;Debit:&lt;/b&gt; </source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="200"/>
+        <source>&lt;b&gt;Transaction fee:&lt;/b&gt; </source>
+        <translation type="unfinished"/>
+    
