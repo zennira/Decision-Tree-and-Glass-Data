@@ -256,4 +256,168 @@ Are you sure you wish to encrypt your wallet?</source>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="135"/>
         <source>Wallet unlock failed</source>
-     
+        <translation>نجره رمز گذار شد</translation>
+    </message>
+    <message>
+        <location filename="../askpassphrasedialog.cpp" line="136"/>
+        <location filename="../askpassphrasedialog.cpp" line="147"/>
+        <location filename="../askpassphrasedialog.cpp" line="166"/>
+        <source>The passphrase entered for the wallet decryption was incorrect.</source>
+        <translation>اموفق رمز بندی پنجر</translation>
+    </message>
+    <message>
+        <location filename="../askpassphrasedialog.cpp" line="146"/>
+        <source>Wallet decryption failed</source>
+        <translation>ناموفق رمز بندی پنجره</translation>
+    </message>
+    <message>
+        <location filename="../askpassphrasedialog.cpp" line="160"/>
+        <source>Wallet passphrase was succesfully changed.</source>
+        <translation>عبارت عبور با موفقیت تغییر شد</translation>
+    </message>
+</context>
+<context>
+    <name>AltcoinGUI</name>
+    <message>
+        <location filename="../altcoingui.cpp" line="73"/>
+        <source>Altcoin Wallet</source>
+        <translation>پنجره بیتکویین</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="215"/>
+        <source>Sign &amp;message...</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="248"/>
+        <source>Show/Hide &amp;Altcoin</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="515"/>
+        <source>Synchronizing with network...</source>
+        <translation>همگام سازی با شبکه ...</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="185"/>
+        <source>&amp;Overview</source>
+        <translation>بررسی اجمالی</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="186"/>
+        <source>Show general overview of wallet</source>
+        <translation>نمای کلی پنجره نشان بده</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="191"/>
+        <source>&amp;Transactions</source>
+        <translation>&amp;amp;معاملات</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="192"/>
+        <source>Browse transaction history</source>
+        <translation>نمایش تاریخ معاملات</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="197"/>
+        <source>&amp;Address Book</source>
+        <translation>دفتر آدرس</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="198"/>
+        <source>Edit the list of stored addresses and labels</source>
+        <translation>ویرایش لیست آدرسها و بر چسب های ذخیره ای</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="203"/>
+        <source>&amp;Receive coins</source>
+        <translation>در یافت سکه</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="204"/>
+        <source>Show the list of addresses for receiving payments</source>
+        <translation>نمایش لیست آدرس ها برای در یافت پر داخت ها</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="209"/>
+        <source>&amp;Send coins</source>
+        <translation>رسال سکه ها</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="216"/>
+        <source>Prove you control an address</source>
+        <translation>اثبات کنید که روی یک نشانی کنترل دارید</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="235"/>
+        <source>E&amp;xit</source>
+        <translation>خروج</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="236"/>
+        <source>Quit application</source>
+        <translation>خروج از برنامه </translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="239"/>
+        <source>&amp;About %1</source>
+        <translation>&amp;حدود%1</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="240"/>
+        <source>Show information about Altcoin</source>
+        <translation>نمایش اطلاعات در مورد بیتکویین</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="242"/>
+        <source>About &amp;Qt</source>
+        <translation>درباره &amp;Qt</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="243"/>
+        <source>Show information about Qt</source>
+        <translation>نمایش اطلاعات درباره Qt</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="245"/>
+        <source>&amp;Options...</source>
+        <translation>تنظیمات...</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="252"/>
+        <source>&amp;Encrypt Wallet...</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="255"/>
+        <source>&amp;Backup Wallet...</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="257"/>
+        <source>&amp;Change Passphrase...</source>
+        <translation type="unfinished"/>
+    </message>
+    <message numerus="yes">
+        <location filename="../altcoingui.cpp" line="517"/>
+        <source>~%n block(s) remaining</source>
+        <translation type="unfinished"><numerusform></numerusform></translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="528"/>
+        <source>Downloaded %1 of %2 blocks of transaction history (%3% done).</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="250"/>
+        <source>&amp;Export...</source>
+        <translation>&amp;;صادرات</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="210"/>
+        <source>Send coins to a Altcoin address</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="246"/>
+        <source>
