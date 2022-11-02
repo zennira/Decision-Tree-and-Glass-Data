@@ -892,4 +892,154 @@ Address: %4
         <translation type="unfinished"/>
     </message>
     <message>
-     
+        <location filename="../messagepage.cpp" line="31"/>
+        <source>Click &quot;Sign Message&quot; to get signature</source>
+        <translation>روی «امضای پیام» کلیک کنید تا امضا را دریافت نمایید</translation>
+    </message>
+    <message>
+        <location filename="../forms/messagepage.ui" line="114"/>
+        <source>Sign a message to prove you own this address</source>
+        <translation>یک پیام را امضا کنید تا ثابت کنید صاحب این نشانی هستید</translation>
+    </message>
+    <message>
+        <location filename="../forms/messagepage.ui" line="117"/>
+        <source>&amp;Sign Message</source>
+        <translation>&amp;امضای پیام</translation>
+    </message>
+    <message>
+        <location filename="../messagepage.cpp" line="30"/>
+        <source>Enter a Altcoin address (e.g. 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L)</source>
+        <translation>آدرس بیتکویین وارد کنید  (bijvoorbeeld: 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L)</translation>
+    </message>
+    <message>
+        <location filename="../messagepage.cpp" line="83"/>
+        <location filename="../messagepage.cpp" line="90"/>
+        <location filename="../messagepage.cpp" line="105"/>
+        <location filename="../messagepage.cpp" line="117"/>
+        <source>Error signing</source>
+        <translation>خطا در امضا</translation>
+    </message>
+    <message>
+        <location filename="../messagepage.cpp" line="83"/>
+        <source>%1 is not a valid address.</source>
+        <translation>%1 یک نشانی معتبر نیست.</translation>
+    </message>
+    <message>
+        <location filename="../messagepage.cpp" line="90"/>
+        <source>%1 does not refer to a key.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../messagepage.cpp" line="105"/>
+        <source>Private key for %1 is not available.</source>
+        <translation>کلید خصوصی برای %1 در دسترس نیست.</translation>
+    </message>
+    <message>
+        <location filename="../messagepage.cpp" line="117"/>
+        <source>Sign failed</source>
+        <translation>امضا موفق نبود</translation>
+    </message>
+</context>
+<context>
+    <name>NetworkOptionsPage</name>
+    <message>
+        <location filename="../optionsdialog.cpp" line="345"/>
+        <source>Network</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="347"/>
+        <source>Map port using &amp;UPnP</source>
+        <translation>درگاه با استفاده از</translation>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="348"/>
+        <source>Automatically open the Altcoin client port on the router. This only works when your router supports UPnP and it is enabled.</source>
+        <translation>اتوماتیک باز کردن بندر بیتکویین در روتر . این فقط در مواردی می باشد که روتر با کمک یو پ ن پ کار می کند</translation>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="351"/>
+        <source>&amp;Connect through SOCKS4 proxy:</source>
+        <translation>ارتباط با توسط</translation>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="352"/>
+        <source>Connect to the Bitcon network through a SOCKS4 proxy (e.g. when connecting through Tor)</source>
+        <translation>وسل به شبکه بیتکویین با توسط</translation>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="357"/>
+        <source>Proxy &amp;IP:</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="366"/>
+        <source>&amp;Port:</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="363"/>
+        <source>IP address of the proxy (e.g. 127.0.0.1)</source>
+        <translation>درس پروکسی</translation>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="372"/>
+        <source>Port of the proxy (e.g. 1234)</source>
+        <translation>ورت پروکسی</translation>
+    </message>
+</context>
+<context>
+    <name>OptionsDialog</name>
+    <message>
+        <location filename="../optionsdialog.cpp" line="135"/>
+        <source>Options</source>
+        <translation>اصلی</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <location filename="../forms/overviewpage.ui" line="14"/>
+        <source>Form</source>
+        <translation>تراز</translation>
+    </message>
+    <message>
+        <location filename="../forms/overviewpage.ui" line="47"/>
+        <location filename="../forms/overviewpage.ui" line="204"/>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Altcoin network after a connection is established, but this process has not completed yet.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/overviewpage.ui" line="89"/>
+        <source>Balance:</source>
+        <translation>راز:</translation>
+    </message>
+    <message>
+        <location filename="../forms/overviewpage.ui" line="147"/>
+        <source>Number of transactions:</source>
+        <translation>تعداد معامله</translation>
+    </message>
+    <message>
+        <location filename="../forms/overviewpage.ui" line="118"/>
+        <source>Unconfirmed:</source>
+        <translation>تایید نشده</translation>
+    </message>
+    <message>
+        <location filename="../forms/overviewpage.ui" line="40"/>
+        <source>Wallet</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/overviewpage.ui" line="197"/>
+        <source>&lt;b&gt;Recent transactions&lt;/b&gt;</source>
+        <translation>اخرین معاملات&amp;lt</translation>
+    </message>
+    <message>
+        <location filename="../forms/overviewpage.ui" line="105"/>
+        <source>Your current balance</source>
+        <translation>تزار جاری شما</translation>
+    </message>
+    <message>
+        <location filename="../forms/overviewpage.ui" line="134"/>
+        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the current balance</source>
+        <translation>تعداد معاملات که تایید شده ولی هنوز در تزا
