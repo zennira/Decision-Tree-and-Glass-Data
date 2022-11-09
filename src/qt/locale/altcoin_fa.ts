@@ -1658,4 +1658,181 @@ Address: %4
     <message>
         <location filename="../transactiontablemodel.cpp" line="362"/>
         <source>Mined</source>
-        
+        <translation>استخراج</translation>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="400"/>
+        <source>(n/a)</source>
+        <translation>(کاربرد ندارد)</translation>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="599"/>
+        <source>Transaction status. Hover over this field to show number of confirmations.</source>
+        <translation>وضعیت معالمه . عرصه که تعداد تایید نشان می دهد</translation>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="601"/>
+        <source>Date and time that the transaction was received.</source>
+        <translation>تاریخ و ساعت در یافت معامله</translation>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="603"/>
+        <source>Type of transaction.</source>
+        <translation>نوع معاملات</translation>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="605"/>
+        <source>Destination address of transaction.</source>
+        <translation>آدرس مقصود معاملات </translation>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="607"/>
+        <source>Amount removed from or added to balance.</source>
+        <translation>مبلغ از تزار شما خارج یا وارد شده</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionView</name>
+    <message>
+        <location filename="../transactionview.cpp" line="55"/>
+        <location filename="../transactionview.cpp" line="71"/>
+        <source>All</source>
+        <translation>همه</translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="56"/>
+        <source>Today</source>
+        <translation>امروز</translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="57"/>
+        <source>This week</source>
+        <translation>این هفته</translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="58"/>
+        <source>This month</source>
+        <translation>این ماه</translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="59"/>
+        <source>Last month</source>
+        <translation>ماه گذشته</translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="60"/>
+        <source>This year</source>
+        <translation>امسال</translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="61"/>
+        <source>Range...</source>
+        <translation>محدوده </translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="72"/>
+        <source>Received with</source>
+        <translation>در یافت با</translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="74"/>
+        <source>Sent to</source>
+        <translation>ارسال به</translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="76"/>
+        <source>To yourself</source>
+        <translation>به خودتان </translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="77"/>
+        <source>Mined</source>
+        <translation>استخراج</translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="78"/>
+        <source>Other</source>
+        <translation>یگر </translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="85"/>
+        <source>Enter address or label to search</source>
+        <translation>برای جست‌‌وجو نشانی یا برچسب را وارد کنید</translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="92"/>
+        <source>Min amount</source>
+        <translation>حد اقل مبلغ </translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="126"/>
+        <source>Copy address</source>
+        <translation>کپی آدرس </translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="127"/>
+        <source>Copy label</source>
+        <translation>کپی بر چسب</translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="128"/>
+        <source>Copy amount</source>
+        <translation>روگرفت مقدار</translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="129"/>
+        <source>Edit label</source>
+        <translation>اصلاح بر چسب</translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="130"/>
+        <source>Show transaction details</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="270"/>
+        <source>Export Transaction Data</source>
+        <translation>صادرات تاریخ معامله</translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="271"/>
+        <source>Comma separated file (*.csv)</source>
+        <translation>Comma فایل جدا </translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="279"/>
+        <source>Confirmed</source>
+        <translation>تایید شده</translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="280"/>
+        <source>Date</source>
+        <translation>تاریخ </translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="281"/>
+        <source>Type</source>
+        <translation>نوع </translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="282"/>
+        <source>Label</source>
+        <translation>ر چسب</translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="283"/>
+        <source>Address</source>
+        <translation>ایل جدا </translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="284"/>
+        <source>Amount</source>
+        <translation>مبلغ</translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="285"/>
+        <source>ID</source>
+        <translation>آی دی</translation>
+    </message>
+    <message>
+        <location filename
