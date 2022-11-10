@@ -1835,4 +1835,162 @@ Address: %4
         <translation>آی دی</translation>
     </message>
     <message>
-        <location filename
+        <location filename="../transactionview.cpp" line="289"/>
+        <source>Error exporting</source>
+        <translation>خطای صادرت</translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="289"/>
+        <source>Could not write to file %1.</source>
+        <translation>تا فایل %1 نمی شود نوشت</translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="384"/>
+        <source>Range:</source>
+        <translation>&gt;محدوده</translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="392"/>
+        <source>to</source>
+        <translation>به</translation>
+    </message>
+</context>
+<context>
+    <name>VerifyMessageDialog</name>
+    <message>
+        <location filename="../forms/verifymessagedialog.ui" line="14"/>
+        <source>Verify Signed Message</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/verifymessagedialog.ui" line="20"/>
+        <source>Enter the message and signature below (be careful to correctly copy newlines, spaces, tabs and other invisible characters) to obtain the Altcoin address used to sign the message.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/verifymessagedialog.ui" line="62"/>
+        <source>Verify a message and obtain the Altcoin address used to sign the message</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/verifymessagedialog.ui" line="65"/>
+        <source>&amp;Verify Message</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/verifymessagedialog.ui" line="79"/>
+        <source>Copy the currently selected address to the system clipboard</source>
+        <translation>آدرس انتخاب شده در سیستم تخته رسم گیره دار کپی کنید</translation>
+    </message>
+    <message>
+        <location filename="../forms/verifymessagedialog.ui" line="82"/>
+        <source>&amp;Copy Address</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/verifymessagedialog.ui" line="93"/>
+        <source>Reset all verify message fields</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/verifymessagedialog.ui" line="96"/>
+        <source>Clear &amp;All</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../verifymessagedialog.cpp" line="28"/>
+        <source>Enter Altcoin signature</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../verifymessagedialog.cpp" line="29"/>
+        <source>Click &quot;Verify Message&quot; to obtain address</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../verifymessagedialog.cpp" line="55"/>
+        <location filename="../verifymessagedialog.cpp" line="62"/>
+        <source>Invalid Signature</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../verifymessagedialog.cpp" line="55"/>
+        <source>The signature could not be decoded. Please check the signature and try again.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../verifymessagedialog.cpp" line="62"/>
+        <source>The signature did not match the message digest. Please check the signature and try again.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../verifymessagedialog.cpp" line="72"/>
+        <source>Address not found in address book.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../verifymessagedialog.cpp" line="72"/>
+        <source>Address found in address book: %1</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>WalletModel</name>
+    <message>
+        <location filename="../walletmodel.cpp" line="158"/>
+        <source>Sending...</source>
+        <translation>ارسال...</translation>
+    </message>
+</context>
+<context>
+    <name>WindowOptionsPage</name>
+    <message>
+        <location filename="../optionsdialog.cpp" line="313"/>
+        <source>Window</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="316"/>
+        <source>&amp;Minimize to the tray instead of the taskbar</source>
+        <translation>حد اقل رساندن در جای نوار ابزار ها</translation>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="317"/>
+        <source>Show only a tray icon after minimizing the window</source>
+        <translation>نمایش فقط نماد سینی بعد از حد اقل رساندن پنجره</translation>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="320"/>
+        <source>M&amp;inimize on close</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="321"/>
+        <source>Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Quit in the menu.</source>
+        <translation>حد اقل رساندن در جای خروج بر نامه وقتیکه پنجره بسته است.وقتیکه این فعال است برنامه خاموش می شود بعد از انتخاب دستور خاموش در منیو</translation>
+    </message>
+</context>
+<context>
+    <name>altcoin-core</name>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="43"/>
+        <source>Altcoin version</source>
+        <translation>سخه بیتکویین</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="44"/>
+        <source>Usage:</source>
+        <translation>ستفاده :</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="45"/>
+        <source>Send command to -server or altcoind</source>
+        <translation>ارسال فرمان به سرور یا باتکویین</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="46"/>
+        <source>List commands</source>
+        <translation>لیست فومان ها</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstring
