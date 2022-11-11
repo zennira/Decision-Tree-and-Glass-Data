@@ -2130,4 +2130,141 @@ Address: %4
     <message>
         <location filename="../altcoinstrings.cpp" line="90"/>
         <source>Prepend debug output with timestamp</source>
-        <t
+        <translation>به خروجی اشکال‌زدایی برچسب زمان بزنید</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="91"/>
+        <source>Send trace/debug info to console instead of debug.log file</source>
+        <translation>اطلاعات ردگیری/اشکال‌زدایی را به جای فایل لاگ اشکال‌زدایی به کنسول بفرستید</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="92"/>
+        <source>Send trace/debug info to debugger</source>
+        <translation>اطلاعات ردگیری/اشکال‌زدایی را به اشکال‌زدا بفرستید</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="93"/>
+        <source>Username for JSON-RPC connections</source>
+        <translation>JSON-RPC شناسه برای ارتباطات</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="94"/>
+        <source>Password for JSON-RPC connections</source>
+        <translation>JSON-RPC عبارت عبور برای ارتباطات</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="95"/>
+        <source>Listen for JSON-RPC connections on &lt;port&gt; (default: 8332)</source>
+        <translation>( 8332پیش فرض :) &amp;lt;poort&amp;gt; JSON-RPC شنوایی برای ارتباطات</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="96"/>
+        <source>Allow JSON-RPC connections from specified IP address</source>
+        <translation>از آدرس آی پی خاص JSON-RPC قبول ارتباطات</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="97"/>
+        <source>Send commands to node running on &lt;ip&gt; (default: 127.0.0.1)</source>
+        <translation>(127.0.0.1پیش فرض: ) &amp;lt;ip&amp;gt; دادن فرمانها برای استفاده گره ها روی</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="98"/>
+        <source>Execute command when the best block changes (%s in cmd is replaced by block hash)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="101"/>
+        <source>Upgrade wallet to latest format</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="102"/>
+        <source>Set key pool size to &lt;n&gt; (default: 100)</source>
+        <translation> (100پیش فرض:)&amp;lt;n&amp;gt; گذاشتن اندازه کلید روی </translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="103"/>
+        <source>Rescan the block chain for missing wallet transactions</source>
+        <translation>اسکان مجدد زنجیر بلوکها برای گم والت معامله</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="104"/>
+        <source>How many blocks to check at startup (default: 2500, 0 = all)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="105"/>
+        <source>How thorough the block verification is (0-6, default: 1)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="106"/>
+        <source>Imports blocks from external blk000?.dat file</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="108"/>
+        <source>
+SSL options: (see the Altcoin Wiki for SSL setup instructions)</source>
+        <translation>
+( نگاه کنید  Altcoin Wiki  در SSLتنظیمات ):SSL گزینه های</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="111"/>
+        <source>Use OpenSSL (https) for JSON-RPC connections</source>
+        <translation>JSON-RPCبرای ارتباطات   استفاده کنید OpenSSL (https)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="112"/>
+        <source>Server certificate file (default: server.cert)</source>
+        <translation> (server.certپیش فرض: )گواهی نامه سرور</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="113"/>
+        <source>Server private key (default: server.pem)</source>
+        <translation>(server.pemپیش فرض: ) کلید خصوصی سرور</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="114"/>
+        <source>Acceptable ciphers (default: TLSv1+HIGH:!SSLv2:!aNULL:!eNULL:!AH:!3DES:@STRENGTH)</source>
+        <translation>رمز های قابل قبول(  TLSv1+HIGH:!SSLv2:!aNULL:!eNULL:!AH:!3DES:@STRENGTH)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="145"/>
+        <source>Warning: Disk space is low</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="107"/>
+        <source>This help message</source>
+        <translation>پیام کمکی</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="121"/>
+        <source>Cannot obtain a lock on data directory %s.  Altcoin is probably already running.</source>
+        <translation>رمز گشایی دایرکتور داده ها امکان پذیر نیست. شاید بیت کویین در حال فعال می باشد%s</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="48"/>
+        <source>Altcoin</source>
+        <translation>یت کویین </translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="30"/>
+        <source>Unable to bind to %s on this computer (bind returned error %d, %s)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="58"/>
+        <source>Connect through socks proxy</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="59"/>
+        <source>Select the version of socks proxy to use (4 or 5, 5 is default)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="60"/>
+        <source>Do not use proxy for connections to network &lt;net&gt; (IPv4 or IPv6)</source>
+        <translation type="unfin
