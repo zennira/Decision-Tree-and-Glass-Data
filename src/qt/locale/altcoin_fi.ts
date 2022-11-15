@@ -1,17 +1,17 @@
 
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="fa_IR" version="2.0">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="fi" version="2.0">
 <defaultcodec>UTF-8</defaultcodec>
 <context>
     <name>AboutDialog</name>
     <message>
         <location filename="../forms/aboutdialog.ui" line="14"/>
         <source>About Altcoin</source>
-        <translation>در مورد بیتکویین</translation>
+        <translation>Tietoa Altcoinista</translation>
     </message>
     <message>
         <location filename="../forms/aboutdialog.ui" line="53"/>
         <source>&lt;b&gt;Altcoin&lt;/b&gt; version</source>
-        <translation>&lt;b&gt;Altcoin&lt;/b&gt; version</translation>
+        <translation>&lt;b&gt;Altcoin&lt;/b&gt; versio</translation>
     </message>
     <message>
         <location filename="../forms/aboutdialog.ui" line="97"/>
@@ -22,7 +22,13 @@ This is experimental software.
 Distributed under the MIT/X11 software license, see the accompanying file license.txt or http://www.opensource.org/licenses/mit-license.php.
 
 This product includes software developed by the OpenSSL Project for use in the OpenSSL Toolkit (http://www.openssl.org/) and cryptographic software written by Eric Young (eay@cryptsoft.com) and UPnP software written by Thomas Bernard.</source>
-        <translation type="unfinished"/>
+        <translation>Copyright © 2009-2012 Altcoin Developers
+
+This is experimental software.
+
+Distributed under the MIT/X11 software license, see the accompanying file license.txt or http://www.opensource.org/licenses/mit-license.php.
+
+This product includes software developed by the OpenSSL Project for use in the OpenSSL Toolkit (http://www.openssl.org/) and cryptographic software written by Eric Young (eay@cryptsoft.com) and UPnP software written by Thomas Bernard.</translation>
     </message>
 </context>
 <context>
@@ -30,27 +36,27 @@ This product includes software developed by the OpenSSL Project for use in the O
     <message>
         <location filename="../forms/addressbookpage.ui" line="14"/>
         <source>Address Book</source>
-        <translation type="unfinished"/>
+        <translation>Osoitekirja</translation>
     </message>
     <message>
         <location filename="../forms/addressbookpage.ui" line="20"/>
         <source>These are your Altcoin addresses for receiving payments.  You may want to give a different one to each sender so you can keep track of who is paying you.</source>
-        <translation type="unfinished"/>
+        <translation>Nämä ovat sinun Altcoin-osoitteesi suoritusten vastaanottamiseen. Voit halutessasi antaa kullekin lähettäjälle eri osoitteen, jotta voit seurata kuka sinulle maksaa.</translation>
     </message>
     <message>
         <location filename="../forms/addressbookpage.ui" line="36"/>
         <source>Double-click to edit address or label</source>
-        <translation type="unfinished"/>
+        <translation>Kaksoisnapauta muokataksesi osoitetta tai nimeä</translation>
     </message>
     <message>
         <location filename="../forms/addressbookpage.ui" line="63"/>
         <source>Create a new address</source>
-        <translation type="unfinished"/>
+        <translation>Luo uusi osoite</translation>
     </message>
     <message>
         <location filename="../forms/addressbookpage.ui" line="77"/>
         <source>Copy the currently selected address to the system clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Kopioi valittu osoite leikepöydälle</translation>
     </message>
     <message>
         <location filename="../forms/addressbookpage.ui" line="66"/>
@@ -65,27 +71,27 @@ This product includes software developed by the OpenSSL Project for use in the O
     <message>
         <location filename="../forms/addressbookpage.ui" line="91"/>
         <source>Show &amp;QR Code</source>
-        <translation type="unfinished"/>
+        <translation>Näytä &amp;QR-koodi</translation>
     </message>
     <message>
         <location filename="../forms/addressbookpage.ui" line="102"/>
         <source>Sign a message to prove you own this address</source>
-        <translation type="unfinished"/>
+        <translation>Allekirjoita viesti millä todistat omistavasi tämän osoitteen</translation>
     </message>
     <message>
         <location filename="../forms/addressbookpage.ui" line="105"/>
         <source>&amp;Sign Message</source>
-        <translation type="unfinished"/>
+        <translation>&amp;Allekirjoita viesti</translation>
     </message>
     <message>
         <location filename="../forms/addressbookpage.ui" line="116"/>
         <source>Delete the currently selected address from the list. Only sending addresses can be deleted.</source>
-        <translation type="unfinished"/>
+        <translation>Poista valittuna oleva osoite listasta. Vain lähettämiseen käytettäviä osoitteita voi poistaa.</translation>
     </message>
     <message>
         <location filename="../forms/addressbookpage.ui" line="119"/>
         <source>&amp;Delete</source>
-        <translation type="unfinished"/>
+        <translation>&amp;Poista</translation>
     </message>
     <message>
         <location filename="../addressbookpage.cpp" line="63"/>
@@ -100,22 +106,22 @@ This product includes software developed by the OpenSSL Project for use in the O
     <message>
         <location filename="../addressbookpage.cpp" line="292"/>
         <source>Export Address Book Data</source>
-        <translation type="unfinished"/>
+        <translation>Vie osoitekirja</translation>
     </message>
     <message>
         <location filename="../addressbookpage.cpp" line="293"/>
         <source>Comma separated file (*.csv)</source>
-        <translation type="unfinished"/>
+        <translation>Comma separated file (*.csv)</translation>
     </message>
     <message>
         <location filename="../addressbookpage.cpp" line="306"/>
         <source>Error exporting</source>
-        <translation type="unfinished"/>
+        <translation>Virhe viedessä osoitekirjaa</translation>
     </message>
     <message>
         <location filename="../addressbookpage.cpp" line="306"/>
         <source>Could not write to file %1.</source>
-        <translation type="unfinished"/>
+        <translation>Ei voida kirjoittaa tiedostoon %1.</translation>
     </message>
 </context>
 <context>
@@ -123,17 +129,17 @@ This product includes software developed by the OpenSSL Project for use in the O
     <message>
         <location filename="../addresstablemodel.cpp" line="142"/>
         <source>Label</source>
-        <translation type="unfinished"/>
+        <translation>Nimi</translation>
     </message>
     <message>
         <location filename="../addresstablemodel.cpp" line="142"/>
         <source>Address</source>
-        <translation type="unfinished"/>
+        <translation>Osoite</translation>
     </message>
     <message>
         <location filename="../addresstablemodel.cpp" line="178"/>
         <source>(no label)</source>
-        <translation type="unfinished"/>
+        <translation>(ei nimeä)</translation>
     </message>
 </context>
 <context>
@@ -146,85 +152,86 @@ This product includes software developed by the OpenSSL Project for use in the O
     <message>
         <location filename="../forms/askpassphrasedialog.ui" line="47"/>
         <source>Enter passphrase</source>
-        <translation type="unfinished"/>
+        <translation>Anna tunnuslause</translation>
     </message>
     <message>
         <location filename="../forms/askpassphrasedialog.ui" line="61"/>
         <source>New passphrase</source>
-        <translation type="unfinished"/>
+        <translation>Uusi tunnuslause</translation>
     </message>
     <message>
         <location filename="../forms/askpassphrasedialog.ui" line="75"/>
         <source>Repeat new passphrase</source>
-        <translation type="unfinished"/>
+        <translation>Toista uusi tunnuslause</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="33"/>
         <source>Enter the new passphrase to the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;10 or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
-        <translation type="unfinished"/>
+        <translation>Anna lompakolle uusi tunnuslause.&lt;br/&gt;Käytä tunnuslausetta, jossa on ainakin  &lt;b&gt;10 satunnaista mekkiä&lt;/b&gt; tai &lt;b&gt;kahdeksan sanaa&lt;/b&gt;.</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="34"/>
         <source>Encrypt wallet</source>
-        <translation type="unfinished"/>
+        <translation>Salaa lompakko</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="37"/>
         <source>This operation needs your wallet passphrase to unlock the wallet.</source>
-        <translation type="unfinished"/>
+        <translation>Tätä toimintoa varten sinun täytyy antaa lompakon tunnuslause sen avaamiseksi.</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="42"/>
         <source>Unlock wallet</source>
-        <translation type="unfinished"/>
+        <translation>Avaa lompakko</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="45"/>
         <source>This operation needs your wallet passphrase to decrypt the wallet.</source>
-        <translation type="unfinished"/>
+        <translation>Tätä toimintoa varten sinun täytyy antaa lompakon tunnuslause salauksen purkuun.</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="50"/>
         <source>Decrypt wallet</source>
-        <translation type="unfinished"/>
+        <translation>Pura lompakon salaus</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="53"/>
         <source>Change passphrase</source>
-        <translation type="unfinished"/>
+        <translation>Vaihda tunnuslause</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="54"/>
         <source>Enter the old and new passphrase to the wallet.</source>
-        <translation type="unfinished"/>
+        <translation>Anna vanha ja uusi tunnuslause.</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="100"/>
         <source>Confirm wallet encryption</source>
-        <translation type="unfinished"/>
+        <translation>Hyväksy lompakon salaus</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="101"/>
         <source>WARNING: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR ALTCOINS&lt;/b&gt;!
 Are you sure you wish to encrypt your wallet?</source>
-        <translation type="unfinished"/>
+        <translation>VAROITUS: Mikäli salaat lompakkosi ja unohdat tunnuslauseen, &lt;b&gt;MENETÄT LOMPAKON KOKO SISÄLLÖN&lt;/b&gt;!
+Tahdotko varmasti salata lompakon?</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="110"/>
         <location filename="../askpassphrasedialog.cpp" line="159"/>
         <source>Wallet encrypted</source>
-        <translation type="unfinished"/>
+        <translation>Lompakko salattu</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="111"/>
         <source>Altcoin will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your altcoins from being stolen by malware infecting your computer.</source>
-        <translation type="unfinished"/>
+        <translation>Altcoin sulkeutuu lopettaakseen salausprosessin. Muista, että salattu lompakko ei täysin suojaa sitä haittaohjelmien aiheuttamilta varkauksilta.</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="207"/>
         <location filename="../askpassphrasedialog.cpp" line="231"/>
         <source>Warning: The Caps Lock key is on.</source>
-        <translation type="unfinished"/>
+        <translation>Varoitus: Caps Lock on päällä.</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="116"/>
@@ -232,40 +239,40 @@ Are you sure you wish to encrypt your wallet?</source>
         <location filename="../askpassphrasedialog.cpp" line="165"/>
         <location filename="../askpassphrasedialog.cpp" line="171"/>
         <source>Wallet encryption failed</source>
-        <translation type="unfinished"/>
+        <translation>Lompakon salaus epäonnistui</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="117"/>
         <source>Wallet encryption failed due to an internal error. Your wallet was not encrypted.</source>
-        <translation type="unfinished"/>
+        <translation>Lompakon salaaminen epäonnistui sisäisen virheen vuoksi. Lompakkoa ei salattu.</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="124"/>
         <location filename="../askpassphrasedialog.cpp" line="172"/>
         <source>The supplied passphrases do not match.</source>
-        <translation type="unfinished"/>
+        <translation>Annetut tunnuslauseet eivät täsmää.</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="135"/>
         <source>Wallet unlock failed</source>
-        <translation type="unfinished"/>
+        <translation>Lompakon avaaminen epäonnistui.</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="136"/>
         <location filename="../askpassphrasedialog.cpp" line="147"/>
         <location filename="../askpassphrasedialog.cpp" line="166"/>
         <source>The passphrase entered for the wallet decryption was incorrect.</source>
-        <translation type="unfinished"/>
+        <translation>Annettu tunnuslause oli väärä.</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="146"/>
         <source>Wallet decryption failed</source>
-        <translation type="unfinished"/>
+        <translation>Lompakon salauksen purku epäonnistui.</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="160"/>
         <source>Wallet passphrase was succesfully changed.</source>
-        <translation type="unfinished"/>
+        <translation>Lompakon tunnuslause on vaihdettu.</translation>
     </message>
 </context>
 <context>
@@ -273,7 +280,7 @@ Are you sure you wish to encrypt your wallet?</source>
     <message>
         <location filename="../altcoingui.cpp" line="73"/>
         <source>Altcoin Wallet</source>
-        <translation type="unfinished"/>
+        <translation>Altcoin-lompakko</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="215"/>
@@ -283,97 +290,97 @@ Are you sure you wish to encrypt your wallet?</source>
     <message>
         <location filename="../altcoingui.cpp" line="248"/>
         <source>Show/Hide &amp;Altcoin</source>
-        <translation type="unfinished"/>
+        <translation>Näytä/Kätke &amp;Altcoin</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="515"/>
         <source>Synchronizing with network...</source>
-        <translation type="unfinished"/>
+        <translation>Synkronoidaan verkon kanssa...</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="185"/>
         <source>&amp;Overview</source>
-        <translation type="unfinished"/>
+        <translation>&amp;Yleisnäkymä</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="186"/>
         <source>Show general overview of wallet</source>
-        <translation type="unfinished"/>
+        <translation>Näyttää kokonaiskatsauksen lompakon tilanteesta</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="191"/>
         <source>&amp;Transactions</source>
-        <translation type="unfinished"/>
+        <translation>&amp;Rahansiirrot</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="192"/>
         <source>Browse transaction history</source>
-        <translation type="unfinished"/>
+        <translation>Selaa rahansiirtohistoriaa</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="197"/>
         <source>&amp;Address Book</source>
-        <translation type="unfinished"/>
+        <translation>&amp;Osoitekirja</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="198"/>
         <source>Edit the list of stored addresses and labels</source>
-        <translation type="unfinished"/>
+        <translation>Muokkaa tallennettujen nimien ja osoitteiden listaa</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="203"/>
         <source>&amp;Receive coins</source>
-        <translation type="unfinished"/>
+        <translation>&amp;Vastaanota Altcoineja</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="204"/>
         <source>Show the list of addresses for receiving payments</source>
-        <translation type="unfinished"/>
+        <translation>Näytä Altcoinien vastaanottamiseen käytetyt osoitteet</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="209"/>
         <source>&amp;Send coins</source>
-        <translation type="unfinished"/>
+        <translation>&amp;Lähetä Altcoineja</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="216"/>
         <source>Prove you control an address</source>
-        <translation type="unfinished"/>
+        <translation>Todista että hallitset osoitetta</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="235"/>
         <source>E&amp;xit</source>
-        <translation type="unfinished"/>
+        <translation>L&amp;opeta</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="236"/>
         <source>Quit application</source>
-        <translation type="unfinished"/>
+        <translation>Lopeta ohjelma</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="239"/>
         <source>&amp;About %1</source>
-        <translation type="unfinished"/>
+        <translation>&amp;Tietoja %1</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="240"/>
         <source>Show information about Altcoin</source>
-        <translation type="unfinished"/>
+        <translation>Näytä tietoa Altcoin-projektista</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="242"/>
         <source>About &amp;Qt</source>
-        <translation type="unfinished"/>
+        <translation>Tietoja &amp;Qt</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="243"/>
         <source>Show information about Qt</source>
-        <translation type="unfinished"/>
+        <translation>Näytä tietoja QT:ta</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="245"/>
         <source>&amp;Options...</source>
-        <translation type="unfinished"/>
+        <translation>&amp;Asetukset...</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="252"/>
@@ -393,17 +400,17 @@ Are you sure you wish to encrypt your wallet?</source>
     <message numerus="yes">
         <location filename="../altcoingui.cpp" line="517"/>
         <source>~%n block(s) remaining</source>
-        <translation type="unfinished"><numerusform></numerusform></translation>
+        <translation><numerusform>~%n lohko jäljellä</numerusform><numerusform>~%n lohkoja jäljellä</numerusform></translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="528"/>
         <source>Downloaded %1 of %2 blocks of transaction history (%3% done).</source>
-        <translation type="unfinished"/>
+        <translation>Ladattu %1 / %2 lohkoista rahansiirtohistoriasta (%3% suoritettu).</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="250"/>
         <source>&amp;Export...</source>
-        <translation type="unfinished"/>
+        <translation>&amp;Vie...</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="210"/>
@@ -418,27 +425,27 @@ Are you sure you wish to encrypt your wallet?</source>
     <message>
         <location filename="../altcoingui.cpp" line="249"/>
         <source>Show or hide the Altcoin window</source>
-        <translation type="unfinished"/>
+        <translation>Näytä tai piillota Altcoin-ikkuna</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="251"/>
         <source>Export the data in the current tab to a file</source>
-        <translation type="unfinished"/>
+        <translation>Vie auki olevan välilehden tiedot tiedostoon</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="253"/>
         <source>Encrypt or decrypt wallet</source>
-        <translation type="unfinished"/>
+        <translation>Salaa tai poista salaus lompakosta</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="256"/>
         <source>Backup wallet to another location</source>
-        <translation type="unfinished"/>
+        <translation>Varmuuskopioi lompakko toiseen sijaintiin</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="258"/>
         <source>Change the passphrase used for wallet encryption</source>
-        <translation type="unfinished"/>
+        <translation>Vaihda lompakon salaukseen käytettävä tunnuslause</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="259"/>
@@ -463,89 +470,89 @@ Are you sure you wish to encrypt your wallet?</source>
     <message>
         <location filename="../altcoingui.cpp" line="286"/>
         <source>&amp;File</source>
-        <translation type="unfinished"/>
+        <translation>&amp;Tiedosto</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="296"/>
         <source>&amp;Settings</source>
-        <translation type="unfinished"/>
+        <translation>&amp;Asetukset</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="302"/>
         <source>&amp;Help</source>
-        <translation type="unfinished"/>
+        <translation>&amp;Apua</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="311"/>
         <source>Tabs toolbar</source>
-        <translation type="unfinished"/>
+        <translation>Välilehtipalkki</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="322"/>
         <source>Actions toolbar</source>
-        <translation type="unfinished"/>
+        <translation>Toimintopalkki</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="334"/>
         <location filename="../altcoingui.cpp" line="343"/>
         <source>[testnet]</source>
-        <translation type="unfinished"/>
+        <translation>[testnet]</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="343"/>
         <location filename="../altcoingui.cpp" line="399"/>
         <source>Altcoin client</source>
-        <translation type="unfinished"/>
+        <translation>Altcoin-asiakas</translation>
     </message>
     <message numerus="yes">
         <location filename="../altcoingui.cpp" line="492"/>
         <source>%n active connection(s) to Altcoin network</source>
-        <translation type="unfinished"><numerusform></numerusform></translation>
+        <translation><numerusform>%n aktiivinen yhteys Altcoin-verkkoon</numerusform><numerusform>%n aktiivista yhteyttä Altcoin-verkkoon</numerusform></translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="540"/>
         <source>Downloaded %1 blocks of transaction history.</source>
-        <translation type="unfinished"/>
+        <translation>Ladattu %1 lohkoa rahansiirron historiasta.</translation>
     </message>
     <message numerus="yes">
         <location filename="../altcoingui.cpp" line="555"/>
         <source>%n second(s) ago</source>
-        <translation type="unfinished"><numerusform></numerusform></translation>
+        <translation><numerusform>%n sekunti sitten</numerusform><numerusform>%n sekuntia sitten</numerusform></translation>
     </message>
     <message numerus="yes">
         <location filename="../altcoingui.cpp" line="559"/>
         <source>%n minute(s) ago</source>
-        <translation type="unfinished"><numerusform></numerusform></translation>
+        <translation><numerusform>%n minuutti sitten</numerusform><numerusform>%n minuuttia sitten</numerusform></translation>
     </message>
     <message numerus="yes">
         <location filename="../altcoingui.cpp" line="563"/>
         <source>%n hour(s) ago</source>
-        <translation type="unfinished"><numerusform></numerusform></translation>
+        <translation><numerusform>%n tunti sitten</numerusform><numerusform>%n tuntia sitten</numerusform></translation>
     </message>
     <message numerus="yes">
         <location filename="../altcoingui.cpp" line="567"/>
         <source>%n day(s) ago</source>
-        <translation type="unfinished"><numerusform></numerusform></translation>
+        <translation><numerusform>%n päivä sitten</numerusform><numerusform>%n päivää sitten</numerusform></translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="573"/>
         <source>Up to date</source>
-        <translation type="unfinished"/>
+        <translation>Rahansiirtohistoria on ajan tasalla</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="580"/>
         <source>Catching up...</source>
-        <translation type="unfinished"/>
+        <translation>Kurotaan kiinni...</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="590"/>
         <source>Last received block was generated %1.</source>
-        <translation type="unfinished"/>
+        <translation>Viimeisin vastaanotettu lohko tuotettu %1.</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="649"/>
         <source>This transaction is over the size limit.  You can still send it for a fee of %1, which goes to the nodes that process your transaction and helps to support the network.  Do you want to pay the fee?</source>
-        <translation type="unfinished"/>
+        <translation>Tämä rahansiirto ylittää kokorajoituksen. Voit siitä huolimatta lähettää sen %1 siirtopalkkion mikä menee solmuille jotka  käsittelevät rahansiirtosi tämä auttaa myös verkostoa. Haluatko maksaa siirtopalkkion? </translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="654"/>
@@ -555,12 +562,12 @@ Are you sure you wish to encrypt your wallet?</source>
     <message>
         <location filename="../altcoingui.cpp" line="681"/>
         <source>Sent transaction</source>
-        <translation type="unfinished"/>
+        <translation>Lähetetyt rahansiirrot</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="682"/>
         <source>Incoming transaction</source>
-        <translation type="unfinished"/>
+        <translation>Saapuva rahansiirto</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="683"/>
@@ -569,37 +576,40 @@ Amount: %2
 Type: %3
 Address: %4
 </source>
-        <translation type="unfinished"/>
+        <translation>Päivä: %1
+Määrä: %2
+Tyyppi: %3
+Osoite: %4</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="804"/>
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
-        <translation type="unfinished"/>
+        <translation>Lompakko on &lt;b&gt;salattu&lt;/b&gt; ja tällä hetkellä &lt;b&gt;avoinna&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="812"/>
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
-        <translation type="unfinished"/>
+        <translation>Lompakko on &lt;b&gt;salattu&lt;/b&gt; ja tällä hetkellä &lt;b&gt;lukittuna&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="835"/>
         <source>Backup Wallet</source>
-        <translation type="unfinished"/>
+        <translation>Varmuuskopioi lompakko</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="835"/>
         <source>Wallet Data (*.dat)</source>
-        <translation type="unfinished"/>
+        <translation>Lompakkodata (*.dat)</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="838"/>
         <source>Backup Failed</source>
-        <translation type="unfinished"/>
+        <translation>Varmuuskopio epäonnistui</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="838"/>
         <source>There was an error trying to save the wallet data to the new location.</source>
-        <translation type="unfinished"/>
+        <translation>Virhe tallennettaessa lompakkodataa uuteen sijaintiin.</translation>
     </message>
     <message>
         <location filename="../altcoin.cpp" line="112"/>
@@ -620,7 +630,7 @@ Address: %4
     <message>
         <location filename="../optionsdialog.cpp" line="246"/>
         <source>Display</source>
-        <translation type="unfinished"/>
+        <translation>Näyttö</translation>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="257"/>
@@ -645,7 +655,7 @@ Address: %4
     <message>
         <location filename="../optionsdialog.cpp" line="277"/>
         <source>Choose the default subdivision unit to show in the interface, and when sending coins</source>
-        <translation type="unfinished"/>
+        <translation>Valitse oletus lisämääre mikä näkyy käyttöliittymässä ja kun lähetät kolikoita</translation>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="284"/>
@@ -673,52 +683,52 @@ Address: %4
     <message>
         <location filename="../forms/editaddressdialog.ui" line="14"/>
         <source>Edit Address</source>
-        <translation type="unfinished"/>
+        <translation>Muokkaa osoitetta</translation>
     </message>
     <message>
         <location filename="../forms/editaddressdialog.ui" line="25"/>
         <source>&amp;Label</source>
-        <translation type="unfinished"/>
+        <translation>&amp;Nimi</translation>
     </message>
     <message>
         <location filename="../forms/editaddressdialog.ui" line="35"/>
         <source>The label associated with this address book entry</source>
-        <translation type="unfinished"/>
+        <translation>Tähän osoitteeseen liitetty nimi</translation>
     </message>
     <message>
         <location filename="../forms/editaddressdialog.ui" line="42"/>
         <source>&amp;Address</source>
-        <translation type="unfinished"/>
+        <translation>&amp;Osoite</translation>
     </message>
     <message>
         <location filename="../forms/editaddressdialog.ui" line="52"/>
         <source>The address associated with this address book entry. This can only be modified for sending addresses.</source>
-        <translation type="unfinished"/>
+        <translation>Osoite, joka liittyy tämän osoitekirjan merkintään. Tätä voidaan muuttaa vain lähtevissä osoitteissa.</translation>
     </message>
     <message>
         <location filename="../editaddressdialog.cpp" line="20"/>
         <source>New receiving address</source>
-        <translation type="unfinished"/>
+        <translation>Uusi vastaanottava osoite</translation>
     </message>
     <message>
         <location filename="../editaddressdialog.cpp" line="24"/>
         <source>New sending address</source>
-        <translation type="unfinished"/>
+        <translation>Uusi lähettävä osoite</translation>
     </message>
     <message>
         <location filename="../editaddressdialog.cpp" line="27"/>
         <source>Edit receiving address</source>
-        <translation type="unfinished"/>
+        <translation>Muokkaa vastaanottajan osoitetta</translation>
     </message>
     <message>
         <location filename="../editaddressdialog.cpp" line="31"/>
         <source>Edit sending address</source>
-        <translation type="unfinished"/>
+        <translation>Muokkaa lähtevää osoitetta</translation>
     </message>
     <message>
         <location filename="../editaddressdialog.cpp" line="91"/>
         <source>The entered address &quot;%1&quot; is already in the address book.</source>
-        <translation type="unfinished"/>
+        <translation>Osoite &quot;%1&quot; on jo osoitekirjassa.</translation>
     </message>
     <message>
         <location filename="../editaddressdialog.cpp" line="96"/>
@@ -728,12 +738,12 @@ Address: %4
     <message>
         <location filename="../editaddressdialog.cpp" line="101"/>
         <source>Could not unlock wallet.</source>
-        <translation type="unfinished"/>
+        <translation>Lompakkoa ei voitu avata.</translation>
     </message>
     <message>
         <location filename="../editaddressdialog.cpp" line="106"/>
         <source>New key generation failed.</source>
-        <translation type="unfinished"/>
+        <translation>Uuden avaimen luonti epäonnistui.</translation>
     </message>
 </context>
 <context>
@@ -752,7 +762,7 @@ Address: %4
     <message>
         <location filename="../altcoin.cpp" line="135"/>
         <source>Usage:</source>
-        <translation type="unfinished"/>
+        <translation>Käyttö:</translation>
     </message>
     <message>
         <location filename="../altcoin.cpp" line="136"/>
@@ -767,17 +777,17 @@ Address: %4
     <message>
         <location filename="../altcoin.cpp" line="139"/>
         <source>Set language, for example &quot;de_DE&quot; (default: system locale)</source>
-        <translation type="unfinished"/>
+        <translation>Set language, for example &quot;de_DE&quot; (default: system locale)</translation>
     </message>
     <message>
         <location filename="../altcoin.cpp" line="140"/>
         <source>Start minimized</source>
-        <translation type="unfinished"/>
+        <translation>Käynnistä pienennettynä</translation>
     </message>
     <message>
         <location filename="../altcoin.cpp" line="141"/>
         <source>Show splash screen on startup (default: 1)</source>
-        <translation type="unfinished"/>
+        <translation>Näytä aloitusruutu käynnistettäessä (oletus: 1)</translation>
     </message>
 </context>
 <context>
@@ -790,17 +800,17 @@ Address: %4
     <message>
         <location filename="../optionsdialog.cpp" line="212"/>
         <source>Pay transaction &amp;fee</source>
-        <translation type="unfinished"/>
+        <translation>Maksa rahansiirtopalkkio</translation>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="204"/>
         <source>Main</source>
-        <translation type="unfinished"/>
+        <translation>Yleiset</translation>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="206"/>
         <source>Optional transaction fee per kB that helps make sure your transactions are processed quickly. Most transactions are 1 kB. Fee 0.01 recommended.</source>
-        <translation type="unfinished"/>
+        <translation>Vapaaehtoinen rahansiirtopalkkio per kB auttaa nopeuttamaan siirtoja. Useimmat rahansiirrot ovat 1 kB. 0.01 palkkio on suositeltava.</translation>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="222"/>
@@ -828,37 +838,38 @@ Address: %4
     <message>
         <location filename="../forms/messagepage.ui" line="20"/>
         <source>You can sign messages with your addresses to prove you own them. Be careful not to sign anything vague, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
-        <translation type="unfinished"/>
+        <translation>Voit allekirjoittaa viestit omalla osoitteellasi todistaaksesi että omistat ne. Ole huolellinen, että et allekirjoita mitään epämääräistä, phishing-hyökkääjät voivat huijata sinua allekirjoittamaan luovuttamalla henkilöllisyytesi. Allekirjoita selvitys täysin yksityiskohtaisesti mihin olet sitoutunut.</translation>
     </message>
     <message>
         <location filename="../forms/messagepage.ui" line="38"/>
         <source>The address to sign the message with  (e.g. 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L)</source>
-        <translation type="unfinished"/>
+        <translation>Osoite millä viesti allekirjoitetaan (esim. 
+1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L)</translation>
     </message>
     <message>
         <location filename="../forms/messagepage.ui" line="48"/>
         <source>Choose adress from address book</source>
-        <translation type="unfinished"/>
+        <translation>Valitse osoite osoitekirjasta</translation>
     </message>
     <message>
         <location filename="../forms/messagepage.ui" line="58"/>
         <source>Alt+A</source>
-        <translation type="unfinished"/>
+        <translation>Alt+A</translation>
     </message>
     <message>
         <location filename="../forms/messagepage.ui" line="71"/>
         <source>Paste address from clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Liitä osoite leikepöydältä</translation>
     </message>
     <message>
         <location filename="../forms/messagepage.ui" line="81"/>
         <source>Alt+P</source>
-        <translation type="unfinished"/>
+        <translation>Alt+P</translation>
     </message>
     <message>
         <location filename="../forms/messagepage.ui" line="93"/>
         <source>Enter the message you want to sign here</source>
-        <translation type="unfinished"/>
+        <translation>Kirjoita tähän viesti minkä haluat allekirjoittaa</translation>
     </message>
     <message>
         <location filename="../forms/messagepage.ui" line="128"/>
@@ -883,22 +894,22 @@ Address: %4
     <message>
         <location filename="../messagepage.cpp" line="31"/>
         <source>Click &quot;Sign Message&quot; to get signature</source>
-        <translation type="unfinished"/>
+        <translation>Klikkaa &quot;Allekirjoita viesti&quot; saadaksesi allekirjoituksen</translation>
     </message>
     <message>
         <location filename="../forms/messagepage.ui" line="114"/>
         <source>Sign a message to prove you own this address</source>
-        <translation type="unfinished"/>
+        <translation>Allekirjoita viesti millä todistat omistavasi tämän osoitteen</translation>
     </message>
     <message>
         <location filename="../forms/messagepage.ui" line="117"/>
         <source>&amp;Sign Message</source>
-        <translation type="unfinished"/>
+        <translation>&amp;Allekirjoita viesti</translation>
     </message>
     <message>
         <location filename="../messagepage.cpp" line="30"/>
         <source>Enter a Altcoin address (e.g. 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L)</source>
-        <translation type="unfinished"/>
+        <translation>Anna Altcoin-osoite (esim. 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L)</translation>
     </message>
     <message>
         <location filename="../messagepage.cpp" line="83"/>
@@ -906,12 +917,12 @@ Address: %4
         <location filename="../messagepage.cpp" line="105"/>
         <location filename="../messagepage.cpp" line="117"/>
         <source>Error signing</source>
-        <translation type="unfinished"/>
+        <translation>Virhe allekirjoitettaessa</translation>
     </message>
     <message>
         <location filename="../messagepage.cpp" line="83"/>
         <source>%1 is not a valid address.</source>
-        <translation type="unfinished"/>
+        <translation>%1 ei ole kelvollinen osoite.</translation>
     </message>
     <message>
         <location filename="../messagepage.cpp" line="90"/>
@@ -921,12 +932,12 @@ Address: %4
     <message>
         <location filename="../messagepage.cpp" line="105"/>
         <source>Private key for %1 is not available.</source>
-        <translation type="unfinished"/>
+        <translation>Yksityisavain %1 :lle ei ole saatavilla.</translation>
     </message>
     <message>
         <location filename="../messagepage.cpp" line="117"/>
         <source>Sign failed</source>
-        <translation type="unfinished"/>
+        <translation>Allekirjoittaminen epäonnistui</translation>
     </message>
 </context>
 <context>
@@ -939,22 +950,22 @@ Address: %4
     <message>
         <location filename="../optionsdialog.cpp" line="347"/>
         <source>Map port using &amp;UPnP</source>
-        <translation type="unfinished"/>
+        <translation>Portin uudelleenohjaus &amp;UPnP:llä</translation>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="348"/>
         <source>Automatically open the Altcoin client port on the router. This only works when your router supports UPnP and it is enabled.</source>
-        <translation type="unfinished"/>
+        <translation>Avaa Altcoin-asiakasohjelman portti reitittimellä automaattisesti. Tämä toimii vain, jos reitittimesi tukee UPnP:tä ja se on käytössä.</translation>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="351"/>
         <source>&amp;Connect through SOCKS4 proxy:</source>
-        <translation type="unfinished"/>
+        <translation>&amp;Yhdistä SOCKS4-välityspalvelimen kautta:</translation>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="352"/>
         <source>Connect to the Bitcon network through a SOCKS4 proxy (e.g. when connecting through Tor)</source>
-        <translation type="unfinished"/>
+        <translation>Yhdistä Altcoin-verkkoon SOCKS4-välityspalvelimen kautta (esimerkiksi käyttäessä Tor:ia)</translation>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="357"/>
@@ -969,12 +980,12 @@ Address: %4
     <message>
         <location filename="../optionsdialog.cpp" line="363"/>
         <source>IP address of the proxy (e.g. 127.0.0.1)</source>
-        <translation type="unfinished"/>
+        <translation>Välityspalvelimen IP-osoite (esim. 127.0.0.1)</translation>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="372"/>
         <source>Port of the proxy (e.g. 1234)</source>
-        <translation type="unfinished"/>
+        <translation>Portti, johon Altcoin-asiakasohjelma yhdistää (esim. 1234)</translation>
     </message>
 </context>
 <context>
@@ -982,7 +993,7 @@ Address: %4
     <message>
         <location filename="../optionsdialog.cpp" line="135"/>
         <source>Options</source>
-        <translation type="unfinished"/>
+        <translation>Asetukset</translation>
     </message>
 </context>
 <context>
@@ -990,7 +1001,7 @@ Address: %4
     <message>
         <location filename="../forms/overviewpage.ui" line="14"/>
         <source>Form</source>
-        <translation type="unfinished"/>
+        <translation>Lomake</translation>
     </message>
     <message>
         <location filename="../forms/overviewpage.ui" line="47"/>
@@ -1001,42 +1012,42 @@ Address: %4
     <message>
         <location filename="../forms/overviewpage.ui" line="89"/>
         <source>Balance:</source>
-        <translation type="unfinished"/>
+        <translation>Saldo:</translation>
     </message>
     <message>
         <location filename="../forms/overviewpage.ui" line="147"/>
         <source>Number of transactions:</source>
-        <translation type="unfinished"/>
+        <translation>Rahansiirtojen lukumäärä:</translation>
     </message>
     <message>
         <location filename="../forms/overviewpage.ui" line="118"/>
         <source>Unconfirmed:</source>
-        <translation type="unfinished"/>
+        <translation>Vahvistamatta:</translation>
     </message>
     <message>
         <location filename="../forms/overviewpage.ui" line="40"/>
         <source>Wallet</source>
-        <translation type="unfinished"/>
+        <translation>Lompakko</translation>
     </message>
     <message>
         <location filename="../forms/overviewpage.ui" line="197"/>
         <source>&lt;b&gt;Recent transactions&lt;/b&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;b&gt;Viimeisimmät rahansiirrot&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../forms/overviewpage.ui" line="105"/>
         <source>Your current balance</source>
-        <translation type="unfinished"/>
+        <translation>Tililläsi tällä hetkellä olevien Altcoinien määrä</translation>
     </message>
     <message>
         <location filename="../forms/overviewpage.ui" line="134"/>
         <source>Total of transactions that have yet to be confirmed, and do not yet count toward the current balance</source>
-        <translation type="unfinished"/>
+        <translation>Niiden saapuvien rahansiirtojen määrä, joita Altcoin-verkko ei vielä ole ehtinyt vahvistaa ja siten eivät vielä näy saldossa.</translation>
     </message>
     <message>
         <location filename="../forms/overviewpage.ui" line="154"/>
         <source>Total number of transactions in wallet</source>
-        <translation type="unfinished"/>
+        <translation>Lompakolla tehtyjen rahansiirtojen yhteismäärä</translation>
     </message>
     <message>
         <location filename="../overviewpage.cpp" line="110"/>
@@ -1055,37 +1066,37 @@ Address: %4
     <message>
         <location filename="../forms/qrcodedialog.ui" line="32"/>
         <source>QR Code</source>
-        <translation type="unfinished"/>
+        <translation>QR-koodi</translation>
     </message>
     <message>
         <location filename="../forms/qrcodedialog.ui" line="55"/>
         <source>Request Payment</source>
-        <translation type="unfinished"/>
+        <translation>Vastaanota maksu</translation>
     </message>
     <message>
         <location filename="../forms/qrcodedialog.ui" line="70"/>
         <source>Amount:</source>
-        <translation type="unfinished"/>
+        <translation>Määrä:</translation>
     </message>
     <message>
         <location filename="../forms/qrcodedialog.ui" line="105"/>
         <source>BTC</source>
-        <translation type="unfinished"/>
+        <translation>BTC</translation>
     </message>
     <message>
         <location filename="../forms/qrcodedialog.ui" line="121"/>
         <source>Label:</source>
-        <translation type="unfinished"/>
+        <translation>Tunniste:</translation>
     </message>
     <message>
         <location filename="../forms/qrcodedialog.ui" line="144"/>
         <source>Message:</source>
-        <translation type="unfinished"/>
+        <translation>Viesti:</translation>
     </message>
     <message>
         <location filename="../forms/qrcodedialog.ui" line="186"/>
         <source>&amp;Save As...</source>
-        <translation type="unfinished"/>
+        <translation>&amp;Tallenna nimellä...</translation>
     </message>
     <message>
         <location filename="../qrcodedialog.cpp" line="45"/>
@@ -1095,7 +1106,7 @@ Address: %4
     <message>
         <location filename="../qrcodedialog.cpp" line="63"/>
         <source>Resulting URI too long, try to reduce the text for label / message.</source>
-        <translation type="unfinished"/>
+        <translation>Tuloksen URI liian pitkä, yritä lyhentää otsikon tekstiä / viestiä.</translation>
     </message>
     <message>
         <location filename="../qrcodedialog.cpp" line="120"/>
@@ -1105,7 +1116,7 @@ Address: %4
     <message>
         <location filename="../qrcodedialog.cpp" line="120"/>
         <source>PNG Images (*.png)</source>
-        <translation type="unfinished"/>
+        <translation>PNG kuvat (*png)</translation>
     </message>
 </context>
 <context>
@@ -1246,12 +1257,12 @@ Address: %4
         <location filename="../sendcoinsdialog.cpp" line="148"/>
         <location filename="../sendcoinsdialog.cpp" line="153"/>
         <source>Send Coins</source>
-        <translation type="unfinished"/>
+        <translation>Lähetä Altcoineja</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsdialog.ui" line="64"/>
         <source>Send to multiple recipients at once</source>
-        <translation type="unfinished"/>
+        <translation>Lähetä monelle vastaanottajalle</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsdialog.ui" line="67"/>
@@ -1261,7 +1272,7 @@ Address: %4
     <message>
         <location filename="../forms/sendcoinsdialog.ui" line="84"/>
         <source>Remove all transaction fields</source>
-        <translation type="unfinished"/>
+        <translation>Poista kaikki rahansiirtokentät</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsdialog.ui" line="87"/>
@@ -1271,52 +1282,52 @@ Address: %4
     <message>
         <location filename="../forms/sendcoinsdialog.ui" line="106"/>
         <source>Balance:</source>
-        <translation type="unfinished"/>
+        <translation>Saldo:</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsdialog.ui" line="113"/>
         <source>123.456 BTC</source>
-        <translation type="unfinished"/>
+        <translation>123,456 BTC</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsdialog.ui" line="144"/>
         <source>Confirm the send action</source>
-        <translation type="unfinished"/>
+        <translation>Vahvista lähetys</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsdialog.ui" line="147"/>
         <source>&amp;Send</source>
-        <translation type="unfinished"/>
+        <translation>&amp;Lähetä</translation>
     </message>
     <message>
         <location filename="../sendcoinsdialog.cpp" line="94"/>
         <source>&lt;b&gt;%1&lt;/b&gt; to %2 (%3)</source>
-        <translation type="unfinished"/>
+        <translation>&lt;b&gt;%1&lt;/b&gt; to %2 (%3)</translation>
     </message>
     <message>
         <location filename="../sendcoinsdialog.cpp" line="99"/>
         <source>Confirm send coins</source>
-        <translation type="unfinished"/>
+        <translation>Hyväksy Altcoinien lähettäminen</translation>
     </message>
     <message>
         <location filename="../sendcoinsdialog.cpp" line="100"/>
         <source>Are you sure you want to send %1?</source>
-        <translation type="unfinished"/>
+        <translation>Haluatko varmasti lähettää %1?</translation>
     </message>
     <message>
         <location filename="../sendcoinsdialog.cpp" line="100"/>
         <source> and </source>
-        <translation type="unfinished"/>
+        <translation> ja </translation>
     </message>
     <message>
         <location filename="../sendcoinsdialog.cpp" line="123"/>
         <source>The recepient address is not valid, please recheck.</source>
-        <translation type="unfinished"/>
+        <translation>Vastaanottajan osoite ei kelpaa, ole hyvä ja tarkista</translation>
     </message>
     <message>
         <location filename="../sendcoinsdialog.cpp" line="128"/>
         <source>The amount to pay must be larger than 0.</source>
-        <translation type="unfinished"/>
+        <translation>Maksettavan summan tulee olla suurempi kuin 0 Altcoinia.</translation>
     </message>
     <message>
         <location filename="../sendcoinsdialog.cpp" line="133"/>
@@ -1349,63 +1360,63 @@ Address: %4
     <message>
         <location filename="../forms/sendcoinsentry.ui" line="14"/>
         <source>Form</source>
-        <translation type="unfinished"/>
+        <translation>Lomake</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsentry.ui" line="29"/>
         <source>A&amp;mount:</source>
-        <translation type="unfinished"/>
+        <translation>M&amp;äärä:</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsentry.ui" line="42"/>
         <source>Pay &amp;To:</source>
-        <translation type="unfinished"/>
+        <translation>Maksun saaja:</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsentry.ui" line="66"/>
         <location filename="../sendcoinsentry.cpp" line="25"/>
         <source>Enter a label for this address to add it to your address book</source>
-        <translation type="unfinished"/>
+        <translation>Anna nimi tälle osoitteelle, jos haluat lisätä sen osoitekirjaan</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsentry.ui" line="75"/>
         <source>&amp;Label:</source>
-        <translation type="unfinished"/>
+        <translation>&amp;Nimi:</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsentry.ui" line="93"/>
         <source>The address to send the payment to  (e.g. 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L)</source>
-        <translation type="unfinished"/>
+        <translation>Osoite, johon Altcoinit lähetetään  (esim. 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L)</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsentry.ui" line="103"/>
         <source>Choose address from address book</source>
-        <translation type="unfinished"/>
+        <translation>Valitse osoite osoitekirjasta</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsentry.ui" line="113"/>
         <source>Alt+A</source>
-        <translation type="unfinished"/>
+        <translation>Alt+A</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsentry.ui" line="120"/>
         <source>Paste address from clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Liitä osoite leikepöydältä</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsentry.ui" line="130"/>
         <source>Alt+P</source>
-        <translation type="unfinished"/>
+        <translation>Alt+P</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsentry.ui" line="137"/>
         <source>Remove this recipient</source>
-        <translation type="unfinished"/>
+        <translation>Poista </translation>
     </message>
     <message>
         <location filename="../sendcoinsentry.cpp" line="26"/>
         <source>Enter a Altcoin address (e.g. 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L)</source>
-        <translation type="unfinished"/>
+        <translation>Anna Altcoin-osoite (esim. 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L)</translation>
     </message>
 </context>
 <context>
@@ -1413,85 +1424,85 @@ Address: %4
     <message>
         <location filename="../transactiondesc.cpp" line="21"/>
         <source>Open for %1 blocks</source>
-        <translation type="unfinished"/>
+        <translation>Avoinna %1 lohkolle</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="23"/>
         <source>Open until %1</source>
-        <translation type="unfinished"/>
+        <translation>Avoinna %1 asti</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="29"/>
         <source>%1/offline?</source>
-        <translation type="unfinished"/>
+        <translation>%1/ei linjalla?</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="31"/>
         <source>%1/unconfirmed</source>
-        <translation type="unfinished"/>
+        <translation>%1/vahvistamaton</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="33"/>
         <source>%1 confirmations</source>
-        <translation type="unfinished"/>
+        <translation>%1 vahvistusta</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="51"/>
         <source>&lt;b&gt;Status:&lt;/b&gt; </source>
-        <translation type="unfinished"/>
+        <translation>&lt;b&gt;Tila:&lt;/b&gt; </translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="56"/>
         <source>, has not been successfully broadcast yet</source>
-        <translation type="unfinished"/>
+        <translation>, ei ole vielä onnistuneesti lähetetty</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="58"/>
         <source>, broadcast through %1 node</source>
-        <translation type="unfinished"/>
+        <translation>, lähetetään %1 solmun kautta</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="60"/>
         <source>, broadcast through %1 nodes</source>
-        <translation type="unfinished"/>
+        <translation>, lähetetään %1 solmun kautta</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="64"/>
         <source>&lt;b&gt;Date:&lt;/b&gt; </source>
-        <translation type="unfinished"/>
+        <translation>&lt;b&gt;Päivä:&lt;/b&gt; </translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="71"/>
         <source>&lt;b&gt;Source:&lt;/b&gt; Generated&lt;br&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;b&gt;Lähde:&lt;/b&gt; Generoitu&lt;br&gt;</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="77"/>
         <location filename="../transactiondesc.cpp" line="94"/>
         <source>&lt;b&gt;From:&lt;/b&gt; </source>
-        <translation type="unfinished"/>
+        <translation>&lt;b&gt;Lähettäjä:&lt;/b&gt; </translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="94"/>
         <source>unknown</source>
-        <translation type="unfinished"/>
+        <translation>tuntematon</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="95"/>
         <location filename="../transactiondesc.cpp" line="118"/>
         <location filename="../transactiondesc.cpp" line="178"/>
         <source>&lt;b&gt;To:&lt;/b&gt; </source>
-        <translation type="unfinished"/>
+        <translation>&lt;b&gt;Vast. ott.:&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="98"/>
         <source> (yours, label: </source>
-        <translation type="unfinished"/>
+        <translation>(sinun, tunniste: </translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="100"/>
         <source> (yours)</source>
-        <translation type="unfinished"/>
+        <translation>(sinun)</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="136"/>
@@ -1499,54 +1510,54 @@ Address: %4
         <location filename="../transactiondesc.cpp" line="195"/>
         <location filename="../transactiondesc.cpp" line="212"/>
         <source>&lt;b&gt;Credit:&lt;/b&gt; </source>
-        <translation type="unfinished"/>
+        <translation>&lt;b&gt;Krediitti:&lt;/b&gt; </translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="138"/>
         <source>(%1 matures in %2 more blocks)</source>
-        <translation type="unfinished"/>
+        <translation>(%1 erääntyy %2 useammassa lohkossa)</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="142"/>
         <source>(not accepted)</source>
-        <translation type="unfinished"/>
+        <translation>(ei hyväksytty)</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="186"/>
         <location filename="../transactiondesc.cpp" line="194"/>
         <location filename="../transactiondesc.cpp" line="209"/>
         <source>&lt;b&gt;Debit:&lt;/b&gt; </source>
-        <translation type="unfinished"/>
+        <translation>&lt;b&gt;Debit:&lt;/b&gt; </translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="200"/>
         <source>&lt;b&gt;Transaction fee:&lt;/b&gt; </source>
-        <translation type="unfinished"/>
+        <translation>&lt;b&gt;Rahansiirtomaksu:&lt;/b&gt; </translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="216"/>
         <source>&lt;b&gt;Net amount:&lt;/b&gt; </source>
-        <translation type="unfinished"/>
+        <translation>&lt;b&gt;Nettomäärä:&lt;/b&gt; </translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="222"/>
         <source>Message:</source>
-        <translation type="unfinished"/>
+        <translation>Viesti:</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="224"/>
         <source>Comment:</source>
-        <translation type="unfinished"/>
+        <translation>Kommentti:</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="226"/>
         <source>Transaction ID:</source>
-        <translation type="unfinished"/>
+        <translation>Rahansiirron ID:</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="229"/>
         <source>Generated coins must wait 120 blocks before they can be spent.  When you generated this block, it was broadcast to the network to be added to the block chain.  If it fails to get into the chain, it will change to &quot;not accepted&quot; and not be spendable.  This may occasionally happen if another node generates a block within a few seconds of yours.</source>
-        <translation type="unfinished"/>
+        <translation>Luotujen kolikoiden on odotettava 120 lohkoa ennen kuin ne voidaan käyttää. Kun loit tämän lohkon, se lähetettiin verkkoon lisättäväksi lohkoketjuun. Jos se epäonnistuu ketjuun liittymisessä, sen tila muuttuu &quot;ei hyväksytty&quot; eikä sitä voi käyttää. Tätä voi silloin tällöin esiintyä jos toinen solmu luo lohkon muutamia sekunteja omastasi.</translation>
     </message>
 </context>
 <context>
@@ -1554,12 +1565,12 @@ Address: %4
     <message>
         <location filename="../forms/transactiondescdialog.ui" line="14"/>
         <source>Transaction details</source>
-        <translation type="unfinished"/>
+        <translation>Rahansiirron yksityiskohdat</translation>
     </message>
     <message>
         <location filename="../forms/transactiondescdialog.ui" line="20"/>
         <source>This pane shows a detailed description of the transaction</source>
-        <translation type="unfinished"/>
+        <translation>Tämä ruutu näyttää yksityiskohtaisen tiedon rahansiirrosta</translation>
     </message>
 </context>
 <context>
@@ -1567,117 +1578,117 @@ Address: %4
     <message>
         <location filename="../transactiontablemodel.cpp" line="226"/>
         <source>Date</source>
-        <translation type="unfinished"/>
+        <translation>Päivämäärä</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="226"/>
         <source>Type</source>
-        <translation type="unfinished"/>
+        <translation>Laatu</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="226"/>
         <source>Address</source>
-        <translation type="unfinished"/>
+        <translation>Osoite</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="226"/>
         <source>Amount</source>
-        <translation type="unfinished"/>
+        <translation>Määrä</translation>
     </message>
     <message numerus="yes">
         <location filename="../transactiontablemodel.cpp" line="281"/>
         <source>Open for %n block(s)</source>
-        <translation type="unfinished"><numerusform></numerusform></translation>
+        <translation><numerusform>Auki %n lohkolle</numerusform><numerusform>Auki %n lohkoille</numerusform></translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="284"/>
         <source>Open until %1</source>
-        <translation type="unfinished"/>
+        <translation>Avoinna %1 asti</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="287"/>
         <source>Offline (%1 confirmations)</source>
-        <translation type="unfinished"/>
+        <translation>Ei yhteyttä verkkoon (%1 vahvistusta)</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="290"/>
         <source>Unconfirmed (%1 of %2 confirmations)</source>
-        <translation type="unfinished"/>
+        <translation>Vahvistamatta (%1/%2 vahvistusta)</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="293"/>
         <source>Confirmed (%1 confirmations)</source>
-        <translation type="unfinished"/>
+        <translation>Vahvistettu (%1 vahvistusta)</translation>
     </message>
     <message numerus="yes">
         <location filename="../transactiontablemodel.cpp" line="301"/>
         <source>Mined balance will be available in %n more blocks</source>
-        <translation type="unfinished"><numerusform></numerusform></translation>
+        <translation><numerusform>Louhittu saldo tulee saataville %n lohkossa</numerusform><numerusform>Louhittu saldo tulee saataville %n lohkossa</numerusform></translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="307"/>
         <source>This block was not received by any other nodes and will probably not be accepted!</source>
-        <translation type="unfinished"/>
+        <translation>Tätä lohkoa ei vastaanotettu mistään muusta solmusta ja sitä ei mahdollisesti hyväksytä!</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="310"/>
         <source>Generated but not accepted</source>
-        <translation type="unfinished"/>
+        <translation>Generoitu mutta ei hyväksytty</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="353"/>
         <source>Received with</source>
-        <translation type="unfinished"/>
+        <translation>Vastaanotettu osoitteella</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="355"/>
         <source>Received from</source>
-        <translation type="unfinished"/>
+        <translation>Vastaanotettu</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="358"/>
         <source>Sent to</source>
-        <translation type="unfinished"/>
+        <translation>Saaja</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="360"/>
         <source>Payment to yourself</source>
-        <translation type="unfinished"/>
+        <translation>Maksu itsellesi</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="362"/>
         <source>Mined</source>
-        <translation type="unfinished"/>
+        <translation>Louhittu</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="400"/>
         <source>(n/a)</source>
-        <translation type="unfinished"/>
+        <translation>(ei saatavilla)</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="599"/>
         <source>Transaction status. Hover over this field to show number of confirmations.</source>
-        <translation type="unfinished"/>
+        <translation>Rahansiirron tila. Siirrä osoitin kentän päälle nähdäksesi vahvistusten lukumäärä.</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="601"/>
         <source>Date and time that the transaction was received.</source>
-        <translation type="unfinished"/>
+        <translation>Rahansiirron vastaanottamisen päivämäärä ja aika.</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="603"/>
         <source>Type of transaction.</source>
-        <translation type="unfinished"/>
+        <translation>Rahansiirron laatu.</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="605"/>
         <source>Destination address of transaction.</source>
-        <translation type="unfinished"/>
+        <translation>Rahansiirron kohteen Altcoin-osoite</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="607"/>
         <source>Amount removed from or added to balance.</source>
-        <translation type="unfinished"/>
+        <translation>Saldoon lisätty tai siitä vähennetty määrä.</translation>
     </message>
 </context>
 <context>
@@ -1686,92 +1697,92 @@ Address: %4
         <location filename="../transactionview.cpp" line="55"/>
         <location filename="../transactionview.cpp" line="71"/>
         <source>All</source>
-        <translation type="unfinished"/>
+        <translation>Kaikki</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="56"/>
         <source>Today</source>
-        <translation type="unfinished"/>
+        <translation>Tänään</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="57"/>
         <source>This week</source>
-        <translation type="unfinished"/>
+        <translation>Tällä viikolla</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="58"/>
         <source>This month</source>
-        <translation type="unfinished"/>
+        <translation>Tässä kuussa</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="59"/>
         <source>Last month</source>
-        <translation type="unfinished"/>
+        <translation>Viime kuussa</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="60"/>
         <source>This year</source>
-        <translation type="unfinished"/>
+        <translation>Tänä vuonna</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="61"/>
         <source>Range...</source>
-        <translation type="unfinished"/>
+        <translation>Alue...</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="72"/>
         <source>Received with</source>
-        <translation type="unfinished"/>
+        <translation>Vastaanotettu osoitteella</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="74"/>
         <source>Sent to</source>
-        <translation type="unfinished"/>
+        <translation>Saaja</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="76"/>
         <source>To yourself</source>
-        <translation type="unfinished"/>
+        <translation>Itsellesi</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="77"/>
         <source>Mined</source>
-        <translation type="unfinished"/>
+        <translation>Louhittu</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="78"/>
         <source>Other</source>
-        <translation type="unfinished"/>
+        <translation>Muu</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="85"/>
         <source>Enter address or label to search</source>
-        <translation type="unfinished"/>
+        <translation>Anna etsittävä osoite tai tunniste</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="92"/>
         <source>Min amount</source>
-        <translation type="unfinished"/>
+        <translation>Minimimäärä</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="126"/>
         <source>Copy address</source>
-        <translation type="unfinished"/>
+        <translation>Kopioi osoite</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="127"/>
         <source>Copy label</source>
-        <translation type="unfinished"/>
+        <translation>Kopioi nimi</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="128"/>
         <source>Copy amount</source>
-        <translation type="unfinished"/>
+        <translation>Kopioi määrä</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="129"/>
         <source>Edit label</source>
-        <translation type="unfinished"/>
+        <translation>Muokkaa nimeä</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="130"/>
@@ -1781,67 +1792,67 @@ Address: %4
     <message>
         <location filename="../transactionview.cpp" line="270"/>
         <source>Export Transaction Data</source>
-        <translation type="unfinished"/>
+        <translation>Vie rahansiirron tiedot</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="271"/>
         <source>Comma separated file (*.csv)</source>
-        <translation type="unfinished"/>
+        <translation>Comma separated file (*.csv)</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="279"/>
         <source>Confirmed</source>
-        <translation type="unfinished"/>
+        <translation>Vahvistettu</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="280"/>
         <source>Date</source>
-        <translation type="unfinished"/>
+        <translation>Aika</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="281"/>
         <source>Type</source>
-        <translation type="unfinished"/>
+        <translation>Laatu</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="282"/>
         <source>Label</source>
-        <translation type="unfinished"/>
+        <translation>Nimi</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="283"/>
         <source>Address</source>
-        <translation type="unfinished"/>
+        <translation>Osoite</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="284"/>
         <source>Amount</source>
-        <translation type="unfinished"/>
+        <translation>Määrä</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="285"/>
         <source>ID</source>
-        <translation type="unfinished"/>
+        <translation>ID</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="289"/>
         <source>Error exporting</source>
-        <translation type="unfinished"/>
+        <translation>Virhe tietojen viennissä</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="289"/>
         <source>Could not write to file %1.</source>
-        <translation type="unfinished"/>
+        <translation>Ei voida kirjoittaa tiedostoon %1.</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="384"/>
         <source>Range:</source>
-        <translation type="unfinished"/>
+        <translation>Alue:</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="392"/>
         <source>to</source>
-        <translation type="unfinished"/>
+        <translation>kenelle</translation>
     </message>
 </context>
 <context>
@@ -1869,7 +1880,7 @@ Address: %4
     <message>
         <location filename="../forms/verifymessagedialog.ui" line="79"/>
         <source>Copy the currently selected address to the system clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Kopioi valittu osoite leikepöydälle</translation>
     </message>
     <message>
         <location filename="../forms/verifymessagedialog.ui" line="82"/>
@@ -1928,7 +1939,7 @@ Address: %4
     <message>
         <location filename="../walletmodel.cpp" line="158"/>
         <source>Sending...</source>
-        <translation type="unfinished"/>
+        <translation>Lähetetään...</translation>
     </message>
 </context>
 <context>
@@ -1941,12 +1952,12 @@ Address: %4
     <message>
         <location filename="../optionsdialog.cpp" line="316"/>
         <source>&amp;Minimize to the tray instead of the taskbar</source>
-        <translation type="unfinished"/>
+        <translation>&amp;Pienennä ilmaisinalueelle työkalurivin sijasta</translation>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="317"/>
         <source>Show only a tray icon after minimizing the window</source>
-        <translation type="unfinished"/>
+        <translation>Näytä ainoastaan pikkukuvake ikkunan pienentämisen jälkeen</translation>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="320"/>
@@ -1956,7 +1967,7 @@ Address: %4
     <message>
         <location filename="../optionsdialog.cpp" line="321"/>
         <source>Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Quit in the menu.</source>
-        <translation type="unfinished"/>
+        <translation>Ikkunaa suljettaessa vain pienentää Altcoin-ohjelman ikkunan lopettamatta itse ohjelmaa. Kun tämä asetus on valittuna, ohjelman voi sulkea vain valitsemalla Lopeta ohjelman valikosta.</translation>
     </message>
 </context>
 <context>
@@ -1964,87 +1975,87 @@ Address: %4
     <message>
         <location filename="../altcoinstrings.cpp" line="43"/>
         <source>Altcoin version</source>
-        <translation type="unfinished"/>
+        <translation>Altcoinin versio</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="44"/>
         <source>Usage:</source>
-        <translation type="unfinished"/>
+        <translation>Käyttö:</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="45"/>
         <source>Send command to -server or altcoind</source>
-        <translation type="unfinished"/>
+        <translation>Lähetä käsky palvelimelle tai altcoind:lle</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="46"/>
         <source>List commands</source>
-        <translation type="unfinished"/>
+        <translation>Lista komennoista</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="47"/>
         <source>Get help for a command</source>
-        <translation type="unfinished"/>
+        <translation>Hanki apua käskyyn</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="49"/>
         <source>Options:</source>
-        <translation type="unfinished"/>
+        <translation>Asetukset:</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="50"/>
         <source>Specify configuration file (default: altcoin.conf)</source>
-        <translation type="unfinished"/>
+        <translation>Määritä asetustiedosto (oletus: altcoin.conf)</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="51"/>
         <source>Specify pid file (default: altcoind.pid)</source>
-        <translation type="unfinished"/>
+        <translation>Määritä pid-tiedosto (oletus: altcoin.pid)</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="52"/>
         <source>Generate coins</source>
-        <translation type="unfinished"/>
+        <translation>Generoi kolikoita</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="53"/>
         <source>Don&apos;t generate coins</source>
-        <translation type="unfinished"/>
+        <translation>Älä generoi kolikoita</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="54"/>
         <source>Specify data directory</source>
-        <translation type="unfinished"/>
+        <translation>Määritä data-hakemisto</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="55"/>
         <source>Set database cache size in megabytes (default: 25)</source>
-        <translation type="unfinished"/>
+        <translation>Aseta tietokannan välimuistin koko megatavuina (oletus: 25)</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="56"/>
         <source>Set database disk log size in megabytes (default: 100)</source>
-        <translation type="unfinished"/>
+        <translation>Aseta tietokannan lokitiedoston koko megatavuina (oletus: 100)</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="57"/>
         <source>Specify connection timeout (in milliseconds)</source>
-        <translation type="unfinished"/>
+        <translation>Määritä yhteyden aikakatkaisu (millisekunneissa)</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="63"/>
         <source>Listen for connections on &lt;port&gt; (default: 8333 or testnet: 18333)</source>
-        <translation type="unfinished"/>
+        <translation>Kuuntele yhteyksiä portista &lt;port&gt; (oletus: 8333 tai testnet: 18333)</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="64"/>
         <source>Maintain at most &lt;n&gt; connections to peers (default: 125)</source>
-        <translation type="unfinished"/>
+        <translation>Pidä enintään &lt;n&gt; yhteyttä verkkoihin (oletus: 125)</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="66"/>
         <source>Connect only to the specified node</source>
-        <translation type="unfinished"/>
+        <translation>Muodosta yhteys vain tiettyyn solmuun</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="67"/>
@@ -2074,22 +2085,22 @@ Address: %4
     <message>
         <location filename="../altcoinstrings.cpp" line="75"/>
         <source>Threshold for disconnecting misbehaving peers (default: 100)</source>
-        <translation type="unfinished"/>
+        <translation>Kynnysarvo aikakatkaisulle heikosti toimiville verkoille (oletus: 100)</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="76"/>
         <source>Number of seconds to keep misbehaving peers from reconnecting (default: 86400)</source>
-        <translation type="unfinished"/>
+        <translation>Sekuntien määrä, kuinka kauan uudelleenkytkeydytään verkkoihin (oletus: 86400)</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="79"/>
         <source>Maximum per-connection receive buffer, &lt;n&gt;*1000 bytes (default: 10000)</source>
-        <translation type="unfinished"/>
+        <translation>Maksimi verkkoyhteyden vastaanottopuskuri, &lt;n&gt;*1000 tavua (oletus: 10000)</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="80"/>
         <source>Maximum per-connection send buffer, &lt;n&gt;*1000 bytes (default: 10000)</source>
-        <translation type="unfinished"/>
+        <translation>Maksimi verkkoyhteyden lähetyspuskuri, &lt;n&gt;*1000 tavua (oletus: 10000)</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="83"/>
@@ -2099,92 +2110,92 @@ Address: %4
     <message>
         <location filename="../altcoinstrings.cpp" line="86"/>
         <source>Accept command line and JSON-RPC commands</source>
-        <translation type="unfinished"/>
+        <translation>Hyväksy merkkipohjaiset- ja JSON-RPC-käskyt</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="87"/>
         <source>Run in the background as a daemon and accept commands</source>
-        <translation type="unfinished"/>
+        <translation>Aja taustalla daemonina ja hyväksy komennot</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="88"/>
         <source>Use the test network</source>
-        <translation type="unfinished"/>
+        <translation>Käytä test -verkkoa</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="89"/>
         <source>Output extra debugging information</source>
-        <translation type="unfinished"/>
+        <translation>Tulosta ylimääräistä debuggaustietoa</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="90"/>
         <source>Prepend debug output with timestamp</source>
-        <translation type="unfinished"/>
+        <translation>Lisää debuggaustiedon tulostukseen aikaleima</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="91"/>
         <source>Send trace/debug info to console instead of debug.log file</source>
-        <translation type="unfinished"/>
+        <translation>Lähetä jäljitys/debug-tieto konsoliin, debug.log-tiedoston sijaan</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="92"/>
         <source>Send trace/debug info to debugger</source>
-        <translation type="unfinished"/>
+        <translation>Lähetä jäljitys/debug-tieto debuggeriin</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="93"/>
         <source>Username for JSON-RPC connections</source>
-        <translation type="unfinished"/>
+        <translation>Käyttäjätunnus JSON-RPC-yhteyksille</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="94"/>
         <source>Password for JSON-RPC connections</source>
-        <translation type="unfinished"/>
+        <translation>Salasana JSON-RPC-yhteyksille</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="95"/>
         <source>Listen for JSON-RPC connections on &lt;port&gt; (default: 8332)</source>
-        <translation type="unfinished"/>
+        <translation>Kuuntele JSON-RPC -yhteyksiä portista &lt;port&gt; (oletus: 8332)</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="96"/>
         <source>Allow JSON-RPC connections from specified IP address</source>
-        <translation type="unfinished"/>
+        <translation>Salli JSON-RPC yhteydet tietystä ip-osoitteesta</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="97"/>
         <source>Send commands to node running on &lt;ip&gt; (default: 127.0.0.1)</source>
-        <translation type="unfinished"/>
+        <translation>Lähetä käskyjä solmuun osoitteessa &lt;ip&gt; (oletus: 127.0.0.1)</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="98"/>
         <source>Execute command when the best block changes (%s in cmd is replaced by block hash)</source>
-        <translation type="unfinished"/>
+        <translation>Suorita käsky kun paras lohko muuttuu (%s cmd on vaihdettu block hashin kanssa)</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="101"/>
         <source>Upgrade wallet to latest format</source>
-        <translation type="unfinished"/>
+        <translation>Päivitä lompakko uusimpaan formaattiin</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="102"/>
         <source>Set key pool size to &lt;n&gt; (default: 100)</source>
-        <translation type="unfinished"/>
+        <translation>Aseta avainpoolin koko arvoon &lt;n&gt; (oletus: 100)</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="103"/>
         <source>Rescan the block chain for missing wallet transactions</source>
-        <translation type="unfinished"/>
+        <translation>Skannaa uudelleen lohkoketju lompakon puuttuvien rahasiirtojen vuoksi</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="104"/>
         <source>How many blocks to check at startup (default: 2500, 0 = all)</source>
-        <translation type="unfinished"/>
+        <translation>Kuinka monta lohkoa tarkistetaan käynnistettäessä (oletus: 2500, 0 = kaikki)</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="105"/>
         <source>How thorough the block verification is (0-6, default: 1)</source>
-        <translation type="unfinished"/>
+        <translation>Kuinka tiukka lohkovarmistus on (0-6, oletus: 1)</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="106"/>
@@ -2195,27 +2206,28 @@ Address: %4
         <location filename="../altcoinstrings.cpp" line="108"/>
         <source>
 SSL options: (see the Altcoin Wiki for SSL setup instructions)</source>
-        <translation type="unfinished"/>
+        <translation>SSL-asetukset: (lisätietoja Altcoin-Wikistä)</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="111"/>
         <source>Use OpenSSL (https) for JSON-RPC connections</source>
-        <translation type="unfinished"/>
+        <translation>Käytä OpenSSL:ää (https) JSON-RPC-yhteyksille</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="112"/>
         <source>Server certificate file (default: server.cert)</source>
-        <translation type="unfinished"/>
+        <translation>Palvelimen sertifikaatti-tiedosto (oletus: server.cert)</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="113"/>
         <source>Server private key (default: server.pem)</source>
-        <translation type="unfinished"/>
+        <translation>Palvelimen yksityisavain (oletus: server.pem)</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="114"/>
         <source>Acceptable ciphers (default: TLSv1+HIGH:!SSLv2:!aNULL:!eNULL:!AH:!3DES:@STRENGTH)</source>
-        <translation type="unfinished"/>
+        <translation>Hyväksyttävä salaus (oletus:
+TLSv1+HIGH:!SSLv2:!aNULL:!eNULL:!AH:!3DES:@STRENGTH)</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="145"/>
@@ -2225,17 +2237,17 @@ SSL options: (see the Altcoin Wiki for SSL setup instructions)</source>
     <message>
         <location filename="../altcoinstrings.cpp" line="107"/>
         <source>This help message</source>
-        <translation type="unfinished"/>
+        <translation>Tämä ohjeviesti</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="121"/>
         <source>Cannot obtain a lock on data directory %s.  Altcoin is probably already running.</source>
-        <translation type="unfinished"/>
+        <translation>En pääse käsiksi data-hakemiston lukitukseen %s. Altcoin on todennäköisesti jo käynnistetty.</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="48"/>
         <source>Altcoin</source>
-        <translation type="unfinished"/>
+        <translation>Altcoin</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="30"/>
@@ -2270,32 +2282,32 @@ SSL options: (see the Altcoin Wiki for SSL setup instructions)</source>
     <message>
         <location filename="../altcoinstrings.cpp" line="142"/>
         <source>Loading addresses...</source>
-        <translation type="unfinished"/>
+        <translation>Ladataan osoitteita...</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="132"/>
         <source>Error loading blkindex.dat</source>
-        <translation type="unfinished"/>
+        <translation>Virhe ladattaessa blkindex.dat-tiedostoa</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="134"/>
         <source>Error loading wallet.dat: Wallet corrupted</source>
-        <translation type="unfinished"/>
+        <translation>Virhe ladattaessa wallet.dat-tiedostoa: Lompakko vioittunut</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="135"/>
         <source>Error loading wallet.dat: Wallet requires newer version of Altcoin</source>
-        <translation type="unfinished"/>
+        <translation>Virhe ladattaessa wallet.dat-tiedostoa: Tarvitset uudemman version Altcoinista</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="136"/>
         <source>Wallet needed to be rewritten: restart Altcoin to complete</source>
-        <translation type="unfinished"/>
+        <translation>Lompakko tarvitsee uudelleenkirjoittaa: käynnistä Altcoin uudelleen</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="137"/>
         <source>Error loading wallet.dat</source>
-        <translation type="unfinished"/>
+        <translation>Virhe ladattaessa wallet.dat-tiedostoa</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="124"/>
@@ -2345,47 +2357,47 @@ SSL options: (see the Altcoin Wiki for SSL setup instructions)</source>
     <message>
         <location filename="../altcoinstrings.cpp" line="31"/>
         <source>Error: Wallet locked, unable to create transaction  </source>
-        <translation type="unfinished"/>
+        <translation>Virhe: Lompakko on lukittu, rahansiirtoa ei voida luoda</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="32"/>
         <source>Error: This transaction requires a transaction fee of at least %s because of its amount, complexity, or use of recently received funds  </source>
-        <translation type="unfinished"/>
+        <translation>Virhe: Tämä rahansiirto vaatii rahansiirtopalkkion vähintään %s johtuen sen määrästä, monimutkaisuudesta tai hiljattain vastaanotettujen summien käytöstä</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="35"/>
         <source>Error: Transaction creation failed  </source>
-        <translation type="unfinished"/>
+        <translation>Virhe: Rahansiirron luonti epäonnistui</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="36"/>
         <source>Sending...</source>
-        <translation type="unfinished"/>
+        <translation>Lähetetään...</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="37"/>
         <source>Error: The transaction was rejected.  This might happen if some of the coins in your wallet were already spent, such as if you used a copy of wallet.dat and coins were spent in the copy but not marked as spent here.</source>
-        <translation type="unfinished"/>
+        <translation>Virhe: Rahansiirto hylättiin.  Tämä voi tapahtua jos jotkin altcoineistasi on jo käytetty, esimerkiksi jos olet käyttänyt kopiota wallet.dat-lompakkotiedostosta ja altcoinit on merkitty käytetyksi vain kopiossa.</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="41"/>
         <source>Invalid amount</source>
-        <translation type="unfinished"/>
+        <translation>Virheellinen määrä</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="42"/>
         <source>Insufficient funds</source>
-        <translation type="unfinished"/>
+        <translation>Lompakon saldo ei riitä</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="131"/>
         <source>Loading block index...</source>
-        <translation type="unfinished"/>
+        <translation>Ladataan lohkoindeksiä...</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="65"/>
         <source>Add a node to connect to and attempt to keep the connection open</source>
-        <translation type="unfinished"/>
+        <translation>Linää solmu mihin liittyä pitääksesi yhteyden auki</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="28"/>
@@ -2395,32 +2407,32 @@ SSL options: (see the Altcoin Wiki for SSL setup instructions)</source>
     <message>
         <location filename="../altcoinstrings.cpp" line="71"/>
         <source>Find peers using internet relay chat (default: 0)</source>
-        <translation type="unfinished"/>
+        <translation>Etsi solmuja käyttäen internet relay chatia (oletus: 0)</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="72"/>
         <source>Accept connections from outside (default: 1)</source>
-        <translation type="unfinished"/>
+        <translation>Hyväksytään ulkopuoliset yhteydet (oletus: 1)</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="74"/>
         <source>Find peers using DNS lookup (default: 1)</source>
-        <translation type="unfinished"/>
+        <translation>Etsi solmuja käyttämällä DNS hakua (oletus: 1)</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="81"/>
         <source>Use Universal Plug and Play to map the listening port (default: 1)</source>
-        <translation type="unfinished"/>
+        <translation>Käytä Plug and Play kartoitusta kuunnellaksesi porttia (oletus: 1)</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="82"/>
         <source>Use Universal Plug and Play to map the listening port (default: 0)</source>
-        <translation type="unfinished"/>
+        <translation>Käytä Plug and Play kartoitusta kuunnellaksesi porttia (oletus: 0)</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="85"/>
         <source>Fee per KB to add to transactions you send</source>
-        <translation type="unfinished"/>
+        <translation>Rahansiirtopalkkio per KB lisätään lähettämääsi rahansiirtoon</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="118"/>
@@ -2430,37 +2442,37 @@ SSL options: (see the Altcoin Wiki for SSL setup instructions)</source>
     <message>
         <location filename="../altcoinstrings.cpp" line="133"/>
         <source>Loading wallet...</source>
-        <translation type="unfinished"/>
+        <translation>Ladataan lompakkoa...</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="138"/>
         <source>Cannot downgrade wallet</source>
-        <translation type="unfinished"/>
+        <translation>Et voi päivittää lompakkoasi vanhempaan versioon</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="139"/>
         <source>Cannot initialize keypool</source>
-        <translation type="unfinished"/>
+        <translation>Avainvarastoa ei voi alustaa</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="140"/>
         <source>Cannot write default address</source>
-        <translation type="unfinished"/>
+        <translation>Oletusosoitetta ei voi kirjoittaa</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="141"/>
         <source>Rescanning...</source>
-        <translation type="unfinished"/>
+        <translation>Skannataan uudelleen...</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="144"/>
         <source>Done loading</source>
-        <translation type="unfinished"/>
+        <translation>Lataus on valmis</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="8"/>
         <source>To use the %s option</source>
-        <translation type="unfinished"/>
+        <translation>Käytä %s optiota</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="9"/>
@@ -2472,29 +2484,38 @@ rpcpassword=%s
 (you do not need to remember this password)
 If the file does not exist, create it with owner-readable-only file permissions.
 </source>
-        <translation type="unfinished"/>
+        <translation>%s, sinun täytyy asettaa rpcpassword asetustiedostoon:
+%s
+On suositeltavaa käyttää seuraavaan satunnaista salasanaa:
+rpcuser=altcoinrpc
+rpcpassword=%s
+(sinun ei tarvitse muistaa tätä salasanaa)
+Jos tiedostoa ei ole, niin luo se ainoastaan omistajan kirjoitusoikeuksin.
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="18"/>
         <source>Error</source>
-        <translation type="unfinished"/>
+        <translation>Virhe</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="19"/>
         <source>An error occured while setting up the RPC port %i for listening: %s</source>
-        <translation type="unfinished"/>
+        <translation>Virhe asetettaessa RCP-porttia %i kuunteluun: %s</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="20"/>
         <source>You must set rpcpassword=&lt;password&gt; in the configuration file:
 %s
 If the file does not exist, create it with owner-readable-only file permissions.</source>
-        <translation type="unfinished"/>
+        <translation>Sinun täytyy asettaa rpcpassword=&lt;password&gt; asetustiedostoon:
+%s
+Jos tiedostoa ei ole, niin luo se ainoastaan omistajan kirjoitusoikeuksin.</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="25"/>
         <source>Warning: Please check that your computer&apos;s date and time are correct.  If your clock is wrong Altcoin will not work properly.</source>
-        <translation type="unfinished"/>
+        <translation>Varoitus: Tarkista, ovatko tietokoneesi päivämäärä ja aika oikein.  Mikäli aika on väärin, Altcoin-ohjelma ei toimi oikein.</translation>
     </message>
 </context>
 </TS>
