@@ -328,4 +328,149 @@ Are you sure you wish to encrypt your wallet?</source>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="203"/>
-        <s
+        <source>&amp;Receive coins</source>
+        <translation>&amp;Recevoir des pièces</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="204"/>
+        <source>Show the list of addresses for receiving payments</source>
+        <translation>Affiche la liste des adresses pour recevoir des paiements</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="209"/>
+        <source>&amp;Send coins</source>
+        <translation>&amp;Envoyer des pièces</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="216"/>
+        <source>Prove you control an address</source>
+        <translation>Prouver que vous contrôlez une adresse</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="235"/>
+        <source>E&amp;xit</source>
+        <translation>Q&amp;uitter</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="236"/>
+        <source>Quit application</source>
+        <translation>Quitter l&apos;application</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="239"/>
+        <source>&amp;About %1</source>
+        <translation>&amp;À propos de %1</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="240"/>
+        <source>Show information about Altcoin</source>
+        <translation>Afficher des informations à propos de Altcoin</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="242"/>
+        <source>About &amp;Qt</source>
+        <translation>À propos de &amp;Qt</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="243"/>
+        <source>Show information about Qt</source>
+        <translation>Afficher des informations sur Qt</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="245"/>
+        <source>&amp;Options...</source>
+        <translation>&amp;Options...</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="252"/>
+        <source>&amp;Encrypt Wallet...</source>
+        <translation>&amp;Chiffrer le porte-monnaie...</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="255"/>
+        <source>&amp;Backup Wallet...</source>
+        <translation>&amp;Sauvegarder le porte-monnaie...</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="257"/>
+        <source>&amp;Change Passphrase...</source>
+        <translation>&amp;Modifier la phrase de passe...</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../altcoingui.cpp" line="517"/>
+        <source>~%n block(s) remaining</source>
+        <translation><numerusform>~%n bloc restant</numerusform><numerusform>~%n blocs restants</numerusform></translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="528"/>
+        <source>Downloaded %1 of %2 blocks of transaction history (%3% done).</source>
+        <translation>%1 blocs de l&apos;historique des transactions sur %2  téléchargés (%3% effectué).</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="250"/>
+        <source>&amp;Export...</source>
+        <translation>&amp;Exporter...</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="210"/>
+        <source>Send coins to a Altcoin address</source>
+        <translation>Envoyer des pièces à une adresse Altcoin</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="246"/>
+        <source>Modify configuration options for Altcoin</source>
+        <translation>Modifier les options de configuration de Altcoin</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="249"/>
+        <source>Show or hide the Altcoin window</source>
+        <translation>Afficher ou cacher la fenêtre Altcoin</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="251"/>
+        <source>Export the data in the current tab to a file</source>
+        <translation>Exporter les données de l&apos;onglet courant vers un fichier</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="253"/>
+        <source>Encrypt or decrypt wallet</source>
+        <translation>Chiffrer ou décrypter le porte-monnaie</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="256"/>
+        <source>Backup wallet to another location</source>
+        <translation>Sauvegarder le porte-monnaie à un autre emplacement</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="258"/>
+        <source>Change the passphrase used for wallet encryption</source>
+        <translation>Modifier la phrase de passe utilisée pour le cryptage du porte-monnaie</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="259"/>
+        <source>&amp;Debug window</source>
+        <translation>Fenêtre de &amp;débogage</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="260"/>
+        <source>Open debugging and diagnostic console</source>
+        <translation>Ouvrir une console de débogage et de diagnostic</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="261"/>
+        <source>&amp;Verify message...</source>
+        <translation>&amp;Vérifier le message...</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="262"/>
+        <source>Verify a message signature</source>
+        <translation>Vérifier la signature d&apos;un message</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="286"/>
+        <source>&amp;File</source>
+        <translation>&amp;Fichier</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="296"/>
+        
