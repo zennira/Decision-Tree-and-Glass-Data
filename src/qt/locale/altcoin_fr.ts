@@ -473,4 +473,140 @@ Are you sure you wish to encrypt your wallet?</source>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="296"/>
-        
+        <source>&amp;Settings</source>
+        <translation>&amp;Réglages</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="302"/>
+        <source>&amp;Help</source>
+        <translation>&amp;Aide</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="311"/>
+        <source>Tabs toolbar</source>
+        <translation>Barre d&apos;outils des onglets</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="322"/>
+        <source>Actions toolbar</source>
+        <translation>Barre d&apos;outils des actions</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="334"/>
+        <location filename="../altcoingui.cpp" line="343"/>
+        <source>[testnet]</source>
+        <translation>[testnet]</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="343"/>
+        <location filename="../altcoingui.cpp" line="399"/>
+        <source>Altcoin client</source>
+        <translation>Client Altcoin</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../altcoingui.cpp" line="492"/>
+        <source>%n active connection(s) to Altcoin network</source>
+        <translation><numerusform>%n connexion active avec le réseau Altcoin</numerusform><numerusform>%n connexions actives avec le réseau Altcoin</numerusform></translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="540"/>
+        <source>Downloaded %1 blocks of transaction history.</source>
+        <translation>%1 blocs de l&apos;historique des transactions téléchargés.</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../altcoingui.cpp" line="555"/>
+        <source>%n second(s) ago</source>
+        <translation><numerusform>il y a %n seconde</numerusform><numerusform>il y a %n secondes</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../altcoingui.cpp" line="559"/>
+        <source>%n minute(s) ago</source>
+        <translation><numerusform>il y a %n minute</numerusform><numerusform>il y a %n minutes</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../altcoingui.cpp" line="563"/>
+        <source>%n hour(s) ago</source>
+        <translation><numerusform>il y a %n heure</numerusform><numerusform>il y a %n heures</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../altcoingui.cpp" line="567"/>
+        <source>%n day(s) ago</source>
+        <translation><numerusform>il y a %n jour</numerusform><numerusform>il y a %n jours</numerusform></translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="573"/>
+        <source>Up to date</source>
+        <translation>À jour</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="580"/>
+        <source>Catching up...</source>
+        <translation>Rattrapage...</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="590"/>
+        <source>Last received block was generated %1.</source>
+        <translation>Le dernier bloc reçu a été généré %1.</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="649"/>
+        <source>This transaction is over the size limit.  You can still send it for a fee of %1, which goes to the nodes that process your transaction and helps to support the network.  Do you want to pay the fee?</source>
+        <translation>Cette transaction dépasse la limite de taille.  Vous pouvez quand même l&apos;envoyer en vous acquittant de frais d&apos;un montant de %1, qui iront aux nœuds qui traiteront la transaction et aideront à soutenir le réseau.  Voulez-vous payer les frais ?</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="654"/>
+        <source>Confirm transaction fee</source>
+        <translation>Confirmer les frais de transaction</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="681"/>
+        <source>Sent transaction</source>
+        <translation>Transaction envoyée</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="682"/>
+        <source>Incoming transaction</source>
+        <translation>Transaction entrante</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="683"/>
+        <source>Date: %1
+Amount: %2
+Type: %3
+Address: %4
+</source>
+        <translation>Date : %1
+Montant : %2
+Type : %3
+Adresse : %4
+</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="804"/>
+        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
+        <translation>Le porte-monnaie est &lt;b&gt;chiffré&lt;/b&gt; et est actuellement &lt;b&gt;déverrouillé&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="812"/>
+        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
+        <translation>Le porte-monnaie est &lt;b&gt;chiffré&lt;/b&gt; et est actuellement &lt;b&gt;verrouillé&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="835"/>
+        <source>Backup Wallet</source>
+        <translation>Sauvegarder le porte-monnaie</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="835"/>
+        <source>Wallet Data (*.dat)</source>
+        <translation>Données de porte-monnaie (*.dat)</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="838"/>
+        <source>Backup Failed</source>
+        <translation>La sauvegarde a échoué</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="838"/>
+        <source>There was an error trying to save the wallet data to the new location.</source>
+        <translation>Une erreur est survenue lors de l&apos;enregistrement des données de porte-monnaie à un autre emplacement.</t
