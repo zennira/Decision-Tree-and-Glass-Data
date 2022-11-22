@@ -609,4 +609,139 @@ Adresse : %4
     <message>
         <location filename="../altcoingui.cpp" line="838"/>
         <source>There was an error trying to save the wallet data to the new location.</source>
-        <translation>Une erreur est survenue lors de l&apos;enregistrement des données de porte-monnaie à un autre emplacement.</t
+        <translation>Une erreur est survenue lors de l&apos;enregistrement des données de porte-monnaie à un autre emplacement.</translation>
+    </message>
+    <message>
+        <location filename="../altcoin.cpp" line="112"/>
+        <source>A fatal error occured. Altcoin can no longer continue safely and will quit.</source>
+        <translation>Une erreur fatale est survenue. Altcoin ne peut plus continuer à fonctionner de façon sûre et va s&apos;arrêter.</translation>
+    </message>
+</context>
+<context>
+    <name>ClientModel</name>
+    <message>
+        <location filename="../clientmodel.cpp" line="84"/>
+        <source>Network Alert</source>
+        <translation>Alerte réseau</translation>
+    </message>
+</context>
+<context>
+    <name>DisplayOptionsPage</name>
+    <message>
+        <location filename="../optionsdialog.cpp" line="246"/>
+        <source>Display</source>
+        <translation>Affichage</translation>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="257"/>
+        <source>default</source>
+        <translation>par défaut</translation>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="263"/>
+        <source>The user interface language can be set here. This setting will only take effect after restarting Altcoin.</source>
+        <translation>La langue de l&apos;interface utilisateur peut être définie ici. Ce réglage ne sera pris en compte qu&apos;après un redémarrage de Altcoin.</translation>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="252"/>
+        <source>User Interface &amp;Language:</source>
+        <translation>&amp;Langue de l&apos;interface utilisateur :</translation>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="273"/>
+        <source>&amp;Unit to show amounts in:</source>
+        <translation>&amp;Unité d&apos;affichage des montants :</translation>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="277"/>
+        <source>Choose the default subdivision unit to show in the interface, and when sending coins</source>
+        <translation>Choisissez la sous-unité par défaut pour l&apos;affichage dans l&apos;interface et lors de l&apos;envoi de pièces</translation>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="284"/>
+        <source>&amp;Display addresses in transaction list</source>
+        <translation>&amp;Afficher les adresses sur la liste des transactions</translation>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="285"/>
+        <source>Whether to show Altcoin addresses in the transaction list</source>
+        <translation>Détermine si les adresses Altcoin seront affichées sur la liste des transactions</translation>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="303"/>
+        <source>Warning</source>
+        <translation>Attention</translation>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="303"/>
+        <source>This setting will take effect after restarting Altcoin.</source>
+        <translation>Ce réglage sera pris en compte après un redémarrage de Altcoin.</translation>
+    </message>
+</context>
+<context>
+    <name>EditAddressDialog</name>
+    <message>
+        <location filename="../forms/editaddressdialog.ui" line="14"/>
+        <source>Edit Address</source>
+        <translation>Éditer l&apos;adresse</translation>
+    </message>
+    <message>
+        <location filename="../forms/editaddressdialog.ui" line="25"/>
+        <source>&amp;Label</source>
+        <translation>&amp;Étiquette</translation>
+    </message>
+    <message>
+        <location filename="../forms/editaddressdialog.ui" line="35"/>
+        <source>The label associated with this address book entry</source>
+        <translation>L&apos;étiquette associée à cette entrée du carnet d&apos;adresses</translation>
+    </message>
+    <message>
+        <location filename="../forms/editaddressdialog.ui" line="42"/>
+        <source>&amp;Address</source>
+        <translation>&amp;Adresse</translation>
+    </message>
+    <message>
+        <location filename="../forms/editaddressdialog.ui" line="52"/>
+        <source>The address associated with this address book entry. This can only be modified for sending addresses.</source>
+        <translation>L&apos;adresse associée avec cette entrée du carnet d&apos;adresses. Ne peut être modifiée que pour les adresses d&apos;envoi.</translation>
+    </message>
+    <message>
+        <location filename="../editaddressdialog.cpp" line="20"/>
+        <source>New receiving address</source>
+        <translation>Nouvelle adresse de réception</translation>
+    </message>
+    <message>
+        <location filename="../editaddressdialog.cpp" line="24"/>
+        <source>New sending address</source>
+        <translation>Nouvelle adresse d&apos;envoi</translation>
+    </message>
+    <message>
+        <location filename="../editaddressdialog.cpp" line="27"/>
+        <source>Edit receiving address</source>
+        <translation>Éditer l&apos;adresse de réception</translation>
+    </message>
+    <message>
+        <location filename="../editaddressdialog.cpp" line="31"/>
+        <source>Edit sending address</source>
+        <translation>Éditer l&apos;adresse d&apos;envoi</translation>
+    </message>
+    <message>
+        <location filename="../editaddressdialog.cpp" line="91"/>
+        <source>The entered address &quot;%1&quot; is already in the address book.</source>
+        <translation>L&apos;adresse fournie « %1 » est déjà présente dans le carnet d&apos;adresses.</translation>
+    </message>
+    <message>
+        <location filename="../editaddressdialog.cpp" line="96"/>
+        <source>The entered address &quot;%1&quot; is not a valid Altcoin address.</source>
+        <translation>L&apos;adresse fournie « %1 » n&apos;est pas une adresse Altcoin valide.</translation>
+    </message>
+    <message>
+        <location filename="../editaddressdialog.cpp" line="101"/>
+        <source>Could not unlock wallet.</source>
+        <translation>Impossible de déverrouiller le porte-monnaie.</translation>
+    </message>
+    <message>
+        <location filename="../editaddressdialog.cpp" line="106"/>
+        <source>New key generation failed.</source>
+        <translation>Échec de la génération de la nouvelle clef.</translation>
+  
