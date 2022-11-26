@@ -1011,4 +1011,162 @@ Adresse : %4
     <message>
         <location filename="../forms/overviewpage.ui" line="89"/>
         <source>Balance:</source>
-      
+        <translation>Solde :</translation>
+    </message>
+    <message>
+        <location filename="../forms/overviewpage.ui" line="147"/>
+        <source>Number of transactions:</source>
+        <translation>Nombre de transactions :</translation>
+    </message>
+    <message>
+        <location filename="../forms/overviewpage.ui" line="118"/>
+        <source>Unconfirmed:</source>
+        <translation>Non confirmé :</translation>
+    </message>
+    <message>
+        <location filename="../forms/overviewpage.ui" line="40"/>
+        <source>Wallet</source>
+        <translation>Porte-monnaie</translation>
+    </message>
+    <message>
+        <location filename="../forms/overviewpage.ui" line="197"/>
+        <source>&lt;b&gt;Recent transactions&lt;/b&gt;</source>
+        <translation>&lt;b&gt;Transactions récentes&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <location filename="../forms/overviewpage.ui" line="105"/>
+        <source>Your current balance</source>
+        <translation>Votre solde actuel</translation>
+    </message>
+    <message>
+        <location filename="../forms/overviewpage.ui" line="134"/>
+        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the current balance</source>
+        <translation>Total des transactions qui doivent encore être confirmées et qui ne sont pas prises en compte pour le solde actuel</translation>
+    </message>
+    <message>
+        <location filename="../forms/overviewpage.ui" line="154"/>
+        <source>Total number of transactions in wallet</source>
+        <translation>Nombre total de transactions dans le porte-monnaie</translation>
+    </message>
+    <message>
+        <location filename="../overviewpage.cpp" line="110"/>
+        <location filename="../overviewpage.cpp" line="111"/>
+        <source>out of sync</source>
+        <translation>désynchronisé</translation>
+    </message>
+</context>
+<context>
+    <name>QRCodeDialog</name>
+    <message>
+        <location filename="../forms/qrcodedialog.ui" line="14"/>
+        <source>QR Code Dialog</source>
+        <translation>Dialogue de QR Code</translation>
+    </message>
+    <message>
+        <location filename="../forms/qrcodedialog.ui" line="32"/>
+        <source>QR Code</source>
+        <translation>QR Code</translation>
+    </message>
+    <message>
+        <location filename="../forms/qrcodedialog.ui" line="55"/>
+        <source>Request Payment</source>
+        <translation>Demande de paiement</translation>
+    </message>
+    <message>
+        <location filename="../forms/qrcodedialog.ui" line="70"/>
+        <source>Amount:</source>
+        <translation>Montant :</translation>
+    </message>
+    <message>
+        <location filename="../forms/qrcodedialog.ui" line="105"/>
+        <source>BTC</source>
+        <translation>BTC</translation>
+    </message>
+    <message>
+        <location filename="../forms/qrcodedialog.ui" line="121"/>
+        <source>Label:</source>
+        <translation>Étiquette :</translation>
+    </message>
+    <message>
+        <location filename="../forms/qrcodedialog.ui" line="144"/>
+        <source>Message:</source>
+        <translation>Message :</translation>
+    </message>
+    <message>
+        <location filename="../forms/qrcodedialog.ui" line="186"/>
+        <source>&amp;Save As...</source>
+        <translation>&amp;Enregistrer sous...</translation>
+    </message>
+    <message>
+        <location filename="../qrcodedialog.cpp" line="45"/>
+        <source>Error encoding URI into QR Code.</source>
+        <translation>Erreur de l&apos;encodage de l&apos;URI dans le QR Code.</translation>
+    </message>
+    <message>
+        <location filename="../qrcodedialog.cpp" line="63"/>
+        <source>Resulting URI too long, try to reduce the text for label / message.</source>
+        <translation>L&apos;URI résultant est trop long, essayez avec un texte d&apos;étiquette ou de message plus court.</translation>
+    </message>
+    <message>
+        <location filename="../qrcodedialog.cpp" line="120"/>
+        <source>Save QR Code</source>
+        <translation>Sauvegarder le QR Code</translation>
+    </message>
+    <message>
+        <location filename="../qrcodedialog.cpp" line="120"/>
+        <source>PNG Images (*.png)</source>
+        <translation>Images PNG (*.png)</translation>
+    </message>
+</context>
+<context>
+    <name>RPCConsole</name>
+    <message>
+        <location filename="../forms/rpcconsole.ui" line="14"/>
+        <source>Altcoin debug window</source>
+        <translation>Fenêtre de débogage de Altcoin</translation>
+    </message>
+    <message>
+        <location filename="../forms/rpcconsole.ui" line="46"/>
+        <source>Client name</source>
+        <translation>Nom du client</translation>
+    </message>
+    <message>
+        <location filename="../forms/rpcconsole.ui" line="56"/>
+        <location filename="../forms/rpcconsole.ui" line="79"/>
+        <location filename="../forms/rpcconsole.ui" line="102"/>
+        <location filename="../forms/rpcconsole.ui" line="125"/>
+        <location filename="../forms/rpcconsole.ui" line="161"/>
+        <location filename="../forms/rpcconsole.ui" line="214"/>
+        <location filename="../forms/rpcconsole.ui" line="237"/>
+        <location filename="../forms/rpcconsole.ui" line="260"/>
+        <location filename="../rpcconsole.cpp" line="245"/>
+        <source>N/A</source>
+        <translation>Indisponible</translation>
+    </message>
+    <message>
+        <location filename="../forms/rpcconsole.ui" line="69"/>
+        <source>Client version</source>
+        <translation>Version du client</translation>
+    </message>
+    <message>
+        <location filename="../forms/rpcconsole.ui" line="24"/>
+        <source>&amp;Information</source>
+        <translation>&amp;Information</translation>
+    </message>
+    <message>
+        <location filename="../forms/rpcconsole.ui" line="39"/>
+        <source>Client</source>
+        <translation>Client</translation>
+    </message>
+    <message>
+        <location filename="../forms/rpcconsole.ui" line="115"/>
+        <source>Startup time</source>
+        <translation>Temps de démarrage</translation>
+    </message>
+    <message>
+        <location filename="../forms/rpcconsole.ui" line="144"/>
+        <source>Network</source>
+        <translation>Réseau</translation>
+    </message>
+    <message>
+     
