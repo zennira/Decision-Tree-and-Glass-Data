@@ -1310,4 +1310,137 @@ Adresse : %4
     </message>
     <message>
         <location filename="../sendcoinsdialog.cpp" line="100"/>
-        <source>Are you sure you want to send %1?</
+        <source>Are you sure you want to send %1?</source>
+        <translation>Êtes-vous sûr de vouloir envoyer %1 ?</translation>
+    </message>
+    <message>
+        <location filename="../sendcoinsdialog.cpp" line="100"/>
+        <source> and </source>
+        <translation> et </translation>
+    </message>
+    <message>
+        <location filename="../sendcoinsdialog.cpp" line="123"/>
+        <source>The recepient address is not valid, please recheck.</source>
+        <translation>L&apos;adresse du destinataire n&apos;est pas valide, veuillez la vérifier.</translation>
+    </message>
+    <message>
+        <location filename="../sendcoinsdialog.cpp" line="128"/>
+        <source>The amount to pay must be larger than 0.</source>
+        <translation>Le montant à payer doit être supérieur à 0.</translation>
+    </message>
+    <message>
+        <location filename="../sendcoinsdialog.cpp" line="133"/>
+        <source>The amount exceeds your balance.</source>
+        <translation>Le montant dépasse votre solde.</translation>
+    </message>
+    <message>
+        <location filename="../sendcoinsdialog.cpp" line="138"/>
+        <source>The total exceeds your balance when the %1 transaction fee is included.</source>
+        <translation>Le montant dépasse votre solde lorsque les frais de transaction de %1 sont inclus.</translation>
+    </message>
+    <message>
+        <location filename="../sendcoinsdialog.cpp" line="144"/>
+        <source>Duplicate address found, can only send to each address once per send operation.</source>
+        <translation>Adresse dupliquée trouvée, il n&apos;est possible d&apos;envoyer qu&apos;une fois à chaque adresse par opération d&apos;envoi.</translation>
+    </message>
+    <message>
+        <location filename="../sendcoinsdialog.cpp" line="149"/>
+        <source>Error: Transaction creation failed.</source>
+        <translation>Erreur : échec de la création de la transaction.</translation>
+    </message>
+    <message>
+        <location filename="../sendcoinsdialog.cpp" line="154"/>
+        <source>Error: The transaction was rejected. This might happen if some of the coins in your wallet were already spent, such as if you used a copy of wallet.dat and coins were spent in the copy but not marked as spent here.</source>
+        <translation>Erreur : la transaction a été rejetée. Cela peut arriver si certaines pièces de votre porte-monnaie ont déjà été dépensées, par exemple si vous avez utilisé une copie de wallet.dat avec laquelle les pièces ont été dépensées mais pas marquées comme telles ici.</translation>
+    </message>
+</context>
+<context>
+    <name>SendCoinsEntry</name>
+    <message>
+        <location filename="../forms/sendcoinsentry.ui" line="14"/>
+        <source>Form</source>
+        <translation>Formulaire</translation>
+    </message>
+    <message>
+        <location filename="../forms/sendcoinsentry.ui" line="29"/>
+        <source>A&amp;mount:</source>
+        <translation>&amp;Montant :</translation>
+    </message>
+    <message>
+        <location filename="../forms/sendcoinsentry.ui" line="42"/>
+        <source>Pay &amp;To:</source>
+        <translation>Payer &amp;à :</translation>
+    </message>
+    <message>
+        <location filename="../forms/sendcoinsentry.ui" line="66"/>
+        <location filename="../sendcoinsentry.cpp" line="25"/>
+        <source>Enter a label for this address to add it to your address book</source>
+        <translation>Entrez une étiquette pour cette adresse afin de l&apos;ajouter à votre carnet d&apos;adresses</translation>
+    </message>
+    <message>
+        <location filename="../forms/sendcoinsentry.ui" line="75"/>
+        <source>&amp;Label:</source>
+        <translation>&amp;Étiquette :</translation>
+    </message>
+    <message>
+        <location filename="../forms/sendcoinsentry.ui" line="93"/>
+        <source>The address to send the payment to  (e.g. 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L)</source>
+        <translation>L&apos;adresse à laquelle le paiement sera envoyé   (par ex. 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L)</translation>
+    </message>
+    <message>
+        <location filename="../forms/sendcoinsentry.ui" line="103"/>
+        <source>Choose address from address book</source>
+        <translation>Choisir une adresse dans le carnet d&apos;adresses</translation>
+    </message>
+    <message>
+        <location filename="../forms/sendcoinsentry.ui" line="113"/>
+        <source>Alt+A</source>
+        <translation>Alt+A</translation>
+    </message>
+    <message>
+        <location filename="../forms/sendcoinsentry.ui" line="120"/>
+        <source>Paste address from clipboard</source>
+        <translation>Coller une adresse depuis le presse-papiers</translation>
+    </message>
+    <message>
+        <location filename="../forms/sendcoinsentry.ui" line="130"/>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+    <message>
+        <location filename="../forms/sendcoinsentry.ui" line="137"/>
+        <source>Remove this recipient</source>
+        <translation>Enlever ce destinataire</translation>
+    </message>
+    <message>
+        <location filename="../sendcoinsentry.cpp" line="26"/>
+        <source>Enter a Altcoin address (e.g. 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L)</source>
+        <translation>Entrez une adresse Altcoin (par ex. 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L)</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <location filename="../transactiondesc.cpp" line="21"/>
+        <source>Open for %1 blocks</source>
+        <translation>Ouvert pour %1 blocs</translation>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="23"/>
+        <source>Open until %1</source>
+        <translation>Ouvert jusqu&apos;à %1</translation>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="29"/>
+        <source>%1/offline?</source>
+        <translation>%1/hors ligne ?</translation>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="31"/>
+        <source>%1/unconfirmed</source>
+        <translation>%1/non confirmée</translation>
+    </message>
+    <message>
+        <location filename="../transactiondesc.cpp" line="33"/>
+        <source>%1 confirmations</source>
+        <translation>%1 confirmations</transla
