@@ -2017,4 +2017,121 @@ Adresse : %4
         <translation>Générer des pièces</translation>
     </message>
     <message>
-        
+        <location filename="../altcoinstrings.cpp" line="53"/>
+        <source>Don&apos;t generate coins</source>
+        <translation>Ne pas générer de pièces</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="54"/>
+        <source>Specify data directory</source>
+        <translation>Spécifier le répertoire de données</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="55"/>
+        <source>Set database cache size in megabytes (default: 25)</source>
+        <translation>Définir la taille du tampon en mégaoctets (par défaut :25)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="56"/>
+        <source>Set database disk log size in megabytes (default: 100)</source>
+        <translation>Définir la taille du journal de la base de données sur le disque en mégaoctets (par défaut : 100)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="57"/>
+        <source>Specify connection timeout (in milliseconds)</source>
+        <translation>Spécifier le délai d&apos;expiration de la connexion (en millisecondes)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="63"/>
+        <source>Listen for connections on &lt;port&gt; (default: 8333 or testnet: 18333)</source>
+        <translation>Écouter les connexions sur le &lt;port&gt; (par défaut : 8333 ou testnet : 18333)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="64"/>
+        <source>Maintain at most &lt;n&gt; connections to peers (default: 125)</source>
+        <translation>Garder au plus &lt;n&gt; connexions avec les pairs (par défaut : 125)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="66"/>
+        <source>Connect only to the specified node</source>
+        <translation>Ne se connecter qu&apos;au nœud spécifié</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="67"/>
+        <source>Connect to a node to retrieve peer addresses, and disconnect</source>
+        <translation>Se connecter à un nœud pour obtenir des adresses de pairs puis se déconnecter</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="68"/>
+        <source>Specify your own public address</source>
+        <translation>Spécifier votre propre adresse publique</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="69"/>
+        <source>Only connect to nodes in network &lt;net&gt; (IPv4 or IPv6)</source>
+        <translation>Se connecter uniquement aux nœuds du réseau &lt;net&gt; (IPv4 ou IPv6)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="70"/>
+        <source>Try to discover public IP address (default: 1)</source>
+        <translation>Essayer de découvrir l&apos;adresse IP publique (par défaut : 1)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="73"/>
+        <source>Bind to given address. Use [host]:port notation for IPv6</source>
+        <translation>Attacher à l&apos;adresse définie. Utilisez la notation [hôte]:port pour l&apos;IPv6</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="75"/>
+        <source>Threshold for disconnecting misbehaving peers (default: 100)</source>
+        <translation>Seuil de déconnexion des pairs de mauvaise qualité (par défaut : 100)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="76"/>
+        <source>Number of seconds to keep misbehaving peers from reconnecting (default: 86400)</source>
+        <translation>Délai en secondes de refus de reconnexion aux pairs de mauvaise qualité (par défaut : 86400)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="79"/>
+        <source>Maximum per-connection receive buffer, &lt;n&gt;*1000 bytes (default: 10000)</source>
+        <translation>Tampon maximal de réception par connexion, &lt;n&gt;*1000 octets (par défaut : 10000)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="80"/>
+        <source>Maximum per-connection send buffer, &lt;n&gt;*1000 bytes (default: 10000)</source>
+        <translation>Tampon maximal d&apos;envoi par connexion, &lt;n&gt;*1000 octets (par défaut : 10000)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="83"/>
+        <source>Detach block and address databases. Increases shutdown time (default: 0)</source>
+        <translation>Détacher les bases de données des blocs et des adresses. Augmente le délai de fermeture (par défaut : 0)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="86"/>
+        <source>Accept command line and JSON-RPC commands</source>
+        <translation>Accepter les commandes de JSON-RPC et de la ligne de commande</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="87"/>
+        <source>Run in the background as a daemon and accept commands</source>
+        <translation>Fonctionner en arrière-plan en tant que démon et accepter les commandes</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="88"/>
+        <source>Use the test network</source>
+        <translation>Utiliser le réseau de test</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="89"/>
+        <source>Output extra debugging information</source>
+        <translation>Informations de débogage supplémentaires</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="90"/>
+        <source>Prepend debug output with timestamp</source>
+        <translation>Faire précéder les données de débogage par un horodatage</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="91"/>
+        <source>Send trace/debug info to console instead of debug.log file</source>
+        <translation>Envoyer les informations de débogage/trace à la console au lieu 
