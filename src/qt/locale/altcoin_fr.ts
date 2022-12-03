@@ -2134,4 +2134,129 @@ Adresse : %4
     <message>
         <location filename="../altcoinstrings.cpp" line="91"/>
         <source>Send trace/debug info to console instead of debug.log file</source>
-        <translation>Envoyer les informations de débogage/trace à la console au lieu 
+        <translation>Envoyer les informations de débogage/trace à la console au lieu du fichier debug.log</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="92"/>
+        <source>Send trace/debug info to debugger</source>
+        <translation>Envoyer les informations de débogage/trace au débogueur</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="93"/>
+        <source>Username for JSON-RPC connections</source>
+        <translation>Nom d&apos;utilisateur pour les connexions JSON-RPC</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="94"/>
+        <source>Password for JSON-RPC connections</source>
+        <translation>Mot de passe pour les connexions JSON-RPC</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="95"/>
+        <source>Listen for JSON-RPC connections on &lt;port&gt; (default: 8332)</source>
+        <translation>Écouter les connexions JSON-RPC sur le &lt;port&gt; (par défaut : 8332)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="96"/>
+        <source>Allow JSON-RPC connections from specified IP address</source>
+        <translation>Autoriser les connexions JSON-RPC depuis l&apos;adresse IP spécifiée</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="97"/>
+        <source>Send commands to node running on &lt;ip&gt; (default: 127.0.0.1)</source>
+        <translation>Envoyer des commandes au nœud fonctionnant à &lt;ip&gt; (par défaut : 127.0.0.1)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="98"/>
+        <source>Execute command when the best block changes (%s in cmd is replaced by block hash)</source>
+        <translation>Exécuter la commande lorsque le meilleur bloc change (%s est remplacé par le hachage du bloc dans cmd)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="101"/>
+        <source>Upgrade wallet to latest format</source>
+        <translation>Mettre à jour le format du porte-monnaie</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="102"/>
+        <source>Set key pool size to &lt;n&gt; (default: 100)</source>
+        <translation>Régler la taille de la plage de clefs sur &lt;n&gt; (par défaut : 100)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="103"/>
+        <source>Rescan the block chain for missing wallet transactions</source>
+        <translation>Réanalyser la chaîne de blocs pour les transactions de porte-monnaie manquantes</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="104"/>
+        <source>How many blocks to check at startup (default: 2500, 0 = all)</source>
+        <translation>Nombre de blocs à tester au démarrage (par défaut : 2500, 0 = tous)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="105"/>
+        <source>How thorough the block verification is (0-6, default: 1)</source>
+        <translation>Profondeur de la vérification des blocs (0-6, par défaut : 1)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="106"/>
+        <source>Imports blocks from external blk000?.dat file</source>
+        <translation>Importe des blocs depuis un fichier blk000?.dat externe</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="108"/>
+        <source>
+SSL options: (see the Altcoin Wiki for SSL setup instructions)</source>
+        <translation>
+Options SSL : (cf. le wiki Altcoin pour les réglages SSL)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="111"/>
+        <source>Use OpenSSL (https) for JSON-RPC connections</source>
+        <translation>Utiliser OpenSSL (https) pour les connexions JSON-RPC</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="112"/>
+        <source>Server certificate file (default: server.cert)</source>
+        <translation>Fichier de certificat serveur (par défaut : server.cert)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="113"/>
+        <source>Server private key (default: server.pem)</source>
+        <translation>Clef privée du serveur (par défaut : server.pem)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="114"/>
+        <source>Acceptable ciphers (default: TLSv1+HIGH:!SSLv2:!aNULL:!eNULL:!AH:!3DES:@STRENGTH)</source>
+        <translation>Clefs de chiffrement acceptables (par défaut : TLSv1+HIGH:!SSLv2:!aNULL:!eNULL:!AH:!3DES:@STRENGTH)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="145"/>
+        <source>Warning: Disk space is low</source>
+        <translation>Attention : l&apos;espace disque est faible</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="107"/>
+        <source>This help message</source>
+        <translation>Ce message d&apos;aide</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="121"/>
+        <source>Cannot obtain a lock on data directory %s.  Altcoin is probably already running.</source>
+        <translation>Impossible d&apos;obtenir un verrou sur le répertoire de données %s.  Altcoin fonctionne probablement déjà.</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="48"/>
+        <source>Altcoin</source>
+        <translation>Altcoin</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="30"/>
+        <source>Unable to bind to %s on this computer (bind returned error %d, %s)</source>
+        <translation>Impossible de se lier à %s sur cet ordinateur (bind a retourné l&apos;erreur %d, %s)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="58"/>
+        <source>Connect through socks proxy</source>
+        <translation>Connexion via un proxy socks</translation>
+    </message>
+    <message>
+        <location filename=
