@@ -2259,4 +2259,121 @@ Options SSL : (cf. le wiki Altcoin pour les réglages SSL)</translation>
         <translation>Connexion via un proxy socks</translation>
     </message>
     <message>
-        <location filename=
+        <location filename="../altcoinstrings.cpp" line="59"/>
+        <source>Select the version of socks proxy to use (4 or 5, 5 is default)</source>
+        <translation>Sélectionner la version du proxy socks à utiliser (4 ou 5, 5 étant la valeur par défaut)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="60"/>
+        <source>Do not use proxy for connections to network &lt;net&gt; (IPv4 or IPv6)</source>
+        <translation>Ne pas utiliser de proxy pour les connexions au réseau &lt;net&gt; (IPv4 ou IPv6)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="61"/>
+        <source>Allow DNS lookups for -addnode, -seednode and -connect</source>
+        <translation>Autoriser les recherches DNS pour -addnode, -seednode et -connect</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="62"/>
+        <source>Pass DNS requests to (SOCKS5) proxy</source>
+        <translation>Transmettre les requêtes DNS au proxy (SOCKS5)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="142"/>
+        <source>Loading addresses...</source>
+        <translation>Chargement des adresses...</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="132"/>
+        <source>Error loading blkindex.dat</source>
+        <translation>Erreur lors du chargement de blkindex.dat</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="134"/>
+        <source>Error loading wallet.dat: Wallet corrupted</source>
+        <translation>Erreur lors du chargement de wallet.dat : porte-monnaie corrompu</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="135"/>
+        <source>Error loading wallet.dat: Wallet requires newer version of Altcoin</source>
+        <translation>Erreur lors du chargement de wallet.dat : le porte-monnaie nécessite une version plus récente de Altcoin</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="136"/>
+        <source>Wallet needed to be rewritten: restart Altcoin to complete</source>
+        <translation>Le porte-monnaie nécessitait une réécriture. Veuillez redémarrer Altcoin pour terminer l&apos;opération</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="137"/>
+        <source>Error loading wallet.dat</source>
+        <translation>Erreur lors du chargement de wallet.dat</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="124"/>
+        <source>Invalid -proxy address: &apos;%s&apos;</source>
+        <translation>Adresse -proxy invalide : « %s »</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="125"/>
+        <source>Unknown network specified in -noproxy: &apos;%s&apos;</source>
+        <translation>Le réseau spécifié dans -noproxy est inconnu : « %s »</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="127"/>
+        <source>Unknown network specified in -onlynet: &apos;%s&apos;</source>
+        <translation>Réseau inconnu spécifié sur -onlynet : « %s »</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="126"/>
+        <source>Unknown -socks proxy version requested: %i</source>
+        <translation>Version inconnue de proxy -socks demandée : %i</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="128"/>
+        <source>Cannot resolve -bind address: &apos;%s&apos;</source>
+        <translation>Impossible de résoudre l&apos;adresse -bind : « %s »</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="129"/>
+        <source>Not listening on any port</source>
+        <translation>Aucune écoute sur quel port que ce soit</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="130"/>
+        <source>Cannot resolve -externalip address: &apos;%s&apos;</source>
+        <translation>Impossible de résoudre l&apos;adresse -externalip : « %s »</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="117"/>
+        <source>Invalid amount for -paytxfee=&lt;amount&gt;: &apos;%s&apos;</source>
+        <translation>Montant invalide pour -paytxfee=&lt;montant&gt; : « %s »</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="143"/>
+        <source>Error: could not start node</source>
+        <translation>Erreur : le nœud n&apos;a pu être démarré</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="31"/>
+        <source>Error: Wallet locked, unable to create transaction  </source>
+        <translation>Erreur : le porte-monnaie est verrouillé, impossible de créer la transaction  </translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="32"/>
+        <source>Error: This transaction requires a transaction fee of at least %s because of its amount, complexity, or use of recently received funds  </source>
+        <translation>Erreur : cette transaction nécessite des frais de transaction d&apos;au moins %s en raison de son montant, de sa complexité ou parce que des fonds reçus récemment sont utilisés  </translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="35"/>
+        <source>Error: Transaction creation failed  </source>
+        <translation>Erreur : échec de la création de la transaction  </translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="36"/>
+        <source>Sending...</source>
+        <translation>Envoi en cours...</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="37"/>
+        <source>Error: The transaction was rejected.  This might happen if some of the coins in your wallet were already spent, such as if you used a copy of wallet.dat and coins were spent in the copy but not marked as spent here.</source>
+        <translation>Erreur : la transaction a été rejetée.  Cela peut arriver si certaines pièces de votre 
