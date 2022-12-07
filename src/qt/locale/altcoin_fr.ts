@@ -2376,4 +2376,134 @@ Options SSL : (cf. le wiki Altcoin pour les réglages SSL)</translation>
     <message>
         <location filename="../altcoinstrings.cpp" line="37"/>
         <source>Error: The transaction was rejected.  This might happen if some of the coins in your wallet were already spent, such as if you used a copy of wallet.dat and coins were spent in the copy but not marked as spent here.</source>
-        <translation>Erreur : la transaction a été rejetée.  Cela peut arriver si certaines pièces de votre 
+        <translation>Erreur : la transaction a été rejetée.  Cela peut arriver si certaines pièces de votre porte-monnaie ont déjà été dépensées, par exemple si vous avez utilisé une copie de wallet.dat et si des pièces ont été dépensées avec cette copie sans être marquées comme telles ici.</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="41"/>
+        <source>Invalid amount</source>
+        <translation>Montant invalide</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="42"/>
+        <source>Insufficient funds</source>
+        <translation>Fonds insuffisants</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="131"/>
+        <source>Loading block index...</source>
+        <translation>Chargement de l&apos;index des blocs...</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="65"/>
+        <source>Add a node to connect to and attempt to keep the connection open</source>
+        <translation>Ajouter un nœud auquel se connecter et tenter de garder la connexion ouverte</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="28"/>
+        <source>Unable to bind to %s on this computer. Altcoin is probably already running.</source>
+        <translation>Impossible de se lier à %s sur cet ordinateur. Altcoin fonctionne probablement déjà.</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="71"/>
+        <source>Find peers using internet relay chat (default: 0)</source>
+        <translation>Trouver des pairs en utilisant Internet Relay Chat (par défaut : 0)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="72"/>
+        <source>Accept connections from outside (default: 1)</source>
+        <translation>Accepter les connexions entrantes (par défaut : 1)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="74"/>
+        <source>Find peers using DNS lookup (default: 1)</source>
+        <translation>Trouver des pairs en utilisant la recherche DNS (par défaut : 1)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="81"/>
+        <source>Use Universal Plug and Play to map the listening port (default: 1)</source>
+        <translation>Utiliser Universal Plug and Play pour rediriger le port d&apos;écoute (par défaut : 1)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="82"/>
+        <source>Use Universal Plug and Play to map the listening port (default: 0)</source>
+        <translation>Utiliser Universal Plug and Play pour rediriger le port d&apos;écoute (par défaut : 0)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="85"/>
+        <source>Fee per KB to add to transactions you send</source>
+        <translation>Frais par Ko à ajouter aux transactions que vous enverrez</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="118"/>
+        <source>Warning: -paytxfee is set very high. This is the transaction fee you will pay if you send a transaction.</source>
+        <translation>Attention : -paytxfee est réglée sur un montant très élevé. Il s&apos;agit des frais de transaction que vous payerez si vous envoyez une transaction.</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="133"/>
+        <source>Loading wallet...</source>
+        <translation>Chargement du porte-monnaie...</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="138"/>
+        <source>Cannot downgrade wallet</source>
+        <translation>Impossible de revenir à une version antérieure du porte-monnaie</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="139"/>
+        <source>Cannot initialize keypool</source>
+        <translation>Impossible d&apos;initialiser le keypool</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="140"/>
+        <source>Cannot write default address</source>
+        <translation>Impossible d&apos;écrire l&apos;adresse par défaut</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="141"/>
+        <source>Rescanning...</source>
+        <translation>Nouvelle analyse...</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="144"/>
+        <source>Done loading</source>
+        <translation>Chargement terminé</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="8"/>
+        <source>To use the %s option</source>
+        <translation>Pour utiliser l&apos;option %s</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="9"/>
+        <source>%s, you must set a rpcpassword in the configuration file:
+ %s
+It is recommended you use the following random password:
+rpcuser=altcoinrpc
+rpcpassword=%s
+(you do not need to remember this password)
+If the file does not exist, create it with owner-readable-only file permissions.
+</source>
+        <translation>%s, vous devez établir un mot de passe rpc dans le fichier de configuration :
+ %s
+Il est recommandé d&apos;utiliser le mot de passe aléatoire suivant :
+rcpuser=altcoinrpc
+rpcpassword=%s
+(vous n&apos;avez pas besoin de mémoriser ce mot de passe)
+Si le fichier n&apos;existe pas, créez-le avec les droits de lecture accordés au propriétaire.
+</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="18"/>
+        <source>Error</source>
+        <translation>Erreur</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="19"/>
+        <source>An error occured while setting up the RPC port %i for listening: %s</source>
+        <translation>Une erreur est survenue lors de mise en place du port RPC d&apos;écoute %i : %s</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="20"/>
+        <source>You must set rpcpassword=&lt;password&gt; in the configuration file:
+%s
+If the file doe
