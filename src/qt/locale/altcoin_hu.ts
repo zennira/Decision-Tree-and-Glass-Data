@@ -1,17 +1,17 @@
 
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="hr" version="2.0">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="hu" version="2.0">
 <defaultcodec>UTF-8</defaultcodec>
 <context>
     <name>AboutDialog</name>
     <message>
         <location filename="../forms/aboutdialog.ui" line="14"/>
         <source>About Altcoin</source>
-        <translation>O Altcoinu</translation>
+        <translation>A Altcoinról</translation>
     </message>
     <message>
         <location filename="../forms/aboutdialog.ui" line="53"/>
         <source>&lt;b&gt;Altcoin&lt;/b&gt; version</source>
-        <translation>&lt;b&gt;Altcoin&lt;/b&gt; verzija</translation>
+        <translation>&lt;b&gt;Altcoin&lt;/b&gt; verzió</translation>
     </message>
     <message>
         <location filename="../forms/aboutdialog.ui" line="97"/>
@@ -22,13 +22,7 @@ This is experimental software.
 Distributed under the MIT/X11 software license, see the accompanying file license.txt or http://www.opensource.org/licenses/mit-license.php.
 
 This product includes software developed by the OpenSSL Project for use in the OpenSSL Toolkit (http://www.openssl.org/) and cryptographic software written by Eric Young (eay@cryptsoft.com) and UPnP software written by Thomas Bernard.</source>
-        <translation>Copyright © 2009-2012 Altcoin Developers
-
-Ovo je eksperimentalan softver.
-
-Djeljen pod MIT/X11 licencom, pogledajte prateću datoteku license.txt ili http://www.opensource.org/licenses/mit-license.php.
-
-Ovaj proizvod sadrži softver kojeg je razvio OpenSSL Project za korištenje u  OpenSSL Toolkit (http://www.openssl.org/) i kriptografski softver kojeg je napisao Eric Young (eay@cryptsoft.com) i UPnP softver kojeg je napisao Thomas Bernard.</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -36,27 +30,27 @@ Ovaj proizvod sadrži softver kojeg je razvio OpenSSL Project za korištenje u  
     <message>
         <location filename="../forms/addressbookpage.ui" line="14"/>
         <source>Address Book</source>
-        <translation>Adresar</translation>
+        <translation>Címjegyzék</translation>
     </message>
     <message>
         <location filename="../forms/addressbookpage.ui" line="20"/>
         <source>These are your Altcoin addresses for receiving payments.  You may want to give a different one to each sender so you can keep track of who is paying you.</source>
-        <translation>Ovo su vaše Altcoin adrese za primanje isplate. Možda želite dati drukčiju adresu svakom primatelju tako da možete pratiti tko je platio.</translation>
+        <translation>Ezekkel a Altcoin-címekkel fogadhatod kifizetéseket.   Érdemes lehet minden egyes kifizető számára külön címet létrehozni, hogy könnyebben nyomon követhesd, kitől kaptál már pénzt.</translation>
     </message>
     <message>
         <location filename="../forms/addressbookpage.ui" line="36"/>
         <source>Double-click to edit address or label</source>
-        <translation>Dvostruki klik za uređivanje adrese ili oznake</translation>
+        <translation>Dupla-katt a cím vagy a címke szerkesztéséhez</translation>
     </message>
     <message>
         <location filename="../forms/addressbookpage.ui" line="63"/>
         <source>Create a new address</source>
-        <translation>Dodajte novu adresu</translation>
+        <translation>Új cím létrehozása</translation>
     </message>
     <message>
         <location filename="../forms/addressbookpage.ui" line="77"/>
         <source>Copy the currently selected address to the system clipboard</source>
-        <translation>Kopiraj trenutno odabranu adresu u međuspremnik</translation>
+        <translation>A kiválasztott cím másolása a vágólapra</translation>
     </message>
     <message>
         <location filename="../forms/addressbookpage.ui" line="66"/>
@@ -71,27 +65,27 @@ Ovaj proizvod sadrži softver kojeg je razvio OpenSSL Project za korištenje u  
     <message>
         <location filename="../forms/addressbookpage.ui" line="91"/>
         <source>Show &amp;QR Code</source>
-        <translation>Prikaži &amp;QR Kôd</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../forms/addressbookpage.ui" line="102"/>
         <source>Sign a message to prove you own this address</source>
-        <translation>Potpišite poruku kako bi dokazali da posjedujete ovu adresu</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../forms/addressbookpage.ui" line="105"/>
         <source>&amp;Sign Message</source>
-        <translation>&amp;Potpišite poruku</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../forms/addressbookpage.ui" line="116"/>
         <source>Delete the currently selected address from the list. Only sending addresses can be deleted.</source>
-        <translation>Brisanje trenutno odabrane adrese s popisa. Samo adrese za slanje se mogu izbrisati.</translation>
+        <translation>A kiválasztott cím törlése a listáról. Csak a küldő címek törölhetőek.</translation>
     </message>
     <message>
         <location filename="../forms/addressbookpage.ui" line="119"/>
         <source>&amp;Delete</source>
-        <translation>&amp;Brisanje</translation>
+        <translation>&amp;Törlés</translation>
     </message>
     <message>
         <location filename="../addressbookpage.cpp" line="63"/>
@@ -106,22 +100,22 @@ Ovaj proizvod sadrži softver kojeg je razvio OpenSSL Project za korištenje u  
     <message>
         <location filename="../addressbookpage.cpp" line="292"/>
         <source>Export Address Book Data</source>
-        <translation>Izvoz podataka adresara</translation>
+        <translation>Címjegyzék adatainak exportálása</translation>
     </message>
     <message>
         <location filename="../addressbookpage.cpp" line="293"/>
         <source>Comma separated file (*.csv)</source>
-        <translation>Datoteka vrijednosti odvojenih zarezom (*. csv)</translation>
+        <translation>Vesszővel elválasztott fájl (*. csv)</translation>
     </message>
     <message>
         <location filename="../addressbookpage.cpp" line="306"/>
         <source>Error exporting</source>
-        <translation>Pogreška kod izvoza</translation>
+        <translation>Hiba exportálás közben</translation>
     </message>
     <message>
         <location filename="../addressbookpage.cpp" line="306"/>
         <source>Could not write to file %1.</source>
-        <translation>Ne mogu pisati u datoteku %1.</translation>
+        <translation>%1 nevű fájl nem írható.</translation>
     </message>
 </context>
 <context>
@@ -129,17 +123,17 @@ Ovaj proizvod sadrži softver kojeg je razvio OpenSSL Project za korištenje u  
     <message>
         <location filename="../addresstablemodel.cpp" line="142"/>
         <source>Label</source>
-        <translation>Oznaka</translation>
+        <translation>Címke</translation>
     </message>
     <message>
         <location filename="../addresstablemodel.cpp" line="142"/>
         <source>Address</source>
-        <translation>Adresa</translation>
+        <translation>Cím</translation>
     </message>
     <message>
         <location filename="../addresstablemodel.cpp" line="178"/>
         <source>(no label)</source>
-        <translation>(bez oznake)</translation>
+        <translation>(nincs címke)</translation>
     </message>
 </context>
 <context>
@@ -152,86 +146,86 @@ Ovaj proizvod sadrži softver kojeg je razvio OpenSSL Project za korištenje u  
     <message>
         <location filename="../forms/askpassphrasedialog.ui" line="47"/>
         <source>Enter passphrase</source>
-        <translation>Unesite lozinku</translation>
+        <translation>Add meg a jelszót</translation>
     </message>
     <message>
         <location filename="../forms/askpassphrasedialog.ui" line="61"/>
         <source>New passphrase</source>
-        <translation>Nova lozinka</translation>
+        <translation>Új jelszó</translation>
     </message>
     <message>
         <location filename="../forms/askpassphrasedialog.ui" line="75"/>
         <source>Repeat new passphrase</source>
-        <translation>Ponovite novu lozinku</translation>
+        <translation>Új jelszó újra</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="33"/>
         <source>Enter the new passphrase to the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;10 or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
-        <translation>Unesite novi lozinku za novčanik. &lt;br/&gt; Molimo Vas da koristite zaporku od &lt;b&gt;10 ili više slučajnih znakova,&lt;/b&gt; ili &lt;b&gt;osam ili više riječi.&lt;/b&gt;</translation>
+        <translation>Írd be az új jelszót a tárcához.&lt;br/&gt;Használj legalább 10&lt;br/&gt;véletlenszerű karaktert&lt;/b&gt; vagy &lt;b&gt;legalább nyolc szót&lt;/b&gt;.</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="34"/>
         <source>Encrypt wallet</source>
-        <translation>Šifriranje novčanika</translation>
+        <translation>Tárca kódolása</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="37"/>
         <source>This operation needs your wallet passphrase to unlock the wallet.</source>
-        <translation>Ova operacija treba lozinku vašeg novčanika kako bi se novčanik otključao.</translation>
+        <translation>A tárcád megnyitásához a műveletnek szüksége van a tárcád jelszavára.</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="42"/>
         <source>Unlock wallet</source>
-        <translation>Otključaj novčanik</translation>
+        <translation>Tárca megnyitása</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="45"/>
         <source>This operation needs your wallet passphrase to decrypt the wallet.</source>
-        <translation>Ova operacija treba lozinku vašeg novčanika kako bi se novčanik dešifrirao.</translation>
+        <translation>A tárcád dekódolásához a műveletnek szüksége van a tárcád jelszavára.</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="50"/>
         <source>Decrypt wallet</source>
-        <translation>Dešifriranje novčanika.</translation>
+        <translation>Tárca dekódolása</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="53"/>
         <source>Change passphrase</source>
-        <translation>Promjena lozinke</translation>
+        <translation>Jelszó megváltoztatása</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="54"/>
         <source>Enter the old and new passphrase to the wallet.</source>
-        <translation>Unesite staru i novu lozinku za novčanik.</translation>
+        <translation>Írd be a tárca régi és új jelszavát.</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="100"/>
         <source>Confirm wallet encryption</source>
-        <translation>Potvrdi šifriranje novčanika</translation>
+        <translation>Biztosan kódolni akarod a tárcát?</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="101"/>
         <source>WARNING: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR ALTCOINS&lt;/b&gt;!
 Are you sure you wish to encrypt your wallet?</source>
-        <translation>UPOZORENJE: Ako šifrirate vaš novčanik i izgubite lozinku, &lt;b&gt;IZGUBIT ĆETE SVE SVOJE ALTCOINSE!&lt;/b&gt;
-Jeste li sigurni da želite šifrirati svoj novčanik?</translation>
+        <translation>FIGYELEM: Ha kódolod a tárcát, és elveszíted a jelszavad, akkor &lt;b&gt;AZ ÖSSZES ALTCOINODAT IS EL FOGOD VESZÍTENI!&lt;/b&gt;
+Biztosan kódolni akarod a tárcát?</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="110"/>
         <location filename="../askpassphrasedialog.cpp" line="159"/>
         <source>Wallet encrypted</source>
-        <translation>Novčanik šifriran</translation>
+        <translation>Tárca kódolva</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="111"/>
         <source>Altcoin will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your altcoins from being stolen by malware infecting your computer.</source>
-        <translation>Altcoin će se sada zatvoriti kako bi dovršio postupak šifriranja. Zapamtite da šifriranje vašeg novčanika ne može u potpunosti zaštititi vaše altcoine od krađe preko zloćudnog softvera koji bi bio na vašem računalu.</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="207"/>
         <location filename="../askpassphrasedialog.cpp" line="231"/>
         <source>Warning: The Caps Lock key is on.</source>
-        <translation>Upozorenje: Tipka Caps Lock je upaljena.</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="116"/>
@@ -239,40 +233,40 @@ Jeste li sigurni da želite šifrirati svoj novčanik?</translation>
         <location filename="../askpassphrasedialog.cpp" line="165"/>
         <location filename="../askpassphrasedialog.cpp" line="171"/>
         <source>Wallet encryption failed</source>
-        <translation>Šifriranje novčanika nije uspjelo</translation>
+        <translation>Tárca kódolása sikertelen.</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="117"/>
         <source>Wallet encryption failed due to an internal error. Your wallet was not encrypted.</source>
-        <translation>Šifriranje novčanika nije uspjelo zbog interne pogreške. Vaš novčanik nije šifriran.</translation>
+        <translation>Tárca kódolása belső hiba miatt sikertelen. A tárcád nem lett kódolva.</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="124"/>
         <location filename="../askpassphrasedialog.cpp" line="172"/>
         <source>The supplied passphrases do not match.</source>
-        <translation>Priložene lozinke se ne podudaraju.</translation>
+        <translation>A megadott jelszavak nem egyeznek.</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="135"/>
         <source>Wallet unlock failed</source>
-        <translation>Otključavanje novčanika nije uspjelo</translation>
+        <translation>Tárca megnyitása sikertelen</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="136"/>
         <location filename="../askpassphrasedialog.cpp" line="147"/>
         <location filename="../askpassphrasedialog.cpp" line="166"/>
         <source>The passphrase entered for the wallet decryption was incorrect.</source>
-        <translation>Lozinka za dešifriranje novčanika nije točna.</translation>
+        <translation>Hibás jelszó.</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="146"/>
         <source>Wallet decryption failed</source>
-        <translation>Dešifriranje novčanika nije uspjelo</translation>
+        <translation>Dekódolás sikertelen.</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="160"/>
         <source>Wallet passphrase was succesfully changed.</source>
-        <translation>Lozinka novčanika je uspješno promijenjena.</translation>
+        <translation>Jelszó megváltoztatva.</translation>
     </message>
 </context>
 <context>
@@ -280,7 +274,7 @@ Jeste li sigurni da želite šifrirati svoj novčanik?</translation>
     <message>
         <location filename="../altcoingui.cpp" line="73"/>
         <source>Altcoin Wallet</source>
-        <translation>Altcoin novčanik</translation>
+        <translation>Altcoin-tárca</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="215"/>
@@ -295,92 +289,92 @@ Jeste li sigurni da želite šifrirati svoj novčanik?</translation>
     <message>
         <location filename="../altcoingui.cpp" line="515"/>
         <source>Synchronizing with network...</source>
-        <translation>Usklađivanje s mrežom ...</translation>
+        <translation>Szinkronizálás a hálózattal...</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="185"/>
         <source>&amp;Overview</source>
-        <translation>&amp;Pregled</translation>
+        <translation>&amp;Áttekintés</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="186"/>
         <source>Show general overview of wallet</source>
-        <translation>Prikaži opći pregled novčanika</translation>
+        <translation>Tárca általános áttekintése</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="191"/>
         <source>&amp;Transactions</source>
-        <translation>&amp;Transakcije</translation>
+        <translation>&amp;Tranzakciók</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="192"/>
         <source>Browse transaction history</source>
-        <translation>Pretraži povijest transakcija</translation>
+        <translation>Tranzakciótörténet megtekintése</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="197"/>
         <source>&amp;Address Book</source>
-        <translation>&amp;Adresar</translation>
+        <translation>Cím&amp;jegyzék</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="198"/>
         <source>Edit the list of stored addresses and labels</source>
-        <translation>Uređivanje popisa pohranjenih adresa i oznaka</translation>
+        <translation>Tárolt címek és címkék listájának szerkesztése</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="203"/>
         <source>&amp;Receive coins</source>
-        <translation>&amp;Primanje novca</translation>
+        <translation>Érmék &amp;fogadása</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="204"/>
         <source>Show the list of addresses for receiving payments</source>
-        <translation>Prikaži popis adresa za primanje isplate</translation>
+        <translation>Kiizetést fogadó címek listája</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="209"/>
         <source>&amp;Send coins</source>
-        <translation>&amp;Slanje novca</translation>
+        <translation>Érmék &amp;küldése</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="216"/>
         <source>Prove you control an address</source>
-        <translation>Dokažite da posjedujete adresu</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="235"/>
         <source>E&amp;xit</source>
-        <translation>&amp;Izlaz</translation>
+        <translation>&amp;Kilépés</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="236"/>
         <source>Quit application</source>
-        <translation>Izlazak iz programa</translation>
+        <translation>Kilépés</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="239"/>
         <source>&amp;About %1</source>
-        <translation>&amp;Više o %1</translation>
+        <translation>&amp;A %1-ról</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="240"/>
         <source>Show information about Altcoin</source>
-        <translation>Prikaži informacije o Altcoinu</translation>
+        <translation>Információk a Altcoinról</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="242"/>
         <source>About &amp;Qt</source>
-        <translation>Više o &amp;Qt</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="243"/>
         <source>Show information about Qt</source>
-        <translation>Prikaži informacije o Qt</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="245"/>
         <source>&amp;Options...</source>
-        <translation>&amp;Postavke</translation>
+        <translation>&amp;Opciók...</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="252"/>
@@ -400,7 +394,7 @@ Jeste li sigurni da želite šifrirati svoj novčanik?</translation>
     <message numerus="yes">
         <location filename="../altcoingui.cpp" line="517"/>
         <source>~%n block(s) remaining</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="528"/>
@@ -410,7 +404,7 @@ Jeste li sigurni da želite šifrirati svoj novčanik?</translation>
     <message>
         <location filename="../altcoingui.cpp" line="250"/>
         <source>&amp;Export...</source>
-        <translation>&amp;Izvoz...</translation>
+        <translation>&amp;Exportálás...</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="210"/>
@@ -430,22 +424,22 @@ Jeste li sigurni da želite šifrirati svoj novčanik?</translation>
     <message>
         <location filename="../altcoingui.cpp" line="251"/>
         <source>Export the data in the current tab to a file</source>
-        <translation>Izvoz podataka iz trenutnog taba u datoteku</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="253"/>
         <source>Encrypt or decrypt wallet</source>
-        <translation>Šifriranje ili dešifriranje novčanika</translation>
+        <translation>Tárca kódolása vagy dekódolása</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="256"/>
         <source>Backup wallet to another location</source>
-        <translation>Napravite sigurnosnu kopiju novčanika na drugoj lokaciji</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="258"/>
         <source>Change the passphrase used for wallet encryption</source>
-        <translation>Promijenite lozinku za šifriranje novčanika</translation>
+        <translation>Tárcakódoló jelszó megváltoztatása</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="259"/>
@@ -470,33 +464,33 @@ Jeste li sigurni da želite šifrirati svoj novčanik?</translation>
     <message>
         <location filename="../altcoingui.cpp" line="286"/>
         <source>&amp;File</source>
-        <translation>&amp;Datoteka</translation>
+        <translation>&amp;Fájl</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="296"/>
         <source>&amp;Settings</source>
-        <translation>&amp;Konfiguracija</translation>
+        <translation>&amp;Beállítások</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="302"/>
         <source>&amp;Help</source>
-        <translation>&amp;Pomoć</translation>
+        <translation>&amp;Súgó</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="311"/>
         <source>Tabs toolbar</source>
-        <translation>Traka kartica</translation>
+        <translation>Fül eszköztár</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="322"/>
         <source>Actions toolbar</source>
-        <translation>Traka akcija</translation>
+        <translation>Parancsok eszköztár</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="334"/>
         <location filename="../altcoingui.cpp" line="343"/>
         <source>[testnet]</source>
-        <translation>[testnet]</translation>
+        <translation>[teszthálózat]</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="343"/>
@@ -507,52 +501,52 @@ Jeste li sigurni da želite šifrirati svoj novčanik?</translation>
     <message numerus="yes">
         <location filename="../altcoingui.cpp" line="492"/>
         <source>%n active connection(s) to Altcoin network</source>
-        <translation><numerusform>%n aktivna veza na Altcoin mrežu</numerusform><numerusform>%n aktivne veze na Altcoin mrežu</numerusform><numerusform>%n aktivnih veza na Altcoin mrežu</numerusform></translation>
+        <translation><numerusform>%n aktív kapcsolat a Altcoin-hálózattal</numerusform><numerusform>%n aktív kapcsolat a Altcoin-hálózattal</numerusform></translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="540"/>
         <source>Downloaded %1 blocks of transaction history.</source>
-        <translation>Preuzeto %1 blokova povijesti transakcije.</translation>
+        <translation>%1 blokk letöltve a tranzakciótörténetből.</translation>
     </message>
     <message numerus="yes">
         <location filename="../altcoingui.cpp" line="555"/>
         <source>%n second(s) ago</source>
-        <translation><numerusform>prije %n sekunde</numerusform><numerusform>prije %n sekunde</numerusform><numerusform>prije %n sekundi</numerusform></translation>
+        <translation><numerusform>%n másodperccel ezelőtt</numerusform><numerusform>%n másodperccel ezelőtt</numerusform></translation>
     </message>
     <message numerus="yes">
         <location filename="../altcoingui.cpp" line="559"/>
         <source>%n minute(s) ago</source>
-        <translation><numerusform>prije %n minute</numerusform><numerusform>prije %n minute</numerusform><numerusform>prije %n minuta</numerusform></translation>
+        <translation><numerusform>%n perccel ezelőtt</numerusform><numerusform>%n perccel ezelőtt</numerusform></translation>
     </message>
     <message numerus="yes">
         <location filename="../altcoingui.cpp" line="563"/>
         <source>%n hour(s) ago</source>
-        <translation><numerusform>prije %n sata</numerusform><numerusform>prije %n sata</numerusform><numerusform>prije %n sati</numerusform></translation>
+        <translation><numerusform>%n órával ezelőtt</numerusform><numerusform>%n órával ezelőtt</numerusform></translation>
     </message>
     <message numerus="yes">
         <location filename="../altcoingui.cpp" line="567"/>
         <source>%n day(s) ago</source>
-        <translation><numerusform>prije %n dana</numerusform><numerusform>prije %n dana</numerusform><numerusform>prije %n dana</numerusform></translation>
+        <translation><numerusform>%n nappal ezelőtt</numerusform><numerusform>%n nappal ezelőtt</numerusform></translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="573"/>
         <source>Up to date</source>
-        <translation>Ažurno</translation>
+        <translation>Naprakész</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="580"/>
         <source>Catching up...</source>
-        <translation>Ažuriranje...</translation>
+        <translation>Frissítés...</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="590"/>
         <source>Last received block was generated %1.</source>
-        <translation>Zadnji primljeni blok je generiran %1.</translation>
+        <translation>Az utolsóként kapott blokk generálva: %1.</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="649"/>
         <source>This transaction is over the size limit.  You can still send it for a fee of %1, which goes to the nodes that process your transaction and helps to support the network.  Do you want to pay the fee?</source>
-        <translation>Ova transakcija je preko ograničenja veličine. Možete ju ipak poslati za naknadu od %1, koja se daje čvorovima koji procesiraju vaše transakcije i tako podržavate mrežu. Želite li platiti naknadu?</translation>
+        <translation>Ez a tranzakció túllépi a mérethatárt,  de %1 tranzakciós díj ellenében így is elküldheted. Ezt a plusz összeget a tranzakcióidat feldolgozó csomópontok kapják,  így magát a hálózatot támogatod vele. Hajlandó vagy megfizetni a díjat?</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="654"/>
@@ -562,12 +556,12 @@ Jeste li sigurni da želite šifrirati svoj novčanik?</translation>
     <message>
         <location filename="../altcoingui.cpp" line="681"/>
         <source>Sent transaction</source>
-        <translation>Poslana transakcija</translation>
+        <translation>Tranzakció elküldve.</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="682"/>
         <source>Incoming transaction</source>
-        <translation>Dolazna transakcija</translation>
+        <translation>Beérkező tranzakció</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="683"/>
@@ -576,41 +570,41 @@ Amount: %2
 Type: %3
 Address: %4
 </source>
-        <translation>Datum:%1
-Iznos:%2
-Tip:%3
-Adresa:%4
+        <translation>Dátum: %1
+Összeg: %2
+Típus: %3
+Cím: %4
 </translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="804"/>
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
-        <translation>Novčanik je &lt;b&gt;šifriran&lt;/b&gt; i trenutno &lt;b&gt;otključan&lt;/b&gt;</translation>
+        <translation>Tárca &lt;b&gt;kódolva&lt;/b&gt; és jelenleg &lt;b&gt;nyitva&lt;/b&gt;.</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="812"/>
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
-        <translation>Novčanik je &lt;b&gt;šifriran&lt;/b&gt; i trenutno &lt;b&gt;zaključan&lt;/b&gt;</translation>
+        <translation>Tárca &lt;b&gt;kódolva&lt;/b&gt; és jelenleg &lt;b&gt;zárva&lt;/b&gt;.</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="835"/>
         <source>Backup Wallet</source>
-        <translation>Backup novčanika</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="835"/>
         <source>Wallet Data (*.dat)</source>
-        <translation>Podaci novčanika (*.dat)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="838"/>
         <source>Backup Failed</source>
-        <translation>Backup nije uspio</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="838"/>
         <source>There was an error trying to save the wallet data to the new location.</source>
-        <translation>Došlo je do pogreške kod spremanja podataka novčanika na novu lokaciju.</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoin.cpp" line="112"/>
@@ -631,7 +625,7 @@ Adresa:%4
     <message>
         <location filename="../optionsdialog.cpp" line="246"/>
         <source>Display</source>
-        <translation>Prikaz</translation>
+        <translation>Megjelenítés</translation>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="257"/>
@@ -656,7 +650,7 @@ Adresa:%4
     <message>
         <location filename="../optionsdialog.cpp" line="277"/>
         <source>Choose the default subdivision unit to show in the interface, and when sending coins</source>
-        <translation>Izaberite željeni najmanji dio altcoina koji će biti prikazan u sučelju i koji će se koristiti za plaćanje.</translation>
+        <translation>Válaszd ki az interfészen és érmék küldésekor megjelenítendő alapértelmezett alegységet.</translation>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="284"/>
@@ -684,52 +678,52 @@ Adresa:%4
     <message>
         <location filename="../forms/editaddressdialog.ui" line="14"/>
         <source>Edit Address</source>
-        <translation>Izmjeni adresu</translation>
+        <translation>Cím szerkesztése</translation>
     </message>
     <message>
         <location filename="../forms/editaddressdialog.ui" line="25"/>
         <source>&amp;Label</source>
-        <translation>&amp;Oznaka</translation>
+        <translation>Cím&amp;ke</translation>
     </message>
     <message>
         <location filename="../forms/editaddressdialog.ui" line="35"/>
         <source>The label associated with this address book entry</source>
-        <translation>Oznaka ovog upisa u adresar</translation>
+        <translation>A címhez tartozó címke</translation>
     </message>
     <message>
         <location filename="../forms/editaddressdialog.ui" line="42"/>
         <source>&amp;Address</source>
-        <translation>&amp;Adresa</translation>
+        <translation>&amp;Cím</translation>
     </message>
     <message>
         <location filename="../forms/editaddressdialog.ui" line="52"/>
         <source>The address associated with this address book entry. This can only be modified for sending addresses.</source>
-        <translation>Adresa ovog upisa u adresar. Može se mjenjati samo kod adresa za slanje.</translation>
+        <translation>Az ehhez a címjegyzék-bejegyzéshez tartozó cím. Ez csak a küldő címeknél módosítható.</translation>
     </message>
     <message>
         <location filename="../editaddressdialog.cpp" line="20"/>
         <source>New receiving address</source>
-        <translation>Nova adresa za primanje</translation>
+        <translation>Új fogadó cím</translation>
     </message>
     <message>
         <location filename="../editaddressdialog.cpp" line="24"/>
         <source>New sending address</source>
-        <translation>Nova adresa za slanje</translation>
+        <translation>Új küldő cím</translation>
     </message>
     <message>
         <location filename="../editaddressdialog.cpp" line="27"/>
         <source>Edit receiving address</source>
-        <translation>Uredi adresu za primanje</translation>
+        <translation>Fogadó cím szerkesztése</translation>
     </message>
     <message>
         <location filename="../editaddressdialog.cpp" line="31"/>
         <source>Edit sending address</source>
-        <translation>Uredi adresu za slanje</translation>
+        <translation>Küldő cím szerkesztése</translation>
     </message>
     <message>
         <location filename="../editaddressdialog.cpp" line="91"/>
         <source>The entered address &quot;%1&quot; is already in the address book.</source>
-        <translation>Upisana adresa &quot;%1&quot; je već u adresaru.</translation>
+        <translation>A megadott &quot;%1&quot; cím már szerepel a címjegyzékben.</translation>
     </message>
     <message>
         <location filename="../editaddressdialog.cpp" line="96"/>
@@ -739,12 +733,12 @@ Adresa:%4
     <message>
         <location filename="../editaddressdialog.cpp" line="101"/>
         <source>Could not unlock wallet.</source>
-        <translation>Ne mogu otključati novčanik.</translation>
+        <translation>Tárca feloldása sikertelen</translation>
     </message>
     <message>
         <location filename="../editaddressdialog.cpp" line="106"/>
         <source>New key generation failed.</source>
-        <translation>Stvaranje novog ključa nije uspjelo.</translation>
+        <translation>Új kulcs generálása sikertelen</translation>
     </message>
 </context>
 <context>
@@ -763,7 +757,7 @@ Adresa:%4
     <message>
         <location filename="../altcoin.cpp" line="135"/>
         <source>Usage:</source>
-        <translation>Upotreba:</translation>
+        <translation>Használat:</translation>
     </message>
     <message>
         <location filename="../altcoin.cpp" line="136"/>
@@ -783,7 +777,8 @@ Adresa:%4
     <message>
         <location filename="../altcoin.cpp" line="140"/>
         <source>Start minimized</source>
-        <translation>Pokreni minimiziran</translation>
+        <translation>Indítás lekicsinyítve
+</translation>
     </message>
     <message>
         <location filename="../altcoin.cpp" line="141"/>
@@ -801,17 +796,17 @@ Adresa:%4
     <message>
         <location filename="../optionsdialog.cpp" line="212"/>
         <source>Pay transaction &amp;fee</source>
-        <translation>Plati &amp;naknadu za transakciju</translation>
+        <translation>Tranzakciós &amp;díj fizetése</translation>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="204"/>
         <source>Main</source>
-        <translation>Glavno</translation>
+        <translation>Fő</translation>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="206"/>
         <source>Optional transaction fee per kB that helps make sure your transactions are processed quickly. Most transactions are 1 kB. Fee 0.01 recommended.</source>
-        <translation>Neobavezna naknada za transakciju po kB koja omogućuje da se vaša transakcija obavi brže. Većina transakcija ima 1 kB.  Preporučena naknada je 0.01.</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="222"/>
@@ -839,7 +834,7 @@ Adresa:%4
     <message>
         <location filename="../forms/messagepage.ui" line="20"/>
         <source>You can sign messages with your addresses to prove you own them. Be careful not to sign anything vague, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
-        <translation>Možete potpisati poruke sa svojom adresom kako bi dokazali da ih posjedujete. Budite oprezni da ne potpisujete ništa mutno, jer bi vas phishing napadi mogli na prevaru natjerati da prepišete svoj identitet njima. Potpisujte samo detaljno objašnjene izjave sa kojima se slažete.</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../forms/messagepage.ui" line="38"/>
@@ -849,7 +844,7 @@ Adresa:%4
     <message>
         <location filename="../forms/messagepage.ui" line="48"/>
         <source>Choose adress from address book</source>
-        <translation>Odaberite adresu iz adresara</translation>
+        <translation>Válassz egy címet a címjegyzékből</translation>
     </message>
     <message>
         <location filename="../forms/messagepage.ui" line="58"/>
@@ -859,7 +854,7 @@ Adresa:%4
     <message>
         <location filename="../forms/messagepage.ui" line="71"/>
         <source>Paste address from clipboard</source>
-        <translation>Zalijepi adresu iz međuspremnika</translation>
+        <translation>Cím beillesztése a vágólapról</translation>
     </message>
     <message>
         <location filename="../forms/messagepage.ui" line="81"/>
@@ -869,7 +864,7 @@ Adresa:%4
     <message>
         <location filename="../forms/messagepage.ui" line="93"/>
         <source>Enter the message you want to sign here</source>
-        <translation>Upišite poruku koju želite potpisati ovdje</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../forms/messagepage.ui" line="128"/>
@@ -894,22 +889,22 @@ Adresa:%4
     <message>
         <location filename="../messagepage.cpp" line="31"/>
         <source>Click &quot;Sign Message&quot; to get signature</source>
-        <translation>Kliknite &quot;Potpiši poruku&quot; za potpis</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../forms/messagepage.ui" line="114"/>
         <source>Sign a message to prove you own this address</source>
-        <translation>Potpišite poruku kako bi dokazali da posjedujete ovu adresu</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../forms/messagepage.ui" line="117"/>
         <source>&amp;Sign Message</source>
-        <translation>&amp;Potpišite poruku</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../messagepage.cpp" line="30"/>
         <source>Enter a Altcoin address (e.g. 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L)</source>
-        <translation>Unesite Altcoin adresu (npr. 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L)</translation>
+        <translation>Adj meg egy Altcoin-címet (pl.: 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L )</translation>
     </message>
     <message>
         <location filename="../messagepage.cpp" line="83"/>
@@ -917,12 +912,12 @@ Adresa:%4
         <location filename="../messagepage.cpp" line="105"/>
         <location filename="../messagepage.cpp" line="117"/>
         <source>Error signing</source>
-        <translation>Greška u potpisivanju</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../messagepage.cpp" line="83"/>
         <source>%1 is not a valid address.</source>
-        <translation>Upisana adresa &quot;%1&quot; nije valjana altcoin adresa.</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../messagepage.cpp" line="90"/>
@@ -932,12 +927,12 @@ Adresa:%4
     <message>
         <location filename="../messagepage.cpp" line="105"/>
         <source>Private key for %1 is not available.</source>
-        <translation>Privatni ključ za %1 nije dostupan.</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../messagepage.cpp" line="117"/>
         <source>Sign failed</source>
-        <translation>Potpis nije uspio</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -950,22 +945,22 @@ Adresa:%4
     <message>
         <location filename="../optionsdialog.cpp" line="347"/>
         <source>Map port using &amp;UPnP</source>
-        <translation>Mapiraj port koristeći &amp;UPnP</translation>
+        <translation>&amp;UPnP port-feltérképezés</translation>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="348"/>
         <source>Automatically open the Altcoin client port on the router. This only works when your router supports UPnP and it is enabled.</source>
-        <translation>Automatski otvori port Altcoin klijenta na ruteru. To radi samo ako ruter podržava UPnP i ako je omogućen.</translation>
+        <translation>A Altcoin-kliens portjának automatikus megnyitása a routeren. Ez csak akkor működik, ha a routered támogatja az UPnP-t és az engedélyezve is van rajta.</translation>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="351"/>
         <source>&amp;Connect through SOCKS4 proxy:</source>
-        <translation>&amp;Povezivanje putem SOCKS4 proxy-a:</translation>
+        <translation>&amp;Csatlakozás SOCKS4 proxyn keresztül:</translation>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="352"/>
         <source>Connect to the Bitcon network through a SOCKS4 proxy (e.g. when connecting through Tor)</source>
-        <translation>Spojite se na Bitcon mrežu putem SOCKS4 proxy-a (npr. kod povezivanja kroz Tor)</translation>
+        <translation>SOCKS4 proxyn keresztüli csatlakozás a Altcoin hálózatához (pl. Tor-on keresztüli csatlakozás esetén)</translation>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="357"/>
@@ -980,12 +975,12 @@ Adresa:%4
     <message>
         <location filename="../optionsdialog.cpp" line="363"/>
         <source>IP address of the proxy (e.g. 127.0.0.1)</source>
-        <translation>IP adresa proxy-a (npr. 127.0.0.1)</translation>
+        <translation>Proxy IP címe (pl.: 127.0.0.1)</translation>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="372"/>
         <source>Port of the proxy (e.g. 1234)</source>
-        <translation>Port od proxy-a (npr. 1234)</translation>
+        <translation>Proxy portja (pl.: 1234)</translation>
     </message>
 </context>
 <context>
@@ -993,7 +988,7 @@ Adresa:%4
     <message>
         <location filename="../optionsdialog.cpp" line="135"/>
         <source>Options</source>
-        <translation>Postavke</translation>
+        <translation>Opciók</translation>
     </message>
 </context>
 <context>
@@ -1001,7 +996,7 @@ Adresa:%4
     <message>
         <location filename="../forms/overviewpage.ui" line="14"/>
         <source>Form</source>
-        <translation>Oblik</translation>
+        <translation>Űrlap</translation>
     </message>
     <message>
         <location filename="../forms/overviewpage.ui" line="47"/>
@@ -1012,17 +1007,17 @@ Adresa:%4
     <message>
         <location filename="../forms/overviewpage.ui" line="89"/>
         <source>Balance:</source>
-        <translation>Stanje:</translation>
+        <translation>Egyenleg:</translation>
     </message>
     <message>
         <location filename="../forms/overviewpage.ui" line="147"/>
         <source>Number of transactions:</source>
-        <translation>Broj transakcija:</translation>
+        <translation>Tranzakciók száma:</translation>
     </message>
     <message>
         <location filename="../forms/overviewpage.ui" line="118"/>
         <source>Unconfirmed:</source>
-        <translation>Nepotvrđene:</translation>
+        <translation>Megerősítetlen:</translation>
     </message>
     <message>
         <location filename="../forms/overviewpage.ui" line="40"/>
@@ -1032,22 +1027,22 @@ Adresa:%4
     <message>
         <location filename="../forms/overviewpage.ui" line="197"/>
         <source>&lt;b&gt;Recent transactions&lt;/b&gt;</source>
-        <translation>&lt;b&gt;Nedavne transakcije&lt;/b&gt;</translation>
+        <translation>&lt;b&gt;Legutóbbi tranzakciók&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../forms/overviewpage.ui" line="105"/>
         <source>Your current balance</source>
-        <translation>Vaše trenutno stanje računa</translation>
+        <translation>Aktuális egyenleged</translation>
     </message>
     <message>
         <location filename="../forms/overviewpage.ui" line="134"/>
         <source>Total of transactions that have yet to be confirmed, and do not yet count toward the current balance</source>
-        <translation>Ukupni iznos transakcija koje tek trebaju biti potvrđene, i još uvijek nisu uračunate u trenutni saldo</translation>
+        <translation>Még megerősítésre váró, a jelenlegi egyenlegbe be nem számított tranzakciók</translation>
     </message>
     <message>
         <location filename="../forms/overviewpage.ui" line="154"/>
         <source>Total number of transactions in wallet</source>
-        <translation>Ukupni broj tansakcija u novčaniku</translation>
+        <translation>Tárca összes tranzakcióinak száma</translation>
     </message>
     <message>
         <location filename="../overviewpage.cpp" line="110"/>
@@ -1066,37 +1061,37 @@ Adresa:%4
     <message>
         <location filename="../forms/qrcodedialog.ui" line="32"/>
         <source>QR Code</source>
-        <translation>QR kôd</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../forms/qrcodedialog.ui" line="55"/>
         <source>Request Payment</source>
-        <translation>Zatraži plaćanje</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../forms/qrcodedialog.ui" line="70"/>
         <source>Amount:</source>
-        <translation>Iznos:</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../forms/qrcodedialog.ui" line="105"/>
         <source>BTC</source>
-        <translation>BTC</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../forms/qrcodedialog.ui" line="121"/>
         <source>Label:</source>
-        <translation>Oznaka</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../forms/qrcodedialog.ui" line="144"/>
         <source>Message:</source>
-        <translation>Poruka:</translation>
+        <translation>Üzenet:</translation>
     </message>
     <message>
         <location filename="../forms/qrcodedialog.ui" line="186"/>
         <source>&amp;Save As...</source>
-        <translation>&amp;Spremi kao...</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../qrcodedialog.cpp" line="45"/>
@@ -1116,7 +1111,7 @@ Adresa:%4
     <message>
         <location filename="../qrcodedialog.cpp" line="120"/>
         <source>PNG Images (*.png)</source>
-        <translation>PNG slike (*.png)</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -1257,12 +1252,12 @@ Adresa:%4
         <location filename="../sendcoinsdialog.cpp" line="148"/>
         <location filename="../sendcoinsdialog.cpp" line="153"/>
         <source>Send Coins</source>
-        <translation>Slanje novca</translation>
+        <translation>Érmék küldése</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsdialog.ui" line="64"/>
         <source>Send to multiple recipients at once</source>
-        <translation>Pošalji k nekoliko primatelja odjednom</translation>
+        <translation>Küldés több címzettnek egyszerre</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsdialog.ui" line="67"/>
@@ -1272,7 +1267,7 @@ Adresa:%4
     <message>
         <location filename="../forms/sendcoinsdialog.ui" line="84"/>
         <source>Remove all transaction fields</source>
-        <translation>Obriši sva polja transakcija</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../forms/sendcoinsdialog.ui" line="87"/>
@@ -1282,52 +1277,52 @@ Adresa:%4
     <message>
         <location filename="../forms/sendcoinsdialog.ui" line="106"/>
         <source>Balance:</source>
-        <translation>Stanje:</translation>
+        <translation>Egyenleg:</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsdialog.ui" line="113"/>
         <source>123.456 BTC</source>
-        <translation>123,456 BTC</translation>
+        <translation>123.456 BTC</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsdialog.ui" line="144"/>
         <source>Confirm the send action</source>
-        <translation>Potvrdi akciju slanja</translation>
+        <translation>Küldés megerősítése</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsdialog.ui" line="147"/>
         <source>&amp;Send</source>
-        <translation>&amp;Pošalji</translation>
+        <translation>&amp;Küldés</translation>
     </message>
     <message>
         <location filename="../sendcoinsdialog.cpp" line="94"/>
         <source>&lt;b&gt;%1&lt;/b&gt; to %2 (%3)</source>
-        <translation>&lt;b&gt;%1&lt;/b&gt; do %2 (%3)</translation>
+        <translation>&lt;b&gt;%1&lt;/b&gt; %2-re (%3)</translation>
     </message>
     <message>
         <location filename="../sendcoinsdialog.cpp" line="99"/>
         <source>Confirm send coins</source>
-        <translation>Potvrdi slanje novca</translation>
+        <translation>Küldés megerősítése</translation>
     </message>
     <message>
         <location filename="../sendcoinsdialog.cpp" line="100"/>
         <source>Are you sure you want to send %1?</source>
-        <translation>Jeste li sigurni da želite poslati %1?</translation>
+        <translation>Valóban el akarsz küldeni %1-t?</translation>
     </message>
     <message>
         <location filename="../sendcoinsdialog.cpp" line="100"/>
         <source> and </source>
-        <translation>i</translation>
+        <translation> és</translation>
     </message>
     <message>
         <location filename="../sendcoinsdialog.cpp" line="123"/>
         <source>The recepient address is not valid, please recheck.</source>
-        <translation>Adresa primatelja je nevaljala, molimo provjerite je ponovo.</translation>
+        <translation>A címzett címe érvénytelen, kérlek, ellenőrizd.</translation>
     </message>
     <message>
         <location filename="../sendcoinsdialog.cpp" line="128"/>
         <source>The amount to pay must be larger than 0.</source>
-        <translation>Iznos mora biti veći od 0.</translation>
+        <translation>A fizetendő összegnek nagyobbnak kell lennie 0-nál.</translation>
     </message>
     <message>
         <location filename="../sendcoinsdialog.cpp" line="133"/>
@@ -1360,38 +1355,39 @@ Adresa:%4
     <message>
         <location filename="../forms/sendcoinsentry.ui" line="14"/>
         <source>Form</source>
-        <translation>Oblik</translation>
+        <translation>Űrlap</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsentry.ui" line="29"/>
         <source>A&amp;mount:</source>
-        <translation>&amp;Iznos:</translation>
+        <translation>Összeg:</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsentry.ui" line="42"/>
         <source>Pay &amp;To:</source>
-        <translation>&amp;Primatelj plaćanja:</translation>
+        <translation>Címzett:</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsentry.ui" line="66"/>
         <location filename="../sendcoinsentry.cpp" line="25"/>
         <source>Enter a label for this address to add it to your address book</source>
-        <translation>Unesite oznaku za ovu adresu kako bi ju dodali u vaš adresar</translation>
+        <translation>Milyen címkével kerüljön be ez a cím a címtáradba?
+</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsentry.ui" line="75"/>
         <source>&amp;Label:</source>
-        <translation>&amp;Oznaka:</translation>
+        <translation>Címke:</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsentry.ui" line="93"/>
         <source>The address to send the payment to  (e.g. 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L)</source>
-        <translation>Adresa za slanje plaćanja (npr. 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L)</translation>
+        <translation>Címzett címe  (pl.: 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L )</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsentry.ui" line="103"/>
         <source>Choose address from address book</source>
-        <translation>Odaberite adresu iz adresara</translation>
+        <translation>Válassz egy címet a címjegyzékből</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsentry.ui" line="113"/>
@@ -1401,7 +1397,7 @@ Adresa:%4
     <message>
         <location filename="../forms/sendcoinsentry.ui" line="120"/>
         <source>Paste address from clipboard</source>
-        <translation>Zalijepi adresu iz međuspremnika</translation>
+        <translation>Cím beillesztése a vágólapról</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsentry.ui" line="130"/>
@@ -1411,12 +1407,12 @@ Adresa:%4
     <message>
         <location filename="../forms/sendcoinsentry.ui" line="137"/>
         <source>Remove this recipient</source>
-        <translation>Ukloni ovog primatelja</translation>
+        <translation>Címzett eltávolítása</translation>
     </message>
     <message>
         <location filename="../sendcoinsentry.cpp" line="26"/>
         <source>Enter a Altcoin address (e.g. 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L)</source>
-        <translation>Unesite Altcoin adresu (npr. 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L)</translation>
+        <translation>Adj meg egy Altcoin-címet (pl.: 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L )</translation>
     </message>
 </context>
 <context>
@@ -1424,85 +1420,85 @@ Adresa:%4
     <message>
         <location filename="../transactiondesc.cpp" line="21"/>
         <source>Open for %1 blocks</source>
-        <translation>Otvori za %1 blokova</translation>
+        <translation>Megnyitva %1 blokkra</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="23"/>
         <source>Open until %1</source>
-        <translation>Otvoren do %1</translation>
+        <translation>Megnyitva %1-ig</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="29"/>
         <source>%1/offline?</source>
-        <translation>%1 nije dostupan?</translation>
+        <translation>%1/offline?</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="31"/>
         <source>%1/unconfirmed</source>
-        <translation>%1/nepotvrđeno</translation>
+        <translation>%1/megerősítetlen</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="33"/>
         <source>%1 confirmations</source>
-        <translation>%1 potvrda</translation>
+        <translation>%1 megerősítés</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="51"/>
         <source>&lt;b&gt;Status:&lt;/b&gt; </source>
-        <translation>&lt;b&gt;Status:&lt;/b&gt;</translation>
+        <translation>&lt;b&gt;Állapot:&lt;/b&gt; </translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="56"/>
         <source>, has not been successfully broadcast yet</source>
-        <translation>, još nije bio uspješno emitiran</translation>
+        <translation>, még nem sikerült elküldeni.</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="58"/>
         <source>, broadcast through %1 node</source>
-        <translation>, emitiran kroz nod %1 </translation>
+        <translation>, %1 csomóponton keresztül elküldve.</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="60"/>
         <source>, broadcast through %1 nodes</source>
-        <translation>, emitiran kroz nodove %1 </translation>
+        <translation>, elküldve %1 csomóponton keresztül.</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="64"/>
         <source>&lt;b&gt;Date:&lt;/b&gt; </source>
-        <translation>&lt;b&gt;Datum:&lt;/b&gt;</translation>
+        <translation>&lt;b&gt;Dátum:&lt;/b&gt; </translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="71"/>
         <source>&lt;b&gt;Source:&lt;/b&gt; Generated&lt;br&gt;</source>
-        <translation>&lt;b&gt;Izvor:&lt;/b&gt; Generirano&lt;br&gt;</translation>
+        <translation>&lt;b&gt;Forrás:&lt;/b&gt; Generálva &lt;br&gt;</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="77"/>
         <location filename="../transactiondesc.cpp" line="94"/>
         <source>&lt;b&gt;From:&lt;/b&gt; </source>
-        <translation>&lt;b&gt;Od:&lt;/b&gt;</translation>
+        <translation>&lt;b&gt;Űrlap:&lt;/b&gt; </translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="94"/>
         <source>unknown</source>
-        <translation>nepoznato</translation>
+        <translation>ismeretlen</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="95"/>
         <location filename="../transactiondesc.cpp" line="118"/>
         <location filename="../transactiondesc.cpp" line="178"/>
         <source>&lt;b&gt;To:&lt;/b&gt; </source>
-        <translation>&lt;b&gt;Za:&lt;/b&gt;</translation>
+        <translation>&lt;b&gt;Címzett:&lt;/b&gt; </translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="98"/>
         <source> (yours, label: </source>
-        <translation>(tvoje, oznaka:</translation>
+        <translation> (tiéd, címke: </translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="100"/>
         <source> (yours)</source>
-        <translation>(tvoje)</translation>
+        <translation> (tiéd)</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="136"/>
@@ -1510,54 +1506,54 @@ Adresa:%4
         <location filename="../transactiondesc.cpp" line="195"/>
         <location filename="../transactiondesc.cpp" line="212"/>
         <source>&lt;b&gt;Credit:&lt;/b&gt; </source>
-        <translation>&lt;b&gt;Uplaćeno:&lt;/b&gt; </translation>
+        <translation>&lt;b&gt;Jóváírás&lt;/b&gt; </translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="138"/>
         <source>(%1 matures in %2 more blocks)</source>
-        <translation>(%1 stasava za %2 dodatna bloka)</translation>
+        <translation>(%1, %2 múlva készül el)</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="142"/>
         <source>(not accepted)</source>
-        <translation>(Nije prihvaćeno)</translation>
+        <translation>(elutasítva)</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="186"/>
         <location filename="../transactiondesc.cpp" line="194"/>
         <location filename="../transactiondesc.cpp" line="209"/>
         <source>&lt;b&gt;Debit:&lt;/b&gt; </source>
-        <translation>&lt;b&gt;Potrošeno:&lt;/b&gt; </translation>
+        <translation>&lt;b&gt;Terhelés&lt;/b&gt; </translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="200"/>
         <source>&lt;b&gt;Transaction fee:&lt;/b&gt; </source>
-        <translation>&lt;b&gt;Naknada za transakciju:&lt;/b&gt;</translation>
+        <translation>&lt;b&gt;Tranzakciós díj:&lt;/b&gt; </translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="216"/>
         <source>&lt;b&gt;Net amount:&lt;/b&gt; </source>
-        <translation>&lt;b&gt;Neto iznos:&lt;/b&gt;</translation>
+        <translation>&lt;b&gt;Nettó összeg:&lt;/b&gt; </translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="222"/>
         <source>Message:</source>
-        <translation>Poruka:</translation>
+        <translation>Üzenet:</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="224"/>
         <source>Comment:</source>
-        <translation>Komentar:</translation>
+        <translation>Megjegyzés:</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="226"/>
         <source>Transaction ID:</source>
-        <translation>ID transakcije:</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="229"/>
         <source>Generated coins must wait 120 blocks before they can be spent.  When you generated this block, it was broadcast to the network to be added to the block chain.  If it fails to get into the chain, it will change to &quot;not accepted&quot; and not be spendable.  This may occasionally happen if another node generates a block within a few seconds of yours.</source>
-        <translation>Generirani novčići moraju pričekati nastanak 120 blokova prije nego što ih je moguće potrošiti. Kad ste generirali taj blok, on je bio emitiran u mrežu kako bi bio dodan postojećim lancima blokova. Ako ne uspije biti dodan, njegov status bit će promijenjen u &quot;nije prihvaćen&quot; i on neće biti potrošiv. S vremena na vrijeme tako nešto se može desiti ako neki drugi nod generira blok u približno isto vrijeme.</translation>
+        <translation>A frissen generált érméket csak 120 blokkal később tudod elkölteni.  Ez a blokk nyomban szétküldésre került a hálózatba, amint legeneráltad, hogy hozzáadhassák a blokklánchoz.  Ha nem kerül be a láncba, úgy az állapota &quot;elutasítva&quot;-ra módosul,  és nem költheted el az érméket. Ez akkor következhet be időnként, ha egy másik csomópont mindössze néhány másodperc különbséggel generált le egy blokkot a tiédhez képest.</translation>
     </message>
 </context>
 <context>
@@ -1565,12 +1561,12 @@ Adresa:%4
     <message>
         <location filename="../forms/transactiondescdialog.ui" line="14"/>
         <source>Transaction details</source>
-        <translation>Detalji transakcije</translation>
+        <translation>Tranzakció részletei</translation>
     </message>
     <message>
         <location filename="../forms/transactiondescdialog.ui" line="20"/>
         <source>This pane shows a detailed description of the transaction</source>
-        <translation>Ova panela prikazuje detaljni opis transakcije</translation>
+        <translation>Ez a mező a tranzakció részleteit mutatja</translation>
     </message>
 </context>
 <context>
@@ -1578,117 +1574,117 @@ Adresa:%4
     <message>
         <location filename="../transactiontablemodel.cpp" line="226"/>
         <source>Date</source>
-        <translation>Datum</translation>
+        <translation>Dátum</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="226"/>
         <source>Type</source>
-        <translation>Tip</translation>
+        <translation>Típus</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="226"/>
         <source>Address</source>
-        <translation>Adresa</translation>
+        <translation>Cím</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="226"/>
         <source>Amount</source>
-        <translation>Iznos</translation>
+        <translation>Összeg</translation>
     </message>
     <message numerus="yes">
         <location filename="../transactiontablemodel.cpp" line="281"/>
         <source>Open for %n block(s)</source>
-        <translation><numerusform>Otvoren za %n bloka</numerusform><numerusform>Otvoren za %n blokova</numerusform><numerusform>Otvoren za %n blokova</numerusform></translation>
+        <translation><numerusform>%n blokkra megnyitva</numerusform><numerusform>%n blokkra megnyitva</numerusform></translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="284"/>
         <source>Open until %1</source>
-        <translation>Otvoren do %1</translation>
+        <translation>%1-ig megnyitva</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="287"/>
         <source>Offline (%1 confirmations)</source>
-        <translation>Nije na mreži (%1 potvrda)</translation>
+        <translation>Offline (%1 megerősítés)</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="290"/>
         <source>Unconfirmed (%1 of %2 confirmations)</source>
-        <translation>Nepotvrđen (%1 od %2 potvrda)</translation>
+        <translation>Megerősítetlen (%1 %2 megerősítésből)</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="293"/>
         <source>Confirmed (%1 confirmations)</source>
-        <translation>Potvrđen (%1 potvrda)</translation>
+        <translation>Megerősítve (%1 megerősítés)</translation>
     </message>
     <message numerus="yes">
         <location filename="../transactiontablemodel.cpp" line="301"/>
         <source>Mined balance will be available in %n more blocks</source>
-        <translation><numerusform>Saldo iskovanih novčićća bit de dostupan nakon %n dodatnog bloka</numerusform><numerusform>Saldo iskovanih novčićća bit de dostupan nakon %n dodatnih blokova</numerusform><numerusform>Saldo iskovanih novčićća bit de dostupan nakon %n dodatnih blokova</numerusform></translation>
+        <translation><numerusform>%n blokk múlva lesz elérhető a bányászott egyenleg.</numerusform><numerusform>%n blokk múlva lesz elérhető a bányászott egyenleg.</numerusform></translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="307"/>
         <source>This block was not received by any other nodes and will probably not be accepted!</source>
-        <translation>Generirano - Upozorenje: ovaj blok nije bio primljen od strane bilo kojeg drugog noda i vjerojatno neće biti prihvaćen!</translation>
+        <translation>Ezt a blokkot egyetlen másik csomópont sem kapta meg, így valószínűleg nem lesz elfogadva!</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="310"/>
         <source>Generated but not accepted</source>
-        <translation>Generirano, ali nije prihvaćeno</translation>
+        <translation>Legenerálva, de még el nem fogadva.</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="353"/>
         <source>Received with</source>
-        <translation>Primljeno s</translation>
+        <translation>Erre a címre</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="355"/>
         <source>Received from</source>
-        <translation>Primljeno od</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="358"/>
         <source>Sent to</source>
-        <translation>Poslano za</translation>
+        <translation>Erre a címre</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="360"/>
         <source>Payment to yourself</source>
-        <translation>Plaćanje samom sebi</translation>
+        <translation>Magadnak kifizetve</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="362"/>
         <source>Mined</source>
-        <translation>Rudareno</translation>
+        <translation>Kibányászva</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="400"/>
         <source>(n/a)</source>
-        <translation>(n/d)</translation>
+        <translation>(nincs)</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="599"/>
         <source>Transaction status. Hover over this field to show number of confirmations.</source>
-        <translation>Status transakcije</translation>
+        <translation>Tranzakció állapota. Húzd ide a kurzort, hogy lásd a megerősítések számát.</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="601"/>
         <source>Date and time that the transaction was received.</source>
-        <translation>Datum i vrijeme kad je transakcija primljena</translation>
+        <translation>Tranzakció fogadásának dátuma és időpontja.</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="603"/>
         <source>Type of transaction.</source>
-        <translation>Vrsta transakcije.</translation>
+        <translation>Tranzakció típusa.</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="605"/>
         <source>Destination address of transaction.</source>
-        <translation>Odredište transakcije</translation>
+        <translation>A tranzakció címzettjének címe.</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="607"/>
         <source>Amount removed from or added to balance.</source>
-        <translation>Iznos odbijen od ili dodan k saldu.</translation>
+        <translation>Az egyenleghez jóváírt vagy ráterhelt összeg.</translation>
     </message>
 </context>
 <context>
@@ -1697,92 +1693,92 @@ Adresa:%4
         <location filename="../transactionview.cpp" line="55"/>
         <location filename="../transactionview.cpp" line="71"/>
         <source>All</source>
-        <translation>Sve</translation>
+        <translation>Mind</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="56"/>
         <source>Today</source>
-        <translation>Danas</translation>
+        <translation>Mai</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="57"/>
         <source>This week</source>
-        <translation>Ovaj tjedan</translation>
+        <translation>Ezen a héten</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="58"/>
         <source>This month</source>
-        <translation>Ovaj mjesec</translation>
+        <translation>Ebben a hónapban</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="59"/>
         <source>Last month</source>
-        <translation>Prošli mjesec</translation>
+        <translation>Múlt hónapban</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="60"/>
         <source>This year</source>
-        <translation>Ove godine</translation>
+        <translation>Ebben az évben</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="61"/>
         <source>Range...</source>
-        <translation>Raspon...</translation>
+        <translation>Tartomány ...</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="72"/>
         <source>Received with</source>
-        <translation>Primljeno s</translation>
+        <translation>Erre a címre</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="74"/>
         <source>Sent to</source>
-        <translation>Poslano za</translation>
+        <translation>Erre a címre</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="76"/>
         <source>To yourself</source>
-        <translation>Tebi</translation>
+        <translation>Magadnak</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="77"/>
         <source>Mined</source>
-        <translation>Rudareno</translation>
+        <translation>Kibányászva</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="78"/>
         <source>Other</source>
-        <translation>Ostalo</translation>
+        <translation>Más</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="85"/>
         <source>Enter address or label to search</source>
-        <translation>Unesite adresu ili oznaku za pretraživanje</translation>
+        <translation>Írd be a keresendő címet vagy címkét</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="92"/>
         <source>Min amount</source>
-        <translation>Min iznos</translation>
+        <translation>Minimális összeg</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="126"/>
         <source>Copy address</source>
-        <translation>Kopirati adresu</translation>
+        <translation>Cím másolása</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="127"/>
         <source>Copy label</source>
-        <translation>Kopirati oznaku</translation>
+        <translation>Címke másolása</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="128"/>
         <source>Copy amount</source>
-        <translation>Kopiraj iznos</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="129"/>
         <source>Edit label</source>
-        <translation>Izmjeniti oznaku</translation>
+        <translation>Címke szerkesztése</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="130"/>
@@ -1792,67 +1788,67 @@ Adresa:%4
     <message>
         <location filename="../transactionview.cpp" line="270"/>
         <source>Export Transaction Data</source>
-        <translation>Izvoz podataka transakcija</translation>
+        <translation>Tranzakció adatainak exportálása</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="271"/>
         <source>Comma separated file (*.csv)</source>
-        <translation>Datoteka podataka odvojenih zarezima (*.csv)</translation>
+        <translation>Vesszővel elválasztott fájl (*.csv)</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="279"/>
         <source>Confirmed</source>
-        <translation>Potvrđeno</translation>
+        <translation>Megerősítve</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="280"/>
         <source>Date</source>
-        <translation>Datum</translation>
+        <translation>Dátum</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="281"/>
         <source>Type</source>
-        <translation>Tip</translation>
+        <translation>Típus</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="282"/>
         <source>Label</source>
-        <translation>Oznaka</translation>
+        <translation>Címke</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="283"/>
         <source>Address</source>
-        <translation>Adresa</translation>
+        <translation>Cím</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="284"/>
         <source>Amount</source>
-        <translation>Iznos</translation>
+        <translation>Összeg</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="285"/>
         <source>ID</source>
-        <translation>ID</translation>
+        <translation>Azonosító</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="289"/>
         <source>Error exporting</source>
-        <translation>Izvoz pogreške</translation>
+        <translation>Hiba lépett fel exportálás közben</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="289"/>
         <source>Could not write to file %1.</source>
-        <translation>Ne mogu pisati u datoteku %1.</translation>
+        <translation>%1 fájlba való kiírás sikertelen.</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="384"/>
         <source>Range:</source>
-        <translation>Raspon:</translation>
+        <translation>Tartomány:</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="392"/>
         <source>to</source>
-        <translation>za</translation>
+        <translation>meddig</translation>
     </message>
 </context>
 <context>
@@ -1880,7 +1876,7 @@ Adresa:%4
     <message>
         <location filename="../forms/verifymessagedialog.ui" line="79"/>
         <source>Copy the currently selected address to the system clipboard</source>
-        <translation>Kopiraj trenutno odabranu adresu u međuspremnik</translation>
+        <translation>A kiválasztott cím másolása a vágólapra</translation>
     </message>
     <message>
         <location filename="../forms/verifymessagedialog.ui" line="82"/>
@@ -1939,7 +1935,7 @@ Adresa:%4
     <message>
         <location filename="../walletmodel.cpp" line="158"/>
         <source>Sending...</source>
-        <translation>Slanje...</translation>
+        <translation>Küldés ...</translation>
     </message>
 </context>
 <context>
@@ -1952,12 +1948,12 @@ Adresa:%4
     <message>
         <location filename="../optionsdialog.cpp" line="316"/>
         <source>&amp;Minimize to the tray instead of the taskbar</source>
-        <translation>&amp;Minimiziraj u sistemsku traku umjesto u traku programa</translation>
+        <translation>&amp;Kicsinyítés a tálcára az eszköztár helyett</translation>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="317"/>
         <source>Show only a tray icon after minimizing the window</source>
-        <translation>Prikaži samo ikonu u sistemskoj traci nakon minimiziranja prozora</translation>
+        <translation>Kicsinyítés után csak eszköztár-ikont mutass</translation>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="320"/>
@@ -1967,7 +1963,7 @@ Adresa:%4
     <message>
         <location filename="../optionsdialog.cpp" line="321"/>
         <source>Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Quit in the menu.</source>
-        <translation>Minimizirati umjesto izaći iz aplikacije kada je prozor zatvoren. Kada je ova opcija omogućena, aplikacija će biti zatvorena tek nakon odabira Izlaz u izborniku.</translation>
+        <translation>Az alkalmazásból való kilépés helyett az eszköztárba kicsinyíti az alkalmazást az ablak bezárásakor. Ez esetben az alkalmazás csak a Kilépés menüponttal zárható be.</translation>
     </message>
 </context>
 <context>
@@ -1975,57 +1971,66 @@ Adresa:%4
     <message>
         <location filename="../altcoinstrings.cpp" line="43"/>
         <source>Altcoin version</source>
-        <translation>Altcoin verzija</translation>
+        <translation>Altcoin verzió</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="44"/>
         <source>Usage:</source>
-        <translation>Upotreba:</translation>
+        <translation>Használat:</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="45"/>
         <source>Send command to -server or altcoind</source>
-        <translation>Pošalji komandu usluzi -server ili altcoind</translation>
+        <translation>Parancs küldése a -serverhez vagy a altcoindhez
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="46"/>
         <source>List commands</source>
-        <translation>Prikaži komande</translation>
+        <translation>Parancsok kilistázása
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="47"/>
         <source>Get help for a command</source>
-        <translation>Potraži pomoć za komandu</translation>
+        <translation>Segítség egy parancsról
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="49"/>
         <source>Options:</source>
-        <translation>Postavke:</translation>
+        <translation>Opciók
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="50"/>
         <source>Specify configuration file (default: altcoin.conf)</source>
-        <translation>Odredi konfiguracijsku datoteku (ugrađeni izbor: altcoin.conf)</translation>
+        <translation>Konfigurációs fájl (alapértelmezett: altcoin.conf)
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="51"/>
         <source>Specify pid file (default: altcoind.pid)</source>
-        <translation>Odredi proces ID datoteku (ugrađeni izbor: altcoin.pid)</translation>
+        <translation>pid-fájl (alapértelmezett: altcoind.pid)
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="52"/>
         <source>Generate coins</source>
-        <translation>Generiraj novčiće</translation>
+        <translation>Érmék generálása
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="53"/>
         <source>Don&apos;t generate coins</source>
-        <translation>Ne generiraj novčiće</translation>
+        <translation>Altcoin-generálás leállítása
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="54"/>
         <source>Specify data directory</source>
-        <translation>Odredi direktorij za datoteke</translation>
+        <translation>Adatkönyvtár
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="55"/>
@@ -2040,22 +2045,24 @@ Adresa:%4
     <message>
         <location filename="../altcoinstrings.cpp" line="57"/>
         <source>Specify connection timeout (in milliseconds)</source>
-        <translation>Odredi vremenski prozor za spajanje na mrežu (u milisekundama)</translation>
+        <translation>Csatlakozás időkerete (milliszekundumban)
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="63"/>
         <source>Listen for connections on &lt;port&gt; (default: 8333 or testnet: 18333)</source>
-        <translation>Slušaj na &lt;port&gt;u (default: 8333 ili testnet: 18333)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="64"/>
         <source>Maintain at most &lt;n&gt; connections to peers (default: 125)</source>
-        <translation>Održavaj najviše &lt;n&gt; veza sa članovima (default: 125)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="66"/>
         <source>Connect only to the specified node</source>
-        <translation>Poveži se samo sa određenim nodom</translation>
+        <translation>Csatlakozás csak a megadott csomóponthoz
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="67"/>
@@ -2085,22 +2092,22 @@ Adresa:%4
     <message>
         <location filename="../altcoinstrings.cpp" line="75"/>
         <source>Threshold for disconnecting misbehaving peers (default: 100)</source>
-        <translation>Prag za odspajanje članova koji se čudno ponašaju (default: 100)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="76"/>
         <source>Number of seconds to keep misbehaving peers from reconnecting (default: 86400)</source>
-        <translation>Broj sekundi koliko se članovima koji se čudno ponašaju neće dopustiti da se opet spoje (default: 86400)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="79"/>
         <source>Maximum per-connection receive buffer, &lt;n&gt;*1000 bytes (default: 10000)</source>
-        <translation>Maksimalni buffer za primanje po vezi, &lt;n&gt;*1000 bajta (default: 10000)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="80"/>
         <source>Maximum per-connection send buffer, &lt;n&gt;*1000 bytes (default: 10000)</source>
-        <translation>Maksimalni buffer za slanje po vezi, &lt;n&gt;*1000 bajta (default: 10000)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="83"/>
@@ -2110,62 +2117,70 @@ Adresa:%4
     <message>
         <location filename="../altcoinstrings.cpp" line="86"/>
         <source>Accept command line and JSON-RPC commands</source>
-        <translation>Prihvati komande iz tekst moda i JSON-RPC</translation>
+        <translation>Parancssoros és JSON-RPC parancsok elfogadása
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="87"/>
         <source>Run in the background as a daemon and accept commands</source>
-        <translation>Izvršavaj u pozadini kao uslužnik i prihvaćaj komande</translation>
+        <translation>Háttérben futtatás daemonként és parancsok elfogadása
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="88"/>
         <source>Use the test network</source>
-        <translation>Koristi test mrežu</translation>
+        <translation>Teszthálózat használata
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="89"/>
         <source>Output extra debugging information</source>
-        <translation>Dodaj sve dodatne informacije debuggiranja na izlaz</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="90"/>
         <source>Prepend debug output with timestamp</source>
-        <translation>Dodaj izlaz debuga na početak sa vremenskom oznakom</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="91"/>
         <source>Send trace/debug info to console instead of debug.log file</source>
-        <translation>Šalji trace/debug informacije na konzolu umjesto u debug.log datoteku</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="92"/>
         <source>Send trace/debug info to debugger</source>
-        <translation>Pošalji trace/debug informacije u debugger</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="93"/>
         <source>Username for JSON-RPC connections</source>
-        <translation>Korisničko ime za JSON-RPC veze</translation>
+        <translation>Felhasználói név JSON-RPC csatlakozásokhoz
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="94"/>
         <source>Password for JSON-RPC connections</source>
-        <translation>Lozinka za JSON-RPC veze</translation>
+        <translation>Jelszó JSON-RPC csatlakozásokhoz
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="95"/>
         <source>Listen for JSON-RPC connections on &lt;port&gt; (default: 8332)</source>
-        <translation>Prihvaćaj JSON-RPC povezivanje na portu broj &lt;port&gt; (ugrađeni izbor: 8332)</translation>
+        <translation>JSON-RPC csatlakozásokhoz figyelendő &lt;port&gt; (alapértelmezett: 8332)
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="96"/>
         <source>Allow JSON-RPC connections from specified IP address</source>
-        <translation>Dozvoli JSON-RPC povezivanje s određene IP adrese</translation>
+        <translation>JSON-RPC csatlakozások engedélyezése meghatározott IP-címről
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="97"/>
         <source>Send commands to node running on &lt;ip&gt; (default: 127.0.0.1)</source>
-        <translation>Pošalji komande nodu na adresi &lt;ip&gt; (ugrađeni izbor: 127.0.0.1)</translation>
+        <translation>Parancsok küldése &lt;ip&gt; címen működő csomóponthoz (alapértelmezett: 127.0.0.1)
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="98"/>
@@ -2180,12 +2195,14 @@ Adresa:%4
     <message>
         <location filename="../altcoinstrings.cpp" line="102"/>
         <source>Set key pool size to &lt;n&gt; (default: 100)</source>
-        <translation>Podesi memorijski prostor za ključeve na &lt;n&gt; (ugrađeni izbor: 100)</translation>
+        <translation>Kulcskarika mérete &lt;n&gt; (alapértelmezett: 100)
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="103"/>
         <source>Rescan the block chain for missing wallet transactions</source>
-        <translation>Ponovno pretraži lanac blokova za transakcije koje nedostaju</translation>
+        <translation>Blokklánc újraszkennelése hiányzó tárca-tranzakciók után
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="104"/>
@@ -2206,27 +2223,33 @@ Adresa:%4
         <location filename="../altcoinstrings.cpp" line="108"/>
         <source>
 SSL options: (see the Altcoin Wiki for SSL setup instructions)</source>
-        <translation>SSL postavke: (za detalje o podešavanju SSL opcija vidi Altcoin Wiki)</translation>
+        <translation>
+SSL-opciók: (lásd a Altcoin Wiki SSL-beállítási instrukcióit)
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="111"/>
         <source>Use OpenSSL (https) for JSON-RPC connections</source>
-        <translation>Koristi OpenSSL (https) za JSON-RPC povezivanje</translation>
+        <translation>OpenSSL (https) használata JSON-RPC csatalkozásokhoz
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="112"/>
         <source>Server certificate file (default: server.cert)</source>
-        <translation>Uslužnikov SSL certifikat (ugrađeni izbor: server.cert)</translation>
+        <translation>Szervertanúsítvány-fájl (alapértelmezett: server.cert)
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="113"/>
         <source>Server private key (default: server.pem)</source>
-        <translation>Uslužnikov privatni ključ (ugrađeni izbor: server.pem)</translation>
+        <translation>Szerver titkos kulcsa (alapértelmezett: server.pem)
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="114"/>
         <source>Acceptable ciphers (default: TLSv1+HIGH:!SSLv2:!aNULL:!eNULL:!AH:!3DES:@STRENGTH)</source>
-        <translation>Prihvaljivi načini šifriranja (ugrađeni izbor: TLSv1+HIGH:!SSLv2:!aNULL:!eNULL:!AH:!3DES:@STRENGTH)</translation>
+        <translation>Elfogadható rejtjelkulcsok (alapértelmezett: TLSv1+HIGH:!SSLv2:!aNULL:!eNULL:!AH:!3DES:@STRENGTH )
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="145"/>
@@ -2236,12 +2259,13 @@ SSL options: (see the Altcoin Wiki for SSL setup instructions)</source>
     <message>
         <location filename="../altcoinstrings.cpp" line="107"/>
         <source>This help message</source>
-        <translation>Ova poruka za pomoć</translation>
+        <translation>Ez a súgó-üzenet
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="121"/>
         <source>Cannot obtain a lock on data directory %s.  Altcoin is probably already running.</source>
-        <translation>Program ne može pristupiti direktoriju s datotekama %s. Altcoin program je vjerojatno već pokrenut.</translation>
+        <translation>Az %s adatkönyvtár nem zárható.  A Altcoin valószínűleg fut már.</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="48"/>
@@ -2281,32 +2305,32 @@ SSL options: (see the Altcoin Wiki for SSL setup instructions)</source>
     <message>
         <location filename="../altcoinstrings.cpp" line="142"/>
         <source>Loading addresses...</source>
-        <translation>Učitavanje adresa...</translation>
+        <translation>Címek betöltése...</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="132"/>
         <source>Error loading blkindex.dat</source>
-        <translation>Greška kod učitavanja blkindex.dat</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="134"/>
         <source>Error loading wallet.dat: Wallet corrupted</source>
-        <translation>Greška kod učitavanja wallet.dat: Novčanik pokvaren</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="135"/>
         <source>Error loading wallet.dat: Wallet requires newer version of Altcoin</source>
-        <translation>Greška kod učitavanja wallet.dat: Novčanik zahtjeva noviju verziju Altcoina</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="136"/>
         <source>Wallet needed to be rewritten: restart Altcoin to complete</source>
-        <translation>Novčanik je trebao prepravak: ponovo pokrenite Altcoin</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="137"/>
         <source>Error loading wallet.dat</source>
-        <translation>Greška kod učitavanja wallet.dat</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="124"/>
@@ -2366,17 +2390,17 @@ SSL options: (see the Altcoin Wiki for SSL setup instructions)</source>
     <message>
         <location filename="../altcoinstrings.cpp" line="35"/>
         <source>Error: Transaction creation failed  </source>
-        <translation>Greška: priprema transakcije nije uspjela</translation>
+        <translation>Hiba: nem sikerült létrehozni a tranzakciót  </translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="36"/>
         <source>Sending...</source>
-        <translation>Slanje...</translation>
+        <translation>Küldés...</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="37"/>
         <source>Error: The transaction was rejected.  This might happen if some of the coins in your wallet were already spent, such as if you used a copy of wallet.dat and coins were spent in the copy but not marked as spent here.</source>
-        <translation>Generirani novčići moraju pričekati nastanak 120 blokova prije nego što ih je moguće potrošiti. Kad ste generirali taj blok, on je bio emitiran u mrežu kako bi bio dodan postojećim lancima blokova. Ako ne uspije biti dodan, njegov status bit će promijenjen u &quot;nije prihvatljiv&quot; i on neće biti potrošiv. S vremena na vrijeme tako nešto se može desiti ako neki drugi nod približno istovremeno generira blok.</translation>
+        <translation>Hiba: a tranzakciót elutasították.  Ezt az okozhatja, ha már elköltöttél valamennyi érmét a tárcádból - például ha a wallet.dat-od egy másolatát használtad, és így az elköltés csak abban lett jelölve, de itt nem.</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="41"/>
@@ -2386,12 +2410,12 @@ SSL options: (see the Altcoin Wiki for SSL setup instructions)</source>
     <message>
         <location filename="../altcoinstrings.cpp" line="42"/>
         <source>Insufficient funds</source>
-        <translation>Nedovoljna sredstva</translation>
+        <translation>Nincs elég altcoinod.</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="131"/>
         <source>Loading block index...</source>
-        <translation>Učitavanje indeksa blokova...</translation>
+        <translation>Blokkindex betöltése...</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="65"/>
@@ -2431,7 +2455,7 @@ SSL options: (see the Altcoin Wiki for SSL setup instructions)</source>
     <message>
         <location filename="../altcoinstrings.cpp" line="85"/>
         <source>Fee per KB to add to transactions you send</source>
-        <translation>Naknada posredniku po KB-u koja će biti dodana svakoj transakciji koju pošalješ</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="118"/>
@@ -2441,7 +2465,7 @@ SSL options: (see the Altcoin Wiki for SSL setup instructions)</source>
     <message>
         <location filename="../altcoinstrings.cpp" line="133"/>
         <source>Loading wallet...</source>
-        <translation>Učitavanje novčanika...</translation>
+        <translation>Tárca betöltése...</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="138"/>
@@ -2461,12 +2485,12 @@ SSL options: (see the Altcoin Wiki for SSL setup instructions)</source>
     <message>
         <location filename="../altcoinstrings.cpp" line="141"/>
         <source>Rescanning...</source>
-        <translation>Rescaniranje</translation>
+        <translation>Újraszkennelés...</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="144"/>
         <source>Done loading</source>
-        <translation>Učitavanje gotovo</translation>
+        <translation>Betöltés befejezve.</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="8"/>
@@ -2505,7 +2529,7 @@ If the file does not exist, create it with owner-readable-only file permissions.
     <message>
         <location filename="../altcoinstrings.cpp" line="25"/>
         <source>Warning: Please check that your computer&apos;s date and time are correct.  If your clock is wrong Altcoin will not work properly.</source>
-        <translation>Upozorenje: Molimo provjerite jesu li datum i vrijeme na vašem računalu točni. Ako vaš sat ide krivo, Altcoin neće raditi ispravno.</translation>
+        <translation>Figyelem: Ellenőrizd, hogy helyesen van-e beállítva a gépeden a dátum és az idő.  A Altcoin nem fog megfelelően működni, ha rosszul van beállítvaaz órád.</translation>
     </message>
 </context>
 </TS>
