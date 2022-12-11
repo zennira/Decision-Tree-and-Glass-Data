@@ -229,4 +229,152 @@ Czy na pewno chcesz zaszyfrować swój portfel?</translation>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="111"/>
         <source>Altcoin will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your altcoins from being stolen by malware infecting your computer.</source>
-        <translation>Program Altcoin zamknie się aby dokończyć proces szyfrowania. Pamiętaj, że szyfrowanie portfela nie zabezpiecza w pełni Twoich altcoinów przed k
+        <translation>Program Altcoin zamknie się aby dokończyć proces szyfrowania. Pamiętaj, że szyfrowanie portfela nie zabezpiecza w pełni Twoich altcoinów przed kradzieżą przez wirusy lub trojany mogące zainfekować Twój komputer.</translation>
+    </message>
+    <message>
+        <location filename="../askpassphrasedialog.cpp" line="207"/>
+        <location filename="../askpassphrasedialog.cpp" line="231"/>
+        <source>Warning: The Caps Lock key is on.</source>
+        <translation>Ostrzeżenie: Caps Lock jest włączony.</translation>
+    </message>
+    <message>
+        <location filename="../askpassphrasedialog.cpp" line="116"/>
+        <location filename="../askpassphrasedialog.cpp" line="123"/>
+        <location filename="../askpassphrasedialog.cpp" line="165"/>
+        <location filename="../askpassphrasedialog.cpp" line="171"/>
+        <source>Wallet encryption failed</source>
+        <translation>Szyfrowanie portfela nie powiodło się</translation>
+    </message>
+    <message>
+        <location filename="../askpassphrasedialog.cpp" line="117"/>
+        <source>Wallet encryption failed due to an internal error. Your wallet was not encrypted.</source>
+        <translation>Szyfrowanie portfela nie powiodło się z powodu wewnętrznego błędu. Twój portfel nie został zaszyfrowany.</translation>
+    </message>
+    <message>
+        <location filename="../askpassphrasedialog.cpp" line="124"/>
+        <location filename="../askpassphrasedialog.cpp" line="172"/>
+        <source>The supplied passphrases do not match.</source>
+        <translation>Podane hasła nie są takie same.</translation>
+    </message>
+    <message>
+        <location filename="../askpassphrasedialog.cpp" line="135"/>
+        <source>Wallet unlock failed</source>
+        <translation>Odblokowanie portfela nie powiodło się</translation>
+    </message>
+    <message>
+        <location filename="../askpassphrasedialog.cpp" line="136"/>
+        <location filename="../askpassphrasedialog.cpp" line="147"/>
+        <location filename="../askpassphrasedialog.cpp" line="166"/>
+        <source>The passphrase entered for the wallet decryption was incorrect.</source>
+        <translation>Wprowadzone hasło do odszyfrowania portfela jest niepoprawne.</translation>
+    </message>
+    <message>
+        <location filename="../askpassphrasedialog.cpp" line="146"/>
+        <source>Wallet decryption failed</source>
+        <translation>Odszyfrowywanie portfela nie powiodło się</translation>
+    </message>
+    <message>
+        <location filename="../askpassphrasedialog.cpp" line="160"/>
+        <source>Wallet passphrase was succesfully changed.</source>
+        <translation>Hasło do portfela zostało pomyślnie zmienione.</translation>
+    </message>
+</context>
+<context>
+    <name>AltcoinGUI</name>
+    <message>
+        <location filename="../altcoingui.cpp" line="73"/>
+        <source>Altcoin Wallet</source>
+        <translation>Portfel Altcoin</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="215"/>
+        <source>Sign &amp;message...</source>
+        <translation>Podpisz wiado&amp;mość...</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="248"/>
+        <source>Show/Hide &amp;Altcoin</source>
+        <translation>Pokaż/Ukryj &amp;Altcoin</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="515"/>
+        <source>Synchronizing with network...</source>
+        <translation>Synchronizacja z siecią...</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="185"/>
+        <source>&amp;Overview</source>
+        <translation>P&amp;odsumowanie</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="186"/>
+        <source>Show general overview of wallet</source>
+        <translation>Pokazuje ogólny zarys portfela</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="191"/>
+        <source>&amp;Transactions</source>
+        <translation>&amp;Transakcje</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="192"/>
+        <source>Browse transaction history</source>
+        <translation>Przeglądaj historię transakcji</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="197"/>
+        <source>&amp;Address Book</source>
+        <translation>Książka &amp;adresowa</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="198"/>
+        <source>Edit the list of stored addresses and labels</source>
+        <translation>Edytuj listę zapisanych adresów i i etykiet</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="203"/>
+        <source>&amp;Receive coins</source>
+        <translation>Odbie&amp;rz monety</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="204"/>
+        <source>Show the list of addresses for receiving payments</source>
+        <translation>Pokaż listę adresów do otrzymywania płatności</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="209"/>
+        <source>&amp;Send coins</source>
+        <translation>Wy&amp;syłka monet</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="216"/>
+        <source>Prove you control an address</source>
+        <translation>Udowodnij, że kontrolujesz adres</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="235"/>
+        <source>E&amp;xit</source>
+        <translation>&amp;Zakończ</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="236"/>
+        <source>Quit application</source>
+        <translation>Zamknij program</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="239"/>
+        <source>&amp;About %1</source>
+        <translation>&amp;O %1</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="240"/>
+        <source>Show information about Altcoin</source>
+        <translation>Pokaż informację o Altcoin</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="242"/>
+        <source>About &amp;Qt</source>
+        <translation>O &amp;Qt</translation>
+    </message>
+    <message>
+        <location filename="../alt
