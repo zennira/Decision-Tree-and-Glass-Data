@@ -377,4 +377,153 @@ Czy na pewno chcesz zaszyfrować swój portfel?</translation>
         <translation>O &amp;Qt</translation>
     </message>
     <message>
-        <location filename="../alt
+        <location filename="../altcoingui.cpp" line="243"/>
+        <source>Show information about Qt</source>
+        <translation>Pokazuje informacje o Qt</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="245"/>
+        <source>&amp;Options...</source>
+        <translation>&amp;Opcje...</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="252"/>
+        <source>&amp;Encrypt Wallet...</source>
+        <translation>Zaszyfruj Portf&amp;el</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="255"/>
+        <source>&amp;Backup Wallet...</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="257"/>
+        <source>&amp;Change Passphrase...</source>
+        <translation type="unfinished"/>
+    </message>
+    <message numerus="yes">
+        <location filename="../altcoingui.cpp" line="517"/>
+        <source>~%n block(s) remaining</source>
+        <translation><numerusform>pozostał ~%n blok</numerusform><numerusform>pozostało ~%n bloki</numerusform><numerusform>pozostało ~%n bloków</numerusform></translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="528"/>
+        <source>Downloaded %1 of %2 blocks of transaction history (%3% done).</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="250"/>
+        <source>&amp;Export...</source>
+        <translation>&amp;Eksportuj...</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="210"/>
+        <source>Send coins to a Altcoin address</source>
+        <translation>Wyślij monety na adres Altcoin</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="246"/>
+        <source>Modify configuration options for Altcoin</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="249"/>
+        <source>Show or hide the Altcoin window</source>
+        <translation>Pokaż lub ukryj okno Altcoin</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="251"/>
+        <source>Export the data in the current tab to a file</source>
+        <translation>Eksportuj dane z aktywnej karty do pliku</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="253"/>
+        <source>Encrypt or decrypt wallet</source>
+        <translation>Zaszyfruj lub odszyfruj portfel</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="256"/>
+        <source>Backup wallet to another location</source>
+        <translation>Zapasowy portfel w innej lokalizacji</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="258"/>
+        <source>Change the passphrase used for wallet encryption</source>
+        <translation>Zmień hasło użyte do szyfrowania portfela</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="259"/>
+        <source>&amp;Debug window</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="260"/>
+        <source>Open debugging and diagnostic console</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="261"/>
+        <source>&amp;Verify message...</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="262"/>
+        <source>Verify a message signature</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="286"/>
+        <source>&amp;File</source>
+        <translation>&amp;Plik</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="296"/>
+        <source>&amp;Settings</source>
+        <translation>P&amp;referencje</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="302"/>
+        <source>&amp;Help</source>
+        <translation>Pomo&amp;c</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="311"/>
+        <source>Tabs toolbar</source>
+        <translation>Pasek zakładek</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="322"/>
+        <source>Actions toolbar</source>
+        <translation>Pasek akcji</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="334"/>
+        <location filename="../altcoingui.cpp" line="343"/>
+        <source>[testnet]</source>
+        <translation>[testnet]</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="343"/>
+        <location filename="../altcoingui.cpp" line="399"/>
+        <source>Altcoin client</source>
+        <translation>Altcoin klient</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../altcoingui.cpp" line="492"/>
+        <source>%n active connection(s) to Altcoin network</source>
+        <translation><numerusform>%n aktywne połączenie do sieci Altcoin</numerusform><numerusform>%n aktywne połączenia do sieci Altcoin</numerusform><numerusform>%n aktywnych połączeń do sieci Altcoin</numerusform></translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="540"/>
+        <source>Downloaded %1 blocks of transaction history.</source>
+        <translation>Pobrano %1 bloków z historią transakcji.</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../altcoingui.cpp" line="555"/>
+        <source>%n second(s) ago</source>
+        <translation><numerusform>%n sekundę temu</numerusform><numerusform>%n sekundy temu</numerusform><numerusform>%n sekund temu</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../altcoingui.cpp" line="559"/>
+        <source>%n minute(s) ago</source>
+        <translation><numerusform>%n minutę temu</numerusf
