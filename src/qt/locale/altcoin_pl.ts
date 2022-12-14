@@ -818,4 +818,145 @@ Adres: %4
         <translation>Opcjonalna prowizja za transakcje za kB, wspomaga ona szybkość przebiegu transakcji. Większość transakcji jest 1 kB. Zalecana prowizja 0.01 .</translation>
     </message>
     <message>
-        <location filename="../optionsdialog.cpp" l
+        <location filename="../optionsdialog.cpp" line="222"/>
+        <source>&amp;Start Altcoin on system login</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="223"/>
+        <source>Automatically start Altcoin after logging in to the system</source>
+        <translation>Automatycznie uruchom Altcoin po zalogowaniu do systemu</translation>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="226"/>
+        <source>&amp;Detach databases at shutdown</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>MessagePage</name>
+    <message>
+        <location filename="../forms/messagepage.ui" line="14"/>
+        <source>Sign Message</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/messagepage.ui" line="20"/>
+        <source>You can sign messages with your addresses to prove you own them. Be careful not to sign anything vague, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
+        <translation>Możesz podpisywać wiadomości swoimi adresami aby udowodnić, że jesteś ich właścicielem. Uważaj, aby nie podpisywać niczego co wzbudza Twoje podejrzenia, ponieważ ktoś może stosować phishing próbując nakłonić Cię do ich podpisania. Akceptuj i podpisuj tylko w pełni zrozumiałe komunikaty i wiadomości.</translation>
+    </message>
+    <message>
+        <location filename="../forms/messagepage.ui" line="38"/>
+        <source>The address to sign the message with  (e.g. 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/messagepage.ui" line="48"/>
+        <source>Choose adress from address book</source>
+        <translation>Wybierz adres z książki adresowej</translation>
+    </message>
+    <message>
+        <location filename="../forms/messagepage.ui" line="58"/>
+        <source>Alt+A</source>
+        <translation>Alt+A</translation>
+    </message>
+    <message>
+        <location filename="../forms/messagepage.ui" line="71"/>
+        <source>Paste address from clipboard</source>
+        <translation>Wklej adres ze schowka</translation>
+    </message>
+    <message>
+        <location filename="../forms/messagepage.ui" line="81"/>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+    <message>
+        <location filename="../forms/messagepage.ui" line="93"/>
+        <source>Enter the message you want to sign here</source>
+        <translation>Wprowadź wiadomość, którą chcesz podpisać, tutaj</translation>
+    </message>
+    <message>
+        <location filename="../forms/messagepage.ui" line="128"/>
+        <source>Copy the current signature to the system clipboard</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/messagepage.ui" line="131"/>
+        <source>&amp;Copy Signature</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/messagepage.ui" line="142"/>
+        <source>Reset all sign message fields</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/messagepage.ui" line="145"/>
+        <source>Clear &amp;All</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../messagepage.cpp" line="31"/>
+        <source>Click &quot;Sign Message&quot; to get signature</source>
+        <translation>Kliknij &quot;Podpisz Wiadomość&quot; żeby uzyskać podpis</translation>
+    </message>
+    <message>
+        <location filename="../forms/messagepage.ui" line="114"/>
+        <source>Sign a message to prove you own this address</source>
+        <translation>Podpisz wiadomość aby dowieść, że ten adres jest twój</translation>
+    </message>
+    <message>
+        <location filename="../forms/messagepage.ui" line="117"/>
+        <source>&amp;Sign Message</source>
+        <translation>Podpi&amp;sz Wiadomość</translation>
+    </message>
+    <message>
+        <location filename="../messagepage.cpp" line="30"/>
+        <source>Enter a Altcoin address (e.g. 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L)</source>
+        <translation>Wprowadź adres Altcoin (np. 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L)</translation>
+    </message>
+    <message>
+        <location filename="../messagepage.cpp" line="83"/>
+        <location filename="../messagepage.cpp" line="90"/>
+        <location filename="../messagepage.cpp" line="105"/>
+        <location filename="../messagepage.cpp" line="117"/>
+        <source>Error signing</source>
+        <translation>Błąd podpisywania</translation>
+    </message>
+    <message>
+        <location filename="../messagepage.cpp" line="83"/>
+        <source>%1 is not a valid address.</source>
+        <translation>%1 nie jest poprawnym adresem.</translation>
+    </message>
+    <message>
+        <location filename="../messagepage.cpp" line="90"/>
+        <source>%1 does not refer to a key.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../messagepage.cpp" line="105"/>
+        <source>Private key for %1 is not available.</source>
+        <translation>Klucz prywatny dla %1 jest niedostępny.</translation>
+    </message>
+    <message>
+        <location filename="../messagepage.cpp" line="117"/>
+        <source>Sign failed</source>
+        <translation>Podpisywanie nie powiodło się.</translation>
+    </message>
+</context>
+<context>
+    <name>NetworkOptionsPage</name>
+    <message>
+        <location filename="../optionsdialog.cpp" line="345"/>
+        <source>Network</source>
+        <translation>Sieć</translation>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="347"/>
+        <source>Map port using &amp;UPnP</source>
+        <translation>Mapuj port używając &amp;UPnP</translation>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="348"/>
+        <source>Automatically open the Altcoin client port on the router. This only works when your router supports UPnP and it is enabled.</source>
+        <translation>Automatycznie otwiera port klienta Altcoin na routerze. Ta opcja dzieła tylko jeśli twój router wspiera 
