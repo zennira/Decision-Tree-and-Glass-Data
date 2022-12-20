@@ -1567,4 +1567,151 @@ Adres: %4
 <context>
     <name>TransactionDescDialog</name>
     <message>
-        <location filename="../form
+        <location filename="../forms/transactiondescdialog.ui" line="14"/>
+        <source>Transaction details</source>
+        <translation>Szczegóły transakcji</translation>
+    </message>
+    <message>
+        <location filename="../forms/transactiondescdialog.ui" line="20"/>
+        <source>This pane shows a detailed description of the transaction</source>
+        <translation>Ten panel pokazuje szczegółowy opis transakcji</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionTableModel</name>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="226"/>
+        <source>Date</source>
+        <translation>Data</translation>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="226"/>
+        <source>Type</source>
+        <translation>Typ</translation>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="226"/>
+        <source>Address</source>
+        <translation>Adres</translation>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="226"/>
+        <source>Amount</source>
+        <translation>Kwota</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../transactiontablemodel.cpp" line="281"/>
+        <source>Open for %n block(s)</source>
+        <translation><numerusform>Otwórz dla %n bloku</numerusform><numerusform>Otwórz dla %n bloków</numerusform><numerusform>Otwórz dla %n bloków</numerusform></translation>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="284"/>
+        <source>Open until %1</source>
+        <translation>Otwórz do %1</translation>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="287"/>
+        <source>Offline (%1 confirmations)</source>
+        <translation>Offline (%1 potwierdzeń)</translation>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="290"/>
+        <source>Unconfirmed (%1 of %2 confirmations)</source>
+        <translation>Niezatwierdzony (%1 z %2 potwierdzeń)</translation>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="293"/>
+        <source>Confirmed (%1 confirmations)</source>
+        <translation>Zatwierdzony (%1 potwierdzeń)</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../transactiontablemodel.cpp" line="301"/>
+        <source>Mined balance will be available in %n more blocks</source>
+        <translation><numerusform>Wydobyta kwota będzie dostępna za %n blok</numerusform><numerusform>Wydobyta kwota będzie dostępna za %n bloków</numerusform><numerusform>Wydobyta kwota będzie dostępna za %n bloki</numerusform></translation>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="307"/>
+        <source>This block was not received by any other nodes and will probably not be accepted!</source>
+        <translation>Ten blok nie został odebrany przez jakikolwiek inny węzeł i prawdopodobnie nie zostanie zaakceptowany!</translation>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="310"/>
+        <source>Generated but not accepted</source>
+        <translation>Wygenerowano ale nie zaakceptowano</translation>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="353"/>
+        <source>Received with</source>
+        <translation>Otrzymane przez</translation>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="355"/>
+        <source>Received from</source>
+        <translation>Odebrano od</translation>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="358"/>
+        <source>Sent to</source>
+        <translation>Wysłano do</translation>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="360"/>
+        <source>Payment to yourself</source>
+        <translation>Płatność do siebie</translation>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="362"/>
+        <source>Mined</source>
+        <translation>Wydobyto</translation>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="400"/>
+        <source>(n/a)</source>
+        <translation>(brak)</translation>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="599"/>
+        <source>Transaction status. Hover over this field to show number of confirmations.</source>
+        <translation>Status transakcji. Najedź na pole, aby zobaczyć liczbę potwierdzeń.</translation>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="601"/>
+        <source>Date and time that the transaction was received.</source>
+        <translation>Data i czas odebrania transakcji.</translation>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="603"/>
+        <source>Type of transaction.</source>
+        <translation>Rodzaj transakcji.</translation>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="605"/>
+        <source>Destination address of transaction.</source>
+        <translation>Adres docelowy transakcji.</translation>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="607"/>
+        <source>Amount removed from or added to balance.</source>
+        <translation>Kwota usunięta z lub dodana do konta.</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionView</name>
+    <message>
+        <location filename="../transactionview.cpp" line="55"/>
+        <location filename="../transactionview.cpp" line="71"/>
+        <source>All</source>
+        <translation>Wszystko</translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="56"/>
+        <source>Today</source>
+        <translation>Dzisiaj</translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="57"/>
+        <source>This week</source>
+        <translation>W tym tygodniu</translation>
+    </message>
+    <message>
+        <location filename="../trans
