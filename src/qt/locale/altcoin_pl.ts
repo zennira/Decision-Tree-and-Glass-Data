@@ -1883,4 +1883,155 @@ Adres: %4
     </message>
     <message>
         <location filename="../forms/verifymessagedialog.ui" line="79"/>
-        <source>Copy th
+        <source>Copy the currently selected address to the system clipboard</source>
+        <translation>Skopiuj aktualnie wybrany adres do schowka</translation>
+    </message>
+    <message>
+        <location filename="../forms/verifymessagedialog.ui" line="82"/>
+        <source>&amp;Copy Address</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/verifymessagedialog.ui" line="93"/>
+        <source>Reset all verify message fields</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/verifymessagedialog.ui" line="96"/>
+        <source>Clear &amp;All</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../verifymessagedialog.cpp" line="28"/>
+        <source>Enter Altcoin signature</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../verifymessagedialog.cpp" line="29"/>
+        <source>Click &quot;Verify Message&quot; to obtain address</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../verifymessagedialog.cpp" line="55"/>
+        <location filename="../verifymessagedialog.cpp" line="62"/>
+        <source>Invalid Signature</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../verifymessagedialog.cpp" line="55"/>
+        <source>The signature could not be decoded. Please check the signature and try again.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../verifymessagedialog.cpp" line="62"/>
+        <source>The signature did not match the message digest. Please check the signature and try again.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../verifymessagedialog.cpp" line="72"/>
+        <source>Address not found in address book.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../verifymessagedialog.cpp" line="72"/>
+        <source>Address found in address book: %1</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>WalletModel</name>
+    <message>
+        <location filename="../walletmodel.cpp" line="158"/>
+        <source>Sending...</source>
+        <translation>Wysyłanie...</translation>
+    </message>
+</context>
+<context>
+    <name>WindowOptionsPage</name>
+    <message>
+        <location filename="../optionsdialog.cpp" line="313"/>
+        <source>Window</source>
+        <translation>Okno</translation>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="316"/>
+        <source>&amp;Minimize to the tray instead of the taskbar</source>
+        <translation>&amp;Minimalizuj do paska przy zegarku zamiast do paska zadań</translation>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="317"/>
+        <source>Show only a tray icon after minimizing the window</source>
+        <translation>Pokazuje tylko ikonę przy zegarku po zminimalizowaniu okna</translation>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="320"/>
+        <source>M&amp;inimize on close</source>
+        <translation>M&amp;inimalizuj przy zamknięciu</translation>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="321"/>
+        <source>Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Quit in the menu.</source>
+        <translation>Minimalizuje zamiast zakończyć działanie programu przy zamykaniu okna. Kiedy ta opcja jest włączona, program zakończy działanie po wybieraniu Zamknij w menu.</translation>
+    </message>
+</context>
+<context>
+    <name>altcoin-core</name>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="43"/>
+        <source>Altcoin version</source>
+        <translation>Wersja Altcoin</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="44"/>
+        <source>Usage:</source>
+        <translation>Użycie:</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="45"/>
+        <source>Send command to -server or altcoind</source>
+        <translation>Wyślij polecenie do -server lub altcoind</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="46"/>
+        <source>List commands</source>
+        <translation>Lista poleceń</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="47"/>
+        <source>Get help for a command</source>
+        <translation>Uzyskaj pomoc do polecenia</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="49"/>
+        <source>Options:</source>
+        <translation>Opcje:</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="50"/>
+        <source>Specify configuration file (default: altcoin.conf)</source>
+        <translation>Wskaż plik konfiguracyjny (domyślnie: altcoin.conf)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="51"/>
+        <source>Specify pid file (default: altcoind.pid)</source>
+        <translation>Wskaż plik pid (domyślnie: altcoin.pid)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="52"/>
+        <source>Generate coins</source>
+        <translation>Generuj monety</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="53"/>
+        <source>Don&apos;t generate coins</source>
+        <translation>Nie generuj monet</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="54"/>
+        <source>Specify data directory</source>
+        <translation>Wskaż folder danych</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="55"/>
+        <source>Set database cache size in megabytes (default: 25)</source>
+        <translation typ
