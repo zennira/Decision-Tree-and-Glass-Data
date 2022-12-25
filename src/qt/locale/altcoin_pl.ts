@@ -2436,4 +2436,82 @@ opcje SSL: (sprawdź Altcoin Wiki dla instrukcje konfiguracji SSL)</translation>
     <message>
         <location filename="../altcoinstrings.cpp" line="85"/>
         <source>Fee per KB to add to transactions you send</source>
-        <translati
+        <translation>
+</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="118"/>
+        <source>Warning: -paytxfee is set very high. This is the transaction fee you will pay if you send a transaction.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="133"/>
+        <source>Loading wallet...</source>
+        <translation>Wczytywanie portfela...</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="138"/>
+        <source>Cannot downgrade wallet</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="139"/>
+        <source>Cannot initialize keypool</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="140"/>
+        <source>Cannot write default address</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="141"/>
+        <source>Rescanning...</source>
+        <translation>Ponowne skanowanie...</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="144"/>
+        <source>Done loading</source>
+        <translation>Wczytywanie zakończone</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="8"/>
+        <source>To use the %s option</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="9"/>
+        <source>%s, you must set a rpcpassword in the configuration file:
+ %s
+It is recommended you use the following random password:
+rpcuser=altcoinrpc
+rpcpassword=%s
+(you do not need to remember this password)
+If the file does not exist, create it with owner-readable-only file permissions.
+</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="18"/>
+        <source>Error</source>
+        <translation>Błąd</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="19"/>
+        <source>An error occured while setting up the RPC port %i for listening: %s</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="20"/>
+        <source>You must set rpcpassword=&lt;password&gt; in the configuration file:
+%s
+If the file does not exist, create it with owner-readable-only file permissions.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="25"/>
+        <source>Warning: Please check that your computer&apos;s date and time are correct.  If your clock is wrong Altcoin will not work properly.</source>
+        <translation>Ostrzeżenie: Proszę sprawdzić poprawność czasu i daty na tym komputerze.  Jeśli czas jest zły Altcoin może nie działać prawidłowo.</translation>
+    </message>
+</context>
+</TS>
