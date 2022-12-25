@@ -2300,4 +2300,140 @@ opcje SSL: (sprawdź Altcoin Wiki dla instrukcje konfiguracji SSL)</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="135"/>
-        <sou
+        <source>Error loading wallet.dat: Wallet requires newer version of Altcoin</source>
+        <translation>Błąd ładowania wallet.dat: Portfel wymaga nowszej wersji Altcoin</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="136"/>
+        <source>Wallet needed to be rewritten: restart Altcoin to complete</source>
+        <translation>Portfel wymaga przepisania: zrestartuj Altcoina żeby ukończyć</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="137"/>
+        <source>Error loading wallet.dat</source>
+        <translation>Błąd ładowania wallet.dat</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="124"/>
+        <source>Invalid -proxy address: &apos;%s&apos;</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="125"/>
+        <source>Unknown network specified in -noproxy: &apos;%s&apos;</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="127"/>
+        <source>Unknown network specified in -onlynet: &apos;%s&apos;</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="126"/>
+        <source>Unknown -socks proxy version requested: %i</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="128"/>
+        <source>Cannot resolve -bind address: &apos;%s&apos;</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="129"/>
+        <source>Not listening on any port</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="130"/>
+        <source>Cannot resolve -externalip address: &apos;%s&apos;</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="117"/>
+        <source>Invalid amount for -paytxfee=&lt;amount&gt;: &apos;%s&apos;</source>
+        <translation>Nieprawidłowa kwota dla -paytxfee=&lt;amount&gt;: &apos;%s&apos;</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="143"/>
+        <source>Error: could not start node</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="31"/>
+        <source>Error: Wallet locked, unable to create transaction  </source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="32"/>
+        <source>Error: This transaction requires a transaction fee of at least %s because of its amount, complexity, or use of recently received funds  </source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="35"/>
+        <source>Error: Transaction creation failed  </source>
+        <translation>Błąd: Tworzenie transakcji nie powiodło się  </translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="36"/>
+        <source>Sending...</source>
+        <translation>Wysyłanie...</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="37"/>
+        <source>Error: The transaction was rejected.  This might happen if some of the coins in your wallet were already spent, such as if you used a copy of wallet.dat and coins were spent in the copy but not marked as spent here.</source>
+        <translation>Błąd: transakcja została odrzucona. Może się to zdarzyć, gdy monety z Twojego portfela zostały już wydane, na przykład gdy używałeś kopii wallet.dat i altcoiny które tam wydałeś nie zostały jeszcze odjęte z portfela z którego teraz korzystasz.</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="41"/>
+        <source>Invalid amount</source>
+        <translation>Nieprawidłowa kwota</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="42"/>
+        <source>Insufficient funds</source>
+        <translation>Niewystarczające środki</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="131"/>
+        <source>Loading block index...</source>
+        <translation>Ładowanie indeksu bloku...</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="65"/>
+        <source>Add a node to connect to and attempt to keep the connection open</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="28"/>
+        <source>Unable to bind to %s on this computer. Altcoin is probably already running.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="71"/>
+        <source>Find peers using internet relay chat (default: 0)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="72"/>
+        <source>Accept connections from outside (default: 1)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="74"/>
+        <source>Find peers using DNS lookup (default: 1)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="81"/>
+        <source>Use Universal Plug and Play to map the listening port (default: 1)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="82"/>
+        <source>Use Universal Plug and Play to map the listening port (default: 0)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="85"/>
+        <source>Fee per KB to add to transactions you send</source>
+        <translati
