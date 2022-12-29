@@ -494,4 +494,147 @@ Are you sure you wish to encrypt your wallet?</source>
         <location filename="../altcoingui.cpp" line="334"/>
         <location filename="../altcoingui.cpp" line="343"/>
         <source>[testnet]</source>
-        <translation>[testnet]</transla
+        <translation>[testnet]</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="343"/>
+        <location filename="../altcoingui.cpp" line="399"/>
+        <source>Altcoin client</source>
+        <translation>Cliente Altcoin</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../altcoingui.cpp" line="492"/>
+        <source>%n active connection(s) to Altcoin network</source>
+        <translation><numerusform>%n conexão ativa na rede Altcoin</numerusform><numerusform>%n conexões ativas na rede Altcoin</numerusform></translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="540"/>
+        <source>Downloaded %1 blocks of transaction history.</source>
+        <translation>Carregados %1 blocos do histórico de transações.</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../altcoingui.cpp" line="555"/>
+        <source>%n second(s) ago</source>
+        <translation><numerusform>%n segundo atrás</numerusform><numerusform>%n segundos atrás</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../altcoingui.cpp" line="559"/>
+        <source>%n minute(s) ago</source>
+        <translation><numerusform>%n minutos atrás</numerusform><numerusform>%n minutos atrás</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../altcoingui.cpp" line="563"/>
+        <source>%n hour(s) ago</source>
+        <translation><numerusform>%n hora atrás</numerusform><numerusform>%n horas atrás</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../altcoingui.cpp" line="567"/>
+        <source>%n day(s) ago</source>
+        <translation><numerusform>%n dia atrás</numerusform><numerusform>%n dias atrás</numerusform></translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="573"/>
+        <source>Up to date</source>
+        <translation>Atualizado</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="580"/>
+        <source>Catching up...</source>
+        <translation>Recuperando o atraso ...</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="590"/>
+        <source>Last received block was generated %1.</source>
+        <translation>Last received block was generated %1.</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="649"/>
+        <source>This transaction is over the size limit.  You can still send it for a fee of %1, which goes to the nodes that process your transaction and helps to support the network.  Do you want to pay the fee?</source>
+        <translation>This transaction is over the size limit.  You can still send it for a fee of %1, which goes to the nodes that process your transaction and helps to support the network.  Do you want to pay the fee?</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="654"/>
+        <source>Confirm transaction fee</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="681"/>
+        <source>Sent transaction</source>
+        <translation>Sent transaction</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="682"/>
+        <source>Incoming transaction</source>
+        <translation>Incoming transaction</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="683"/>
+        <source>Date: %1
+Amount: %2
+Type: %3
+Address: %4
+</source>
+        <translation>Data: %1
+Quantidade: %2
+Tipo: %3
+Endereço: %4</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="804"/>
+        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
+        <translation>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="812"/>
+        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
+        <translation>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="835"/>
+        <source>Backup Wallet</source>
+        <translation>Fazer cópia de segurança da Carteira</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="835"/>
+        <source>Wallet Data (*.dat)</source>
+        <translation>Dados da Carteira (*.dat)</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="838"/>
+        <source>Backup Failed</source>
+        <translation>Cópia de segurança Falhou</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="838"/>
+        <source>There was an error trying to save the wallet data to the new location.</source>
+        <translation>Houve um erro ao tentar salvar os dados da carteira para uma nova localização.</translation>
+    </message>
+    <message>
+        <location filename="../altcoin.cpp" line="112"/>
+        <source>A fatal error occured. Altcoin can no longer continue safely and will quit.</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>ClientModel</name>
+    <message>
+        <location filename="../clientmodel.cpp" line="84"/>
+        <source>Network Alert</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>DisplayOptionsPage</name>
+    <message>
+        <location filename="../optionsdialog.cpp" line="246"/>
+        <source>Display</source>
+        <translation>Display</translation>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="257"/>
+        <source>default</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="263"/>
+        <source>The user interface language can be set here. This setting will only t
