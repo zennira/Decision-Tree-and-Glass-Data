@@ -1554,4 +1554,140 @@ Endereço: %4</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="229"/>
-        <source>Generated coins must wait 120 blocks before they can be spent.  When you generated 
+        <source>Generated coins must wait 120 blocks before they can be spent.  When you generated this block, it was broadcast to the network to be added to the block chain.  If it fails to get into the chain, it will change to &quot;not accepted&quot; and not be spendable.  This may occasionally happen if another node generates a block within a few seconds of yours.</source>
+        <translation>Generated coins must wait 120 blocks before they can be spent.  When you generated this block, it was broadcast to the network to be added to the block chain.  If it fails to get into the chain, it will change to &quot;not accepted&quot; and not be spendable.  This may occasionally happen if another node generates a block within a few seconds of yours.</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDescDialog</name>
+    <message>
+        <location filename="../forms/transactiondescdialog.ui" line="14"/>
+        <source>Transaction details</source>
+        <translation>Transaction details</translation>
+    </message>
+    <message>
+        <location filename="../forms/transactiondescdialog.ui" line="20"/>
+        <source>This pane shows a detailed description of the transaction</source>
+        <translation>This pane shows a detailed description of the transaction</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionTableModel</name>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="226"/>
+        <source>Date</source>
+        <translation>Date</translation>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="226"/>
+        <source>Type</source>
+        <translation>Type</translation>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="226"/>
+        <source>Address</source>
+        <translation>Address</translation>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="226"/>
+        <source>Amount</source>
+        <translation>Amount</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../transactiontablemodel.cpp" line="281"/>
+        <source>Open for %n block(s)</source>
+        <translation><numerusform>Open for %n block</numerusform><numerusform>Open for %n blocks</numerusform></translation>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="284"/>
+        <source>Open until %1</source>
+        <translation>Open until %1</translation>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="287"/>
+        <source>Offline (%1 confirmations)</source>
+        <translation>Offline (%1 confirmations)</translation>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="290"/>
+        <source>Unconfirmed (%1 of %2 confirmations)</source>
+        <translation>Unconfirmed (%1 of %2 confirmations)</translation>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="293"/>
+        <source>Confirmed (%1 confirmations)</source>
+        <translation>Confirmed (%1 confirmations)</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../transactiontablemodel.cpp" line="301"/>
+        <source>Mined balance will be available in %n more blocks</source>
+        <translation><numerusform>Mined balance will be available in %n more block</numerusform><numerusform>Mined balance will be available in %n more blocks</numerusform></translation>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="307"/>
+        <source>This block was not received by any other nodes and will probably not be accepted!</source>
+        <translation>This block was not received by any other nodes and will probably not be accepted!</translation>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="310"/>
+        <source>Generated but not accepted</source>
+        <translation>Generated but not accepted</translation>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="353"/>
+        <source>Received with</source>
+        <translation>Received with</translation>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="355"/>
+        <source>Received from</source>
+        <translation>Recebido de</translation>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="358"/>
+        <source>Sent to</source>
+        <translation>Sent to</translation>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="360"/>
+        <source>Payment to yourself</source>
+        <translation>Payment to yourself</translation>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="362"/>
+        <source>Mined</source>
+        <translation>Mined</translation>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="400"/>
+        <source>(n/a)</source>
+        <translation>(n/a)</translation>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="599"/>
+        <source>Transaction status. Hover over this field to show number of confirmations.</source>
+        <translation>Transaction status. Hover over this field to show number of confirmations.</translation>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="601"/>
+        <source>Date and time that the transaction was received.</source>
+        <translation>Date and time that the transaction was received.</translation>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="603"/>
+        <source>Type of transaction.</source>
+        <translation>Type of transaction.</translation>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="605"/>
+        <source>Destination address of transaction.</source>
+        <translation>Destination address of transaction.</translation>
+    </message>
+    <message>
+        <location filename="../transactiontablemodel.cpp" line="607"/>
+        <source>Amount removed from or added to balance.</source>
+        <translation>Amount removed from or added to balance.</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionView
