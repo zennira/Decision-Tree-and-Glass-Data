@@ -438,4 +438,145 @@ Sunteţi sigur că doriţi să criptaţi portofelul electronic?</translation>
     <message>
         <location filename="../altcoingui.cpp" line="258"/>
         <source>Change the passphrase used for wallet encryption</source>
-        <translation>&amp;Schimbă parola folosită pentru criptarea portofelului elec
+        <translation>&amp;Schimbă parola folosită pentru criptarea portofelului electronic</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="259"/>
+        <source>&amp;Debug window</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="260"/>
+        <source>Open debugging and diagnostic console</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="261"/>
+        <source>&amp;Verify message...</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="262"/>
+        <source>Verify a message signature</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="286"/>
+        <source>&amp;File</source>
+        <translation>&amp;Fişier</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="296"/>
+        <source>&amp;Settings</source>
+        <translation>&amp;Setări</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="302"/>
+        <source>&amp;Help</source>
+        <translation>&amp;Ajutor</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="311"/>
+        <source>Tabs toolbar</source>
+        <translation>Bara de ferestre de lucru</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="322"/>
+        <source>Actions toolbar</source>
+        <translation>Bara de acţiuni</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="334"/>
+        <location filename="../altcoingui.cpp" line="343"/>
+        <source>[testnet]</source>
+        <translation>[testnet]</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="343"/>
+        <location filename="../altcoingui.cpp" line="399"/>
+        <source>Altcoin client</source>
+        <translation type="unfinished"/>
+    </message>
+    <message numerus="yes">
+        <location filename="../altcoingui.cpp" line="492"/>
+        <source>%n active connection(s) to Altcoin network</source>
+        <translation><numerusform>%n active connections to Altcoin network</numerusform><numerusform>%n active connections to Altcoin network</numerusform><numerusform>%n active connections to Altcoin network</numerusform></translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="540"/>
+        <source>Downloaded %1 blocks of transaction history.</source>
+        <translation>S-au descărcat %1 blocuri din istoricul tranzaciilor.</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../altcoingui.cpp" line="555"/>
+        <source>%n second(s) ago</source>
+        <translation><numerusform>%n seconds ago</numerusform><numerusform>%n seconds ago</numerusform><numerusform>%n seconds ago</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../altcoingui.cpp" line="559"/>
+        <source>%n minute(s) ago</source>
+        <translation><numerusform>Acum %n minut</numerusform><numerusform>Acum %n minute</numerusform><numerusform>Acum %n minute</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../altcoingui.cpp" line="563"/>
+        <source>%n hour(s) ago</source>
+        <translation><numerusform>Acum %n oră</numerusform><numerusform>Acum %n ore</numerusform><numerusform>Acum %n ore</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../altcoingui.cpp" line="567"/>
+        <source>%n day(s) ago</source>
+        <translation><numerusform>Acum %n zi</numerusform><numerusform>Acum %n zile</numerusform><numerusform>Acum %n zile</numerusform></translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="573"/>
+        <source>Up to date</source>
+        <translation>Actualizat</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="580"/>
+        <source>Catching up...</source>
+        <translation>Se actualizează...</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="590"/>
+        <source>Last received block was generated %1.</source>
+        <translation>Ultimul bloc primit a fost generat %1.</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="649"/>
+        <source>This transaction is over the size limit.  You can still send it for a fee of %1, which goes to the nodes that process your transaction and helps to support the network.  Do you want to pay the fee?</source>
+        <translation>Această tranzacţie depăşeşte limita.  Puteţi iniţia tranzacţia platind un comision de %1, de care vor beneficia nodurile care procesează tranzacţia şi ajută la menţinerea reţelei.  Acceptaţi plata comisionului?</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="654"/>
+        <source>Confirm transaction fee</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="681"/>
+        <source>Sent transaction</source>
+        <translation>Tranzacţie expediată</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="682"/>
+        <source>Incoming transaction</source>
+        <translation>Tranzacţie recepţionată</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="683"/>
+        <source>Date: %1
+Amount: %2
+Type: %3
+Address: %4
+</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="804"/>
+        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
+        <translation>Portofelul electronic este &lt;b&gt;criptat&lt;/b&gt; iar in momentul de faţă este &lt;b&gt;deblocat&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="812"/>
+        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
+        <translation>Portofelul electronic este &lt;b&gt;criptat&lt;/b&gt; iar in mo
