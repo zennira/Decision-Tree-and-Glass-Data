@@ -1810,4 +1810,156 @@ Address: %4
     </message>
     <message>
         <location filename="../transactionview.cpp" line="283"/>
-        <s
+        <source>Address</source>
+        <translation>Adresă</translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="284"/>
+        <source>Amount</source>
+        <translation>Sumă</translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="285"/>
+        <source>ID</source>
+        <translation>ID</translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="289"/>
+        <source>Error exporting</source>
+        <translation>Eroare în timpul exportului</translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="289"/>
+        <source>Could not write to file %1.</source>
+        <translation>Fisierul %1 nu a putut fi accesat pentru scriere.</translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="384"/>
+        <source>Range:</source>
+        <translation>Interval:</translation>
+    </message>
+    <message>
+        <location filename="../transactionview.cpp" line="392"/>
+        <source>to</source>
+        <translation>către</translation>
+    </message>
+</context>
+<context>
+    <name>VerifyMessageDialog</name>
+    <message>
+        <location filename="../forms/verifymessagedialog.ui" line="14"/>
+        <source>Verify Signed Message</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/verifymessagedialog.ui" line="20"/>
+        <source>Enter the message and signature below (be careful to correctly copy newlines, spaces, tabs and other invisible characters) to obtain the Altcoin address used to sign the message.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/verifymessagedialog.ui" line="62"/>
+        <source>Verify a message and obtain the Altcoin address used to sign the message</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/verifymessagedialog.ui" line="65"/>
+        <source>&amp;Verify Message</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/verifymessagedialog.ui" line="79"/>
+        <source>Copy the currently selected address to the system clipboard</source>
+        <translation>Copiați adresa selectată în clipboard</translation>
+    </message>
+    <message>
+        <location filename="../forms/verifymessagedialog.ui" line="82"/>
+        <source>&amp;Copy Address</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/verifymessagedialog.ui" line="93"/>
+        <source>Reset all verify message fields</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/verifymessagedialog.ui" line="96"/>
+        <source>Clear &amp;All</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../verifymessagedialog.cpp" line="28"/>
+        <source>Enter Altcoin signature</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../verifymessagedialog.cpp" line="29"/>
+        <source>Click &quot;Verify Message&quot; to obtain address</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../verifymessagedialog.cpp" line="55"/>
+        <location filename="../verifymessagedialog.cpp" line="62"/>
+        <source>Invalid Signature</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../verifymessagedialog.cpp" line="55"/>
+        <source>The signature could not be decoded. Please check the signature and try again.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../verifymessagedialog.cpp" line="62"/>
+        <source>The signature did not match the message digest. Please check the signature and try again.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../verifymessagedialog.cpp" line="72"/>
+        <source>Address not found in address book.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../verifymessagedialog.cpp" line="72"/>
+        <source>Address found in address book: %1</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>WalletModel</name>
+    <message>
+        <location filename="../walletmodel.cpp" line="158"/>
+        <source>Sending...</source>
+        <translation>Se expediază...</translation>
+    </message>
+</context>
+<context>
+    <name>WindowOptionsPage</name>
+    <message>
+        <location filename="../optionsdialog.cpp" line="313"/>
+        <source>Window</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="316"/>
+        <source>&amp;Minimize to the tray instead of the taskbar</source>
+        <translation>&amp;M Ascunde în tray în loc de taskbar</translation>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="317"/>
+        <source>Show only a tray icon after minimizing the window</source>
+        <translation>Afişează doar un icon in tray la ascunderea ferestrei</translation>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="320"/>
+        <source>M&amp;inimize on close</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="321"/>
+        <source>Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Quit in the menu.</source>
+        <translation>Ascunde fereastra în locul părăsirii programului în momentul închiderii ferestrei. Când acestă opţiune e activă, aplicaţia se va opri doar în momentul selectării comenzii Quit din menu.</translation>
+    </message>
+</context>
+<context>
+    <name>altcoin-core</name>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="
