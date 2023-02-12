@@ -451,4 +451,144 @@ Ste si istí, že si želáte zašifrovať peňaženku?</translation>
         <translation type="unfinished"/>
     </message>
     <message>
-      
+        <location filename="../altcoingui.cpp" line="261"/>
+        <source>&amp;Verify message...</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="262"/>
+        <source>Verify a message signature</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="286"/>
+        <source>&amp;File</source>
+        <translation>&amp;Súbor</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="296"/>
+        <source>&amp;Settings</source>
+        <translation>&amp;Nastavenia</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="302"/>
+        <source>&amp;Help</source>
+        <translation>&amp;Pomoc</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="311"/>
+        <source>Tabs toolbar</source>
+        <translation>Lišta záložiek</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="322"/>
+        <source>Actions toolbar</source>
+        <translation>Lišta aktvivít</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="334"/>
+        <location filename="../altcoingui.cpp" line="343"/>
+        <source>[testnet]</source>
+        <translation>[testovacia sieť]</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="343"/>
+        <location filename="../altcoingui.cpp" line="399"/>
+        <source>Altcoin client</source>
+        <translation type="unfinished"/>
+    </message>
+    <message numerus="yes">
+        <location filename="../altcoingui.cpp" line="492"/>
+        <source>%n active connection(s) to Altcoin network</source>
+        <translation><numerusform>%n aktívne spojenie v Altcoin sieti</numerusform><numerusform>%n aktívne spojenia v Altcoin sieti</numerusform><numerusform>%n aktívnych spojení v Bitconi sieti</numerusform></translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="540"/>
+        <source>Downloaded %1 blocks of transaction history.</source>
+        <translation>Stiahnutých %1 blokov transakčnej histórie</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../altcoingui.cpp" line="555"/>
+        <source>%n second(s) ago</source>
+        <translation><numerusform>pred %n sekundou</numerusform><numerusform>pred %n sekundami</numerusform><numerusform>pred %n sekundami</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../altcoingui.cpp" line="559"/>
+        <source>%n minute(s) ago</source>
+        <translation><numerusform>pred %n minútou</numerusform><numerusform>pred %n minútami</numerusform><numerusform>pred %n minútami</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../altcoingui.cpp" line="563"/>
+        <source>%n hour(s) ago</source>
+        <translation><numerusform>pred hodinou</numerusform><numerusform>pred %n hodinami</numerusform><numerusform>pred %n hodinami</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../altcoingui.cpp" line="567"/>
+        <source>%n day(s) ago</source>
+        <translation><numerusform>včera</numerusform><numerusform>pred %n dňami</numerusform><numerusform>pred %n dňami</numerusform></translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="573"/>
+        <source>Up to date</source>
+        <translation>Aktualizovaný</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="580"/>
+        <source>Catching up...</source>
+        <translation>Sťahujem...</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="590"/>
+        <source>Last received block was generated %1.</source>
+        <translation>Posledný prijatý blok bol generovaný %1.</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="649"/>
+        <source>This transaction is over the size limit.  You can still send it for a fee of %1, which goes to the nodes that process your transaction and helps to support the network.  Do you want to pay the fee?</source>
+        <translation>Veľkosť tejto transakcie prekračuje limit. Stále ju však môžete odoslať za poplatok %1 ktorý bude pripísaný uzlu spracúvajúcemu vašu transakciu. Chcete zaplatiť poplatok?</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="654"/>
+        <source>Confirm transaction fee</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="681"/>
+        <source>Sent transaction</source>
+        <translation>Odoslané transakcie</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="682"/>
+        <source>Incoming transaction</source>
+        <translation>Prijaté transakcie</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="683"/>
+        <source>Date: %1
+Amount: %2
+Type: %3
+Address: %4
+</source>
+        <translation>Dátum: %1
+Suma: %2
+Typ: %3
+Adresa: %4</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="804"/>
+        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
+        <translation>Peňaženka je &lt;b&gt;zašifrovaná&lt;/b&gt; a momentálne &lt;b&gt;odomknutá&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="812"/>
+        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
+        <translation>Peňaženka je &lt;b&gt;zašifrovaná&lt;/b&gt; a momentálne &lt;b&gt;zamknutá&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="835"/>
+        <source>Backup Wallet</source>
+        <translation>Zálohovať peňaženku</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="835"/>
+        <so
