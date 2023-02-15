@@ -591,4 +591,162 @@ Adresa: %4</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="835"/>
-        <so
+        <source>Wallet Data (*.dat)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="838"/>
+        <source>Backup Failed</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="838"/>
+        <source>There was an error trying to save the wallet data to the new location.</source>
+        <translation>Nastala chyba pri pokuse uložiť peňaženku na nové miesto.</translation>
+    </message>
+    <message>
+        <location filename="../altcoin.cpp" line="112"/>
+        <source>A fatal error occured. Altcoin can no longer continue safely and will quit.</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>ClientModel</name>
+    <message>
+        <location filename="../clientmodel.cpp" line="84"/>
+        <source>Network Alert</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>DisplayOptionsPage</name>
+    <message>
+        <location filename="../optionsdialog.cpp" line="246"/>
+        <source>Display</source>
+        <translation>Displej</translation>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="257"/>
+        <source>default</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="263"/>
+        <source>The user interface language can be set here. This setting will only take effect after restarting Altcoin.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="252"/>
+        <source>User Interface &amp;Language:</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="273"/>
+        <source>&amp;Unit to show amounts in:</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="277"/>
+        <source>Choose the default subdivision unit to show in the interface, and when sending coins</source>
+        <translation>Zvoľ východziu podjednotku ktorá sa bude zobrazovať v programe a pri odosielaní mincí.</translation>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="284"/>
+        <source>&amp;Display addresses in transaction list</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="285"/>
+        <source>Whether to show Altcoin addresses in the transaction list</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="303"/>
+        <source>Warning</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="303"/>
+        <source>This setting will take effect after restarting Altcoin.</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>EditAddressDialog</name>
+    <message>
+        <location filename="../forms/editaddressdialog.ui" line="14"/>
+        <source>Edit Address</source>
+        <translation>Upraviť adresu</translation>
+    </message>
+    <message>
+        <location filename="../forms/editaddressdialog.ui" line="25"/>
+        <source>&amp;Label</source>
+        <translation>&amp;Popis</translation>
+    </message>
+    <message>
+        <location filename="../forms/editaddressdialog.ui" line="35"/>
+        <source>The label associated with this address book entry</source>
+        <translation>Popis priradený k tomuto záznamu v adresári</translation>
+    </message>
+    <message>
+        <location filename="../forms/editaddressdialog.ui" line="42"/>
+        <source>&amp;Address</source>
+        <translation>&amp;Adresa</translation>
+    </message>
+    <message>
+        <location filename="../forms/editaddressdialog.ui" line="52"/>
+        <source>The address associated with this address book entry. This can only be modified for sending addresses.</source>
+        <translation>Adresa spojená s týmto záznamom v adresári. Možno upravovať len pre odosielajúce adresy.</translation>
+    </message>
+    <message>
+        <location filename="../editaddressdialog.cpp" line="20"/>
+        <source>New receiving address</source>
+        <translation>Nová adresa pre prijímanie</translation>
+    </message>
+    <message>
+        <location filename="../editaddressdialog.cpp" line="24"/>
+        <source>New sending address</source>
+        <translation>Nová adresa pre odoslanie</translation>
+    </message>
+    <message>
+        <location filename="../editaddressdialog.cpp" line="27"/>
+        <source>Edit receiving address</source>
+        <translation>Upraviť prijímacie adresy</translation>
+    </message>
+    <message>
+        <location filename="../editaddressdialog.cpp" line="31"/>
+        <source>Edit sending address</source>
+        <translation>Upraviť odosielaciu adresu</translation>
+    </message>
+    <message>
+        <location filename="../editaddressdialog.cpp" line="91"/>
+        <source>The entered address &quot;%1&quot; is already in the address book.</source>
+        <translation>Vložená adresa &quot;%1&quot; sa už nachádza v adresári.</translation>
+    </message>
+    <message>
+        <location filename="../editaddressdialog.cpp" line="96"/>
+        <source>The entered address &quot;%1&quot; is not a valid Altcoin address.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../editaddressdialog.cpp" line="101"/>
+        <source>Could not unlock wallet.</source>
+        <translation>Nepodarilo sa odomknúť peňaženku.</translation>
+    </message>
+    <message>
+        <location filename="../editaddressdialog.cpp" line="106"/>
+        <source>New key generation failed.</source>
+        <translation>Generovanie nového kľúča zlyhalo.</translation>
+    </message>
+</context>
+<context>
+    <name>HelpMessageBox</name>
+    <message>
+        <location filename="../altcoin.cpp" line="133"/>
+        <location filename="../altcoin.cpp" line="143"/>
+        <source>Altcoin-Qt</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../altcoin.cpp" line="133"/>
+        <source>ve
