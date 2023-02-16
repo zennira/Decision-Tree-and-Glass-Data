@@ -896,3 +896,150 @@ Adresa: %4</translation>
     <message>
         <location filename="../forms/messagepage.ui" line="117"/>
         <source>&amp;Sign Message</source>
+        <translation>&amp;Podpísať Správu</translation>
+    </message>
+    <message>
+        <location filename="../messagepage.cpp" line="30"/>
+        <source>Enter a Altcoin address (e.g. 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L)</source>
+        <translation>Zadajte Altcoin adresu (napr. 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L)</translation>
+    </message>
+    <message>
+        <location filename="../messagepage.cpp" line="83"/>
+        <location filename="../messagepage.cpp" line="90"/>
+        <location filename="../messagepage.cpp" line="105"/>
+        <location filename="../messagepage.cpp" line="117"/>
+        <source>Error signing</source>
+        <translation>Chyba podpisovania</translation>
+    </message>
+    <message>
+        <location filename="../messagepage.cpp" line="83"/>
+        <source>%1 is not a valid address.</source>
+        <translation>%1 nieje platná adresa.</translation>
+    </message>
+    <message>
+        <location filename="../messagepage.cpp" line="90"/>
+        <source>%1 does not refer to a key.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../messagepage.cpp" line="105"/>
+        <source>Private key for %1 is not available.</source>
+        <translation>Súkromný kľúč pre %1 nieje k dispozícii.</translation>
+    </message>
+    <message>
+        <location filename="../messagepage.cpp" line="117"/>
+        <source>Sign failed</source>
+        <translation>Podpisovanie neúspešné</translation>
+    </message>
+</context>
+<context>
+    <name>NetworkOptionsPage</name>
+    <message>
+        <location filename="../optionsdialog.cpp" line="345"/>
+        <source>Network</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="347"/>
+        <source>Map port using &amp;UPnP</source>
+        <translation>Mapovať port pomocou &amp;UPnP</translation>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="348"/>
+        <source>Automatically open the Altcoin client port on the router. This only works when your router supports UPnP and it is enabled.</source>
+        <translation>Automaticky otvorit port pre Altcoin na routeri. Toto funguje len ak router podporuje UPnP a je táto podpora aktivovaná.</translation>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="351"/>
+        <source>&amp;Connect through SOCKS4 proxy:</source>
+        <translation>&amp;Pripojiť cez SOCKS4 proxy:</translation>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="352"/>
+        <source>Connect to the Bitcon network through a SOCKS4 proxy (e.g. when connecting through Tor)</source>
+        <translation>Pripojiť do siete Altcoin cez SOCKS4 proxy (napr. keď sa pripájate cez Tor)</translation>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="357"/>
+        <source>Proxy &amp;IP:</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="366"/>
+        <source>&amp;Port:</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="363"/>
+        <source>IP address of the proxy (e.g. 127.0.0.1)</source>
+        <translation>IP addresa proxy (napr. 127.0.0.1)</translation>
+    </message>
+    <message>
+        <location filename="../optionsdialog.cpp" line="372"/>
+        <source>Port of the proxy (e.g. 1234)</source>
+        <translation>Port proxy (napr. 1234)</translation>
+    </message>
+</context>
+<context>
+    <name>OptionsDialog</name>
+    <message>
+        <location filename="../optionsdialog.cpp" line="135"/>
+        <source>Options</source>
+        <translation>Možnosti</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <location filename="../forms/overviewpage.ui" line="14"/>
+        <source>Form</source>
+        <translation>Forma</translation>
+    </message>
+    <message>
+        <location filename="../forms/overviewpage.ui" line="47"/>
+        <location filename="../forms/overviewpage.ui" line="204"/>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Altcoin network after a connection is established, but this process has not completed yet.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/overviewpage.ui" line="89"/>
+        <source>Balance:</source>
+        <translation>Zostatok:</translation>
+    </message>
+    <message>
+        <location filename="../forms/overviewpage.ui" line="147"/>
+        <source>Number of transactions:</source>
+        <translation>Počet transakcií:</translation>
+    </message>
+    <message>
+        <location filename="../forms/overviewpage.ui" line="118"/>
+        <source>Unconfirmed:</source>
+        <translation>Nepotvrdené:</translation>
+    </message>
+    <message>
+        <location filename="../forms/overviewpage.ui" line="40"/>
+        <source>Wallet</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../forms/overviewpage.ui" line="197"/>
+        <source>&lt;b&gt;Recent transactions&lt;/b&gt;</source>
+        <translation>&lt;b&gt;Nedávne transakcie&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <location filename="../forms/overviewpage.ui" line="105"/>
+        <source>Your current balance</source>
+        <translation>Váš súčasný zostatok</translation>
+    </message>
+    <message>
+        <location filename="../forms/overviewpage.ui" line="134"/>
+        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the current balance</source>
+        <translation>Suma transakcií ktoré ešte neboli potvrdené a nezapočítavaju sa do celkového zostatku.</translation>
+    </message>
+    <message>
+        <location filename="../forms/overviewpage.ui" line="154"/>
+        <source>Total number of transactions in wallet</source>
+        <translation>Celkový počet transakcií v peňaženke</translation>
+    </message>
+    <message>
+        <location filename=".
