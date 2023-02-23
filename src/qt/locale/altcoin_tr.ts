@@ -216,4 +216,143 @@ Are you sure you wish to encrypt your wallet?</source>
 Cüzdanınızı şifrelemek istediğinizden emin misiniz?</translation>
     </message>
     <message>
-        <location filename="../askpassphrasedialog.cpp" line="110
+        <location filename="../askpassphrasedialog.cpp" line="110"/>
+        <location filename="../askpassphrasedialog.cpp" line="159"/>
+        <source>Wallet encrypted</source>
+        <translation>Cüzdan şifrelendi</translation>
+    </message>
+    <message>
+        <location filename="../askpassphrasedialog.cpp" line="111"/>
+        <source>Altcoin will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your altcoins from being stolen by malware infecting your computer.</source>
+        <translation>Şifreleme işlemini tamamlamak için Altcoin şimdi kapanacaktır. Cüzdanınızı şifrelemenin, Altcoinlerinizin bilgisayara bulaşan kötücül bir yazılım tarafından çalınmaya karşı tamamen koruyamayacağını unutmayınız.</translation>
+    </message>
+    <message>
+        <location filename="../askpassphrasedialog.cpp" line="207"/>
+        <location filename="../askpassphrasedialog.cpp" line="231"/>
+        <source>Warning: The Caps Lock key is on.</source>
+        <translation>Uyarı: Caps Lock tuşu etkin durumda.</translation>
+    </message>
+    <message>
+        <location filename="../askpassphrasedialog.cpp" line="116"/>
+        <location filename="../askpassphrasedialog.cpp" line="123"/>
+        <location filename="../askpassphrasedialog.cpp" line="165"/>
+        <location filename="../askpassphrasedialog.cpp" line="171"/>
+        <source>Wallet encryption failed</source>
+        <translation>Cüzdan şifrelemesi başarısız oldu</translation>
+    </message>
+    <message>
+        <location filename="../askpassphrasedialog.cpp" line="117"/>
+        <source>Wallet encryption failed due to an internal error. Your wallet was not encrypted.</source>
+        <translation>Dahili bir hata sebebiyle cüzdan şifrelemesi başarısız oldu. Cüzdanınız şifrelenmedi.</translation>
+    </message>
+    <message>
+        <location filename="../askpassphrasedialog.cpp" line="124"/>
+        <location filename="../askpassphrasedialog.cpp" line="172"/>
+        <source>The supplied passphrases do not match.</source>
+        <translation>Girilen parolalar birbirleriyle uyumlu değil.</translation>
+    </message>
+    <message>
+        <location filename="../askpassphrasedialog.cpp" line="135"/>
+        <source>Wallet unlock failed</source>
+        <translation>Cüzdan kilidinin açılması başarısız oldu</translation>
+    </message>
+    <message>
+        <location filename="../askpassphrasedialog.cpp" line="136"/>
+        <location filename="../askpassphrasedialog.cpp" line="147"/>
+        <location filename="../askpassphrasedialog.cpp" line="166"/>
+        <source>The passphrase entered for the wallet decryption was incorrect.</source>
+        <translation>Cüzdan şifresinin açılması için girilen parola yanlıştı.</translation>
+    </message>
+    <message>
+        <location filename="../askpassphrasedialog.cpp" line="146"/>
+        <source>Wallet decryption failed</source>
+        <translation>Cüzdan şifresinin açılması başarısız oldu</translation>
+    </message>
+    <message>
+        <location filename="../askpassphrasedialog.cpp" line="160"/>
+        <source>Wallet passphrase was succesfully changed.</source>
+        <translation>Cüzdan parolası başarılı bir şekilde değiştirildi.</translation>
+    </message>
+</context>
+<context>
+    <name>AltcoinGUI</name>
+    <message>
+        <location filename="../altcoingui.cpp" line="73"/>
+        <source>Altcoin Wallet</source>
+        <translation>Altcoin cüzdanı</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="215"/>
+        <source>Sign &amp;message...</source>
+        <translation>&amp;Mesaj imzala...</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="248"/>
+        <source>Show/Hide &amp;Altcoin</source>
+        <translation>&amp;Altcoin&apos;i Göster/Sakla</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="515"/>
+        <source>Synchronizing with network...</source>
+        <translation>Şebeke ile senkronizasyon...</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="185"/>
+        <source>&amp;Overview</source>
+        <translation>&amp;Genel bakış</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="186"/>
+        <source>Show general overview of wallet</source>
+        <translation>Cüzdana genel bakışı gösterir</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="191"/>
+        <source>&amp;Transactions</source>
+        <translation>&amp;Muameleler</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="192"/>
+        <source>Browse transaction history</source>
+        <translation>Muamele tarihçesini tara</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="197"/>
+        <source>&amp;Address Book</source>
+        <translation>&amp;Adres defteri</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="198"/>
+        <source>Edit the list of stored addresses and labels</source>
+        <translation>Saklanan adres ve etiket listesini düzenler</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="203"/>
+        <source>&amp;Receive coins</source>
+        <translation>Altcoin &amp;al</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="204"/>
+        <source>Show the list of addresses for receiving payments</source>
+        <translation>Ödeme alma adreslerinin listesini gösterir</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="209"/>
+        <source>&amp;Send coins</source>
+        <translation>Altcoin &amp;yolla</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="216"/>
+        <source>Prove you control an address</source>
+        <translation>Bu adresin kontrolünüz altında olduğunu ispatlayın</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="235"/>
+        <source>E&amp;xit</source>
+        <translation>&amp;Çık</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="236"/>
+        <source>Quit application</source>
+        <translation>Uygulamadan çıkar</translation>
+    </message>
