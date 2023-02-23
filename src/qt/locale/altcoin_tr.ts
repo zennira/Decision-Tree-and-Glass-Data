@@ -356,3 +356,155 @@ Cüzdanınızı şifrelemek istediğinizden emin misiniz?</translation>
         <source>Quit application</source>
         <translation>Uygulamadan çıkar</translation>
     </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="239"/>
+        <source>&amp;About %1</source>
+        <translation>%1 &amp;hakkında</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="240"/>
+        <source>Show information about Altcoin</source>
+        <translation>Altcoin hakkında bilgi gösterir</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="242"/>
+        <source>About &amp;Qt</source>
+        <translation>&amp;Qt hakkında</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="243"/>
+        <source>Show information about Qt</source>
+        <translation>Qt hakkında bilgi görüntüler</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="245"/>
+        <source>&amp;Options...</source>
+        <translation>&amp;Seçenekler...</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="252"/>
+        <source>&amp;Encrypt Wallet...</source>
+        <translation>Cüzdanı &amp;şifrele...</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="255"/>
+        <source>&amp;Backup Wallet...</source>
+        <translation>Cüzdanı &amp;yedekle...</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="257"/>
+        <source>&amp;Change Passphrase...</source>
+        <translation>Parolayı &amp;değiştir...</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../altcoingui.cpp" line="517"/>
+        <source>~%n block(s) remaining</source>
+        <translation><numerusform>~%n blok kaldı</numerusform></translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="528"/>
+        <source>Downloaded %1 of %2 blocks of transaction history (%3% done).</source>
+        <translation>Muamele tarihçesinden %1 blok indirildi (toplam %2 blok, %%3 tamamlandı).</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="250"/>
+        <source>&amp;Export...</source>
+        <translation>&amp;Dışa aktar...</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="210"/>
+        <source>Send coins to a Altcoin address</source>
+        <translation>Bir Altcoin adresine Altcoin yollar</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="246"/>
+        <source>Modify configuration options for Altcoin</source>
+        <translation>Altcoin seçeneklerinin yapılandırmasını değiştirir</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="249"/>
+        <source>Show or hide the Altcoin window</source>
+        <translation>Altcoin penceresini göster ya da sakla</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="251"/>
+        <source>Export the data in the current tab to a file</source>
+        <translation>Güncel sekmedeki verileri bir dosyaya aktar</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="253"/>
+        <source>Encrypt or decrypt wallet</source>
+        <translation>Cüzdanı şifreler ya da şifreyi açar</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="256"/>
+        <source>Backup wallet to another location</source>
+        <translation>Cüzdanı diğer bir konumda yedekle</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="258"/>
+        <source>Change the passphrase used for wallet encryption</source>
+        <translation>Cüzdan şifrelemesi için kullanılan parolayı değiştirir</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="259"/>
+        <source>&amp;Debug window</source>
+        <translation>&amp;Hata ayıklama penceresi</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="260"/>
+        <source>Open debugging and diagnostic console</source>
+        <translation>Hata ayıklama ve teşhis penceresini aç</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="261"/>
+        <source>&amp;Verify message...</source>
+        <translation>&amp;Mesaj kontrol et...</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="262"/>
+        <source>Verify a message signature</source>
+        <translation>Mesaj imzasını kontrol et</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="286"/>
+        <source>&amp;File</source>
+        <translation>&amp;Dosya</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="296"/>
+        <source>&amp;Settings</source>
+        <translation>&amp;Ayarlar</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="302"/>
+        <source>&amp;Help</source>
+        <translation>&amp;Yardım</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="311"/>
+        <source>Tabs toolbar</source>
+        <translation>Sekme araç çubuğu</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="322"/>
+        <source>Actions toolbar</source>
+        <translation>Faaliyet araç çubuğu</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="334"/>
+        <location filename="../altcoingui.cpp" line="343"/>
+        <source>[testnet]</source>
+        <translation>[testnet]</translation>
+    </message>
+    <message>
+        <location filename="../altcoingui.cpp" line="343"/>
+        <location filename="../altcoingui.cpp" line="399"/>
+        <source>Altcoin client</source>
+        <translation>Altcoin istemcisi</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../altcoingui.cpp" line="492"/>
+        <source>%n active connection(s) to Altcoin network</source>
+        <translation><numerusform>Altcoin şebekesine %n etkin bağlantı</numerusform></translation>
+    </messa
