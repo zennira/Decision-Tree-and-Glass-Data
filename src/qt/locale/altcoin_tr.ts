@@ -1068,3 +1068,160 @@ Adres: %4
         <translation>QR Kodu</translation>
     </message>
     <message>
+        <location filename="../forms/qrcodedialog.ui" line="55"/>
+        <source>Request Payment</source>
+        <translation>Ödeme isteği</translation>
+    </message>
+    <message>
+        <location filename="../forms/qrcodedialog.ui" line="70"/>
+        <source>Amount:</source>
+        <translation>Miktar:</translation>
+    </message>
+    <message>
+        <location filename="../forms/qrcodedialog.ui" line="105"/>
+        <source>BTC</source>
+        <translation>BTC</translation>
+    </message>
+    <message>
+        <location filename="../forms/qrcodedialog.ui" line="121"/>
+        <source>Label:</source>
+        <translation>Etiket:</translation>
+    </message>
+    <message>
+        <location filename="../forms/qrcodedialog.ui" line="144"/>
+        <source>Message:</source>
+        <translation>Mesaj:</translation>
+    </message>
+    <message>
+        <location filename="../forms/qrcodedialog.ui" line="186"/>
+        <source>&amp;Save As...</source>
+        <translation>&amp;Farklı kaydet...</translation>
+    </message>
+    <message>
+        <location filename="../qrcodedialog.cpp" line="45"/>
+        <source>Error encoding URI into QR Code.</source>
+        <translation>URI&apos;nin QR koduna kodlanmasında hata oluştu.</translation>
+    </message>
+    <message>
+        <location filename="../qrcodedialog.cpp" line="63"/>
+        <source>Resulting URI too long, try to reduce the text for label / message.</source>
+        <translation>Sonuç URI çok uzun, etiket ya da mesaj metnini kısaltmayı deneyiniz.</translation>
+    </message>
+    <message>
+        <location filename="../qrcodedialog.cpp" line="120"/>
+        <source>Save QR Code</source>
+        <translation>QR kodu kaydet</translation>
+    </message>
+    <message>
+        <location filename="../qrcodedialog.cpp" line="120"/>
+        <source>PNG Images (*.png)</source>
+        <translation>PNG resimleri (*.png)</translation>
+    </message>
+</context>
+<context>
+    <name>RPCConsole</name>
+    <message>
+        <location filename="../forms/rpcconsole.ui" line="14"/>
+        <source>Altcoin debug window</source>
+        <translation>Altcoin hata ayıklama penceresi</translation>
+    </message>
+    <message>
+        <location filename="../forms/rpcconsole.ui" line="46"/>
+        <source>Client name</source>
+        <translation>İstemci ismi</translation>
+    </message>
+    <message>
+        <location filename="../forms/rpcconsole.ui" line="56"/>
+        <location filename="../forms/rpcconsole.ui" line="79"/>
+        <location filename="../forms/rpcconsole.ui" line="102"/>
+        <location filename="../forms/rpcconsole.ui" line="125"/>
+        <location filename="../forms/rpcconsole.ui" line="161"/>
+        <location filename="../forms/rpcconsole.ui" line="214"/>
+        <location filename="../forms/rpcconsole.ui" line="237"/>
+        <location filename="../forms/rpcconsole.ui" line="260"/>
+        <location filename="../rpcconsole.cpp" line="245"/>
+        <source>N/A</source>
+        <translation>Mevcut değil</translation>
+    </message>
+    <message>
+        <location filename="../forms/rpcconsole.ui" line="69"/>
+        <source>Client version</source>
+        <translation>İstemci sürümü</translation>
+    </message>
+    <message>
+        <location filename="../forms/rpcconsole.ui" line="24"/>
+        <source>&amp;Information</source>
+        <translation>&amp;Malumat</translation>
+    </message>
+    <message>
+        <location filename="../forms/rpcconsole.ui" line="39"/>
+        <source>Client</source>
+        <translation>İstemci</translation>
+    </message>
+    <message>
+        <location filename="../forms/rpcconsole.ui" line="115"/>
+        <source>Startup time</source>
+        <translation>Başlama zamanı</translation>
+    </message>
+    <message>
+        <location filename="../forms/rpcconsole.ui" line="144"/>
+        <source>Network</source>
+        <translation>Şebeke</translation>
+    </message>
+    <message>
+        <location filename="../forms/rpcconsole.ui" line="151"/>
+        <source>Number of connections</source>
+        <translation>Bağlantı sayısı</translation>
+    </message>
+    <message>
+        <location filename="../forms/rpcconsole.ui" line="174"/>
+        <source>On testnet</source>
+        <translation>Testnet üzerinde</translation>
+    </message>
+    <message>
+        <location filename="../forms/rpcconsole.ui" line="197"/>
+        <source>Block chain</source>
+        <translation>Blok zinciri</translation>
+    </message>
+    <message>
+        <location filename="../forms/rpcconsole.ui" line="204"/>
+        <source>Current number of blocks</source>
+        <translation>Güncel blok sayısı</translation>
+    </message>
+    <message>
+        <location filename="../forms/rpcconsole.ui" line="227"/>
+        <source>Estimated total blocks</source>
+        <translation>Tahmini toplam blok sayısı</translation>
+    </message>
+    <message>
+        <location filename="../forms/rpcconsole.ui" line="250"/>
+        <source>Last block time</source>
+        <translation>Son blok zamanı</translation>
+    </message>
+    <message>
+        <location filename="../forms/rpcconsole.ui" line="292"/>
+        <source>Debug logfile</source>
+        <translation>Hata ayıklama kütük dosyası</translation>
+    </message>
+    <message>
+        <location filename="../forms/rpcconsole.ui" line="299"/>
+        <source>Open the Altcoin debug logfile from the current data directory. This can take a few seconds for large logfiles.</source>
+        <translation>Güncel veri klasöründen Altcoin hata ayıklama kütüğünü aç. Büyük kütük dosyaları için bu birkaç saniye alabilir.</translation>
+    </message>
+    <message>
+        <location filename="../forms/rpcconsole.ui" line="302"/>
+        <source>&amp;Open</source>
+        <translation>&amp;Aç</translation>
+    </message>
+    <message>
+        <location filename="../forms/rpcconsole.ui" line="323"/>
+        <source>&amp;Console</source>
+        <translation>&amp;Konsol</translation>
+    </message>
+    <message>
+        <location filename="../forms/rpcconsole.ui" line="92"/>
+        <source>Build date</source>
+        <translation>Derleme tarihi</translation>
+    </message>
+    <message>
+        <location filename="../fo
