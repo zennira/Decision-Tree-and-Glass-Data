@@ -2093,4 +2093,131 @@ Adres: %4
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="79"/>
-        <source>Maximum per-connec
+        <source>Maximum per-connection receive buffer, &lt;n&gt;*1000 bytes (default: 10000)</source>
+        <translation>Her bağlantı için alım tamponu, &lt;n&gt;*1000 bayt (varsayılan: 10000)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="80"/>
+        <source>Maximum per-connection send buffer, &lt;n&gt;*1000 bytes (default: 10000)</source>
+        <translation>Her bağlantı için yollama tamponu, &lt;n&gt;*1000 bayt (varsayılan: 10000)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="83"/>
+        <source>Detach block and address databases. Increases shutdown time (default: 0)</source>
+        <translation>Blok ve adres veri tabanlarını ayır. Kapatma süresini arttırır (varsayılan: 0)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="86"/>
+        <source>Accept command line and JSON-RPC commands</source>
+        <translation>Konut satırı ve JSON-RPC komutlarını kabul et</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="87"/>
+        <source>Run in the background as a daemon and accept commands</source>
+        <translation>Arka planda daemon (servis) olarak çalış ve komutları kabul et</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="88"/>
+        <source>Use the test network</source>
+        <translation>Deneme şebekesini kullan</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="89"/>
+        <source>Output extra debugging information</source>
+        <translation>İlâve hata ayıklama verisi çıkar</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="90"/>
+        <source>Prepend debug output with timestamp</source>
+        <translation>Hata ayıklama çıktısına tarih ön ekleri ilâve et</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="91"/>
+        <source>Send trace/debug info to console instead of debug.log file</source>
+        <translation>Trace/hata ayıklama verilerini debug.log dosyası yerine konsola gönder</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="92"/>
+        <source>Send trace/debug info to debugger</source>
+        <translation>Hata ayıklayıcıya -debugger- trace/hata ayıklama verileri gönder</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="93"/>
+        <source>Username for JSON-RPC connections</source>
+        <translation>JSON-RPC bağlantıları için kullanıcı ismi</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="94"/>
+        <source>Password for JSON-RPC connections</source>
+        <translation>JSON-RPC bağlantıları için parola</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="95"/>
+        <source>Listen for JSON-RPC connections on &lt;port&gt; (default: 8332)</source>
+        <translation>JSON-RPC bağlantıları için dinlenecek &lt;port&gt; (varsayılan: 8332)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="96"/>
+        <source>Allow JSON-RPC connections from specified IP address</source>
+        <translation>Belirtilen İP adresinden JSON-RPC bağlantılarını kabul et</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="97"/>
+        <source>Send commands to node running on &lt;ip&gt; (default: 127.0.0.1)</source>
+        <translation>Şu &lt;ip&gt; adresinde (varsayılan: 127.0.0.1) çalışan düğüme komut yolla</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="98"/>
+        <source>Execute command when the best block changes (%s in cmd is replaced by block hash)</source>
+        <translation>En iyi blok değiştiğinde komutu çalıştır (cmd için %s blok hash değeri ile değiştirilecektir)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="101"/>
+        <source>Upgrade wallet to latest format</source>
+        <translation>Cüzdanı en yeni biçime güncelle</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="102"/>
+        <source>Set key pool size to &lt;n&gt; (default: 100)</source>
+        <translation>Anahtar alan boyutunu &lt;n&gt; değerine ayarla (varsayılan: 100)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="103"/>
+        <source>Rescan the block chain for missing wallet transactions</source>
+        <translation>Blok zincirini eksik cüzdan muameleleri için tekrar tara</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="104"/>
+        <source>How many blocks to check at startup (default: 2500, 0 = all)</source>
+        <translation>Başlangıçta ne kadar blokun denetleneceği (varsayılan: 2500, 0 = tümü)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="105"/>
+        <source>How thorough the block verification is (0-6, default: 1)</source>
+        <translation>Blok kontrolünün derinliği (0 ilâ 6, varsayılan: 1)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="106"/>
+        <source>Imports blocks from external blk000?.dat file</source>
+        <translation>Harici blk000?.dat dosyasından blokları içe aktarır</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="108"/>
+        <source>
+SSL options: (see the Altcoin Wiki for SSL setup instructions)</source>
+        <translation>
+SSL seçenekleri: (SSL kurulum bilgisi için Altcoin vikisine bakınız)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="111"/>
+        <source>Use OpenSSL (https) for JSON-RPC connections</source>
+        <translation>JSON-RPC bağlantıları için OpenSSL (https) kullan</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="112"/>
+        <source>Server certificate file (default: server.cert)</source>
+        <translation>Sunucu sertifika dosyası (varsayılan: server.cert)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="113"/>
+     
