@@ -2220,4 +2220,129 @@ SSL seçenekleri: (SSL kurulum bilgisi için Altcoin vikisine bakınız)</transl
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="113"/>
-     
+        <source>Server private key (default: server.pem)</source>
+        <translation>Sunucu özel anahtarı (varsayılan: server.pem)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="114"/>
+        <source>Acceptable ciphers (default: TLSv1+HIGH:!SSLv2:!aNULL:!eNULL:!AH:!3DES:@STRENGTH)</source>
+        <translation>Kabul edilebilir şifreler (varsayılan: TLSv1+HIGH:!SSLv2:!aNULL:!eNULL:!AH:!3DES:@STRENGTH)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="145"/>
+        <source>Warning: Disk space is low</source>
+        <translation>Uyarı: Disk alanı düşük</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="107"/>
+        <source>This help message</source>
+        <translation>Bu yardım mesajı</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="121"/>
+        <source>Cannot obtain a lock on data directory %s.  Altcoin is probably already running.</source>
+        <translation>%s veri dizininde kilit elde edilemedi.  Altcoin muhtemelen hâlihazırda çalışmaktadır.</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="48"/>
+        <source>Altcoin</source>
+        <translation>Altcoin</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="30"/>
+        <source>Unable to bind to %s on this computer (bind returned error %d, %s)</source>
+        <translation>Bu bilgisayarda %s unsuruna bağlanılamadı. (bind şu hatayı iletti: %d, %s)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="58"/>
+        <source>Connect through socks proxy</source>
+        <translation>Socks vekil sunucusu vasıtasıyla bağlan</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="59"/>
+        <source>Select the version of socks proxy to use (4 or 5, 5 is default)</source>
+        <translation>Kullanılacak socks vekil sunucu sürümünü seç (4 veya 5, ki 5 varsayılan değerdir)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="60"/>
+        <source>Do not use proxy for connections to network &lt;net&gt; (IPv4 or IPv6)</source>
+        <translation>&lt;net&gt; şebekesi ile bağlantılarda vekil sunucu kullanma (IPv4 ya da IPv6)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="61"/>
+        <source>Allow DNS lookups for -addnode, -seednode and -connect</source>
+        <translation>-addnode, -seednode ve -connect için DNS aramalarına izin ver</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="62"/>
+        <source>Pass DNS requests to (SOCKS5) proxy</source>
+        <translation>DNS isteklerini (SOCKS5) vekil sunucusuna devret</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="142"/>
+        <source>Loading addresses...</source>
+        <translation>Adresler yükleniyor...</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="132"/>
+        <source>Error loading blkindex.dat</source>
+        <translation>blkindex.dat dosyasının yüklenmesinde hata oluştu</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="134"/>
+        <source>Error loading wallet.dat: Wallet corrupted</source>
+        <translation>wallet.dat dosyasının yüklenmesinde hata oluştu: bozuk cüzdan</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="135"/>
+        <source>Error loading wallet.dat: Wallet requires newer version of Altcoin</source>
+        <translation>wallet.dat dosyasının yüklenmesinde hata oluştu: cüzdanın daha yeni bir Altcoin sürümüne ihtiyacı var</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="136"/>
+        <source>Wallet needed to be rewritten: restart Altcoin to complete</source>
+        <translation>Cüzdanın tekrar yazılması gerekiyordu: işlemi tamamlamak için Altcoin&apos;i yeniden başlatınız</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="137"/>
+        <source>Error loading wallet.dat</source>
+        <translation>wallet.dat dosyasının yüklenmesinde hata oluştu</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="124"/>
+        <source>Invalid -proxy address: &apos;%s&apos;</source>
+        <translation>Geçersiz -proxy adresi: &apos;%s&apos;</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="125"/>
+        <source>Unknown network specified in -noproxy: &apos;%s&apos;</source>
+        <translation>-noproxy&apos;de bilinmeyen bir şebeke belirtildi: &apos;%s&apos;</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="127"/>
+        <source>Unknown network specified in -onlynet: &apos;%s&apos;</source>
+        <translation>-onlynet için bilinmeyen bir şebeke belirtildi: &apos;%s&apos;</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="126"/>
+        <source>Unknown -socks proxy version requested: %i</source>
+        <translation>Bilinmeyen bir -socks vekil sürümü talep edildi: %i</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="128"/>
+        <source>Cannot resolve -bind address: &apos;%s&apos;</source>
+        <translation>-bind adresi çözümlenemedi: &apos;%s&apos;</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="129"/>
+        <source>Not listening on any port</source>
+        <translation>Hiçbir port dinlenmiyor</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="130"/>
+        <source>Cannot resolve -externalip address: &apos;%s&apos;</source>
+        <translation>-externalip adresi çözümlenemedi: &apos;%s&apos;</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="117"/>
+        <source>Invalid amount for -paytxfee=&lt;
