@@ -1965,4 +1965,132 @@ Adres: %4
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="321"/>
-        <so
+        <source>Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Quit in the menu.</source>
+        <translation>Pencere kapatıldığında uygulamadan çıkmak yerine uygulamayı küçültür. Bu seçenek etkinleştirildiğinde, uygulama sadece menüden çıkış seçildiğinde kapanacaktır.</translation>
+    </message>
+</context>
+<context>
+    <name>altcoin-core</name>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="43"/>
+        <source>Altcoin version</source>
+        <translation>Altcoin sürümü</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="44"/>
+        <source>Usage:</source>
+        <translation>Kullanım:</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="45"/>
+        <source>Send command to -server or altcoind</source>
+        <translation>-server ya da altcoind&apos;ye komut gönder</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="46"/>
+        <source>List commands</source>
+        <translation>Komutları listele</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="47"/>
+        <source>Get help for a command</source>
+        <translation>Bir komut için yardım al</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="49"/>
+        <source>Options:</source>
+        <translation>Seçenekler:</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="50"/>
+        <source>Specify configuration file (default: altcoin.conf)</source>
+        <translation>Yapılandırma dosyası belirt (varsayılan: altcoin.conf)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="51"/>
+        <source>Specify pid file (default: altcoind.pid)</source>
+        <translation>Pid dosyası belirt (varsayılan: altcoind.pid)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="52"/>
+        <source>Generate coins</source>
+        <translation>Madenî para (Altcoin) oluştur</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="53"/>
+        <source>Don&apos;t generate coins</source>
+        <translation>Altcoin oluşturmasını devre dışı bırak</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="54"/>
+        <source>Specify data directory</source>
+        <translation>Veri dizinini belirt</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="55"/>
+        <source>Set database cache size in megabytes (default: 25)</source>
+        <translation>Veritabanı önbellek boyutunu megabayt olarak belirt (varsayılan: 25)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="56"/>
+        <source>Set database disk log size in megabytes (default: 100)</source>
+        <translation>Diskteki veritabanı kütüğü boyutunu megabayt olarak belirt (varsayılan: 100)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="57"/>
+        <source>Specify connection timeout (in milliseconds)</source>
+        <translation>Bağlantı zaman aşım süresini milisaniye olarak belirt</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="63"/>
+        <source>Listen for connections on &lt;port&gt; (default: 8333 or testnet: 18333)</source>
+        <translation>Bağlantılar için dinlenecek &lt;port&gt; (varsayılan: 8333 ya da testnet: 18333)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="64"/>
+        <source>Maintain at most &lt;n&gt; connections to peers (default: 125)</source>
+        <translation>Eşler ile en çok &lt;n&gt; adet bağlantı kur (varsayılan: 125)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="66"/>
+        <source>Connect only to the specified node</source>
+        <translation>Sadece belirtilen düğüme bağlan</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="67"/>
+        <source>Connect to a node to retrieve peer addresses, and disconnect</source>
+        <translation>Eş adresleri elde etmek için bir düğüme bağlan ve ardından bağlantıyı kes</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="68"/>
+        <source>Specify your own public address</source>
+        <translation>Kendi genel adresinizi tanımlayın</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="69"/>
+        <source>Only connect to nodes in network &lt;net&gt; (IPv4 or IPv6)</source>
+        <translation>Sadece &lt;net&gt; şebekesindeki düğümlere bağlan (IPv4 ya da IPv6)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="70"/>
+        <source>Try to discover public IP address (default: 1)</source>
+        <translation>Genel IP adresini keşfetmeye çalış (varsayılan: 1)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="73"/>
+        <source>Bind to given address. Use [host]:port notation for IPv6</source>
+        <translation>Belirtilen adresle ilişiklendir. IPv6 için [makine]:port simgelemini kullanınız</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="75"/>
+        <source>Threshold for disconnecting misbehaving peers (default: 100)</source>
+        <translation>Aksaklık gösteren eşlerle bağlantıyı kesme sınırı (varsayılan: 100)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="76"/>
+        <source>Number of seconds to keep misbehaving peers from reconnecting (default: 86400)</source>
+        <translation>Aksaklık gösteren eşlerle yeni bağlantıları engelleme süresi, saniye olarak (varsayılan: 86400)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="79"/>
+        <source>Maximum per-connec
