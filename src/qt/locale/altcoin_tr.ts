@@ -2345,4 +2345,123 @@ SSL seçenekleri: (SSL kurulum bilgisi için Altcoin vikisine bakınız)</transl
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="117"/>
-        <source>Invalid amount for -paytxfee=&lt;
+        <source>Invalid amount for -paytxfee=&lt;amount&gt;: &apos;%s&apos;</source>
+        <translation>-paytxfee=&lt;miktar&gt; için geçersiz miktar: &apos;%s&apos;</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="143"/>
+        <source>Error: could not start node</source>
+        <translation>Hata: düğüm başlatılamadı</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="31"/>
+        <source>Error: Wallet locked, unable to create transaction  </source>
+        <translation>Hata: Cüzdan kilitli, muamele oluşturulamadı  </translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="32"/>
+        <source>Error: This transaction requires a transaction fee of at least %s because of its amount, complexity, or use of recently received funds  </source>
+        <translation>Hata: Muamelenin miktarı, karmaşıklığı ya da yakın geçmişte alınan fonların kullanılması nedeniyle bu muamele en az %s tutarında ücret gerektirmektedir  </translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="35"/>
+        <source>Error: Transaction creation failed  </source>
+        <translation>Hata: Muamele oluşturması başarısız oldu  </translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="36"/>
+        <source>Sending...</source>
+        <translation>Gönderiliyor...</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="37"/>
+        <source>Error: The transaction was rejected.  This might happen if some of the coins in your wallet were already spent, such as if you used a copy of wallet.dat and coins were spent in the copy but not marked as spent here.</source>
+        <translation>Hata: Muamele reddedildi.  Cüzdanınızdaki madenî paraların bazıları zaten harcanmış olduğunda bu meydana gelebilir. Örneğin wallet.dat dosyasının bir kopyasını kullandıysanız ve kopyada para harcandığında ancak burada harcandığı işaretlenmediğinde.</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="41"/>
+        <source>Invalid amount</source>
+        <translation>Geçersiz miktar</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="42"/>
+        <source>Insufficient funds</source>
+        <translation>Yetersiz bakiye</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="131"/>
+        <source>Loading block index...</source>
+        <translation>Blok indeksi yükleniyor...</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="65"/>
+        <source>Add a node to connect to and attempt to keep the connection open</source>
+        <translation>Bağlanılacak düğüm ekle ve bağlantıyı zinde tutmaya çalış</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="28"/>
+        <source>Unable to bind to %s on this computer. Altcoin is probably already running.</source>
+        <translation>Bu bilgisayarda %s unsuruna bağlanılamadı. Altcoin muhtemelen hâlihazırda çalışmaktadır.</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="71"/>
+        <source>Find peers using internet relay chat (default: 0)</source>
+        <translation>Eşleri Internet Relay Chat vasıtasıyla bul (varsayılan: 0)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="72"/>
+        <source>Accept connections from outside (default: 1)</source>
+        <translation>Dışarıdan gelen bağlantıları kabul et (varsayılan: 1)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="74"/>
+        <source>Find peers using DNS lookup (default: 1)</source>
+        <translation>Eşleri DNS araması vasıtasıyla bul (varsayılan: 1)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="81"/>
+        <source>Use Universal Plug and Play to map the listening port (default: 1)</source>
+        <translation>Dinlenecek portu haritalamak için Universal Plug and Play kullan (varsayılan: 1)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="82"/>
+        <source>Use Universal Plug and Play to map the listening port (default: 0)</source>
+        <translation>Dinlenecek portu haritalamak için Universal Plug and Play kullan (varsayılan: 0)</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="85"/>
+        <source>Fee per KB to add to transactions you send</source>
+        <translation>Yolladığınız muameleler için eklenecek KB başı ücret</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="118"/>
+        <source>Warning: -paytxfee is set very high. This is the transaction fee you will pay if you send a transaction.</source>
+        <translation>Uyarı: -paytxfee çok yüksek bir değere ayarlanmış. Bu, muamele gönderirseniz ödeyeceğiniz muamele ücretidir.</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="133"/>
+        <source>Loading wallet...</source>
+        <translation>Cüzdan yükleniyor...</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="138"/>
+        <source>Cannot downgrade wallet</source>
+        <translation>Cüzdan eski biçime geri alınamaz</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="139"/>
+        <source>Cannot initialize keypool</source>
+        <translation>Keypool başlatılamadı</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="140"/>
+        <source>Cannot write default address</source>
+        <translation>Varsayılan adres yazılamadı</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp" line="141"/>
+        <source>Rescanning...</source>
+        <translation>Yeniden tarama...</translation>
+    </message>
+    <message>
+        <location filename="../altcoinstrings.cpp
