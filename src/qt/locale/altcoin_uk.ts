@@ -1,16 +1,17 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="tr" version="2.0">
+
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="uk" version="2.0">
 <defaultcodec>UTF-8</defaultcodec>
 <context>
     <name>AboutDialog</name>
     <message>
         <location filename="../forms/aboutdialog.ui" line="14"/>
         <source>About Altcoin</source>
-        <translation>Altcoin hakkında</translation>
+        <translation>Про Altcoin</translation>
     </message>
     <message>
         <location filename="../forms/aboutdialog.ui" line="53"/>
         <source>&lt;b&gt;Altcoin&lt;/b&gt; version</source>
-        <translation>&lt;b&gt;Altcoin&lt;/b&gt; sürüm</translation>
+        <translation>Версія &lt;b&gt;Altcoin&apos;a&lt;b&gt;</translation>
     </message>
     <message>
         <location filename="../forms/aboutdialog.ui" line="97"/>
@@ -21,13 +22,13 @@ This is experimental software.
 Distributed under the MIT/X11 software license, see the accompanying file license.txt or http://www.opensource.org/licenses/mit-license.php.
 
 This product includes software developed by the OpenSSL Project for use in the OpenSSL Toolkit (http://www.openssl.org/) and cryptographic software written by Eric Young (eay@cryptsoft.com) and UPnP software written by Thomas Bernard.</source>
-        <translation>Telif hakkı © 2009-2012 Altcoin geliştiricileri
+        <translation>Авторське право © 2009-2012 Розробники Altcoin
 
-Bu yazılım deneme safhasındadır.
+Це програмне забезпечення є експериментальним.
 
-MIT/X11 yazılım lisansı kapsamında yayınlanmıştır, license.txt dosyasına ya da http://www.opensource.org/licenses/mit-license.php sayfasına bakınız.
+Поширюється за ліцензією MIT/X11, додаткова інформація міститься у файлі license.txt, а також за адресою http://www.opensource.org/licenses/mit-license.php.
 
-Bu ürün OpenSSL projesi tarafından OpenSSL araç takımı (http://www.openssl.org/) için geliştirilen yazılımlar, Eric Young (eay@cryptsoft.com) tarafından yazılmış şifreleme yazılımları ve Thomas Bernard tarafından programlanmış UPnP yazılımı içerir.</translation>
+Цей продукт включає в себе програмне забезпечення, розроблене в рамках проекту OpenSSL (http://www.openssl.org/), криптографічне програмне забезпечення, написане Еріком Янгом (eay@cryptsoft.com), та функції для роботи з UPnP, написані Томасом Бернардом.</translation>
     </message>
 </context>
 <context>
@@ -35,92 +36,92 @@ Bu ürün OpenSSL projesi tarafından OpenSSL araç takımı (http://www.openssl
     <message>
         <location filename="../forms/addressbookpage.ui" line="14"/>
         <source>Address Book</source>
-        <translation>Adres defteri</translation>
+        <translation>Адресна книга</translation>
     </message>
     <message>
         <location filename="../forms/addressbookpage.ui" line="20"/>
         <source>These are your Altcoin addresses for receiving payments.  You may want to give a different one to each sender so you can keep track of who is paying you.</source>
-        <translation>Bunlar, ödemeleri almak için Altcoin adresleridir.  Kimin ödeme yaptığını izleyebilmek için her ödeme yollaması gereken kişiye değişik bir adres verebilirsiniz.</translation>
+        <translation>Це ваші адреси для отримання платежів. Ви можете давати різні адреси різним людям, таким чином маючи можливість відслідкувати хто конкретно і скільки вам заплатив. </translation>
     </message>
     <message>
         <location filename="../forms/addressbookpage.ui" line="36"/>
         <source>Double-click to edit address or label</source>
-        <translation>Adresi ya da etiketi düzenlemek için çift tıklayınız</translation>
+        <translation>Двічі клікніть на адресу чи назву для їх зміни</translation>
     </message>
     <message>
         <location filename="../forms/addressbookpage.ui" line="63"/>
         <source>Create a new address</source>
-        <translation>Yeni bir adres oluştur</translation>
+        <translation>Створити нову адресу</translation>
     </message>
     <message>
         <location filename="../forms/addressbookpage.ui" line="77"/>
         <source>Copy the currently selected address to the system clipboard</source>
-        <translation>Şu anda seçili olan adresi panoya kopyalar</translation>
+        <translation>Копіювати виділену адресу в буфер обміну</translation>
     </message>
     <message>
         <location filename="../forms/addressbookpage.ui" line="66"/>
         <source>&amp;New Address</source>
-        <translation>&amp;Yeni adres</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../forms/addressbookpage.ui" line="80"/>
         <source>&amp;Copy Address</source>
-        <translation>Adresi &amp;kopyala</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../forms/addressbookpage.ui" line="91"/>
         <source>Show &amp;QR Code</source>
-        <translation>&amp;QR kodunu göster</translation>
+        <translation>Показати QR-&amp;Код</translation>
     </message>
     <message>
         <location filename="../forms/addressbookpage.ui" line="102"/>
         <source>Sign a message to prove you own this address</source>
-        <translation>Bu adresin sizin olduğunu ispatlamak için mesaj imzalayın</translation>
+        <translation>Підпишіть повідомлення щоб довести, що ви є власником цієї адреси</translation>
     </message>
     <message>
         <location filename="../forms/addressbookpage.ui" line="105"/>
         <source>&amp;Sign Message</source>
-        <translation>Mesaj &amp;imzala</translation>
+        <translation>&amp;Підписати повідомлення</translation>
     </message>
     <message>
         <location filename="../forms/addressbookpage.ui" line="116"/>
         <source>Delete the currently selected address from the list. Only sending addresses can be deleted.</source>
-        <translation>Seçilen adresi listeden siler. Sadece gönderi adresleri silinebilir.</translation>
+        <translation>Видалити виділену адресу зі списку. Лише адреси з адресної книги можуть бути видалені.</translation>
     </message>
     <message>
         <location filename="../forms/addressbookpage.ui" line="119"/>
         <source>&amp;Delete</source>
-        <translation>&amp;Sil</translation>
+        <translation>&amp;Видалити</translation>
     </message>
     <message>
         <location filename="../addressbookpage.cpp" line="63"/>
         <source>Copy &amp;Label</source>
-        <translation>&amp;Etiketi kopyala</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../addressbookpage.cpp" line="65"/>
         <source>&amp;Edit</source>
-        <translation>&amp;Düzenle</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../addressbookpage.cpp" line="292"/>
         <source>Export Address Book Data</source>
-        <translation>Adres defteri verilerini dışa aktar</translation>
+        <translation>Експортувати адресну книгу</translation>
     </message>
     <message>
         <location filename="../addressbookpage.cpp" line="293"/>
         <source>Comma separated file (*.csv)</source>
-        <translation>Virgülle ayrılmış değerler dosyası (*.csv)</translation>
+        <translation>Файли відділені комами (*.csv)</translation>
     </message>
     <message>
         <location filename="../addressbookpage.cpp" line="306"/>
         <source>Error exporting</source>
-        <translation>Dışa aktarımda hata oluştu</translation>
+        <translation>Помилка при експортуванні</translation>
     </message>
     <message>
         <location filename="../addressbookpage.cpp" line="306"/>
         <source>Could not write to file %1.</source>
-        <translation>%1 dosyasına yazılamadı.</translation>
+        <translation>Неможливо записати у файл %1.</translation>
     </message>
 </context>
 <context>
@@ -128,17 +129,17 @@ Bu ürün OpenSSL projesi tarafından OpenSSL araç takımı (http://www.openssl
     <message>
         <location filename="../addresstablemodel.cpp" line="142"/>
         <source>Label</source>
-        <translation>Etiket</translation>
+        <translation>Назва</translation>
     </message>
     <message>
         <location filename="../addresstablemodel.cpp" line="142"/>
         <source>Address</source>
-        <translation>Adres</translation>
+        <translation>Адреса</translation>
     </message>
     <message>
         <location filename="../addresstablemodel.cpp" line="178"/>
         <source>(no label)</source>
-        <translation>(boş etiket)</translation>
+        <translation>(немає назви)</translation>
     </message>
 </context>
 <context>
@@ -146,91 +147,91 @@ Bu ürün OpenSSL projesi tarafından OpenSSL araç takımı (http://www.openssl
     <message>
         <location filename="../forms/askpassphrasedialog.ui" line="26"/>
         <source>Passphrase Dialog</source>
-        <translation>Parola diyaloğu</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../forms/askpassphrasedialog.ui" line="47"/>
         <source>Enter passphrase</source>
-        <translation>Parolayı giriniz</translation>
+        <translation>Введіть пароль</translation>
     </message>
     <message>
         <location filename="../forms/askpassphrasedialog.ui" line="61"/>
         <source>New passphrase</source>
-        <translation>Yeni parola</translation>
+        <translation>Новий пароль</translation>
     </message>
     <message>
         <location filename="../forms/askpassphrasedialog.ui" line="75"/>
         <source>Repeat new passphrase</source>
-        <translation>Yeni parolayı tekrarlayınız</translation>
+        <translation>Повторіть пароль</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="33"/>
         <source>Enter the new passphrase to the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;10 or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
-        <translation>Cüzdanınız için yeni parolayı giriniz.&lt;br/&gt;Lütfen &lt;b&gt;10 ya da daha fazla rastgele karakter&lt;/b&gt; veya &lt;b&gt;sekiz ya da daha fazla kelime&lt;/b&gt; içeren bir parola seçiniz.</translation>
+        <translation>Введіть новий пароль для гаманця.&lt;br/&gt;Будь ласка, використовуйте паролі що містять &lt;b&gt; як мінімум 10 випадкових символів &lt;/b&gt; або &lt;b&gt; як мінімум 8 слів&lt;/b&gt;.</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="34"/>
         <source>Encrypt wallet</source>
-        <translation>Cüzdanı şifrele</translation>
+        <translation>Зашифрувати гаманець</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="37"/>
         <source>This operation needs your wallet passphrase to unlock the wallet.</source>
-        <translation>Bu işlem cüzdan kilidini açmak için cüzdan parolanızı gerektirir.</translation>
+        <translation>Ця операція потребує пароль для розблокування гаманця.</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="42"/>
         <source>Unlock wallet</source>
-        <translation>Cüzdan kilidini aç</translation>
+        <translation>Розблокувати гаманець</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="45"/>
         <source>This operation needs your wallet passphrase to decrypt the wallet.</source>
-        <translation>Bu işlem, cüzdan şifresini açmak için cüzdan parolasını gerektirir.</translation>
+        <translation>Ця операція потребує пароль для дешифрування гаманця.</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="50"/>
         <source>Decrypt wallet</source>
-        <translation>Cüzdan şifresini aç</translation>
+        <translation>Дешифрувати гаманець</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="53"/>
         <source>Change passphrase</source>
-        <translation>Parolayı değiştir</translation>
+        <translation>Змінити пароль</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="54"/>
         <source>Enter the old and new passphrase to the wallet.</source>
-        <translation>Cüzdan için eski ve yeni parolaları giriniz.</translation>
+        <translation>Ввести старий та новий паролі для гаманця.</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="100"/>
         <source>Confirm wallet encryption</source>
-        <translation>Cüzdan şifrelenmesini teyit eder</translation>
+        <translation>Підтвердити шифрування гаманця</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="101"/>
         <source>WARNING: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR ALTCOINS&lt;/b&gt;!
 Are you sure you wish to encrypt your wallet?</source>
-        <translation>UYARI: Eğer cüzdanınızı şifrelerseniz ve parolanızı kaybederseniz, &lt;b&gt;TÜM BİTCOİNLERİNİZİ KAYBEDERSİNİZ&lt;/b&gt;!
-Cüzdanınızı şifrelemek istediğinizden emin misiniz?</translation>
+        <translation>УВАГА: Якщо ви зашифруєте гаманець і забудете пароль, ви &lt;b&gt;ВТРАТИТЕ ВСІ СВОЇ БІТКОІНИ&lt;/b&gt;!
+Ви дійсно хочете зашифрувати свій гаманець?</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="110"/>
         <location filename="../askpassphrasedialog.cpp" line="159"/>
         <source>Wallet encrypted</source>
-        <translation>Cüzdan şifrelendi</translation>
+        <translation>Гаманець зашифровано</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="111"/>
         <source>Altcoin will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your altcoins from being stolen by malware infecting your computer.</source>
-        <translation>Şifreleme işlemini tamamlamak için Altcoin şimdi kapanacaktır. Cüzdanınızı şifrelemenin, Altcoinlerinizin bilgisayara bulaşan kötücül bir yazılım tarafından çalınmaya karşı tamamen koruyamayacağını unutmayınız.</translation>
+        <translation>Біткоін-клієнт буде закрито для завершення процесу шифрування. Пам’ятайте, що шифрування гаманця не може повністю захистити ваші біткоіни від кражі, у випадку якщо ваш комп’ютер буде інфіковано шкідливими програмами.</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="207"/>
         <location filename="../askpassphrasedialog.cpp" line="231"/>
         <source>Warning: The Caps Lock key is on.</source>
-        <translation>Uyarı: Caps Lock tuşu etkin durumda.</translation>
+        <translation>Увага: Ввімкнено Caps Lock</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="116"/>
@@ -238,40 +239,40 @@ Cüzdanınızı şifrelemek istediğinizden emin misiniz?</translation>
         <location filename="../askpassphrasedialog.cpp" line="165"/>
         <location filename="../askpassphrasedialog.cpp" line="171"/>
         <source>Wallet encryption failed</source>
-        <translation>Cüzdan şifrelemesi başarısız oldu</translation>
+        <translation>Не вдалося зашифрувати гаманець</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="117"/>
         <source>Wallet encryption failed due to an internal error. Your wallet was not encrypted.</source>
-        <translation>Dahili bir hata sebebiyle cüzdan şifrelemesi başarısız oldu. Cüzdanınız şifrelenmedi.</translation>
+        <translation>Виникла помилка під час шифрування гаманця. Ваш гаманець не було зашифровано.</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="124"/>
         <location filename="../askpassphrasedialog.cpp" line="172"/>
         <source>The supplied passphrases do not match.</source>
-        <translation>Girilen parolalar birbirleriyle uyumlu değil.</translation>
+        <translation>Введені паролі не співпадають.</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="135"/>
         <source>Wallet unlock failed</source>
-        <translation>Cüzdan kilidinin açılması başarısız oldu</translation>
+        <translation>Не вдалося розблокувати гаманець</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="136"/>
         <location filename="../askpassphrasedialog.cpp" line="147"/>
         <location filename="../askpassphrasedialog.cpp" line="166"/>
         <source>The passphrase entered for the wallet decryption was incorrect.</source>
-        <translation>Cüzdan şifresinin açılması için girilen parola yanlıştı.</translation>
+        <translation>Введений пароль є невірним.</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="146"/>
         <source>Wallet decryption failed</source>
-        <translation>Cüzdan şifresinin açılması başarısız oldu</translation>
+        <translation>Не вдалося розшифрувати гаманець</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="160"/>
         <source>Wallet passphrase was succesfully changed.</source>
-        <translation>Cüzdan parolası başarılı bir şekilde değiştirildi.</translation>
+        <translation>Пароль було успішно змінено.</translation>
     </message>
 </context>
 <context>
@@ -279,294 +280,294 @@ Cüzdanınızı şifrelemek istediğinizden emin misiniz?</translation>
     <message>
         <location filename="../altcoingui.cpp" line="73"/>
         <source>Altcoin Wallet</source>
-        <translation>Altcoin cüzdanı</translation>
+        <translation>Гаманець</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="215"/>
         <source>Sign &amp;message...</source>
-        <translation>&amp;Mesaj imzala...</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="248"/>
         <source>Show/Hide &amp;Altcoin</source>
-        <translation>&amp;Altcoin&apos;i Göster/Sakla</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="515"/>
         <source>Synchronizing with network...</source>
-        <translation>Şebeke ile senkronizasyon...</translation>
+        <translation>Синхронізація з мережею...</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="185"/>
         <source>&amp;Overview</source>
-        <translation>&amp;Genel bakış</translation>
+        <translation>&amp;Огляд</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="186"/>
         <source>Show general overview of wallet</source>
-        <translation>Cüzdana genel bakışı gösterir</translation>
+        <translation>Показати загальний огляд гаманця</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="191"/>
         <source>&amp;Transactions</source>
-        <translation>&amp;Muameleler</translation>
+        <translation>Пе&amp;реклади</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="192"/>
         <source>Browse transaction history</source>
-        <translation>Muamele tarihçesini tara</translation>
+        <translation>Переглянути історію переказів</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="197"/>
         <source>&amp;Address Book</source>
-        <translation>&amp;Adres defteri</translation>
+        <translation>&amp;Адресна книга</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="198"/>
         <source>Edit the list of stored addresses and labels</source>
-        <translation>Saklanan adres ve etiket listesini düzenler</translation>
+        <translation>Редагувати список збережених адрес та міток</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="203"/>
         <source>&amp;Receive coins</source>
-        <translation>Altcoin &amp;al</translation>
+        <translation>О&amp;тримати</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="204"/>
         <source>Show the list of addresses for receiving payments</source>
-        <translation>Ödeme alma adreslerinin listesini gösterir</translation>
+        <translation>Показати список адрес для отримання платежів</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="209"/>
         <source>&amp;Send coins</source>
-        <translation>Altcoin &amp;yolla</translation>
+        <translation>В&amp;ідправити</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="216"/>
         <source>Prove you control an address</source>
-        <translation>Bu adresin kontrolünüz altında olduğunu ispatlayın</translation>
+        <translation>Доведіть, що це ваша адреса</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="235"/>
         <source>E&amp;xit</source>
-        <translation>&amp;Çık</translation>
+        <translation>&amp;Вихід</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="236"/>
         <source>Quit application</source>
-        <translation>Uygulamadan çıkar</translation>
+        <translation>Вийти</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="239"/>
         <source>&amp;About %1</source>
-        <translation>%1 &amp;hakkında</translation>
+        <translation>П&amp;ро %1</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="240"/>
         <source>Show information about Altcoin</source>
-        <translation>Altcoin hakkında bilgi gösterir</translation>
+        <translation>Показати інформацію про Altcoin</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="242"/>
         <source>About &amp;Qt</source>
-        <translation>&amp;Qt hakkında</translation>
+        <translation>&amp;Про Qt</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="243"/>
         <source>Show information about Qt</source>
-        <translation>Qt hakkında bilgi görüntüler</translation>
+        <translation>Показати інформацію про Qt</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="245"/>
         <source>&amp;Options...</source>
-        <translation>&amp;Seçenekler...</translation>
+        <translation>&amp;Параметри...</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="252"/>
         <source>&amp;Encrypt Wallet...</source>
-        <translation>Cüzdanı &amp;şifrele...</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="255"/>
         <source>&amp;Backup Wallet...</source>
-        <translation>Cüzdanı &amp;yedekle...</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="257"/>
         <source>&amp;Change Passphrase...</source>
-        <translation>Parolayı &amp;değiştir...</translation>
+        <translation type="unfinished"/>
     </message>
     <message numerus="yes">
         <location filename="../altcoingui.cpp" line="517"/>
         <source>~%n block(s) remaining</source>
-        <translation><numerusform>~%n blok kaldı</numerusform></translation>
+        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform></translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="528"/>
         <source>Downloaded %1 of %2 blocks of transaction history (%3% done).</source>
-        <translation>Muamele tarihçesinden %1 blok indirildi (toplam %2 blok, %%3 tamamlandı).</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="250"/>
         <source>&amp;Export...</source>
-        <translation>&amp;Dışa aktar...</translation>
+        <translation>&amp;Експорт...</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="210"/>
         <source>Send coins to a Altcoin address</source>
-        <translation>Bir Altcoin adresine Altcoin yollar</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="246"/>
         <source>Modify configuration options for Altcoin</source>
-        <translation>Altcoin seçeneklerinin yapılandırmasını değiştirir</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="249"/>
         <source>Show or hide the Altcoin window</source>
-        <translation>Altcoin penceresini göster ya da sakla</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="251"/>
         <source>Export the data in the current tab to a file</source>
-        <translation>Güncel sekmedeki verileri bir dosyaya aktar</translation>
+        <translation>Експортувати дані з поточної вкладки в файл</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="253"/>
         <source>Encrypt or decrypt wallet</source>
-        <translation>Cüzdanı şifreler ya da şifreyi açar</translation>
+        <translation>Зашифрувати чи розшифрувати гаманець</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="256"/>
         <source>Backup wallet to another location</source>
-        <translation>Cüzdanı diğer bir konumda yedekle</translation>
+        <translation>Резервне копіювання гаманця в інше місце</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="258"/>
         <source>Change the passphrase used for wallet encryption</source>
-        <translation>Cüzdan şifrelemesi için kullanılan parolayı değiştirir</translation>
+        <translation>Змінити пароль, який використовується для шифрування гаманця</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="259"/>
         <source>&amp;Debug window</source>
-        <translation>&amp;Hata ayıklama penceresi</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="260"/>
         <source>Open debugging and diagnostic console</source>
-        <translation>Hata ayıklama ve teşhis penceresini aç</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="261"/>
         <source>&amp;Verify message...</source>
-        <translation>&amp;Mesaj kontrol et...</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="262"/>
         <source>Verify a message signature</source>
-        <translation>Mesaj imzasını kontrol et</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="286"/>
         <source>&amp;File</source>
-        <translation>&amp;Dosya</translation>
+        <translation>&amp;Файл</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="296"/>
         <source>&amp;Settings</source>
-        <translation>&amp;Ayarlar</translation>
+        <translation>&amp;Налаштування</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="302"/>
         <source>&amp;Help</source>
-        <translation>&amp;Yardım</translation>
+        <translation>&amp;Довідка</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="311"/>
         <source>Tabs toolbar</source>
-        <translation>Sekme araç çubuğu</translation>
+        <translation>Панель вкладок</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="322"/>
         <source>Actions toolbar</source>
-        <translation>Faaliyet araç çubuğu</translation>
+        <translation>Панель дій</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="334"/>
         <location filename="../altcoingui.cpp" line="343"/>
         <source>[testnet]</source>
-        <translation>[testnet]</translation>
+        <translation>[тестова мережа]</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="343"/>
         <location filename="../altcoingui.cpp" line="399"/>
         <source>Altcoin client</source>
-        <translation>Altcoin istemcisi</translation>
+        <translation type="unfinished"/>
     </message>
     <message numerus="yes">
         <location filename="../altcoingui.cpp" line="492"/>
         <source>%n active connection(s) to Altcoin network</source>
-        <translation><numerusform>Altcoin şebekesine %n etkin bağlantı</numerusform></translation>
+        <translation><numerusform>%n активне з’єднання з мережею</numerusform><numerusform>%n активні з’єднання з мережею</numerusform><numerusform>%n активних з’єднань з мережею</numerusform></translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="540"/>
         <source>Downloaded %1 blocks of transaction history.</source>
-        <translation>Muamele tarihçesinin %1 adet bloku indirildi.</translation>
+        <translation>Завантажено %1 блоків історії транзакцій.</translation>
     </message>
     <message numerus="yes">
         <location filename="../altcoingui.cpp" line="555"/>
         <source>%n second(s) ago</source>
-        <translation><numerusform>%n saniye önce</numerusform></translation>
+        <translation><numerusform>%n секунду тому</numerusform><numerusform>%n секунди тому</numerusform><numerusform>%n секунд тому</numerusform></translation>
     </message>
     <message numerus="yes">
         <location filename="../altcoingui.cpp" line="559"/>
         <source>%n minute(s) ago</source>
-        <translation><numerusform>%n dakika önce</numerusform></translation>
+        <translation><numerusform>%n хвилину тому</numerusform><numerusform>%n хвилини тому</numerusform><numerusform>%n хвилин тому</numerusform></translation>
     </message>
     <message numerus="yes">
         <location filename="../altcoingui.cpp" line="563"/>
         <source>%n hour(s) ago</source>
-        <translation><numerusform>%n saat önce</numerusform></translation>
+        <translation><numerusform>%n годину тому</numerusform><numerusform>%n години тому</numerusform><numerusform>%n годин тому</numerusform></translation>
     </message>
     <message numerus="yes">
         <location filename="../altcoingui.cpp" line="567"/>
         <source>%n day(s) ago</source>
-        <translation><numerusform>%n gün önce</numerusform></translation>
+        <translation><numerusform>%n день тому</numerusform><numerusform>%n дня тому</numerusform><numerusform>%n днів тому</numerusform></translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="573"/>
         <source>Up to date</source>
-        <translation>Güncel</translation>
+        <translation>Синхронізовано</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="580"/>
         <source>Catching up...</source>
-        <translation>Aralık kapatılıyor...</translation>
+        <translation>Синхронізується...</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="590"/>
         <source>Last received block was generated %1.</source>
-        <translation>Son alınan blok şu vakit oluşturulmuştu: %1.</translation>
+        <translation>Останній отриманий блок було згенеровано %1.</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="649"/>
         <source>This transaction is over the size limit.  You can still send it for a fee of %1, which goes to the nodes that process your transaction and helps to support the network.  Do you want to pay the fee?</source>
-        <translation>Bu muamele boyut sınırlarını aşmıştır.  Gene de %1 ücret ödeyerek gönderebilirsiniz, ki bu ücret muamelenizi işleyen ve şebekeye yardım eden düğümlere ödenecektir.  Ücreti ödemek istiyor musunuz?</translation>
+        <translation>Цей переказ перевищує максимально допустимий розмір. Проте ви можете здійснити її, додавши комісію в %1, яка відправиться тим вузлам що оброблять ваш переказ, та допоможе підтримати мережу. Ви хочете додати комісію?</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="654"/>
         <source>Confirm transaction fee</source>
-        <translation>Muamele ücretini teyit et</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="681"/>
         <source>Sent transaction</source>
-        <translation>Muamele yollandı</translation>
+        <translation>Надіслані перекази</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="682"/>
         <source>Incoming transaction</source>
-        <translation>Gelen muamele</translation>
+        <translation>Отримані перекази</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="683"/>
@@ -575,46 +576,46 @@ Amount: %2
 Type: %3
 Address: %4
 </source>
-        <translation>Tarih: %1
-Miktar: %2
-Tür: %3
-Adres: %4
+        <translation>Дата: %1
+Кількість: %2
+Тип: %3
+Адреса: %4
 </translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="804"/>
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
-        <translation>Cüzdan &lt;b&gt;şifrelenmiştir&lt;/b&gt; ve şu anda &lt;b&gt;kilidi açılmıştır&lt;/b&gt;</translation>
+        <translation>&lt;b&gt;Зашифрований&lt;/b&gt; гаманець &lt;b&gt;розблоковано&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="812"/>
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
-        <translation>Cüzdan &lt;b&gt;şifrelenmiştir&lt;/b&gt; ve şu anda &lt;b&gt;kilitlidir&lt;/b&gt;</translation>
+        <translation>&lt;b&gt;Зашифрований&lt;/b&gt; гаманець &lt;b&gt;заблоковано&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="835"/>
         <source>Backup Wallet</source>
-        <translation>Cüzdanı yedekle</translation>
+        <translation>Резервне копіювання гаманця</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="835"/>
         <source>Wallet Data (*.dat)</source>
-        <translation>Cüzdan verileri (*.dat)</translation>
+        <translation>Дані гаманця (*.dat)</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="838"/>
         <source>Backup Failed</source>
-        <translation>Yedekleme başarısız oldu</translation>
+        <translation>Резервне копіювання не вдалося</translation>
     </message>
     <message>
         <location filename="../altcoingui.cpp" line="838"/>
         <source>There was an error trying to save the wallet data to the new location.</source>
-        <translation>Cüzdan verilerinin başka bir konumda kaydedilmesi sırasında bir hata meydana geldi.</translation>
+        <translation>Виникла помилка при спробі зберегти гаманець в новому місці</translation>
     </message>
     <message>
         <location filename="../altcoin.cpp" line="112"/>
         <source>A fatal error occured. Altcoin can no longer continue safely and will quit.</source>
-        <translation>Ciddi bir hata oluştu. Artık Altcoin güvenli bir şekilde işlemeye devam edemez ve kapanacaktır.</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -622,7 +623,7 @@ Adres: %4
     <message>
         <location filename="../clientmodel.cpp" line="84"/>
         <source>Network Alert</source>
-        <translation>Şebeke hakkında uyarı</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -630,52 +631,52 @@ Adres: %4
     <message>
         <location filename="../optionsdialog.cpp" line="246"/>
         <source>Display</source>
-        <translation>Görünüm</translation>
+        <translation>Відображення</translation>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="257"/>
         <source>default</source>
-        <translation>varsayılan</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="263"/>
         <source>The user interface language can be set here. This setting will only take effect after restarting Altcoin.</source>
-        <translation>Kullanıcı arayüzünün dili burada belirtilebilir. Bu ayar Altcoin tekrar başlatıldığında etkinleşecektir.</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="252"/>
         <source>User Interface &amp;Language:</source>
-        <translation>Kullanıcı arayüzü &amp;lisanı:</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="273"/>
         <source>&amp;Unit to show amounts in:</source>
-        <translation>Miktarı göstermek için &amp;birim:     </translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="277"/>
         <source>Choose the default subdivision unit to show in the interface, and when sending coins</source>
-        <translation>Altcoin gönderildiğinde arayüzde gösterilecek varsayılan alt birimi seçiniz</translation>
+        <translation>Виберіть одиницю вимірювання монет, яка буде відображатись в гаманці та при відправленні.</translation>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="284"/>
         <source>&amp;Display addresses in transaction list</source>
-        <translation>Muamele listesinde adresleri &amp;göster</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="285"/>
         <source>Whether to show Altcoin addresses in the transaction list</source>
-        <translation>Muamele listesinde Altcoin adreslerinin gösterilip gösterilmeyeceklerini belirler</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="303"/>
         <source>Warning</source>
-        <translation>Uyarı</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="303"/>
         <source>This setting will take effect after restarting Altcoin.</source>
-        <translation>Bu ayarlar Altcoin tekrar başlatıldığında etkinleşecektir.</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -683,67 +684,67 @@ Adres: %4
     <message>
         <location filename="../forms/editaddressdialog.ui" line="14"/>
         <source>Edit Address</source>
-        <translation>Adresi düzenle</translation>
+        <translation>Редагувати адресу</translation>
     </message>
     <message>
         <location filename="../forms/editaddressdialog.ui" line="25"/>
         <source>&amp;Label</source>
-        <translation>&amp;Etiket</translation>
+        <translation>&amp;Мітка</translation>
     </message>
     <message>
         <location filename="../forms/editaddressdialog.ui" line="35"/>
         <source>The label associated with this address book entry</source>
-        <translation>Bu adres defteri unsuru ile ilişkili etiket</translation>
+        <translation>Мітка, пов’язана з цим записом адресної книги</translation>
     </message>
     <message>
         <location filename="../forms/editaddressdialog.ui" line="42"/>
         <source>&amp;Address</source>
-        <translation>&amp;Adres</translation>
+        <translation>&amp;Адреса</translation>
     </message>
     <message>
         <location filename="../forms/editaddressdialog.ui" line="52"/>
         <source>The address associated with this address book entry. This can only be modified for sending addresses.</source>
-        <translation>Bu adres defteri unsuru ile ilişkili adres. Bu, sadece gönderi adresi için değiştirilebilir.</translation>
+        <translation>Адреса, пов’язана з цим записом адресної книги.</translation>
     </message>
     <message>
         <location filename="../editaddressdialog.cpp" line="20"/>
         <source>New receiving address</source>
-        <translation>Yeni alım adresi</translation>
+        <translation>Нова адреса для отримання</translation>
     </message>
     <message>
         <location filename="../editaddressdialog.cpp" line="24"/>
         <source>New sending address</source>
-        <translation>Yeni gönderi adresi</translation>
+        <translation>Нова адреса для відправлення</translation>
     </message>
     <message>
         <location filename="../editaddressdialog.cpp" line="27"/>
         <source>Edit receiving address</source>
-        <translation>Alım adresini düzenle</translation>
+        <translation>Редагувати адресу для отримання</translation>
     </message>
     <message>
         <location filename="../editaddressdialog.cpp" line="31"/>
         <source>Edit sending address</source>
-        <translation>Gönderi adresini düzenle</translation>
+        <translation>Редагувати адресу для відправлення</translation>
     </message>
     <message>
         <location filename="../editaddressdialog.cpp" line="91"/>
         <source>The entered address &quot;%1&quot; is already in the address book.</source>
-        <translation>Girilen &quot;%1&quot; adresi hâlihazırda adres defterinde mevcuttur.</translation>
+        <translation>Введена адреса «%1» вже присутня в адресній книзі.</translation>
     </message>
     <message>
         <location filename="../editaddressdialog.cpp" line="96"/>
         <source>The entered address &quot;%1&quot; is not a valid Altcoin address.</source>
-        <translation>Girilen &quot;%1&quot; adresi geçerli bir Altcoin adresi değildir.</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../editaddressdialog.cpp" line="101"/>
         <source>Could not unlock wallet.</source>
-        <translation>Cüzdan kilidi açılamadı.</translation>
+        <translation>Неможливо розблокувати гаманець.</translation>
     </message>
     <message>
         <location filename="../editaddressdialog.cpp" line="106"/>
         <source>New key generation failed.</source>
-        <translation>Yeni anahtar oluşturulması başarısız oldu.</translation>
+        <translation>Не вдалося згенерувати нові ключі.</translation>
     </message>
 </context>
 <context>
@@ -752,42 +753,43 @@ Adres: %4
         <location filename="../altcoin.cpp" line="133"/>
         <location filename="../altcoin.cpp" line="143"/>
         <source>Altcoin-Qt</source>
-        <translation>Altcoin-Qt</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoin.cpp" line="133"/>
         <source>version</source>
-        <translation>sürüm</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoin.cpp" line="135"/>
         <source>Usage:</source>
-        <translation>Kullanım:</translation>
+        <translation>Вкористання:</translation>
     </message>
     <message>
         <location filename="../altcoin.cpp" line="136"/>
         <source>options</source>
-        <translation>seçenekler</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoin.cpp" line="138"/>
         <source>UI options</source>
-        <translation>Kullanıcı arayüzü seçenekleri</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoin.cpp" line="139"/>
         <source>Set language, for example &quot;de_DE&quot; (default: system locale)</source>
-        <translation>Lisan belirt, mesela &quot;de_De&quot; (varsayılan: sistem dili)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoin.cpp" line="140"/>
         <source>Start minimized</source>
-        <translation>Küçültülmüş olarak başla</translation>
+        <translation>Запускати згорнутим
+</translation>
     </message>
     <message>
         <location filename="../altcoin.cpp" line="141"/>
         <source>Show splash screen on startup (default: 1)</source>
-        <translation>Başlatıldığında başlangıç ekranını göster (varsayılan: 1)</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -795,37 +797,37 @@ Adres: %4
     <message>
         <location filename="../optionsdialog.cpp" line="227"/>
         <source>Detach block and address databases at shutdown. This means they can be moved to another data directory, but it slows down shutdown. The wallet is always detached.</source>
-        <translation>Çıkışta blok ve adres veri tabanlarını ayırır. Bu, kapanışı yavaşlatır ancak veri tabanlarının başka klasörlere taşınabilmelerine imkân sağlar. Cüzdan daima ayırılır.</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="212"/>
         <source>Pay transaction &amp;fee</source>
-        <translation>Muamele ücreti &amp;öde</translation>
+        <translation>Заплатити комісі&amp;ю</translation>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="204"/>
         <source>Main</source>
-        <translation>Ana menü</translation>
+        <translation>Головні</translation>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="206"/>
         <source>Optional transaction fee per kB that helps make sure your transactions are processed quickly. Most transactions are 1 kB. Fee 0.01 recommended.</source>
-        <translation>Muamelelerin hızlı işlenmesini garantilemeye yardım eden, seçime dayalı kB başı muamele ücreti. Muamelelerin çoğunluğunun boyutu 1 kB&apos;dir. 0.01 ücreti önerilir. </translation>
+        <translation>Добровільна комісія за кожен Кб переказу, яка дозволяє бути впевненим у тому, що ваш переказ буде оброблено швидко. Розмір більшості переказів рівен 1 Кб. Рекомендована комісія: 0,01.</translation>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="222"/>
         <source>&amp;Start Altcoin on system login</source>
-        <translation>Altcoin&apos;i sistem oturumuyla &amp;başlat</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="223"/>
         <source>Automatically start Altcoin after logging in to the system</source>
-        <translation>Sistemde oturum açıldığında Altcoin&apos;i otomatik olarak başlat</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="226"/>
         <source>&amp;Detach databases at shutdown</source>
-        <translation>Kapanışta veritabanlarını &amp;ayır</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -833,22 +835,22 @@ Adres: %4
     <message>
         <location filename="../forms/messagepage.ui" line="14"/>
         <source>Sign Message</source>
-        <translation>Mesaj imzala</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../forms/messagepage.ui" line="20"/>
         <source>You can sign messages with your addresses to prove you own them. Be careful not to sign anything vague, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
-        <translation>Bir adresin sizin olduğunu ispatlamak için adresinizle mesaj imzalayabilirsiniz. Oltalama saldırılarının kimliğinizi imzanızla elde etmeyi deneyebilecekleri için belirsiz hiçbir şey imzalamamaya dikkat ediniz. Sadece ayrıntılı açıklaması olan ve tümüne katıldığınız ifadeleri imzalayın.</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../forms/messagepage.ui" line="38"/>
         <source>The address to sign the message with  (e.g. 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L)</source>
-        <translation>Mesajı imzalamak için kullanılacak adres  (mesela 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../forms/messagepage.ui" line="48"/>
         <source>Choose adress from address book</source>
-        <translation>Adres defterinden adres seç</translation>
+        <translation>Вибрати адресу з адресної книги</translation>
     </message>
     <message>
         <location filename="../forms/messagepage.ui" line="58"/>
@@ -858,7 +860,7 @@ Adres: %4
     <message>
         <location filename="../forms/messagepage.ui" line="71"/>
         <source>Paste address from clipboard</source>
-        <translation>Panodan adres yapıştır</translation>
+        <translation>Вставити адресу</translation>
     </message>
     <message>
         <location filename="../forms/messagepage.ui" line="81"/>
@@ -868,47 +870,47 @@ Adres: %4
     <message>
         <location filename="../forms/messagepage.ui" line="93"/>
         <source>Enter the message you want to sign here</source>
-        <translation>İmzalamak istediğiniz mesajı burada giriniz</translation>
+        <translation>Введіть повідомлення, яке ви хочете підписати тут</translation>
     </message>
     <message>
         <location filename="../forms/messagepage.ui" line="128"/>
         <source>Copy the current signature to the system clipboard</source>
-        <translation>Güncel imzayı sistem panosuna kopyala</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../forms/messagepage.ui" line="131"/>
         <source>&amp;Copy Signature</source>
-        <translation>İmzayı &amp;kopyala</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../forms/messagepage.ui" line="142"/>
         <source>Reset all sign message fields</source>
-        <translation>Tüm mesaj alanlarını sıfırla</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../forms/messagepage.ui" line="145"/>
         <source>Clear &amp;All</source>
-        <translation>Tümünü &amp;temizle</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../messagepage.cpp" line="31"/>
         <source>Click &quot;Sign Message&quot; to get signature</source>
-        <translation>İmza elde etmek için &quot;Mesaj İmzala&quot; unsurunu tıklayın</translation>
+        <translation>Натисніть кнопку &quot;Підписати повідомлення&quot;, для отриманя підпису</translation>
     </message>
     <message>
         <location filename="../forms/messagepage.ui" line="114"/>
         <source>Sign a message to prove you own this address</source>
-        <translation>Bu adresin sizin olduğunu ispatlamak için bir mesaj imzalayın</translation>
+        <translation>Підпишіть повідомлення щоб довести, що ви є власником цієї адреси</translation>
     </message>
     <message>
         <location filename="../forms/messagepage.ui" line="117"/>
         <source>&amp;Sign Message</source>
-        <translation>Mesaj &amp;İmzala</translation>
+        <translation>&amp;Підписати повідомлення</translation>
     </message>
     <message>
         <location filename="../messagepage.cpp" line="30"/>
         <source>Enter a Altcoin address (e.g. 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L)</source>
-        <translation>Altcoin adresi giriniz (mesela 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L)</translation>
+        <translation>Введіть адресу Altcoin (наприклад 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L)</translation>
     </message>
     <message>
         <location filename="../messagepage.cpp" line="83"/>
@@ -916,27 +918,27 @@ Adres: %4
         <location filename="../messagepage.cpp" line="105"/>
         <location filename="../messagepage.cpp" line="117"/>
         <source>Error signing</source>
-        <translation>İmza sırasında hata meydana geldi</translation>
+        <translation>Помилка при підписуванні</translation>
     </message>
     <message>
         <location filename="../messagepage.cpp" line="83"/>
         <source>%1 is not a valid address.</source>
-        <translation>%1 geçerli bir adres değildir.</translation>
+        <translation>&quot;%1&quot; не є коректною адресою в мережі Altcoin.</translation>
     </message>
     <message>
         <location filename="../messagepage.cpp" line="90"/>
         <source>%1 does not refer to a key.</source>
-        <translation>%1 herhangi bir anahtara işaret etmemektedir.</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../messagepage.cpp" line="105"/>
         <source>Private key for %1 is not available.</source>
-        <translation>%1 için özel anahtar mevcut değil.</translation>
+        <translation>Приватний ключ для %1 недоступний.</translation>
     </message>
     <message>
         <location filename="../messagepage.cpp" line="117"/>
         <source>Sign failed</source>
-        <translation>İmzalama başarısız oldu</translation>
+        <translation>Не вдалось підписати</translation>
     </message>
 </context>
 <context>
@@ -944,47 +946,47 @@ Adres: %4
     <message>
         <location filename="../optionsdialog.cpp" line="345"/>
         <source>Network</source>
-        <translation>Şebeke</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="347"/>
         <source>Map port using &amp;UPnP</source>
-        <translation>Portları &amp;UPnP kullanarak haritala</translation>
+        <translation>Відображення порту через &amp;UPnP</translation>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="348"/>
         <source>Automatically open the Altcoin client port on the router. This only works when your router supports UPnP and it is enabled.</source>
-        <translation>Yönlendiricide Altcoin istemci portlarını otomatik olarak açar. Bu, sadece yönlendiricinizin UPnP desteği bulunuyorsa ve etkinse çalışabilir.</translation>
+        <translation>Автоматично відкривати порт для клієнту біткоін на роутері. Працює лише якщо ваш роутер підтримує UPnP і ця функція увімкнена.</translation>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="351"/>
         <source>&amp;Connect through SOCKS4 proxy:</source>
-        <translation>SOCKS4 vekil sunucusu vasıtasıyla ba&amp;ğlan:</translation>
+        <translation>Підключатись через &amp;SOCKS4-проксі:</translation>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="352"/>
         <source>Connect to the Bitcon network through a SOCKS4 proxy (e.g. when connecting through Tor)</source>
-        <translation>Altcoin şebekesine SOCKS4 vekil sunucusu vasıtasıyla bağlanır (mesela Tor ile bağlanıldığında)</translation>
+        <translation>Підключатись до мережі Altcoin через SOCKS4-проксі (наприклад при використанні Tor) </translation>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="357"/>
         <source>Proxy &amp;IP:</source>
-        <translation>Vekil &amp;İP:</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="366"/>
         <source>&amp;Port:</source>
-        <translation>&amp;Port:</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="363"/>
         <source>IP address of the proxy (e.g. 127.0.0.1)</source>
-        <translation>Vekil sunucunun İP adresi (mesela 127.0.0.1)</translation>
+        <translation>IP-адреса проксі-сервера (наприклад 127.0.0.1)</translation>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="372"/>
         <source>Port of the proxy (e.g. 1234)</source>
-        <translation>Vekil sunucun portu (örneğin 1234)</translation>
+        <translation>Порт проксі-сервера (наприклад 1234)</translation>
     </message>
 </context>
 <context>
@@ -992,7 +994,7 @@ Adres: %4
     <message>
         <location filename="../optionsdialog.cpp" line="135"/>
         <source>Options</source>
-        <translation>Seçenekler</translation>
+        <translation>Параметри</translation>
     </message>
 </context>
 <context>
@@ -1000,59 +1002,59 @@ Adres: %4
     <message>
         <location filename="../forms/overviewpage.ui" line="14"/>
         <source>Form</source>
-        <translation>Form</translation>
+        <translation>Форма</translation>
     </message>
     <message>
         <location filename="../forms/overviewpage.ui" line="47"/>
         <location filename="../forms/overviewpage.ui" line="204"/>
         <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Altcoin network after a connection is established, but this process has not completed yet.</source>
-        <translation>Görüntülenen veriler zaman aşımını uğramış olabilir. Bağlantı kurulduğunda cüzdanınız otomatik olarak şebeke ile eşleşir ancak bu işlem henüz tamamlanmamıştır.</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../forms/overviewpage.ui" line="89"/>
         <source>Balance:</source>
-        <translation>Bakiye:</translation>
+        <translation>Баланс:</translation>
     </message>
     <message>
         <location filename="../forms/overviewpage.ui" line="147"/>
         <source>Number of transactions:</source>
-        <translation>Muamele sayısı:</translation>
+        <translation>Кількість переказів:</translation>
     </message>
     <message>
         <location filename="../forms/overviewpage.ui" line="118"/>
         <source>Unconfirmed:</source>
-        <translation>Doğrulanmamış:</translation>
+        <translation>Непідтверджені:</translation>
     </message>
     <message>
         <location filename="../forms/overviewpage.ui" line="40"/>
         <source>Wallet</source>
-        <translation>Cüzdan</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../forms/overviewpage.ui" line="197"/>
         <source>&lt;b&gt;Recent transactions&lt;/b&gt;</source>
-        <translation>&lt;b&gt;Son muameleler&lt;/b&gt;</translation>
+        <translation>&lt;b&gt;Недавні перекази&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../forms/overviewpage.ui" line="105"/>
         <source>Your current balance</source>
-        <translation>Güncel bakiyeniz</translation>
+        <translation>Ваш поточний баланс</translation>
     </message>
     <message>
         <location filename="../forms/overviewpage.ui" line="134"/>
         <source>Total of transactions that have yet to be confirmed, and do not yet count toward the current balance</source>
-        <translation>Doğrulanması beklenen ve henüz güncel bakiyeye ilâve edilmemiş muamelelerin toplamı</translation>
+        <translation>Загальна сума всіх переказів, які ще не підтверджені, та до сих пір не враховуються в загальному балансі</translation>
     </message>
     <message>
         <location filename="../forms/overviewpage.ui" line="154"/>
         <source>Total number of transactions in wallet</source>
-        <translation>Cüzdandaki muamelelerin toplam sayısı</translation>
+        <translation>Загальна кількість переказів в гаманці</translation>
     </message>
     <message>
         <location filename="../overviewpage.cpp" line="110"/>
         <location filename="../overviewpage.cpp" line="111"/>
         <source>out of sync</source>
-        <translation>eşleşme dışı</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -1060,22 +1062,22 @@ Adres: %4
     <message>
         <location filename="../forms/qrcodedialog.ui" line="14"/>
         <source>QR Code Dialog</source>
-        <translation>QR kodu diyaloğu</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../forms/qrcodedialog.ui" line="32"/>
         <source>QR Code</source>
-        <translation>QR Kodu</translation>
+        <translation>QR-Код</translation>
     </message>
     <message>
         <location filename="../forms/qrcodedialog.ui" line="55"/>
         <source>Request Payment</source>
-        <translation>Ödeme isteği</translation>
+        <translation>Запросити Платіж</translation>
     </message>
     <message>
         <location filename="../forms/qrcodedialog.ui" line="70"/>
         <source>Amount:</source>
-        <translation>Miktar:</translation>
+        <translation>Кількість:</translation>
     </message>
     <message>
         <location filename="../forms/qrcodedialog.ui" line="105"/>
@@ -1085,37 +1087,37 @@ Adres: %4
     <message>
         <location filename="../forms/qrcodedialog.ui" line="121"/>
         <source>Label:</source>
-        <translation>Etiket:</translation>
+        <translation>Мітка:</translation>
     </message>
     <message>
         <location filename="../forms/qrcodedialog.ui" line="144"/>
         <source>Message:</source>
-        <translation>Mesaj:</translation>
+        <translation>Повідомлення:</translation>
     </message>
     <message>
         <location filename="../forms/qrcodedialog.ui" line="186"/>
         <source>&amp;Save As...</source>
-        <translation>&amp;Farklı kaydet...</translation>
+        <translation>&amp;Зберегти як...</translation>
     </message>
     <message>
         <location filename="../qrcodedialog.cpp" line="45"/>
         <source>Error encoding URI into QR Code.</source>
-        <translation>URI&apos;nin QR koduna kodlanmasında hata oluştu.</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../qrcodedialog.cpp" line="63"/>
         <source>Resulting URI too long, try to reduce the text for label / message.</source>
-        <translation>Sonuç URI çok uzun, etiket ya da mesaj metnini kısaltmayı deneyiniz.</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../qrcodedialog.cpp" line="120"/>
         <source>Save QR Code</source>
-        <translation>QR kodu kaydet</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../qrcodedialog.cpp" line="120"/>
         <source>PNG Images (*.png)</source>
-        <translation>PNG resimleri (*.png)</translation>
+        <translation>PNG-зображення (*.png)</translation>
     </message>
 </context>
 <context>
@@ -1123,12 +1125,12 @@ Adres: %4
     <message>
         <location filename="../forms/rpcconsole.ui" line="14"/>
         <source>Altcoin debug window</source>
-        <translation>Altcoin hata ayıklama penceresi</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../forms/rpcconsole.ui" line="46"/>
         <source>Client name</source>
-        <translation>İstemci ismi</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../forms/rpcconsole.ui" line="56"/>
@@ -1141,107 +1143,107 @@ Adres: %4
         <location filename="../forms/rpcconsole.ui" line="260"/>
         <location filename="../rpcconsole.cpp" line="245"/>
         <source>N/A</source>
-        <translation>Mevcut değil</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../forms/rpcconsole.ui" line="69"/>
         <source>Client version</source>
-        <translation>İstemci sürümü</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../forms/rpcconsole.ui" line="24"/>
         <source>&amp;Information</source>
-        <translation>&amp;Malumat</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../forms/rpcconsole.ui" line="39"/>
         <source>Client</source>
-        <translation>İstemci</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../forms/rpcconsole.ui" line="115"/>
         <source>Startup time</source>
-        <translation>Başlama zamanı</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../forms/rpcconsole.ui" line="144"/>
         <source>Network</source>
-        <translation>Şebeke</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../forms/rpcconsole.ui" line="151"/>
         <source>Number of connections</source>
-        <translation>Bağlantı sayısı</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../forms/rpcconsole.ui" line="174"/>
         <source>On testnet</source>
-        <translation>Testnet üzerinde</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../forms/rpcconsole.ui" line="197"/>
         <source>Block chain</source>
-        <translation>Blok zinciri</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../forms/rpcconsole.ui" line="204"/>
         <source>Current number of blocks</source>
-        <translation>Güncel blok sayısı</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../forms/rpcconsole.ui" line="227"/>
         <source>Estimated total blocks</source>
-        <translation>Tahmini toplam blok sayısı</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../forms/rpcconsole.ui" line="250"/>
         <source>Last block time</source>
-        <translation>Son blok zamanı</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../forms/rpcconsole.ui" line="292"/>
         <source>Debug logfile</source>
-        <translation>Hata ayıklama kütük dosyası</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../forms/rpcconsole.ui" line="299"/>
         <source>Open the Altcoin debug logfile from the current data directory. This can take a few seconds for large logfiles.</source>
-        <translation>Güncel veri klasöründen Altcoin hata ayıklama kütüğünü aç. Büyük kütük dosyaları için bu birkaç saniye alabilir.</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../forms/rpcconsole.ui" line="302"/>
         <source>&amp;Open</source>
-        <translation>&amp;Aç</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../forms/rpcconsole.ui" line="323"/>
         <source>&amp;Console</source>
-        <translation>&amp;Konsol</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../forms/rpcconsole.ui" line="92"/>
         <source>Build date</source>
-        <translation>Derleme tarihi</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../forms/rpcconsole.ui" line="372"/>
         <source>Clear console</source>
-        <translation>Konsolu temizle</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../rpcconsole.cpp" line="212"/>
         <source>Welcome to the Altcoin RPC console.</source>
-        <translation>Altcoin RPC konsoluna hoş geldiniz.</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../rpcconsole.cpp" line="213"/>
         <source>Use up and down arrows to navigate history, and &lt;b&gt;Ctrl-L&lt;/b&gt; to clear screen.</source>
-        <translation>Tarihçede gezinmek için imleç tuşlarını kullanınız, &lt;b&gt;Ctrl-L&lt;/b&gt; ile de ekranı temizleyebilirsiniz.</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../rpcconsole.cpp" line="214"/>
         <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
-        <translation>Mevcut komutların listesi için &lt;b&gt;help&lt;/b&gt; yazınız.</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -1256,32 +1258,32 @@ Adres: %4
         <location filename="../sendcoinsdialog.cpp" line="148"/>
         <location filename="../sendcoinsdialog.cpp" line="153"/>
         <source>Send Coins</source>
-        <translation>Altcoin yolla</translation>
+        <translation>Відправити</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsdialog.ui" line="64"/>
         <source>Send to multiple recipients at once</source>
-        <translation>Birçok alıcıya aynı anda gönder</translation>
+        <translation>Відправити на декілька адрес</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsdialog.ui" line="67"/>
         <source>&amp;Add Recipient</source>
-        <translation>Alıcı &amp;ekle</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../forms/sendcoinsdialog.ui" line="84"/>
         <source>Remove all transaction fields</source>
-        <translation>Bütün muamele alanlarını kaldır</translation>
+        <translation>Видалити всі поля транзакції</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsdialog.ui" line="87"/>
         <source>Clear &amp;All</source>
-        <translation>Tümünü &amp;temizle</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../forms/sendcoinsdialog.ui" line="106"/>
         <source>Balance:</source>
-        <translation>Bakiye:</translation>
+        <translation>Баланс:</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsdialog.ui" line="113"/>
@@ -1291,67 +1293,67 @@ Adres: %4
     <message>
         <location filename="../forms/sendcoinsdialog.ui" line="144"/>
         <source>Confirm the send action</source>
-        <translation>Yollama etkinliğini teyit ediniz</translation>
+        <translation>Підтвердити відправлення</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsdialog.ui" line="147"/>
         <source>&amp;Send</source>
-        <translation>&amp;Gönder</translation>
+        <translation>&amp;Відправити</translation>
     </message>
     <message>
         <location filename="../sendcoinsdialog.cpp" line="94"/>
         <source>&lt;b&gt;%1&lt;/b&gt; to %2 (%3)</source>
-        <translation>&lt;b&gt;%1&lt;/b&gt; şu adrese: %2 (%3)</translation>
+        <translation>&lt;b&gt;%1&lt;/b&gt; адресату %2 (%3)</translation>
     </message>
     <message>
         <location filename="../sendcoinsdialog.cpp" line="99"/>
         <source>Confirm send coins</source>
-        <translation>Gönderiyi teyit ediniz</translation>
+        <translation>Підтвердіть відправлення</translation>
     </message>
     <message>
         <location filename="../sendcoinsdialog.cpp" line="100"/>
         <source>Are you sure you want to send %1?</source>
-        <translation>%1 göndermek istediğinizden emin misiniz?</translation>
+        <translation>Ви впевнені що хочете відправити %1</translation>
     </message>
     <message>
         <location filename="../sendcoinsdialog.cpp" line="100"/>
         <source> and </source>
-        <translation> ve </translation>
+        <translation> і </translation>
     </message>
     <message>
         <location filename="../sendcoinsdialog.cpp" line="123"/>
         <source>The recepient address is not valid, please recheck.</source>
-        <translation>Alıcı adresi geçerli değildir, lütfen denetleyiniz.</translation>
+        <translation>Адреса отримувача невірна, будьласка перепровірте.</translation>
     </message>
     <message>
         <location filename="../sendcoinsdialog.cpp" line="128"/>
         <source>The amount to pay must be larger than 0.</source>
-        <translation>Ödeyeceğiniz tutarın sıfırdan yüksek olması gerekir.</translation>
+        <translation>Кількість монет для відправлення повинна бути більшою 0.</translation>
     </message>
     <message>
         <location filename="../sendcoinsdialog.cpp" line="133"/>
         <source>The amount exceeds your balance.</source>
-        <translation>Tutar bakiyenizden yüksektir.</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../sendcoinsdialog.cpp" line="138"/>
         <source>The total exceeds your balance when the %1 transaction fee is included.</source>
-        <translation>Toplam, %1 muamele ücreti ilâve edildiğinde bakiyenizi geçmektedir.</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../sendcoinsdialog.cpp" line="144"/>
         <source>Duplicate address found, can only send to each address once per send operation.</source>
-        <translation>Çift adres bulundu, belli bir gönderi sırasında her adrese sadece tek bir gönderide bulunulabilir.</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../sendcoinsdialog.cpp" line="149"/>
         <source>Error: Transaction creation failed.</source>
-        <translation>Hata: Muamele oluşturması başarısız oldu.</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../sendcoinsdialog.cpp" line="154"/>
         <source>Error: The transaction was rejected. This might happen if some of the coins in your wallet were already spent, such as if you used a copy of wallet.dat and coins were spent in the copy but not marked as spent here.</source>
-        <translation>Hata: Muamele reddedildi.  Cüzdanınızdaki madenî paraların bazıları zaten harcanmış olduğunda bu meydana gelebilir. Örneğin wallet.dat dosyasının bir kopyasını kullandıysanız ve kopyada para harcandığında ancak burada harcandığı işaretlenmediğinde.</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -1359,38 +1361,38 @@ Adres: %4
     <message>
         <location filename="../forms/sendcoinsentry.ui" line="14"/>
         <source>Form</source>
-        <translation>Form</translation>
+        <translation>Форма</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsentry.ui" line="29"/>
         <source>A&amp;mount:</source>
-        <translation>M&amp;iktar:</translation>
+        <translation>&amp;Кількість:</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsentry.ui" line="42"/>
         <source>Pay &amp;To:</source>
-        <translation>&amp;Şu kişiye öde:</translation>
+        <translation>&amp;Отримувач:</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsentry.ui" line="66"/>
         <location filename="../sendcoinsentry.cpp" line="25"/>
         <source>Enter a label for this address to add it to your address book</source>
-        <translation>Adres defterinize eklemek için bu adrese ilişik bir etiket giriniz</translation>
+        <translation>Введіть мітку для цієї адреси для додавання її в адресну книгу</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsentry.ui" line="75"/>
         <source>&amp;Label:</source>
-        <translation>&amp;Etiket:</translation>
+        <translation>&amp;Мітка:</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsentry.ui" line="93"/>
         <source>The address to send the payment to  (e.g. 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L)</source>
-        <translation>Ödemenin gönderileceği adres  (mesela 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L)</translation>
+        <translation>Адреса для отримувача платежу (наприклад, 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L)</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsentry.ui" line="103"/>
         <source>Choose address from address book</source>
-        <translation>Adres defterinden adres seç</translation>
+        <translation>Вибрати адресу з адресної книги</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsentry.ui" line="113"/>
@@ -1400,7 +1402,7 @@ Adres: %4
     <message>
         <location filename="../forms/sendcoinsentry.ui" line="120"/>
         <source>Paste address from clipboard</source>
-        <translation>Panodan adres yapıştır</translation>
+        <translation>Вставити адресу</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsentry.ui" line="130"/>
@@ -1410,12 +1412,12 @@ Adres: %4
     <message>
         <location filename="../forms/sendcoinsentry.ui" line="137"/>
         <source>Remove this recipient</source>
-        <translation>Bu alıcıyı kaldır</translation>
+        <translation>Видалити цього отримувача</translation>
     </message>
     <message>
         <location filename="../sendcoinsentry.cpp" line="26"/>
         <source>Enter a Altcoin address (e.g. 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L)</source>
-        <translation>Altcoin adresi giriniz (mesela 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L)</translation>
+        <translation>Введіть адресу Altcoin (наприклад 1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L)</translation>
     </message>
 </context>
 <context>
@@ -1423,85 +1425,85 @@ Adres: %4
     <message>
         <location filename="../transactiondesc.cpp" line="21"/>
         <source>Open for %1 blocks</source>
-        <translation>%1 blok için açık</translation>
+        <translation>Відкрити для %1 блоків</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="23"/>
         <source>Open until %1</source>
-        <translation>%1 değerine dek açık</translation>
+        <translation>Відкрити до %1</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="29"/>
         <source>%1/offline?</source>
-        <translation>%1/çevrimdışı mı?</translation>
+        <translation>%1/поза інтернетом?</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="31"/>
         <source>%1/unconfirmed</source>
-        <translation>%1/doğrulanmadı</translation>
+        <translation>%1/не підтверджено</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="33"/>
         <source>%1 confirmations</source>
-        <translation>%1 teyit</translation>
+        <translation>%1 підтверджень</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="51"/>
         <source>&lt;b&gt;Status:&lt;/b&gt; </source>
-        <translation>&lt;b&gt;Durum:&lt;/b&gt; </translation>
+        <translation>&lt;b&gt;Статус:&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="56"/>
         <source>, has not been successfully broadcast yet</source>
-        <translation>, henüz başarılı bir şekilde yayınlanmadı</translation>
+        <translation>, ще не було успішно розіслано</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="58"/>
         <source>, broadcast through %1 node</source>
-        <translation>, %1 düğüm vasıtasıyla yayınlandı</translation>
+        <translation>, розіслано через %1 вузол</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="60"/>
         <source>, broadcast through %1 nodes</source>
-        <translation>, %1 düğüm vasıtasıyla yayınlandı</translation>
+        <translation>, розіслано через %1 вузлів</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="64"/>
         <source>&lt;b&gt;Date:&lt;/b&gt; </source>
-        <translation>&lt;b&gt;Tarih:&lt;/b&gt; </translation>
+        <translation>&lt;b&gt;Дата:&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="71"/>
         <source>&lt;b&gt;Source:&lt;/b&gt; Generated&lt;br&gt;</source>
-        <translation>&lt;b&gt;Kaynak:&lt;/b&gt; Oluşturuldu&lt;br&gt;</translation>
+        <translation>&lt;b&gt;Джерело:&lt;/b&gt; згенеровано&lt;br&gt;</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="77"/>
         <location filename="../transactiondesc.cpp" line="94"/>
         <source>&lt;b&gt;From:&lt;/b&gt; </source>
-        <translation>&lt;b&gt;Gönderen:&lt;/b&gt; </translation>
+        <translation>&lt;b&gt;Відправник:&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="94"/>
         <source>unknown</source>
-        <translation>bilinmiyor</translation>
+        <translation>невідомий</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="95"/>
         <location filename="../transactiondesc.cpp" line="118"/>
         <location filename="../transactiondesc.cpp" line="178"/>
         <source>&lt;b&gt;To:&lt;/b&gt; </source>
-        <translation>&lt;b&gt;Alıcı:&lt;/b&gt; </translation>
+        <translation>&lt;b&gt;Одержувач:&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="98"/>
         <source> (yours, label: </source>
-        <translation> (sizin, etiket: </translation>
+        <translation> (Ваша, мітка: </translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="100"/>
         <source> (yours)</source>
-        <translation> (sizin)</translation>
+        <translation> (ваша)</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="136"/>
@@ -1509,54 +1511,54 @@ Adres: %4
         <location filename="../transactiondesc.cpp" line="195"/>
         <location filename="../transactiondesc.cpp" line="212"/>
         <source>&lt;b&gt;Credit:&lt;/b&gt; </source>
-        <translation>&lt;b&gt;Gelir:&lt;/b&gt; </translation>
+        <translation>&lt;b&gt;Кредит:&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="138"/>
         <source>(%1 matures in %2 more blocks)</source>
-        <translation>(%1, %2 ek blok sonrasında olgunlaşacak)</translation>
+        <translation>(%1 «дозріє» через %2 блоків)</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="142"/>
         <source>(not accepted)</source>
-        <translation>(kabul edilmedi)</translation>
+        <translation>(не прийнято)</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="186"/>
         <location filename="../transactiondesc.cpp" line="194"/>
         <location filename="../transactiondesc.cpp" line="209"/>
         <source>&lt;b&gt;Debit:&lt;/b&gt; </source>
-        <translation>&lt;b&gt;Gider:&lt;/b&gt; </translation>
+        <translation>&lt;b&gt;Дебет:&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="200"/>
         <source>&lt;b&gt;Transaction fee:&lt;/b&gt; </source>
-        <translation>&lt;b&gt;Muamele ücreti:&lt;b&gt; </translation>
+        <translation>&lt;b&gt;Комісія за переказ:&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="216"/>
         <source>&lt;b&gt;Net amount:&lt;/b&gt; </source>
-        <translation>&lt;b&gt;Net miktar:&lt;/b&gt; </translation>
+        <translation>&lt;b&gt;Загальна сума:&lt;/b&gt; </translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="222"/>
         <source>Message:</source>
-        <translation>Mesaj:</translation>
+        <translation>Повідомлення:</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="224"/>
         <source>Comment:</source>
-        <translation>Yorum:</translation>
+        <translation>Коментар:</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="226"/>
         <source>Transaction ID:</source>
-        <translation>Muamele kimliği:</translation>
+        <translation>ID транзакції:</translation>
     </message>
     <message>
         <location filename="../transactiondesc.cpp" line="229"/>
         <source>Generated coins must wait 120 blocks before they can be spent.  When you generated this block, it was broadcast to the network to be added to the block chain.  If it fails to get into the chain, it will change to &quot;not accepted&quot; and not be spendable.  This may occasionally happen if another node generates a block within a few seconds of yours.</source>
-        <translation>Oluşturulan Altcoin&apos;lerin harcanabilmelerinden önce 120 blok beklemeleri gerekmektedir.  Bu blok, oluşturduğunuzda, blok zincirine eklenmesi için ağda yayınlandı.  Zincire eklenmesi başarısız olursa, &quot;kabul edilmedi&quot; olarak değiştirilecek ve harcanamayacaktır.  Bu, bazen başka bir düğüm sizden birkaç saniye önce ya da sonra blok oluşturursa meydana gelebilir.</translation>
+        <translation>Після генерації монет, потрібно зачекати 120 блоків, перш ніж їх можна буде використати.  Коли ви згенерували цей блок, його було відправлено в мережу для того, щоб він був доданий до ланцюжка блоків.  Якщо ця процедура не вдасться, статус буде змінено на «не підтверджено» і ви не зможете потратити згенеровані монету.  Таке може статись, якщо хтось інший згенерував блок на декілька секунд раніше.</translation>
     </message>
 </context>
 <context>
@@ -1564,12 +1566,12 @@ Adres: %4
     <message>
         <location filename="../forms/transactiondescdialog.ui" line="14"/>
         <source>Transaction details</source>
-        <translation>Muamele detayları</translation>
+        <translation>Деталі переказів</translation>
     </message>
     <message>
         <location filename="../forms/transactiondescdialog.ui" line="20"/>
         <source>This pane shows a detailed description of the transaction</source>
-        <translation>Bu pano muamelenin ayrıntılı açıklamasını gösterir</translation>
+        <translation>Даний діалог показує детальну статистику по вибраному переказу</translation>
     </message>
 </context>
 <context>
@@ -1577,117 +1579,117 @@ Adres: %4
     <message>
         <location filename="../transactiontablemodel.cpp" line="226"/>
         <source>Date</source>
-        <translation>Tarih</translation>
+        <translation>Дата</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="226"/>
         <source>Type</source>
-        <translation>Tür</translation>
+        <translation>Тип</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="226"/>
         <source>Address</source>
-        <translation>Adres</translation>
+        <translation>Адреса</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="226"/>
         <source>Amount</source>
-        <translation>Miktar</translation>
+        <translation>Кількість</translation>
     </message>
     <message numerus="yes">
         <location filename="../transactiontablemodel.cpp" line="281"/>
         <source>Open for %n block(s)</source>
-        <translation><numerusform>%n blok için açık</numerusform></translation>
+        <translation><numerusform>Відкрити для %n блоку</numerusform><numerusform>Відкрити для %n блоків</numerusform><numerusform>Відкрити для %n блоків</numerusform></translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="284"/>
         <source>Open until %1</source>
-        <translation>%1 değerine dek açık</translation>
+        <translation>Відкрити до %1</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="287"/>
         <source>Offline (%1 confirmations)</source>
-        <translation>Çevrimdışı (%1 teyit)</translation>
+        <translation>Поза інтернетом (%1 підтверджень)</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="290"/>
         <source>Unconfirmed (%1 of %2 confirmations)</source>
-        <translation>Doğrulanmadı (%1 (toplam %2 üzerinden) teyit)</translation>
+        <translation>Непідтверджено (%1 із %2 підтверджень)</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="293"/>
         <source>Confirmed (%1 confirmations)</source>
-        <translation>Doğrulandı (%1 teyit)</translation>
+        <translation>Підтверджено (%1 підтверджень)</translation>
     </message>
     <message numerus="yes">
         <location filename="../transactiontablemodel.cpp" line="301"/>
         <source>Mined balance will be available in %n more blocks</source>
-        <translation><numerusform>Madenden çıkarılan bakiye %n ek blok sonrasında kullanılabilecektir</numerusform></translation>
+        <translation><numerusform>Добутими монетами можна буде скористатись через %n блок</numerusform><numerusform>Добутими монетами можна буде скористатись через %n блоки</numerusform><numerusform>Добутими монетами можна буде скористатись через %n блоків</numerusform></translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="307"/>
         <source>This block was not received by any other nodes and will probably not be accepted!</source>
-        <translation>Bu blok başka hiçbir düğüm tarafından alınmamıştır ve muhtemelen kabul edilmeyecektir!</translation>
+        <translation>Цей блок не був отриманий жодними іншими вузлами і, ймовірно, не буде прийнятий!</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="310"/>
         <source>Generated but not accepted</source>
-        <translation>Oluşturuldu ama kabul edilmedi</translation>
+        <translation>Згенеровано, але не підтверджено</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="353"/>
         <source>Received with</source>
-        <translation>Şununla alındı</translation>
+        <translation>Отримано</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="355"/>
         <source>Received from</source>
-        <translation>Alındığı kişi</translation>
+        <translation>Отримано від</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="358"/>
         <source>Sent to</source>
-        <translation>Gönderildiği adres</translation>
+        <translation>Відправлено</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="360"/>
         <source>Payment to yourself</source>
-        <translation>Kendinize ödeme</translation>
+        <translation>Відправлено собі</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="362"/>
         <source>Mined</source>
-        <translation>Madenden çıkarılan</translation>
+        <translation>Добуто</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="400"/>
         <source>(n/a)</source>
-        <translation>(mevcut değil)</translation>
+        <translation>(недоступно)</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="599"/>
         <source>Transaction status. Hover over this field to show number of confirmations.</source>
-        <translation>Muamele durumu. Doğrulama sayısını görüntülemek için imleci bu alanda tutunuz.</translation>
+        <translation>Статус переказу. Наведіть вказівник на це поле, щоб показати кількість підтверджень.</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="601"/>
         <source>Date and time that the transaction was received.</source>
-        <translation>Muamelenin alındığı tarih ve zaman.</translation>
+        <translation>Дата і час, коли переказ було отримано.</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="603"/>
         <source>Type of transaction.</source>
-        <translation>Muamele türü.</translation>
+        <translation>Тип переказу.</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="605"/>
         <source>Destination address of transaction.</source>
-        <translation>Muamelenin alıcı adresi.</translation>
+        <translation>Адреса отримувача</translation>
     </message>
     <message>
         <location filename="../transactiontablemodel.cpp" line="607"/>
         <source>Amount removed from or added to balance.</source>
-        <translation>Bakiyeden alınan ya da bakiyeye eklenen miktar.</translation>
+        <translation>Сума, додана чи знята з балансу.</translation>
     </message>
 </context>
 <context>
@@ -1696,162 +1698,162 @@ Adres: %4
         <location filename="../transactionview.cpp" line="55"/>
         <location filename="../transactionview.cpp" line="71"/>
         <source>All</source>
-        <translation>Hepsi</translation>
+        <translation>Всі</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="56"/>
         <source>Today</source>
-        <translation>Bugün</translation>
+        <translation>Сьогодні</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="57"/>
         <source>This week</source>
-        <translation>Bu hafta</translation>
+        <translation>На цьому тижні</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="58"/>
         <source>This month</source>
-        <translation>Bu ay</translation>
+        <translation>На цьому місяці</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="59"/>
         <source>Last month</source>
-        <translation>Geçen ay</translation>
+        <translation>Минулого місяця</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="60"/>
         <source>This year</source>
-        <translation>Bu sene</translation>
+        <translation>Цього року</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="61"/>
         <source>Range...</source>
-        <translation>Aralık...</translation>
+        <translation>Проміжок</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="72"/>
         <source>Received with</source>
-        <translation>Şununla alınan</translation>
+        <translation>Отримані на</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="74"/>
         <source>Sent to</source>
-        <translation>Gönderildiği adres</translation>
+        <translation>Відправлені на</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="76"/>
         <source>To yourself</source>
-        <translation>Kendinize</translation>
+        <translation>Відправлені собі</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="77"/>
         <source>Mined</source>
-        <translation>Oluşturulan</translation>
+        <translation>Добуті</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="78"/>
         <source>Other</source>
-        <translation>Diğer</translation>
+        <translation>Інше</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="85"/>
         <source>Enter address or label to search</source>
-        <translation>Aranacak adres ya da etiket giriniz</translation>
+        <translation>Введіть адресу чи мітку для пошуку</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="92"/>
         <source>Min amount</source>
-        <translation>Asgari miktar</translation>
+        <translation>Мінімальна сума</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="126"/>
         <source>Copy address</source>
-        <translation>Adresi kopyala</translation>
+        <translation>Скопіювати адресу</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="127"/>
         <source>Copy label</source>
-        <translation>Etiketi kopyala</translation>
+        <translation>Скопіювати мітку</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="128"/>
         <source>Copy amount</source>
-        <translation>Miktarı kopyala</translation>
+        <translation>Копіювати кількість</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="129"/>
         <source>Edit label</source>
-        <translation>Etiketi düzenle</translation>
+        <translation>Редагувати мітку</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="130"/>
         <source>Show transaction details</source>
-        <translation>Muamele detaylarını göster</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="270"/>
         <source>Export Transaction Data</source>
-        <translation>Muamele verilerini dışa aktar</translation>
+        <translation>Експортувати дані переказів</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="271"/>
         <source>Comma separated file (*.csv)</source>
-        <translation>Virgülle ayrılmış değerler dosyası (*.csv)</translation>
+        <translation>Файли, розділені комою (*.csv)</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="279"/>
         <source>Confirmed</source>
-        <translation>Doğrulandı</translation>
+        <translation>Підтверджені</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="280"/>
         <source>Date</source>
-        <translation>Tarih</translation>
+        <translation>Дата</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="281"/>
         <source>Type</source>
-        <translation>Tür</translation>
+        <translation>Тип</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="282"/>
         <source>Label</source>
-        <translation>Etiket</translation>
+        <translation>Мітка</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="283"/>
         <source>Address</source>
-        <translation>Adres</translation>
+        <translation>Адреса</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="284"/>
         <source>Amount</source>
-        <translation>Miktar</translation>
+        <translation>Кількість</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="285"/>
         <source>ID</source>
-        <translation>Kimlik</translation>
+        <translation>Ідентифікатор</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="289"/>
         <source>Error exporting</source>
-        <translation>Dışa aktarımda hata oluştu</translation>
+        <translation>Помилка експорту</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="289"/>
         <source>Could not write to file %1.</source>
-        <translation>%1 dosyasına yazılamadı.</translation>
+        <translation>Неможливо записати у файл %1</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="384"/>
         <source>Range:</source>
-        <translation>Aralık:</translation>
+        <translation>Діапазон від:</translation>
     </message>
     <message>
         <location filename="../transactionview.cpp" line="392"/>
         <source>to</source>
-        <translation>ilâ</translation>
+        <translation>до</translation>
     </message>
 </context>
 <context>
@@ -1859,78 +1861,78 @@ Adres: %4
     <message>
         <location filename="../forms/verifymessagedialog.ui" line="14"/>
         <source>Verify Signed Message</source>
-        <translation>İmzalı mesajı kontrol et</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../forms/verifymessagedialog.ui" line="20"/>
         <source>Enter the message and signature below (be careful to correctly copy newlines, spaces, tabs and other invisible characters) to obtain the Altcoin address used to sign the message.</source>
-        <translation>Mesajı imzalamak için kullanılan Altcoin adresini elde etmek için mesaj ve imzayı aşağıda giriniz (yani satırlar, boşluklar ve sekmeler gibi görünmeyen karakterleri doğru şekilde kopyalamaya dikkat ediniz).</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../forms/verifymessagedialog.ui" line="62"/>
         <source>Verify a message and obtain the Altcoin address used to sign the message</source>
-        <translation>Mesajı kontrol et ve imzalamak için kullanılan Altcoin adresini elde et</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../forms/verifymessagedialog.ui" line="65"/>
         <source>&amp;Verify Message</source>
-        <translation>Mesajı &amp;kontrol et</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../forms/verifymessagedialog.ui" line="79"/>
         <source>Copy the currently selected address to the system clipboard</source>
-        <translation>Şu anda seçili olan adresi panoya kopyalar</translation>
+        <translation>Копіювати виділену адресу в буфер обміну</translation>
     </message>
     <message>
         <location filename="../forms/verifymessagedialog.ui" line="82"/>
         <source>&amp;Copy Address</source>
-        <translation>Adresi &amp;kopyala</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../forms/verifymessagedialog.ui" line="93"/>
         <source>Reset all verify message fields</source>
-        <translation>Tüm mesaj kontrolü alanlarını sıfırla</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../forms/verifymessagedialog.ui" line="96"/>
         <source>Clear &amp;All</source>
-        <translation>Tümünü &amp;temizle</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../verifymessagedialog.cpp" line="28"/>
         <source>Enter Altcoin signature</source>
-        <translation>Altcoin imzası gir</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../verifymessagedialog.cpp" line="29"/>
         <source>Click &quot;Verify Message&quot; to obtain address</source>
-        <translation>Adresi elde etmek için &quot;Mesajı kontrol et&quot; düğmesini tıkayınız</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../verifymessagedialog.cpp" line="55"/>
         <location filename="../verifymessagedialog.cpp" line="62"/>
         <source>Invalid Signature</source>
-        <translation>Geçersiz imza</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../verifymessagedialog.cpp" line="55"/>
         <source>The signature could not be decoded. Please check the signature and try again.</source>
-        <translation>İmzanın kodu çözülemedi. İmzayı kontrol edip tekrar deneyiniz.</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../verifymessagedialog.cpp" line="62"/>
         <source>The signature did not match the message digest. Please check the signature and try again.</source>
-        <translation>İmza mesajın hash değeri eşleşmedi. İmzayı kontrol edip tekrar deneyiniz.</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../verifymessagedialog.cpp" line="72"/>
         <source>Address not found in address book.</source>
-        <translation>Bu adres, adres defterinde bulunamadı.</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../verifymessagedialog.cpp" line="72"/>
         <source>Address found in address book: %1</source>
-        <translation>Adres defterinde bu adres bulundu: %1</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -1938,7 +1940,7 @@ Adres: %4
     <message>
         <location filename="../walletmodel.cpp" line="158"/>
         <source>Sending...</source>
-        <translation>Gönderiliyor...</translation>
+        <translation>Відправка...</translation>
     </message>
 </context>
 <context>
@@ -1946,27 +1948,27 @@ Adres: %4
     <message>
         <location filename="../optionsdialog.cpp" line="313"/>
         <source>Window</source>
-        <translation>Pencere</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="316"/>
         <source>&amp;Minimize to the tray instead of the taskbar</source>
-        <translation>İşlem çubuğu yerine sistem çekmecesine &amp;küçült</translation>
+        <translation>Мінімізувати &amp;у трей</translation>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="317"/>
         <source>Show only a tray icon after minimizing the window</source>
-        <translation>Küçültüldükten sonra sadece çekmece ikonu gösterir</translation>
+        <translation>Показувати лише іконку в треї після згортання вікна</translation>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="320"/>
         <source>M&amp;inimize on close</source>
-        <translation>Kapatma sırasında k&amp;üçült</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="321"/>
         <source>Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Quit in the menu.</source>
-        <translation>Pencere kapatıldığında uygulamadan çıkmak yerine uygulamayı küçültür. Bu seçenek etkinleştirildiğinde, uygulama sadece menüden çıkış seçildiğinde kapanacaktır.</translation>
+        <translation>Згортати замість закриття. Якщо ця опція включена, програма закриється лише після вибору відповідного пункту в меню.</translation>
     </message>
 </context>
 <context>
@@ -1974,274 +1976,301 @@ Adres: %4
     <message>
         <location filename="../altcoinstrings.cpp" line="43"/>
         <source>Altcoin version</source>
-        <translation>Altcoin sürümü</translation>
+        <translation>Версія</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="44"/>
         <source>Usage:</source>
-        <translation>Kullanım:</translation>
+        <translation>Вкористання:</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="45"/>
         <source>Send command to -server or altcoind</source>
-        <translation>-server ya da altcoind&apos;ye komut gönder</translation>
+        <translation>Відправити команду серверу -server чи демону
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="46"/>
         <source>List commands</source>
-        <translation>Komutları listele</translation>
+        <translation>Список команд
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="47"/>
         <source>Get help for a command</source>
-        <translation>Bir komut için yardım al</translation>
+        <translation>Отримати довідку по команді
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="49"/>
         <source>Options:</source>
-        <translation>Seçenekler:</translation>
+        <translation>Параметри:
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="50"/>
         <source>Specify configuration file (default: altcoin.conf)</source>
-        <translation>Yapılandırma dosyası belirt (varsayılan: altcoin.conf)</translation>
+        <translation>Вкажіть файл конфігурації (за промовчуванням: altcoin.conf)
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="51"/>
         <source>Specify pid file (default: altcoind.pid)</source>
-        <translation>Pid dosyası belirt (varsayılan: altcoind.pid)</translation>
+        <translation>Вкажіть pid-файл (за промовчуванням: altcoind.pid)
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="52"/>
         <source>Generate coins</source>
-        <translation>Madenî para (Altcoin) oluştur</translation>
+        <translation>Генерувати монети
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="53"/>
         <source>Don&apos;t generate coins</source>
-        <translation>Altcoin oluşturmasını devre dışı bırak</translation>
+        <translation>Не генерувати монети
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="54"/>
         <source>Specify data directory</source>
-        <translation>Veri dizinini belirt</translation>
+        <translation>Вкажіть робочий каталог
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="55"/>
         <source>Set database cache size in megabytes (default: 25)</source>
-        <translation>Veritabanı önbellek boyutunu megabayt olarak belirt (varsayılan: 25)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="56"/>
         <source>Set database disk log size in megabytes (default: 100)</source>
-        <translation>Diskteki veritabanı kütüğü boyutunu megabayt olarak belirt (varsayılan: 100)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="57"/>
         <source>Specify connection timeout (in milliseconds)</source>
-        <translation>Bağlantı zaman aşım süresini milisaniye olarak belirt</translation>
+        <translation>Вкажіть таймаут з’єднання (в мілісекундах)
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="63"/>
         <source>Listen for connections on &lt;port&gt; (default: 8333 or testnet: 18333)</source>
-        <translation>Bağlantılar için dinlenecek &lt;port&gt; (varsayılan: 8333 ya da testnet: 18333)</translation>
+        <translation>Чекати на з&apos;єднання на порту (по замовченню 8333 або тестова мережа 18333)</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="64"/>
         <source>Maintain at most &lt;n&gt; connections to peers (default: 125)</source>
-        <translation>Eşler ile en çok &lt;n&gt; adet bağlantı kur (varsayılan: 125)</translation>
+        <translation>Підтримувати не більше &lt;n&gt; зв&apos;язків з колегами (за замовчуванням: 125)</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="66"/>
         <source>Connect only to the specified node</source>
-        <translation>Sadece belirtilen düğüme bağlan</translation>
+        <translation>Підключитись лише до вказаного вузла
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="67"/>
         <source>Connect to a node to retrieve peer addresses, and disconnect</source>
-        <translation>Eş adresleri elde etmek için bir düğüme bağlan ve ardından bağlantıyı kes</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="68"/>
         <source>Specify your own public address</source>
-        <translation>Kendi genel adresinizi tanımlayın</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="69"/>
         <source>Only connect to nodes in network &lt;net&gt; (IPv4 or IPv6)</source>
-        <translation>Sadece &lt;net&gt; şebekesindeki düğümlere bağlan (IPv4 ya da IPv6)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="70"/>
         <source>Try to discover public IP address (default: 1)</source>
-        <translation>Genel IP adresini keşfetmeye çalış (varsayılan: 1)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="73"/>
         <source>Bind to given address. Use [host]:port notation for IPv6</source>
-        <translation>Belirtilen adresle ilişiklendir. IPv6 için [makine]:port simgelemini kullanınız</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="75"/>
         <source>Threshold for disconnecting misbehaving peers (default: 100)</source>
-        <translation>Aksaklık gösteren eşlerle bağlantıyı kesme sınırı (varsayılan: 100)</translation>
+        <translation>Поріг відключення неправильно підєднаних пірів (за замовчуванням: 100)</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="76"/>
         <source>Number of seconds to keep misbehaving peers from reconnecting (default: 86400)</source>
-        <translation>Aksaklık gösteren eşlerle yeni bağlantıları engelleme süresi, saniye olarak (varsayılan: 86400)</translation>
+        <translation>Максимальній розмір вхідного буферу на одне з&apos;єднання (за замовчуванням 86400)</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="79"/>
         <source>Maximum per-connection receive buffer, &lt;n&gt;*1000 bytes (default: 10000)</source>
-        <translation>Her bağlantı için alım tamponu, &lt;n&gt;*1000 bayt (varsayılan: 10000)</translation>
+        <translation>Максимальоий буфер , &lt;n&gt; * 1000 байт (за умовчанням: 10000)</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="80"/>
         <source>Maximum per-connection send buffer, &lt;n&gt;*1000 bytes (default: 10000)</source>
-        <translation>Her bağlantı için yollama tamponu, &lt;n&gt;*1000 bayt (varsayılan: 10000)</translation>
+        <translation>Максимальній розмір виіхідного буферу на одне з&apos;єднання (за замовчуванням 10000)</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="83"/>
         <source>Detach block and address databases. Increases shutdown time (default: 0)</source>
-        <translation>Blok ve adres veri tabanlarını ayır. Kapatma süresini arttırır (varsayılan: 0)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="86"/>
         <source>Accept command line and JSON-RPC commands</source>
-        <translation>Konut satırı ve JSON-RPC komutlarını kabul et</translation>
+        <translation>Приймати команди із командного рядка та команди JSON-RPC
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="87"/>
         <source>Run in the background as a daemon and accept commands</source>
-        <translation>Arka planda daemon (servis) olarak çalış ve komutları kabul et</translation>
+        <translation>Запустити в фоновому режимі (як демон) та приймати команди
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="88"/>
         <source>Use the test network</source>
-        <translation>Deneme şebekesini kullan</translation>
+        <translation>Використовувати тестову мережу
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="89"/>
         <source>Output extra debugging information</source>
-        <translation>İlâve hata ayıklama verisi çıkar</translation>
+        <translation>Виводити більше налагоджувальної інформації</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="90"/>
         <source>Prepend debug output with timestamp</source>
-        <translation>Hata ayıklama çıktısına tarih ön ekleri ilâve et</translation>
+        <translation>Доповнювати налагоджувальний вивід відміткою часу</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="91"/>
         <source>Send trace/debug info to console instead of debug.log file</source>
-        <translation>Trace/hata ayıklama verilerini debug.log dosyası yerine konsola gönder</translation>
+        <translation>Відсилаті налагоджувальну інформацію на консоль, а не у файл debug.log</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="92"/>
         <source>Send trace/debug info to debugger</source>
-        <translation>Hata ayıklayıcıya -debugger- trace/hata ayıklama verileri gönder</translation>
+        <translation>Відсилаті налагоджувальну інформацію до налагоджувача</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="93"/>
         <source>Username for JSON-RPC connections</source>
-        <translation>JSON-RPC bağlantıları için kullanıcı ismi</translation>
+        <translation>Ім’я користувача для JSON-RPC-з’єднань
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="94"/>
         <source>Password for JSON-RPC connections</source>
-        <translation>JSON-RPC bağlantıları için parola</translation>
+        <translation>Пароль для JSON-RPC-з’єднань
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="95"/>
         <source>Listen for JSON-RPC connections on &lt;port&gt; (default: 8332)</source>
-        <translation>JSON-RPC bağlantıları için dinlenecek &lt;port&gt; (varsayılan: 8332)</translation>
+        <translation>Прослуховувати &lt;port&gt; для JSON-RPC-з’єднань (за промовчуванням: 8332)
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="96"/>
         <source>Allow JSON-RPC connections from specified IP address</source>
-        <translation>Belirtilen İP adresinden JSON-RPC bağlantılarını kabul et</translation>
+        <translation>Дозволити JSON-RPC-з’єднання з вказаної IP-адреси
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="97"/>
         <source>Send commands to node running on &lt;ip&gt; (default: 127.0.0.1)</source>
-        <translation>Şu &lt;ip&gt; adresinde (varsayılan: 127.0.0.1) çalışan düğüme komut yolla</translation>
+        <translation>Відправляти команди на вузол, запущений на &lt;ip&gt; (за промовчуванням: 127.0.0.1)
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="98"/>
         <source>Execute command when the best block changes (%s in cmd is replaced by block hash)</source>
-        <translation>En iyi blok değiştiğinde komutu çalıştır (cmd için %s blok hash değeri ile değiştirilecektir)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="101"/>
         <source>Upgrade wallet to latest format</source>
-        <translation>Cüzdanı en yeni biçime güncelle</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="102"/>
         <source>Set key pool size to &lt;n&gt; (default: 100)</source>
-        <translation>Anahtar alan boyutunu &lt;n&gt; değerine ayarla (varsayılan: 100)</translation>
+        <translation>Встановити розмір пулу ключів &lt;n&gt; (за промовчуванням: 100)
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="103"/>
         <source>Rescan the block chain for missing wallet transactions</source>
-        <translation>Blok zincirini eksik cüzdan muameleleri için tekrar tara</translation>
+        <translation>Пересканувати ланцюжок блоків, в пошуку втрачених переказів
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="104"/>
         <source>How many blocks to check at startup (default: 2500, 0 = all)</source>
-        <translation>Başlangıçta ne kadar blokun denetleneceği (varsayılan: 2500, 0 = tümü)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="105"/>
         <source>How thorough the block verification is (0-6, default: 1)</source>
-        <translation>Blok kontrolünün derinliği (0 ilâ 6, varsayılan: 1)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="106"/>
         <source>Imports blocks from external blk000?.dat file</source>
-        <translation>Harici blk000?.dat dosyasından blokları içe aktarır</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="108"/>
         <source>
 SSL options: (see the Altcoin Wiki for SSL setup instructions)</source>
         <translation>
-SSL seçenekleri: (SSL kurulum bilgisi için Altcoin vikisine bakınız)</translation>
+Параметри SSL: (див. Altcoin Wiki)
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="111"/>
         <source>Use OpenSSL (https) for JSON-RPC connections</source>
-        <translation>JSON-RPC bağlantıları için OpenSSL (https) kullan</translation>
+        <translation>Використовувати OpenSSL (https) для JSON-RPC-з’єднань
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="112"/>
         <source>Server certificate file (default: server.cert)</source>
-        <translation>Sunucu sertifika dosyası (varsayılan: server.cert)</translation>
+        <translation>Сертифікату сервера (за промовчуванням: server.cert)
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="113"/>
         <source>Server private key (default: server.pem)</source>
-        <translation>Sunucu özel anahtarı (varsayılan: server.pem)</translation>
+        <translation>Закритий ключ сервера (за промовчуванням: server.pem)
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="114"/>
         <source>Acceptable ciphers (default: TLSv1+HIGH:!SSLv2:!aNULL:!eNULL:!AH:!3DES:@STRENGTH)</source>
-        <translation>Kabul edilebilir şifreler (varsayılan: TLSv1+HIGH:!SSLv2:!aNULL:!eNULL:!AH:!3DES:@STRENGTH)</translation>
+        <translation>Допустимі шифри (за промовчуванням: TLSv1+HIGH:!SSLv2:!aNULL:!eNULL:!AH:!3DES:@STRENGTH)
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="145"/>
         <source>Warning: Disk space is low</source>
-        <translation>Uyarı: Disk alanı düşük</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="107"/>
         <source>This help message</source>
-        <translation>Bu yardım mesajı</translation>
+        <translation>Дана довідка
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="121"/>
         <source>Cannot obtain a lock on data directory %s.  Altcoin is probably already running.</source>
-        <translation>%s veri dizininde kilit elde edilemedi.  Altcoin muhtemelen hâlihazırda çalışmaktadır.</translation>
+        <translation>Неможливо встановити блокування на робочий каталог %s.  Можливо, гаманець вже запущено.</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="48"/>
@@ -2251,227 +2280,228 @@ SSL seçenekleri: (SSL kurulum bilgisi için Altcoin vikisine bakınız)</transl
     <message>
         <location filename="../altcoinstrings.cpp" line="30"/>
         <source>Unable to bind to %s on this computer (bind returned error %d, %s)</source>
-        <translation>Bu bilgisayarda %s unsuruna bağlanılamadı. (bind şu hatayı iletti: %d, %s)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="58"/>
         <source>Connect through socks proxy</source>
-        <translation>Socks vekil sunucusu vasıtasıyla bağlan</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="59"/>
         <source>Select the version of socks proxy to use (4 or 5, 5 is default)</source>
-        <translation>Kullanılacak socks vekil sunucu sürümünü seç (4 veya 5, ki 5 varsayılan değerdir)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="60"/>
         <source>Do not use proxy for connections to network &lt;net&gt; (IPv4 or IPv6)</source>
-        <translation>&lt;net&gt; şebekesi ile bağlantılarda vekil sunucu kullanma (IPv4 ya da IPv6)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="61"/>
         <source>Allow DNS lookups for -addnode, -seednode and -connect</source>
-        <translation>-addnode, -seednode ve -connect için DNS aramalarına izin ver</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="62"/>
         <source>Pass DNS requests to (SOCKS5) proxy</source>
-        <translation>DNS isteklerini (SOCKS5) vekil sunucusuna devret</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="142"/>
         <source>Loading addresses...</source>
-        <translation>Adresler yükleniyor...</translation>
+        <translation>Завантаження адрес...</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="132"/>
         <source>Error loading blkindex.dat</source>
-        <translation>blkindex.dat dosyasının yüklenmesinde hata oluştu</translation>
+        <translation>Помилка при завантаженні blkindex.dat </translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="134"/>
         <source>Error loading wallet.dat: Wallet corrupted</source>
-        <translation>wallet.dat dosyasının yüklenmesinde hata oluştu: bozuk cüzdan</translation>
+        <translation>Помилка при завантаженні wallet.dat: Гаманець пошкоджено      </translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="135"/>
         <source>Error loading wallet.dat: Wallet requires newer version of Altcoin</source>
-        <translation>wallet.dat dosyasının yüklenmesinde hata oluştu: cüzdanın daha yeni bir Altcoin sürümüne ihtiyacı var</translation>
+        <translation>Помилка при завантаженні wallet.dat: Гаманець потребує новішої версії Біткоін-клієнта</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="136"/>
         <source>Wallet needed to be rewritten: restart Altcoin to complete</source>
-        <translation>Cüzdanın tekrar yazılması gerekiyordu: işlemi tamamlamak için Altcoin&apos;i yeniden başlatınız</translation>
+        <translation>Потрібно перезаписати гаманець: перезапустіть Біткоін-клієнт для завершення</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="137"/>
         <source>Error loading wallet.dat</source>
-        <translation>wallet.dat dosyasının yüklenmesinde hata oluştu</translation>
+        <translation>Помилка при завантаженні wallet.dat</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="124"/>
         <source>Invalid -proxy address: &apos;%s&apos;</source>
-        <translation>Geçersiz -proxy adresi: &apos;%s&apos;</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="125"/>
         <source>Unknown network specified in -noproxy: &apos;%s&apos;</source>
-        <translation>-noproxy&apos;de bilinmeyen bir şebeke belirtildi: &apos;%s&apos;</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="127"/>
         <source>Unknown network specified in -onlynet: &apos;%s&apos;</source>
-        <translation>-onlynet için bilinmeyen bir şebeke belirtildi: &apos;%s&apos;</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="126"/>
         <source>Unknown -socks proxy version requested: %i</source>
-        <translation>Bilinmeyen bir -socks vekil sürümü talep edildi: %i</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="128"/>
         <source>Cannot resolve -bind address: &apos;%s&apos;</source>
-        <translation>-bind adresi çözümlenemedi: &apos;%s&apos;</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="129"/>
         <source>Not listening on any port</source>
-        <translation>Hiçbir port dinlenmiyor</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="130"/>
         <source>Cannot resolve -externalip address: &apos;%s&apos;</source>
-        <translation>-externalip adresi çözümlenemedi: &apos;%s&apos;</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="117"/>
         <source>Invalid amount for -paytxfee=&lt;amount&gt;: &apos;%s&apos;</source>
-        <translation>-paytxfee=&lt;miktar&gt; için geçersiz miktar: &apos;%s&apos;</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="143"/>
         <source>Error: could not start node</source>
-        <translation>Hata: düğüm başlatılamadı</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="31"/>
         <source>Error: Wallet locked, unable to create transaction  </source>
-        <translation>Hata: Cüzdan kilitli, muamele oluşturulamadı  </translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="32"/>
         <source>Error: This transaction requires a transaction fee of at least %s because of its amount, complexity, or use of recently received funds  </source>
-        <translation>Hata: Muamelenin miktarı, karmaşıklığı ya da yakın geçmişte alınan fonların kullanılması nedeniyle bu muamele en az %s tutarında ücret gerektirmektedir  </translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="35"/>
         <source>Error: Transaction creation failed  </source>
-        <translation>Hata: Muamele oluşturması başarısız oldu  </translation>
+        <translation>Помилка: не вдалося створити переказ  </translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="36"/>
         <source>Sending...</source>
-        <translation>Gönderiliyor...</translation>
+        <translation>Відправлення...</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="37"/>
         <source>Error: The transaction was rejected.  This might happen if some of the coins in your wallet were already spent, such as if you used a copy of wallet.dat and coins were spent in the copy but not marked as spent here.</source>
-        <translation>Hata: Muamele reddedildi.  Cüzdanınızdaki madenî paraların bazıları zaten harcanmış olduğunda bu meydana gelebilir. Örneğin wallet.dat dosyasının bir kopyasını kullandıysanız ve kopyada para harcandığında ancak burada harcandığı işaretlenmediğinde.</translation>
+        <translation>Помилка: переказ було відхилено.  Це може статись, якщо декілька монет з вашого гаманця вже використані, наприклад, якщо ви використовуєте одну копію гаманця (wallet.dat), а монети були використані з іншої копії, але не позначені як використані в цій.</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="41"/>
         <source>Invalid amount</source>
-        <translation>Geçersiz miktar</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="42"/>
         <source>Insufficient funds</source>
-        <translation>Yetersiz bakiye</translation>
+        <translation>Недостатньо коштів</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="131"/>
         <source>Loading block index...</source>
-        <translation>Blok indeksi yükleniyor...</translation>
+        <translation>Завантаження індексу блоків...</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="65"/>
         <source>Add a node to connect to and attempt to keep the connection open</source>
-        <translation>Bağlanılacak düğüm ekle ve bağlantıyı zinde tutmaya çalış</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="28"/>
         <source>Unable to bind to %s on this computer. Altcoin is probably already running.</source>
-        <translation>Bu bilgisayarda %s unsuruna bağlanılamadı. Altcoin muhtemelen hâlihazırda çalışmaktadır.</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="71"/>
         <source>Find peers using internet relay chat (default: 0)</source>
-        <translation>Eşleri Internet Relay Chat vasıtasıyla bul (varsayılan: 0)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="72"/>
         <source>Accept connections from outside (default: 1)</source>
-        <translation>Dışarıdan gelen bağlantıları kabul et (varsayılan: 1)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="74"/>
         <source>Find peers using DNS lookup (default: 1)</source>
-        <translation>Eşleri DNS araması vasıtasıyla bul (varsayılan: 1)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="81"/>
         <source>Use Universal Plug and Play to map the listening port (default: 1)</source>
-        <translation>Dinlenecek portu haritalamak için Universal Plug and Play kullan (varsayılan: 1)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="82"/>
         <source>Use Universal Plug and Play to map the listening port (default: 0)</source>
-        <translation>Dinlenecek portu haritalamak için Universal Plug and Play kullan (varsayılan: 0)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="85"/>
         <source>Fee per KB to add to transactions you send</source>
-        <translation>Yolladığınız muameleler için eklenecek KB başı ücret</translation>
+        <translation>Комісія за Кб
+</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="118"/>
         <source>Warning: -paytxfee is set very high. This is the transaction fee you will pay if you send a transaction.</source>
-        <translation>Uyarı: -paytxfee çok yüksek bir değere ayarlanmış. Bu, muamele gönderirseniz ödeyeceğiniz muamele ücretidir.</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="133"/>
         <source>Loading wallet...</source>
-        <translation>Cüzdan yükleniyor...</translation>
+        <translation>Завантаження гаманця...</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="138"/>
         <source>Cannot downgrade wallet</source>
-        <translation>Cüzdan eski biçime geri alınamaz</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="139"/>
         <source>Cannot initialize keypool</source>
-        <translation>Keypool başlatılamadı</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="140"/>
         <source>Cannot write default address</source>
-        <translation>Varsayılan adres yazılamadı</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="141"/>
         <source>Rescanning...</source>
-        <translation>Yeniden tarama...</translation>
+        <translation>Сканування...</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="144"/>
         <source>Done loading</source>
-        <translation>Yükleme tamamlandı</translation>
+        <translation>Завантаження завершене</translation>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="8"/>
         <source>To use the %s option</source>
-        <translation>%s seçeneğini kullanmak için</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="9"/>
@@ -2483,38 +2513,29 @@ rpcpassword=%s
 (you do not need to remember this password)
 If the file does not exist, create it with owner-readable-only file permissions.
 </source>
-        <translation>%s, şu yapılandırma dosyasında rpc parolası belirtmeniz gerekir:
- %s
-Aşağıdaki rastgele oluşturulan parolayı kullanmanız tavsiye edilir:
-rpcuser=altcoinrpc
-rpcpassword=%s
-(bu parolayı hatırlamanız gerekli değildir)
-Dosya mevcut değilse, sadece sahibi için okumayla sınırlı izin ile oluşturunuz.
-</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="18"/>
         <source>Error</source>
-        <translation>Hata</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="19"/>
         <source>An error occured while setting up the RPC port %i for listening: %s</source>
-        <translation>%i RPC portunun dinleme için kurulması sırasında bir hata meydana geldi: %s</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="20"/>
         <source>You must set rpcpassword=&lt;password&gt; in the configuration file:
 %s
 If the file does not exist, create it with owner-readable-only file permissions.</source>
-        <translation>rpcpassword=&lt;parola&gt; şu yapılandırma dosyasında belirtilmelidir:
-%s
-Dosya mevcut değilse, sadece sahibi için okumayla sınırlı izin ile oluşturunuz.</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../altcoinstrings.cpp" line="25"/>
         <source>Warning: Please check that your computer&apos;s date and time are correct.  If your clock is wrong Altcoin will not work properly.</source>
-        <translation>Uyarı: Lütfen bilgisayarınızın tarih ve saatinin doğru olup olmadığını kontrol ediniz.  Saatiniz doğru değilse Altcoin gerektiği gibi çalışamaz.</translation>
+        <translation>Увага: будь ласка, перевірте дату і час на свому комп’ютері.  Якщо ваш годинник йде неправильно, Altcoin може працювати некоректно.</translation>
     </message>
 </context>
 </TS>
