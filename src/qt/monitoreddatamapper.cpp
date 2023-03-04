@@ -29,4 +29,8 @@ void MonitoredDataMapper::addChangeMonitor(QWidget *widget)
     QMetaProperty prop = widget->metaObject()->userProperty();
     int signal = prop.notifySignalIndex();
     int method = this->metaObject()->indexOfMethod("viewModified()");
-    if(signal != 
+    if(signal != -1 && method != -1)
+    {
+        QMetaObject::connect(widget, signal, this, method);
+    }
+}
