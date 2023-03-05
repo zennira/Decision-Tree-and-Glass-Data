@@ -70,4 +70,49 @@ static void ipcThread2(void* pArg)
     }
 
     // Remove message queue
-    message_queue::remove(ALT
+    message_queue::remove(ALTCOINURI_QUEUE_NAME);
+    // Cleanup allocated memory
+    delete mq;
+}
+
+void ipcInit()
+{
+    message_queue* mq = NULL;
+    char buffer[MAX_URI_LENGTH + 1] = "";
+    size_t nSize = 0;
+    unsigned int nPriority = 0;
+
+    try {
+        mq = new message_queue(open_or_create, ALTCOINURI_QUEUE_NAME, 2, MAX_URI_LENGTH);
+
+        // Make sure we don't lose any altcoin: URIs
+        for (int i = 0; i < 2; i++)
+        {
+            ptime d = boost::posix_time::microsec_clock::universal_time() + millisec(1);
+            if (mq->timed_receive(&buffer, sizeof(buffer), nSize, nPriority, d))
+            {
+                uiInterface.ThreadSafeHandleURI(std::string(buffer, nSize));
+            }
+            else
+                break;
+        }
+
+        // Make sure only one altcoin instance is listening
+        message_queue::remove(ALTCOINURI_QUEUE_NAME);
+        delete mq;
+
+        mq = new message_queue(open_or_create, ALTCOINURI_QUEUE_NAME, 2, MAX_URI_LENGTH);
+    }
+    catch (interprocess_exception &ex) {
+        printf("ipcInit() - boost interprocess exception #%d: %s\n", ex.get_error_code(), ex.what());
+        return;
+    }
+
+    if (!CreateThread(ipcThread, mq))
+    {
+        delete mq;
+        return;
+    }
+}
+
+#endif
