@@ -115,4 +115,194 @@ public:
             }
 
             OutputDebugStringF("   inWallet=%i inModel=%i Index=%i-%i showTransaction=%i derivedStatus=%i\n",
-              
+                     inWallet, inModel, lowerIndex, upperIndex, showTransaction, status);
+
+            switch(status)
+            {
+            case CT_NEW:
+                if(inModel)
+                {
+                    OutputDebugStringF("Warning: updateWallet: Got CT_NEW, but transaction is already in model\n");
+                    break;
+                }
+                if(!inWallet)
+                {
+                    OutputDebugStringF("Warning: updateWallet: Got CT_NEW, but transaction is not in wallet\n");
+                    break;
+                }
+                if(showTransaction)
+                {
+                    // Added -- insert at the right position
+                    QList<TransactionRecord> toInsert =
+                            TransactionRecord::decomposeTransaction(wallet, mi->second);
+                    if(!toInsert.isEmpty()) /* only if something to insert */
+                    {
+                        parent->beginInsertRows(QModelIndex(), lowerIndex, lowerIndex+toInsert.size()-1);
+                        int insert_idx = lowerIndex;
+                        foreach(const TransactionRecord &rec, toInsert)
+                        {
+                            cachedWallet.insert(insert_idx, rec);
+                            insert_idx += 1;
+                        }
+                        parent->endInsertRows();
+                    }
+                }
+                break;
+            case CT_DELETED:
+                if(!inModel)
+                {
+                    OutputDebugStringF("Warning: updateWallet: Got CT_DELETED, but transaction is not in model\n");
+                    break;
+                }
+                // Removed -- remove entire transaction from table
+                parent->beginRemoveRows(QModelIndex(), lowerIndex, upperIndex-1);
+                cachedWallet.erase(lower, upper);
+                parent->endRemoveRows();
+                break;
+            case CT_UPDATED:
+                // Miscellaneous updates -- nothing to do, status update will take care of this, and is only computed for
+                // visible transactions.
+                break;
+            }
+        }
+    }
+
+    int size()
+    {
+        return cachedWallet.size();
+    }
+
+    TransactionRecord *index(int idx)
+    {
+        if(idx >= 0 && idx < cachedWallet.size())
+        {
+            TransactionRecord *rec = &cachedWallet[idx];
+
+            // If a status update is needed (blocks came in since last check),
+            //  update the status of this transaction from the wallet. Otherwise,
+            // simply re-use the cached status.
+            if(rec->statusUpdateNeeded())
+            {
+                {
+                    LOCK(wallet->cs_wallet);
+                    std::map<uint256, CWalletTx>::iterator mi = wallet->mapWallet.find(rec->hash);
+
+                    if(mi != wallet->mapWallet.end())
+                    {
+                        rec->updateStatus(mi->second);
+                    }
+                }
+            }
+            return rec;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+    QString describe(TransactionRecord *rec)
+    {
+        {
+            LOCK(wallet->cs_wallet);
+            std::map<uint256, CWalletTx>::iterator mi = wallet->mapWallet.find(rec->hash);
+            if(mi != wallet->mapWallet.end())
+            {
+                return TransactionDesc::toHTML(wallet, mi->second);
+            }
+        }
+        return QString("");
+    }
+
+};
+
+TransactionTableModel::TransactionTableModel(CWallet* wallet, WalletModel *parent):
+        QAbstractTableModel(parent),
+        wallet(wallet),
+        walletModel(parent),
+        priv(new TransactionTablePriv(wallet, this)),
+        cachedNumBlocks(0)
+{
+    columns << QString() << tr("Date") << tr("Type") << tr("Address") << tr("Amount");
+
+    priv->refreshWallet();
+
+    QTimer *timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(updateConfirmations()));
+    timer->start(MODEL_UPDATE_DELAY);
+
+    connect(walletModel->getOptionsModel(), SIGNAL(displayUnitChanged(int)), this, SLOT(updateDisplayUnit()));
+}
+
+TransactionTableModel::~TransactionTableModel()
+{
+    delete priv;
+}
+
+void TransactionTableModel::updateTransaction(const QString &hash, int status)
+{
+    uint256 updated;
+    updated.SetHex(hash.toStdString());
+
+    priv->updateWallet(updated, status);
+}
+
+void TransactionTableModel::updateConfirmations()
+{
+    if(nBestHeight != cachedNumBlocks)
+    {
+        cachedNumBlocks = nBestHeight;
+        // Blocks came in since last poll.
+        // Invalidate status (number of confirmations) and (possibly) description
+        //  for all rows. Qt is smart enough to only actually request the data for the
+        //  visible rows.
+        emit dataChanged(index(0, Status), index(priv->size()-1, Status));
+        emit dataChanged(index(0, ToAddress), index(priv->size()-1, ToAddress));
+    }
+}
+
+int TransactionTableModel::rowCount(const QModelIndex &parent) const
+{
+    Q_UNUSED(parent);
+    return priv->size();
+}
+
+int TransactionTableModel::columnCount(const QModelIndex &parent) const
+{
+    Q_UNUSED(parent);
+    return columns.length();
+}
+
+QString TransactionTableModel::formatTxStatus(const TransactionRecord *wtx) const
+{
+    QString status;
+
+    switch(wtx->status.status)
+    {
+    case TransactionStatus::OpenUntilBlock:
+        status = tr("Open for %n block(s)","",wtx->status.open_for);
+        break;
+    case TransactionStatus::OpenUntilDate:
+        status = tr("Open until %1").arg(GUIUtil::dateTimeStr(wtx->status.open_for));
+        break;
+    case TransactionStatus::Offline:
+        status = tr("Offline (%1 confirmations)").arg(wtx->status.depth);
+        break;
+    case TransactionStatus::Unconfirmed:
+        status = tr("Unconfirmed (%1 of %2 confirmations)").arg(wtx->status.depth).arg(TransactionRecord::NumConfirmations);
+        break;
+    case TransactionStatus::HaveConfirmations:
+        status = tr("Confirmed (%1 confirmations)").arg(wtx->status.depth);
+        break;
+    }
+    if(wtx->type == TransactionRecord::Generated)
+    {
+        switch(wtx->status.maturity)
+        {
+        case TransactionStatus::Immature:
+            status += "\n" + tr("Mined balance will be available when it matures in %n more block(s)", "", wtx->status.matures_in);
+            break;
+        case TransactionStatus::Mature:
+            break;
+        case TransactionStatus::MaturesWarning:
+   
