@@ -74,4 +74,12 @@ private:
     QVariant txAddressDecoration(const TransactionRecord *wtx) const;
 
 public slots:
-    void updateTransaction(const QString 
+    void updateTransaction(const QString &hash, int status);
+    void updateConfirmations();
+    void updateDisplayUnit();
+
+    friend class TransactionTablePriv;
+};
+
+#endif
+
