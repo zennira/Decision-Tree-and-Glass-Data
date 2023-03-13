@@ -560,4 +560,211 @@ void Unserialize(Stream& is, boost::tuple<T0, T1, T2>& item, int nType, int nVer
 template<typename T0, typename T1, typename T2, typename T3>
 unsigned int GetSerializeSize(const boost::tuple<T0, T1, T2, T3>& item, int nType, int nVersion)
 {
-    uns
+    unsigned int nSize = 0;
+    nSize += GetSerializeSize(boost::get<0>(item), nType, nVersion);
+    nSize += GetSerializeSize(boost::get<1>(item), nType, nVersion);
+    nSize += GetSerializeSize(boost::get<2>(item), nType, nVersion);
+    nSize += GetSerializeSize(boost::get<3>(item), nType, nVersion);
+    return nSize;
+}
+
+template<typename Stream, typename T0, typename T1, typename T2, typename T3>
+void Serialize(Stream& os, const boost::tuple<T0, T1, T2, T3>& item, int nType, int nVersion)
+{
+    Serialize(os, boost::get<0>(item), nType, nVersion);
+    Serialize(os, boost::get<1>(item), nType, nVersion);
+    Serialize(os, boost::get<2>(item), nType, nVersion);
+    Serialize(os, boost::get<3>(item), nType, nVersion);
+}
+
+template<typename Stream, typename T0, typename T1, typename T2, typename T3>
+void Unserialize(Stream& is, boost::tuple<T0, T1, T2, T3>& item, int nType, int nVersion)
+{
+    Unserialize(is, boost::get<0>(item), nType, nVersion);
+    Unserialize(is, boost::get<1>(item), nType, nVersion);
+    Unserialize(is, boost::get<2>(item), nType, nVersion);
+    Unserialize(is, boost::get<3>(item), nType, nVersion);
+}
+
+
+
+//
+// map
+//
+template<typename K, typename T, typename Pred, typename A>
+unsigned int GetSerializeSize(const std::map<K, T, Pred, A>& m, int nType, int nVersion)
+{
+    unsigned int nSize = GetSizeOfCompactSize(m.size());
+    for (typename std::map<K, T, Pred, A>::const_iterator mi = m.begin(); mi != m.end(); ++mi)
+        nSize += GetSerializeSize((*mi), nType, nVersion);
+    return nSize;
+}
+
+template<typename Stream, typename K, typename T, typename Pred, typename A>
+void Serialize(Stream& os, const std::map<K, T, Pred, A>& m, int nType, int nVersion)
+{
+    WriteCompactSize(os, m.size());
+    for (typename std::map<K, T, Pred, A>::const_iterator mi = m.begin(); mi != m.end(); ++mi)
+        Serialize(os, (*mi), nType, nVersion);
+}
+
+template<typename Stream, typename K, typename T, typename Pred, typename A>
+void Unserialize(Stream& is, std::map<K, T, Pred, A>& m, int nType, int nVersion)
+{
+    m.clear();
+    unsigned int nSize = ReadCompactSize(is);
+    typename std::map<K, T, Pred, A>::iterator mi = m.begin();
+    for (unsigned int i = 0; i < nSize; i++)
+    {
+        std::pair<K, T> item;
+        Unserialize(is, item, nType, nVersion);
+        mi = m.insert(mi, item);
+    }
+}
+
+
+
+//
+// set
+//
+template<typename K, typename Pred, typename A>
+unsigned int GetSerializeSize(const std::set<K, Pred, A>& m, int nType, int nVersion)
+{
+    unsigned int nSize = GetSizeOfCompactSize(m.size());
+    for (typename std::set<K, Pred, A>::const_iterator it = m.begin(); it != m.end(); ++it)
+        nSize += GetSerializeSize((*it), nType, nVersion);
+    return nSize;
+}
+
+template<typename Stream, typename K, typename Pred, typename A>
+void Serialize(Stream& os, const std::set<K, Pred, A>& m, int nType, int nVersion)
+{
+    WriteCompactSize(os, m.size());
+    for (typename std::set<K, Pred, A>::const_iterator it = m.begin(); it != m.end(); ++it)
+        Serialize(os, (*it), nType, nVersion);
+}
+
+template<typename Stream, typename K, typename Pred, typename A>
+void Unserialize(Stream& is, std::set<K, Pred, A>& m, int nType, int nVersion)
+{
+    m.clear();
+    unsigned int nSize = ReadCompactSize(is);
+    typename std::set<K, Pred, A>::iterator it = m.begin();
+    for (unsigned int i = 0; i < nSize; i++)
+    {
+        K key;
+        Unserialize(is, key, nType, nVersion);
+        it = m.insert(it, key);
+    }
+}
+
+
+
+//
+// Support for IMPLEMENT_SERIALIZE and READWRITE macro
+//
+class CSerActionGetSerializeSize { };
+class CSerActionSerialize { };
+class CSerActionUnserialize { };
+
+template<typename Stream, typename T>
+inline unsigned int SerReadWrite(Stream& s, const T& obj, int nType, int nVersion, CSerActionGetSerializeSize ser_action)
+{
+    return ::GetSerializeSize(obj, nType, nVersion);
+}
+
+template<typename Stream, typename T>
+inline unsigned int SerReadWrite(Stream& s, const T& obj, int nType, int nVersion, CSerActionSerialize ser_action)
+{
+    ::Serialize(s, obj, nType, nVersion);
+    return 0;
+}
+
+template<typename Stream, typename T>
+inline unsigned int SerReadWrite(Stream& s, T& obj, int nType, int nVersion, CSerActionUnserialize ser_action)
+{
+    ::Unserialize(s, obj, nType, nVersion);
+    return 0;
+}
+
+struct ser_streamplaceholder
+{
+    int nType;
+    int nVersion;
+};
+
+
+
+
+
+
+
+
+
+
+
+
+/** Double ended buffer combining vector and stream-like interfaces.
+ *
+ * >> and << read and write unformatted data using the above serialization templates.
+ * Fills with data in linear time; some stringstream implementations take N^2 time.
+ */
+class CDataStream
+{
+protected:
+    typedef std::vector<char, zero_after_free_allocator<char> > vector_type;
+    vector_type vch;
+    unsigned int nReadPos;
+    short state;
+    short exceptmask;
+public:
+    int nType;
+    int nVersion;
+
+    typedef vector_type::allocator_type   allocator_type;
+    typedef vector_type::size_type        size_type;
+    typedef vector_type::difference_type  difference_type;
+    typedef vector_type::reference        reference;
+    typedef vector_type::const_reference  const_reference;
+    typedef vector_type::value_type       value_type;
+    typedef vector_type::iterator         iterator;
+    typedef vector_type::const_iterator   const_iterator;
+    typedef vector_type::reverse_iterator reverse_iterator;
+
+    explicit CDataStream(int nTypeIn, int nVersionIn)
+    {
+        Init(nTypeIn, nVersionIn);
+    }
+
+    CDataStream(const_iterator pbegin, const_iterator pend, int nTypeIn, int nVersionIn) : vch(pbegin, pend)
+    {
+        Init(nTypeIn, nVersionIn);
+    }
+
+#if !defined(_MSC_VER) || _MSC_VER >= 1300
+    CDataStream(const char* pbegin, const char* pend, int nTypeIn, int nVersionIn) : vch(pbegin, pend)
+    {
+        Init(nTypeIn, nVersionIn);
+    }
+#endif
+
+    CDataStream(const vector_type& vchIn, int nTypeIn, int nVersionIn) : vch(vchIn.begin(), vchIn.end())
+    {
+        Init(nTypeIn, nVersionIn);
+    }
+
+    CDataStream(const std::vector<char>& vchIn, int nTypeIn, int nVersionIn) : vch(vchIn.begin(), vchIn.end())
+    {
+        Init(nTypeIn, nVersionIn);
+    }
+
+    CDataStream(const std::vector<unsigned char>& vchIn, int nTypeIn, int nVersionIn) : vch((char*)&vchIn.begin()[0], (char*)&vchIn.end()[0])
+    {
+        Init(nTypeIn, nVersionIn);
+    }
+
+    void Init(int nTypeIn, int nVersionIn)
+    {
+        nReadPos = 0;
+        nType = nTypeIn;
+        nVe
