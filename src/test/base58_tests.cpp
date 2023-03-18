@@ -82,3 +82,6 @@ BOOST_AUTO_TEST_CASE(base58_DecodeBase58)
     }
     BOOST_CHECK(!DecodeBase58("invalid", result));
 }
+
+BOOST_AUTO_TEST_SUITE_END()
+
