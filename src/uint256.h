@@ -307,4 +307,179 @@ public:
             psz += 2;
 
         // hex string to uint
-        static unsi
+        static unsigned char phexdigit[256] = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,1,2,3,4,5,6,7,8,9,0,0,0,0,0,0, 0,0xa,0xb,0xc,0xd,0xe,0xf,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0xa,0xb,0xc,0xd,0xe,0xf,0,0,0,0,0,0,0,0,0 };
+        const char* pbegin = psz;
+        while (phexdigit[(unsigned char)*psz] || *psz == '0')
+            psz++;
+        psz--;
+        unsigned char* p1 = (unsigned char*)pn;
+        unsigned char* pend = p1 + WIDTH * 4;
+        while (psz >= pbegin && p1 < pend)
+        {
+            *p1 = phexdigit[(unsigned char)*psz--];
+            if (psz >= pbegin)
+            {
+                *p1 |= (phexdigit[(unsigned char)*psz--] << 4);
+                p1++;
+            }
+        }
+    }
+
+    void SetHex(const std::string& str)
+    {
+        SetHex(str.c_str());
+    }
+
+    std::string ToString() const
+    {
+        return (GetHex());
+    }
+
+    unsigned char* begin()
+    {
+        return (unsigned char*)&pn[0];
+    }
+
+    unsigned char* end()
+    {
+        return (unsigned char*)&pn[WIDTH];
+    }
+
+    unsigned int size()
+    {
+        return sizeof(pn);
+    }
+
+    uint64 Get64(int n=0) const
+    {
+        return pn[2*n] | (uint64)pn[2*n+1] << 32;
+    }
+
+//    unsigned int GetSerializeSize(int nType=0, int nVersion=PROTOCOL_VERSION) const
+    unsigned int GetSerializeSize(int nType, int nVersion) const
+    {
+        return sizeof(pn);
+    }
+
+    template<typename Stream>
+//    void Serialize(Stream& s, int nType=0, int nVersion=PROTOCOL_VERSION) const
+    void Serialize(Stream& s, int nType, int nVersion) const
+    {
+        s.write((char*)pn, sizeof(pn));
+    }
+
+    template<typename Stream>
+//    void Unserialize(Stream& s, int nType=0, int nVersion=PROTOCOL_VERSION)
+    void Unserialize(Stream& s, int nType, int nVersion)
+    {
+        s.read((char*)pn, sizeof(pn));
+    }
+
+
+    friend class uint160;
+    friend class uint256;
+    friend inline int Testuint256AdHoc(std::vector<std::string> vArg);
+};
+
+typedef base_uint<160> base_uint160;
+typedef base_uint<256> base_uint256;
+
+
+
+//
+// uint160 and uint256 could be implemented as templates, but to keep
+// compile errors and debugging cleaner, they're copy and pasted.
+//
+
+
+
+//////////////////////////////////////////////////////////////////////////////
+//
+// uint160
+//
+
+/** 160-bit unsigned integer */
+class uint160 : public base_uint160
+{
+public:
+    typedef base_uint160 basetype;
+
+    uint160()
+    {
+        for (int i = 0; i < WIDTH; i++)
+            pn[i] = 0;
+    }
+
+    uint160(const basetype& b)
+    {
+        for (int i = 0; i < WIDTH; i++)
+            pn[i] = b.pn[i];
+    }
+
+    uint160& operator=(const basetype& b)
+    {
+        for (int i = 0; i < WIDTH; i++)
+            pn[i] = b.pn[i];
+        return *this;
+    }
+
+    uint160(uint64 b)
+    {
+        pn[0] = (unsigned int)b;
+        pn[1] = (unsigned int)(b >> 32);
+        for (int i = 2; i < WIDTH; i++)
+            pn[i] = 0;
+    }
+
+    uint160& operator=(uint64 b)
+    {
+        pn[0] = (unsigned int)b;
+        pn[1] = (unsigned int)(b >> 32);
+        for (int i = 2; i < WIDTH; i++)
+            pn[i] = 0;
+        return *this;
+    }
+
+    explicit uint160(const std::string& str)
+    {
+        SetHex(str);
+    }
+
+    explicit uint160(const std::vector<unsigned char>& vch)
+    {
+        if (vch.size() == sizeof(pn))
+            memcpy(pn, &vch[0], sizeof(pn));
+        else
+            *this = 0;
+    }
+};
+
+inline bool operator==(const uint160& a, uint64 b)                           { return (base_uint160)a == b; }
+inline bool operator!=(const uint160& a, uint64 b)                           { return (base_uint160)a != b; }
+inline const uint160 operator<<(const base_uint160& a, unsigned int shift)   { return uint160(a) <<= shift; }
+inline const uint160 operator>>(const base_uint160& a, unsigned int shift)   { return uint160(a) >>= shift; }
+inline const uint160 operator<<(const uint160& a, unsigned int shift)        { return uint160(a) <<= shift; }
+inline const uint160 operator>>(const uint160& a, unsigned int shift)        { return uint160(a) >>= shift; }
+
+inline const uint160 operator^(const base_uint160& a, const base_uint160& b) { return uint160(a) ^= b; }
+inline const uint160 operator&(const base_uint160& a, const base_uint160& b) { return uint160(a) &= b; }
+inline const uint160 operator|(const base_uint160& a, const base_uint160& b) { return uint160(a) |= b; }
+inline const uint160 operator+(const base_uint160& a, const base_uint160& b) { return uint160(a) += b; }
+inline const uint160 operator-(const base_uint160& a, const base_uint160& b) { return uint160(a) -= b; }
+
+inline bool operator<(const base_uint160& a, const uint160& b)          { return (base_uint160)a <  (base_uint160)b; }
+inline bool operator<=(const base_uint160& a, const uint160& b)         { return (base_uint160)a <= (base_uint160)b; }
+inline bool operator>(const base_uint160& a, const uint160& b)          { return (base_uint160)a >  (base_uint160)b; }
+inline bool operator>=(const base_uint160& a, const uint160& b)         { return (base_uint160)a >= (base_uint160)b; }
+inline bool operator==(const base_uint160& a, const uint160& b)         { return (base_uint160)a == (base_uint160)b; }
+inline bool operator!=(const base_uint160& a, const uint160& b)         { return (base_uint160)a != (base_uint160)b; }
+inline const uint160 operator^(const base_uint160& a, const uint160& b) { return (base_uint160)a ^  (base_uint160)b; }
+inline const uint160 operator&(const base_uint160& a, const uint160& b) { return (base_uint160)a &  (base_uint160)b; }
+inline const uint160 operator|(const base_uint160& a, const uint160& b) { return (base_uint160)a |  (base_uint160)b; }
+inline const uint160 operator+(const base_uint160& a, const uint160& b) { return (base_uint160)a +  (base_uint160)b; }
+inline const uint160 operator-(const base_uint160& a, const uint160& b) { return (base_uint160)a -  (base_uint160)b; }
+
+inline bool operator<(const uint160& a, const base_uint160& b)          { return (base_uint160)a <  (base_uint160)b; }
+inline bool operator<=(const uint160& a, const base_uint160& b)         { return (base_uint160)a <= (base_uint160)b; }
+inline bool operator>(const uint160& a, const base_uint160& b)          { return (base_uint160)a >  (base_uint160)b; }
+inline bool operator>=(const uint160& a, const base_uint160& b
