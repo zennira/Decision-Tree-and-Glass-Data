@@ -442,4 +442,194 @@ inline uint256 Hash(const T1 p1begin, const T1 p1end,
     SHA256_CTX ctx;
     SHA256_Init(&ctx);
     SHA256_Update(&ctx, (p1begin == p1end ? pblank : (unsigned char*)&p1begin[0]), (p1end - p1begin) * sizeof(p1begin[0]));
-    SHA256_Update(&ctx, (p2begin == p2end ? pblank : (unsigned char*)&p2begin[0]), 
+    SHA256_Update(&ctx, (p2begin == p2end ? pblank : (unsigned char*)&p2begin[0]), (p2end - p2begin) * sizeof(p2begin[0]));
+    SHA256_Final((unsigned char*)&hash1, &ctx);
+    uint256 hash2;
+    SHA256((unsigned char*)&hash1, sizeof(hash1), (unsigned char*)&hash2);
+    return hash2;
+}
+
+template<typename T1, typename T2, typename T3>
+inline uint256 Hash(const T1 p1begin, const T1 p1end,
+                    const T2 p2begin, const T2 p2end,
+                    const T3 p3begin, const T3 p3end)
+{
+    static unsigned char pblank[1];
+    uint256 hash1;
+    SHA256_CTX ctx;
+    SHA256_Init(&ctx);
+    SHA256_Update(&ctx, (p1begin == p1end ? pblank : (unsigned char*)&p1begin[0]), (p1end - p1begin) * sizeof(p1begin[0]));
+    SHA256_Update(&ctx, (p2begin == p2end ? pblank : (unsigned char*)&p2begin[0]), (p2end - p2begin) * sizeof(p2begin[0]));
+    SHA256_Update(&ctx, (p3begin == p3end ? pblank : (unsigned char*)&p3begin[0]), (p3end - p3begin) * sizeof(p3begin[0]));
+    SHA256_Final((unsigned char*)&hash1, &ctx);
+    uint256 hash2;
+    SHA256((unsigned char*)&hash1, sizeof(hash1), (unsigned char*)&hash2);
+    return hash2;
+}
+
+template<typename T>
+uint256 SerializeHash(const T& obj, int nType=SER_GETHASH, int nVersion=PROTOCOL_VERSION)
+{
+    CHashWriter ss(nType, nVersion);
+    ss << obj;
+    return ss.GetHash();
+}
+
+inline uint160 Hash160(const std::vector<unsigned char>& vch)
+{
+    uint256 hash1;
+    SHA256(&vch[0], vch.size(), (unsigned char*)&hash1);
+    uint160 hash2;
+    RIPEMD160((unsigned char*)&hash1, sizeof(hash1), (unsigned char*)&hash2);
+    return hash2;
+}
+
+
+/** Median filter over a stream of values. 
+ * Returns the median of the last N numbers
+ */
+template <typename T> class CMedianFilter
+{
+private:
+    std::vector<T> vValues;
+    std::vector<T> vSorted;
+    unsigned int nSize;
+public:
+    CMedianFilter(unsigned int size, T initial_value):
+        nSize(size)
+    {
+        vValues.reserve(size);
+        vValues.push_back(initial_value);
+        vSorted = vValues;
+    }
+    
+    void input(T value)
+    {
+        if(vValues.size() == nSize)
+        {
+            vValues.erase(vValues.begin());
+        }
+        vValues.push_back(value);
+
+        vSorted.resize(vValues.size());
+        std::copy(vValues.begin(), vValues.end(), vSorted.begin());
+        std::sort(vSorted.begin(), vSorted.end());
+    }
+
+    T median() const
+    {
+        int size = vSorted.size();
+        assert(size>0);
+        if(size & 1) // Odd number of elements
+        {
+            return vSorted[size/2];
+        }
+        else // Even number of elements
+        {
+            return (vSorted[size/2-1] + vSorted[size/2]) / 2;
+        }
+    }
+
+    int size() const
+    {
+        return vValues.size();
+    }
+
+    std::vector<T> sorted () const
+    {
+        return vSorted;
+    }
+};
+
+
+
+
+
+
+
+
+
+
+// Note: It turns out we might have been able to use boost::thread
+// by using TerminateThread(boost::thread.native_handle(), 0);
+#ifdef WIN32
+typedef HANDLE pthread_t;
+
+inline pthread_t CreateThread(void(*pfn)(void*), void* parg, bool fWantHandle=false)
+{
+    DWORD nUnused = 0;
+    HANDLE hthread =
+        CreateThread(
+            NULL,                        // default security
+            0,                           // inherit stack size from parent
+            (LPTHREAD_START_ROUTINE)pfn, // function pointer
+            parg,                        // argument
+            0,                           // creation option, start immediately
+            &nUnused);                   // thread identifier
+    if (hthread == NULL)
+    {
+        printf("Error: CreateThread() returned %d\n", GetLastError());
+        return (pthread_t)0;
+    }
+    if (!fWantHandle)
+    {
+        CloseHandle(hthread);
+        return (pthread_t)-1;
+    }
+    return hthread;
+}
+
+inline void SetThreadPriority(int nPriority)
+{
+    SetThreadPriority(GetCurrentThread(), nPriority);
+}
+#else
+inline pthread_t CreateThread(void(*pfn)(void*), void* parg, bool fWantHandle=false)
+{
+    pthread_t hthread = 0;
+    int ret = pthread_create(&hthread, NULL, (void*(*)(void*))pfn, parg);
+    if (ret != 0)
+    {
+        printf("Error: pthread_create() returned %d\n", ret);
+        return (pthread_t)0;
+    }
+    if (!fWantHandle)
+    {
+        pthread_detach(hthread);
+        return (pthread_t)-1;
+    }
+    return hthread;
+}
+
+#define THREAD_PRIORITY_LOWEST          PRIO_MAX
+#define THREAD_PRIORITY_BELOW_NORMAL    2
+#define THREAD_PRIORITY_NORMAL          0
+#define THREAD_PRIORITY_ABOVE_NORMAL    0
+
+inline void SetThreadPriority(int nPriority)
+{
+    // It's unclear if it's even possible to change thread priorities on Linux,
+    // but we really and truly need it for the generation threads.
+#ifdef PRIO_THREAD
+    setpriority(PRIO_THREAD, 0, nPriority);
+#else
+    setpriority(PRIO_PROCESS, 0, nPriority);
+#endif
+}
+
+inline void ExitThread(size_t nExitCode)
+{
+    pthread_exit((void*)nExitCode);
+}
+#endif
+
+void RenameThread(const char* name);
+
+inline uint32_t ByteReverse(uint32_t value)
+{
+    value = ((value & 0xFF00FF00) >> 8) | ((value & 0x00FF00FF) << 8);
+    return (value<<16) | (value>>16);
+}
+
+#endif
+
