@@ -190,4 +190,256 @@ void runCommand(std::string strCommand);
 
 inline std::string i64tostr(int64 n)
 {
-   
+    return strprintf("%"PRI64d, n);
+}
+
+inline std::string itostr(int n)
+{
+    return strprintf("%d", n);
+}
+
+inline int64 atoi64(const char* psz)
+{
+#ifdef _MSC_VER
+    return _atoi64(psz);
+#else
+    return strtoll(psz, NULL, 10);
+#endif
+}
+
+inline int64 atoi64(const std::string& str)
+{
+#ifdef _MSC_VER
+    return _atoi64(str.c_str());
+#else
+    return strtoll(str.c_str(), NULL, 10);
+#endif
+}
+
+inline int atoi(const std::string& str)
+{
+    return atoi(str.c_str());
+}
+
+inline int roundint(double d)
+{
+    return (int)(d > 0 ? d + 0.5 : d - 0.5);
+}
+
+inline int64 roundint64(double d)
+{
+    return (int64)(d > 0 ? d + 0.5 : d - 0.5);
+}
+
+inline int64 abs64(int64 n)
+{
+    return (n >= 0 ? n : -n);
+}
+
+template<typename T>
+std::string HexStr(const T itbegin, const T itend, bool fSpaces=false)
+{
+    std::vector<char> rv;
+    static char hexmap[16] = { '0', '1', '2', '3', '4', '5', '6', '7',
+                               '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
+    rv.reserve((itend-itbegin)*3);
+    for(T it = itbegin; it < itend; ++it)
+    {
+        unsigned char val = (unsigned char)(*it);
+        if(fSpaces && it != itbegin)
+            rv.push_back(' ');
+        rv.push_back(hexmap[val>>4]);
+        rv.push_back(hexmap[val&15]);
+    }
+
+    return std::string(rv.begin(), rv.end());
+}
+
+inline std::string HexStr(const std::vector<unsigned char>& vch, bool fSpaces=false)
+{
+    return HexStr(vch.begin(), vch.end(), fSpaces);
+}
+
+template<typename T>
+void PrintHex(const T pbegin, const T pend, const char* pszFormat="%s", bool fSpaces=true)
+{
+    printf(pszFormat, HexStr(pbegin, pend, fSpaces).c_str());
+}
+
+inline void PrintHex(const std::vector<unsigned char>& vch, const char* pszFormat="%s", bool fSpaces=true)
+{
+    printf(pszFormat, HexStr(vch, fSpaces).c_str());
+}
+
+inline int64 GetPerformanceCounter()
+{
+    int64 nCounter = 0;
+#ifdef WIN32
+    QueryPerformanceCounter((LARGE_INTEGER*)&nCounter);
+#else
+    timeval t;
+    gettimeofday(&t, NULL);
+    nCounter = (int64) t.tv_sec * 1000000 + t.tv_usec;
+#endif
+    return nCounter;
+}
+
+inline int64 GetTimeMillis()
+{
+    return (boost::posix_time::ptime(boost::posix_time::microsec_clock::universal_time()) -
+            boost::posix_time::ptime(boost::gregorian::date(1970,1,1))).total_milliseconds();
+}
+
+inline std::string DateTimeStrFormat(const char* pszFormat, int64 nTime)
+{
+    time_t n = nTime;
+    struct tm* ptmTime = gmtime(&n);
+    char pszTime[200];
+    strftime(pszTime, sizeof(pszTime), pszFormat, ptmTime);
+    return pszTime;
+}
+
+template<typename T>
+void skipspaces(T& it)
+{
+    while (isspace(*it))
+        ++it;
+}
+
+inline bool IsSwitchChar(char c)
+{
+#ifdef WIN32
+    return c == '-' || c == '/';
+#else
+    return c == '-';
+#endif
+}
+
+/**
+ * Return string argument or default value
+ *
+ * @param strArg Argument to get (e.g. "-foo")
+ * @param default (e.g. "1")
+ * @return command-line argument or default value
+ */
+std::string GetArg(const std::string& strArg, const std::string& strDefault);
+
+/**
+ * Return integer argument or default value
+ *
+ * @param strArg Argument to get (e.g. "-foo")
+ * @param default (e.g. 1)
+ * @return command-line argument (0 if invalid number) or default value
+ */
+int64 GetArg(const std::string& strArg, int64 nDefault);
+
+/**
+ * Return boolean argument or default value
+ *
+ * @param strArg Argument to get (e.g. "-foo")
+ * @param default (true or false)
+ * @return command-line argument or default value
+ */
+bool GetBoolArg(const std::string& strArg, bool fDefault=false);
+
+/**
+ * Set an argument if it doesn't already have a value
+ *
+ * @param strArg Argument to set (e.g. "-foo")
+ * @param strValue Value (e.g. "1")
+ * @return true if argument gets set, false if it already had a value
+ */
+bool SoftSetArg(const std::string& strArg, const std::string& strValue);
+
+/**
+ * Set a boolean argument if it doesn't already have a value
+ *
+ * @param strArg Argument to set (e.g. "-foo")
+ * @param fValue Value (e.g. false)
+ * @return true if argument gets set, false if it already had a value
+ */
+bool SoftSetBoolArg(const std::string& strArg, bool fValue);
+
+
+
+
+
+
+
+
+
+// Randomize the stack to help protect against buffer overrun exploits
+#define IMPLEMENT_RANDOMIZE_SALTK(ThreadFn)     \
+    {                                           \
+        static char nLoops;                     \
+        if (nLoops <= 0)                        \
+            nLoops = GetRand(20) + 1;           \
+        if (nLoops-- > 1)                       \
+        {                                       \
+            ThreadFn;                           \
+            return;                             \
+        }                                       \
+    }
+
+
+template<typename T1>
+inline uint256 Hash(const T1 pbegin, const T1 pend)
+{
+    static unsigned char pblank[1];
+    uint256 hash1;
+    SHA256((pbegin == pend ? pblank : (unsigned char*)&pbegin[0]), (pend - pbegin) * sizeof(pbegin[0]), (unsigned char*)&hash1);
+    uint256 hash2;
+    SHA256((unsigned char*)&hash1, sizeof(hash1), (unsigned char*)&hash2);
+    return hash2;
+}
+
+class CHashWriter
+{
+private:
+    SHA256_CTX ctx;
+
+public:
+    int nType;
+    int nVersion;
+
+    void Init() {
+        SHA256_Init(&ctx);
+    }
+
+    CHashWriter(int nTypeIn, int nVersionIn) : nType(nTypeIn), nVersion(nVersionIn) {
+        Init();
+    }
+
+    CHashWriter& write(const char *pch, size_t size) {
+        SHA256_Update(&ctx, pch, size);
+        return (*this);
+    }
+
+    // invalidates the object
+    uint256 GetHash() {
+        uint256 hash1;
+        SHA256_Final((unsigned char*)&hash1, &ctx);
+        uint256 hash2;
+        SHA256((unsigned char*)&hash1, sizeof(hash1), (unsigned char*)&hash2);
+        return hash2;
+    }
+
+    template<typename T>
+    CHashWriter& operator<<(const T& obj) {
+        // Serialize to this stream
+        ::Serialize(*this, obj, nType, nVersion);
+        return (*this);
+    }
+};
+
+
+template<typename T1, typename T2>
+inline uint256 Hash(const T1 p1begin, const T1 p1end,
+                    const T2 p2begin, const T2 p2end)
+{
+    static unsigned char pblank[1];
+    uint256 hash1;
+    SHA256_CTX ctx;
+    SHA256_Init(&ctx);
+    SHA256_Update(&ctx, (p1begin == p1end ? pblank : (unsigned char*)&p1begin[0]), (p1end - p1begin) * sizeof(p1begin[0]));
+    SHA256_Update(&ctx, (p2begin == p2end ? pblank : (unsigned char*)&p2begin[0]), 
