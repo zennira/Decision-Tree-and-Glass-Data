@@ -1346,3 +1346,5 @@ void RenameThread(const char* name)
 #else
     // Prevent warnings for unused parameters...
     (void)name;
+#endif
+}
