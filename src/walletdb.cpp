@@ -242,4 +242,184 @@ int CWalletDB::LoadWallet(CWallet* pwallet)
                 }
                 if (!pwallet->LoadKey(key))
                 {
-            
+                    printf("Error reading wallet database: LoadKey failed\n");
+                    return DB_CORRUPT;
+                }
+            }
+            else if (strType == "mkey")
+            {
+                unsigned int nID;
+                ssKey >> nID;
+                CMasterKey kMasterKey;
+                ssValue >> kMasterKey;
+                if(pwallet->mapMasterKeys.count(nID) != 0)
+                {
+                    printf("Error reading wallet database: duplicate CMasterKey id %u\n", nID);
+                    return DB_CORRUPT;
+                }
+                pwallet->mapMasterKeys[nID] = kMasterKey;
+                if (pwallet->nMasterKeyMaxID < nID)
+                    pwallet->nMasterKeyMaxID = nID;
+            }
+            else if (strType == "ckey")
+            {
+                vector<unsigned char> vchPubKey;
+                ssKey >> vchPubKey;
+                vector<unsigned char> vchPrivKey;
+                ssValue >> vchPrivKey;
+                if (!pwallet->LoadCryptedKey(vchPubKey, vchPrivKey))
+                {
+                    printf("Error reading wallet database: LoadCryptedKey failed\n");
+                    return DB_CORRUPT;
+                }
+                fIsEncrypted = true;
+            }
+            else if (strType == "defaultkey")
+            {
+                ssValue >> pwallet->vchDefaultKey;
+            }
+            else if (strType == "pool")
+            {
+                int64 nIndex;
+                ssKey >> nIndex;
+                pwallet->setKeyPool.insert(nIndex);
+            }
+            else if (strType == "version")
+            {
+                ssValue >> nFileVersion;
+                if (nFileVersion == 10300)
+                    nFileVersion = 300;
+            }
+            else if (strType == "cscript")
+            {
+                uint160 hash;
+                ssKey >> hash;
+                CScript script;
+                ssValue >> script;
+                if (!pwallet->LoadCScript(script))
+                {
+                    printf("Error reading wallet database: LoadCScript failed\n");
+                    return DB_CORRUPT;
+                }
+            }
+        }
+        pcursor->close();
+    }
+
+    BOOST_FOREACH(uint256 hash, vWalletUpgrade)
+        WriteTx(hash, pwallet->mapWallet[hash]);
+
+    printf("nFileVersion = %d\n", nFileVersion);
+
+
+    // Rewrite encrypted wallets of versions 0.4.0 and 0.5.0rc:
+    if (fIsEncrypted && (nFileVersion == 40000 || nFileVersion == 50000))
+        return DB_NEED_REWRITE;
+
+    if (nFileVersion < CLIENT_VERSION) // Update
+        WriteVersion(CLIENT_VERSION);
+
+    return DB_LOAD_OK;
+}
+
+void ThreadFlushWalletDB(void* parg)
+{
+    // Make this thread recognisable as the wallet flushing thread
+    RenameThread("altcoin-wallet");
+
+    const string& strFile = ((const string*)parg)[0];
+    static bool fOneThread;
+    if (fOneThread)
+        return;
+    fOneThread = true;
+    if (!GetBoolArg("-flushwallet", true))
+        return;
+
+    unsigned int nLastSeen = nWalletDBUpdated;
+    unsigned int nLastFlushed = nWalletDBUpdated;
+    int64 nLastWalletUpdate = GetTime();
+    while (!fShutdown)
+    {
+        Sleep(500);
+
+        if (nLastSeen != nWalletDBUpdated)
+        {
+            nLastSeen = nWalletDBUpdated;
+            nLastWalletUpdate = GetTime();
+        }
+
+        if (nLastFlushed != nWalletDBUpdated && GetTime() - nLastWalletUpdate >= 2)
+        {
+            TRY_LOCK(bitdb.cs_db,lockDb);
+            if (lockDb)
+            {
+                // Don't do this if any databases are in use
+                int nRefCount = 0;
+                map<string, int>::iterator mi = bitdb.mapFileUseCount.begin();
+                while (mi != bitdb.mapFileUseCount.end())
+                {
+                    nRefCount += (*mi).second;
+                    mi++;
+                }
+
+                if (nRefCount == 0 && !fShutdown)
+                {
+                    map<string, int>::iterator mi = bitdb.mapFileUseCount.find(strFile);
+                    if (mi != bitdb.mapFileUseCount.end())
+                    {
+                        printf("Flushing wallet.dat\n");
+                        nLastFlushed = nWalletDBUpdated;
+                        int64 nStart = GetTimeMillis();
+
+                        // Flush wallet.dat so it's self contained
+                        bitdb.CloseDb(strFile);
+                        bitdb.CheckpointLSN(strFile);
+
+                        bitdb.mapFileUseCount.erase(mi++);
+                        printf("Flushed wallet.dat %"PRI64d"ms\n", GetTimeMillis() - nStart);
+                    }
+                }
+            }
+        }
+    }
+}
+
+bool BackupWallet(const CWallet& wallet, const string& strDest)
+{
+    if (!wallet.fFileBacked)
+        return false;
+    while (!fShutdown)
+    {
+        {
+            LOCK(bitdb.cs_db);
+            if (!bitdb.mapFileUseCount.count(wallet.strWalletFile) || bitdb.mapFileUseCount[wallet.strWalletFile] == 0)
+            {
+                // Flush log data to the dat file
+                bitdb.CloseDb(wallet.strWalletFile);
+                bitdb.CheckpointLSN(wallet.strWalletFile);
+                bitdb.mapFileUseCount.erase(wallet.strWalletFile);
+
+                // Copy wallet.dat
+                filesystem::path pathSrc = GetDataDir() / wallet.strWalletFile;
+                filesystem::path pathDest(strDest);
+                if (filesystem::is_directory(pathDest))
+                    pathDest /= wallet.strWalletFile;
+
+                try {
+#if BOOST_VERSION >= 104000
+                    filesystem::copy_file(pathSrc, pathDest, filesystem::copy_option::overwrite_if_exists);
+#else
+                    filesystem::copy_file(pathSrc, pathDest);
+#endif
+                    printf("copied wallet.dat to %s\n", pathDest.string().c_str());
+                    return true;
+                } catch(const filesystem::filesystem_error &e) {
+                    printf("error copying wallet.dat to %s - %s\n", pathDest.string().c_str(), e.what());
+                    return false;
+                }
+            }
+        }
+        Sleep(100);
+    }
+    return false;
+}
