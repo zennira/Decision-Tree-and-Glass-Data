@@ -62,4 +62,184 @@ int64 CWalletDB::GetAccountCreditDebit(const string& strAccount)
 
 void CWalletDB::ListAccountCreditDebit(const string& strAccount, list<CAccountingEntry>& entries)
 {
-    bool fAllAccounts = (strAccount == "*"
+    bool fAllAccounts = (strAccount == "*");
+
+    Dbc* pcursor = GetCursor();
+    if (!pcursor)
+        throw runtime_error("CWalletDB::ListAccountCreditDebit() : cannot create DB cursor");
+    unsigned int fFlags = DB_SET_RANGE;
+    loop
+    {
+        // Read next record
+        CDataStream ssKey(SER_DISK, CLIENT_VERSION);
+        if (fFlags == DB_SET_RANGE)
+            ssKey << boost::make_tuple(string("acentry"), (fAllAccounts? string("") : strAccount), uint64(0));
+        CDataStream ssValue(SER_DISK, CLIENT_VERSION);
+        int ret = ReadAtCursor(pcursor, ssKey, ssValue, fFlags);
+        fFlags = DB_NEXT;
+        if (ret == DB_NOTFOUND)
+            break;
+        else if (ret != 0)
+        {
+            pcursor->close();
+            throw runtime_error("CWalletDB::ListAccountCreditDebit() : error scanning DB");
+        }
+
+        // Unserialize
+        string strType;
+        ssKey >> strType;
+        if (strType != "acentry")
+            break;
+        CAccountingEntry acentry;
+        ssKey >> acentry.strAccount;
+        if (!fAllAccounts && acentry.strAccount != strAccount)
+            break;
+
+        ssValue >> acentry;
+        entries.push_back(acentry);
+    }
+
+    pcursor->close();
+}
+
+
+int CWalletDB::LoadWallet(CWallet* pwallet)
+{
+    pwallet->vchDefaultKey = CPubKey();
+    int nFileVersion = 0;
+    vector<uint256> vWalletUpgrade;
+    bool fIsEncrypted = false;
+
+    //// todo: shouldn't we catch exceptions and try to recover and continue?
+    {
+        LOCK(pwallet->cs_wallet);
+        int nMinVersion = 0;
+        if (Read((string)"minversion", nMinVersion))
+        {
+            if (nMinVersion > CLIENT_VERSION)
+                return DB_TOO_NEW;
+            pwallet->LoadMinVersion(nMinVersion);
+        }
+
+        // Get cursor
+        Dbc* pcursor = GetCursor();
+        if (!pcursor)
+        {
+            printf("Error getting wallet database cursor\n");
+            return DB_CORRUPT;
+        }
+
+        loop
+        {
+            // Read next record
+            CDataStream ssKey(SER_DISK, CLIENT_VERSION);
+            CDataStream ssValue(SER_DISK, CLIENT_VERSION);
+            int ret = ReadAtCursor(pcursor, ssKey, ssValue);
+            if (ret == DB_NOTFOUND)
+                break;
+            else if (ret != 0)
+            {
+                printf("Error reading next record from wallet database\n");
+                return DB_CORRUPT;
+            }
+
+            // Unserialize
+            // Taking advantage of the fact that pair serialization
+            // is just the two items serialized one after the other
+            string strType;
+            ssKey >> strType;
+            if (strType == "name")
+            {
+                string strAddress;
+                ssKey >> strAddress;
+                ssValue >> pwallet->mapAddressBook[CAltcoinAddress(strAddress).Get()];
+            }
+            else if (strType == "tx")
+            {
+                uint256 hash;
+                ssKey >> hash;
+                CWalletTx& wtx = pwallet->mapWallet[hash];
+                ssValue >> wtx;
+                wtx.BindWallet(pwallet);
+
+                if (wtx.GetHash() != hash)
+                    printf("Error in wallet.dat, hash mismatch\n");
+
+                // Undo serialize changes in 31600
+                if (31404 <= wtx.fTimeReceivedIsTxTime && wtx.fTimeReceivedIsTxTime <= 31703)
+                {
+                    if (!ssValue.empty())
+                    {
+                        char fTmp;
+                        char fUnused;
+                        ssValue >> fTmp >> fUnused >> wtx.strFromAccount;
+                        printf("LoadWallet() upgrading tx ver=%d %d '%s' %s\n", wtx.fTimeReceivedIsTxTime, fTmp, wtx.strFromAccount.c_str(), hash.ToString().c_str());
+                        wtx.fTimeReceivedIsTxTime = fTmp;
+                    }
+                    else
+                    {
+                        printf("LoadWallet() repairing tx ver=%d %s\n", wtx.fTimeReceivedIsTxTime, hash.ToString().c_str());
+                        wtx.fTimeReceivedIsTxTime = 0;
+                    }
+                    vWalletUpgrade.push_back(hash);
+                }
+
+                //// debug print
+                //printf("LoadWallet  %s\n", wtx.GetHash().ToString().c_str());
+                //printf(" %12"PRI64d"  %s  %s  %s\n",
+                //    wtx.vout[0].nValue,
+                //    DateTimeStrFormat("%x %H:%M:%S", wtx.GetBlockTime()).c_str(),
+                //    wtx.hashBlock.ToString().substr(0,20).c_str(),
+                //    wtx.mapValue["message"].c_str());
+            }
+            else if (strType == "acentry")
+            {
+                string strAccount;
+                ssKey >> strAccount;
+                uint64 nNumber;
+                ssKey >> nNumber;
+                if (nNumber > nAccountingEntryNumber)
+                    nAccountingEntryNumber = nNumber;
+            }
+            else if (strType == "key" || strType == "wkey")
+            {
+                vector<unsigned char> vchPubKey;
+                ssKey >> vchPubKey;
+                CKey key;
+                if (strType == "key")
+                {
+                    CPrivKey pkey;
+                    ssValue >> pkey;
+                    key.SetPubKey(vchPubKey);
+                    key.SetPrivKey(pkey);
+                    if (key.GetPubKey() != vchPubKey)
+                    {
+                        printf("Error reading wallet database: CPrivKey pubkey inconsistency\n");
+                        return DB_CORRUPT;
+                    }
+                    if (!key.IsValid())
+                    {
+                        printf("Error reading wallet database: invalid CPrivKey\n");
+                        return DB_CORRUPT;
+                    }
+                }
+                else
+                {
+                    CWalletKey wkey;
+                    ssValue >> wkey;
+                    key.SetPubKey(vchPubKey);
+                    key.SetPrivKey(wkey.vchPrivKey);
+                    if (key.GetPubKey() != vchPubKey)
+                    {
+                        printf("Error reading wallet database: CWalletKey pubkey inconsistency\n");
+                        return DB_CORRUPT;
+                    }
+                    if (!key.IsValid())
+                    {
+                        printf("Error reading wallet database: invalid CWalletKey\n");
+                        return DB_CORRUPT;
+                    }
+                }
+                if (!pwallet->LoadKey(key))
+                {
+            
